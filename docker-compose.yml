@@ -1,0 +1,39 @@
+version: "3"
+services:
+  postgres_acao_social:
+    container_name: postgres_acao_social
+    image: postgres:13
+    ports:
+      - 5432:5432
+    environment:
+      - POSTGRES_USER=test
+      - POSTGRES_PASSWORD=test
+    volumes:
+      - /var/lib/postgresql
+    networks:
+      net_postgres:
+        ipv4_address: 172.16.19.2
+
+networks:
+  net_postgres:
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: 172.16.19.0/24
+
+#
+#  keycloak:
+#    image: jboss/keycloak:latest
+#    env_file: .env
+#    environment:
+#      - KEYCLOAK_USER=${KEYCLOAK_USER}
+#      - KEYCLOAK_PASSWORD=${KEYCLOAK_PASSWORD}
+#      - DB_VENDOR=${KEYCLOAK_DB_VENDOR}
+#    ports:
+#      - ${KEYCLOAK_PORT}:8080
+#    volumes:
+#      - keycloak_data:/opt/jboss/keycloak/standalone/data
+#
+#volumes:
+#  keycloak_data:
