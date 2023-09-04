@@ -10,6 +10,10 @@ O projeto consiste em
   - buscar um
   - buscar todos
   - deletar
+# Tecnologias
+
+# Variaveis de ambiente
+SPRING_PROFILES_ACTIVE=test
 
 # Arquitetutra 
 - controller
@@ -20,4 +24,4 @@ O projeto consiste em
 - config
 - enum
 - repository
-- 
+- db/migration/dataDefinitionProduction
