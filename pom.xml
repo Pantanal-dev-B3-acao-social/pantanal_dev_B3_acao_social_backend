@@ -15,6 +15,7 @@
 	<description>Sistema de gestão de ação social</description>
 	<properties>
 		<java.version>17</java.version>
+		<springdoc-openapi-ui.version>1.6.12</springdoc-openapi-ui.version>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -70,6 +71,12 @@
 			<groupId>org.postgresql</groupId>
 			<artifactId>postgresql</artifactId>
 			<scope>runtime</scope>
+		</dependency>
+		<!-- swagger -->
+		<dependency>
+			<groupId>org.springdoc</groupId>
+			<artifactId>springdoc-openapi-ui</artifactId>
+			<version>${springdoc-openapi-ui.version}</version>
 		</dependency>
 	</dependencies>
 
