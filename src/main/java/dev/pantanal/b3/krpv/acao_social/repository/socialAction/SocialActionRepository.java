@@ -1,6 +1,5 @@
-package dev.pantanal.b3.krpv.acao_social.repository;
+package dev.pantanal.b3.krpv.acao_social.repository.socialAction;
 
-import dev.pantanal.b3.krpv.acao_social.config.postgres.PostgresSocialActionRepository;
 import dev.pantanal.b3.krpv.acao_social.entity.SocialActionEntity;
 import dev.pantanal.b3.krpv.acao_social.exception.ObjectNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -8,7 +7,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 
-import java.util.List;
 import java.util.UUID;
 
 @Component
@@ -16,6 +14,7 @@ import java.util.UUID;
 public class SocialActionRepository {
 
     private final PostgresSocialActionRepository postgresSocialActionRepository;
+
 
     private SocialActionEntity find(UUID id) {
         return postgresSocialActionRepository.findById(id)
@@ -30,6 +29,11 @@ public class SocialActionRepository {
     public SocialActionEntity search(SocialActionEntity obj) {
         SocialActionEntity entitySaved = postgresSocialActionRepository.save(obj);
         return entitySaved;
+    }
+
+    public SocialActionEntity save(SocialActionEntity obj) {
+        SocialActionEntity socialActionEntity = postgresSocialActionRepository.save(obj);
+        return socialActionEntity;
     }
 
     public SocialActionEntity update(SocialActionEntity obj) {
