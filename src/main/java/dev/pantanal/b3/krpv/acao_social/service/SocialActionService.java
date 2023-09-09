@@ -27,6 +27,10 @@ public class SocialActionService {
         return savedObj;
     }
 
+    public void delete(UUID id) {
+        socialActionRepository.delete(id);
+    }
+
     public Page<SocialActionEntity> findAll(Pageable pageable, SocialActionParamsDto filters) {
 
         Page<SocialActionEntity> objects = socialActionRepository.findAll(pageable, filters);
@@ -39,5 +43,7 @@ public class SocialActionService {
         // lançar exceções
         return obj;
     }
+
+
 
 }

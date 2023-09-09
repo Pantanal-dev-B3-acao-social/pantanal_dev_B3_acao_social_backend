@@ -74,5 +74,20 @@ public class SocialActionController {
 //        return new ResponseEntity<SocialActionEntity>(entity);
     }
 
+    @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @Operation(summary = "Exclui uma ação social por ID", method = "DELETE")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "204", description = "Ação social excluída com sucesso"),
+            @ApiResponse(responseCode = "400", description = "ID inválido"),
+            @ApiResponse(responseCode = "401", description = "Usuário não autenticado"),
+            @ApiResponse(responseCode = "404", description = "Ação social não encontrada"),
+            @ApiResponse(responseCode = "500", description = "Erro ao excluir ação social"),
+    })
+    public void delete(@PathVariable UUID id) {
+        service.delete(id);
+    }
+
+
 
 }

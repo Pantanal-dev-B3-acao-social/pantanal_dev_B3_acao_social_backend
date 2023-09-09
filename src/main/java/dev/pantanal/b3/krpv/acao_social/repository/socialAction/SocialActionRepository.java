@@ -65,9 +65,9 @@ public class SocialActionRepository {
 //        return entityUpdated;
 //    }
 
-//    public void delete(UUID id) {
-//        SocialActionEntity objEntity = find(id);
-//        postgresSocialActionRepository.delete(objEntity);
-//    }
+    public void delete(UUID id) {
+        SocialActionEntity objEntity = findById(id);
+        postgresSocialActionRepository.delete(objEntity);
+    }
 
 }
