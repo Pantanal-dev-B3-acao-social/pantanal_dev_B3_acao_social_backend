@@ -30,21 +30,25 @@ public class SocialActionController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-// TODO: @PreAuthorize("hasAnyRole('ADMIN')")
-//    @Operation(summary = "Cria um endereço", method = "POST")
-//    @ApiResponses(value = {
-//            @ApiResponse(responseCode = "201", description = "Endereço criada com sucesso"),
-//            @ApiResponse(responseCode = "400", description = "Parâmetros inválidos"),
-//            @ApiResponse(responseCode = "401", description = "Usuário não autenticado"),
-//            @ApiResponse(responseCode = "404", description = "Endereço não encontrada"),
-//            @ApiResponse(responseCode = "422", description = "Dados de requisição inválida"),
-//            @ApiResponse(responseCode = "500", description = "Erro ao criar endereço"),
-//    })
+    @PreAuthorize("hasAnyRole('ADMIN')")
+    @Operation(summary = "Cria um endereço", method = "POST")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "Endereço criada com sucesso"),
+            @ApiResponse(responseCode = "400", description = "Parâmetros inválidos"),
+            @ApiResponse(responseCode = "401", description = "Usuário não autenticado"),
+            @ApiResponse(responseCode = "404", description = "Endereço não encontrada"),
+            @ApiResponse(responseCode = "422", description = "Dados de requisição inválida"),
+            @ApiResponse(responseCode = "500", description = "Erro ao criar endereço"),
+    })
     public ResponseEntity<SocialActionResponseDto> create(@Valid @RequestBody SocialActionCreateDto request) {
-        SocialActionResponseDto response = service.create(request);
+        SocialActionEntity entity = service.create(request);
+        SocialActionResponseDto response = new SocialActionResponseDto(
+                entity.getId(),
+                entity.getName(),
+                entity.getDescription()
+        );
         return new ResponseEntity<>(response, HttpStatus.CREATED);
         // TODO: fazer um handle para gerar esse retorno
     }
-
 
 }

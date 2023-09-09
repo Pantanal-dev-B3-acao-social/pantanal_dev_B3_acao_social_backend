@@ -4,6 +4,6 @@ package dev.pantanal.b3.krpv.acao_social.dto.request;
 public record SocialActionCreateDto(
 // TODO:
 //        @NotBlank
-        String nome,
+        String name,
         String description
 ) {}

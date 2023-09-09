@@ -13,17 +13,13 @@ public class SocialActionService {
     @Autowired
     private SocialActionRepository socialActionRepository;
 
-    public SocialActionResponseDto create(SocialActionCreateDto request) {
+    public SocialActionEntity create(SocialActionCreateDto dataRequest) {
         SocialActionEntity entity = new SocialActionEntity();
-        entity.setName(request.nome());
-        entity.setDescription(request.description());
+        entity.setName(dataRequest.name());
+        entity.setDescription(dataRequest.description());
         SocialActionEntity savedObj = socialActionRepository.save(entity);
-        SocialActionResponseDto response = new SocialActionResponseDto(
-                savedObj.getId(),
-                savedObj.getName(),
-                savedObj.getDescription()
-        );
-        return response;
+        //
+        return savedObj;
     }
 
 }
