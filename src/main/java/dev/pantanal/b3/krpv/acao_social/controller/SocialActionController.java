@@ -20,6 +20,8 @@ import static dev.pantanal.b3.krpv.acao_social.controller.SocialActionController
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+import java.util.UUID;
+
 @RestController
 @RequestMapping(ROUTE_SOCIAL)
 public class SocialActionController {
@@ -57,5 +59,20 @@ public class SocialActionController {
         // TODO: fazer um handle para gerar esse retorno
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
+
+    @GetMapping("/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseEntity<SocialActionEntity> findOne(@PathVariable UUID id) {
+        SocialActionEntity entity = service.findById(id);
+        if (entity != null) {
+            return ResponseEntity.ok(entity);
+        } else {
+            // Aqui você pode personalizar a resposta de acordo com o que desejar
+            // Por exemplo, retornar 404 Not Found se a ação social não for encontrada
+            return ResponseEntity.notFound().build();
+        }
+//        return new ResponseEntity<SocialActionEntity>(entity);
+    }
+
 
 }

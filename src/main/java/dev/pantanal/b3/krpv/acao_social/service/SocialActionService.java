@@ -9,6 +9,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.data.domain.Page;
+
+import java.util.UUID;
+
 @Service
 public class SocialActionService {
 
@@ -29,6 +32,12 @@ public class SocialActionService {
         Page<SocialActionEntity> objects = socialActionRepository.findAll(pageable, filters);
         // lançar exceções
         return objects;
+    }
+
+    public SocialActionEntity findById(UUID id) {
+        SocialActionEntity obj = socialActionRepository.findById(id);
+        // lançar exceções
+        return obj;
     }
 
 }

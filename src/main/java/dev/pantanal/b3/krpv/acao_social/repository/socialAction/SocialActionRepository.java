@@ -24,7 +24,7 @@ public class SocialActionRepository {
     private final PostgresSocialActionRepository postgresSocialActionRepository;
     private final EntityManager entityManager;
 
-    private SocialActionEntity find(UUID id) {
+    public SocialActionEntity findById(UUID id) {
         return postgresSocialActionRepository.findById(id)
                 .orElseThrow(() -> new ObjectNotFoundException("registro não encontrado: " + id));
     }
@@ -53,21 +53,21 @@ public class SocialActionRepository {
         return socialActionEntity;
     }
 
-    public SocialActionEntity update(SocialActionEntity obj) {
-        SocialActionEntity entitySaved = find(obj.getId());
-        if(obj.getName() != null) {
-            entitySaved.setName(obj.getName());
-        }
-        if(obj.getDescription() != null) {
-            entitySaved.setDescription(obj.getDescription());
-        }
-        SocialActionEntity entityUpdated = postgresSocialActionRepository.save(entitySaved);
-        return entityUpdated;
-    }
+//    public SocialActionEntity update(SocialActionEntity obj) {
+//        SocialActionEntity entitySaved = find(obj.getId());
+//        if(obj.getName() != null) {
+//            entitySaved.setName(obj.getName());
+//        }
+//        if(obj.getDescription() != null) {
+//            entitySaved.setDescription(obj.getDescription());
+//        }
+//        SocialActionEntity entityUpdated = postgresSocialActionRepository.save(entitySaved);
+//        return entityUpdated;
+//    }
 
-    public void delete(UUID id) {
-        SocialActionEntity objEntity = find(id);
-        postgresSocialActionRepository.delete(objEntity);
-    }
+//    public void delete(UUID id) {
+//        SocialActionEntity objEntity = find(id);
+//        postgresSocialActionRepository.delete(objEntity);
+//    }
 
 }
