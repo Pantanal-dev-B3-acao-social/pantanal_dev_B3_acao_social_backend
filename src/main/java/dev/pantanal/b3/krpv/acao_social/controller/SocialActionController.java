@@ -30,7 +30,7 @@ public class SocialActionController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    @PreAuthorize("hasAnyRole('ADMIN')")
+//    @PreAuthorize("hasAnyRole('ADMIN')")
     @Operation(summary = "Cria um endereço", method = "POST")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "Endereço criada com sucesso"),
