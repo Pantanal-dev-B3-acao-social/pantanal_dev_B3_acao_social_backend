@@ -1,34 +1,51 @@
 package dev.pantanal.b3.krpv.acao_social.repository.socialAction;
 
+import dev.pantanal.b3.krpv.acao_social.dto.request.SocialActionParamsDto;
 import dev.pantanal.b3.krpv.acao_social.entity.SocialActionEntity;
 import dev.pantanal.b3.krpv.acao_social.exception.ObjectNotFoundException;
+import jakarta.persistence.TypedQuery;
+import jakarta.persistence.criteria.CriteriaBuilder;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
-
+// TODO: verificar se vamos usar jakarta ou javax
+import jakarta.persistence.EntityManager;
+//import javax.persistence.EntityManager;
+import java.util.List;
 import java.util.UUID;
+import jakarta.persistence.criteria.*;
 
 @Component
 @RequiredArgsConstructor
 public class SocialActionRepository {
 
     private final PostgresSocialActionRepository postgresSocialActionRepository;
-
+    private final EntityManager entityManager;
 
     private SocialActionEntity find(UUID id) {
         return postgresSocialActionRepository.findById(id)
                 .orElseThrow(() -> new ObjectNotFoundException("registro não encontrado: " + id));
     }
 
-    public Page<SocialActionEntity> search(Pageable var1) {
-        Page<SocialActionEntity> objsEntities = postgresSocialActionRepository.findAll(var1);
-        return objsEntities;
-    }
-
-    public SocialActionEntity search(SocialActionEntity obj) {
-        SocialActionEntity entitySaved = postgresSocialActionRepository.save(obj);
-        return entitySaved;
+    public Page<SocialActionEntity> findAll(Pageable pageable, SocialActionParamsDto filters) {
+        // filtro
+        CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+        CriteriaQuery<SocialActionEntity> criteriaQuery = criteriaBuilder.createQuery(SocialActionEntity.class);
+        Root<SocialActionEntity> root = criteriaQuery.from(SocialActionEntity.class);
+        Predicate[] predicatesArray = SocialActionSpecifications.getPredicates(filters, root, criteriaBuilder);
+        criteriaQuery.where(predicatesArray);
+        TypedQuery<SocialActionEntity> query = entityManager.createQuery(criteriaQuery);
+        query.setFirstResult((int) pageable.getOffset());
+        query.setMaxResults(pageable.getPageSize());
+        List<SocialActionEntity> resultList = query.getResultList();
+        CriteriaQuery<Long> countQuery = criteriaBuilder.createQuery(Long.class);
+        countQuery.select(criteriaBuilder.count(countQuery.from(SocialActionEntity.class)));
+        countQuery.where(predicatesArray);
+        Long totalCount = entityManager.createQuery(countQuery).getSingleResult();
+        Page<SocialActionEntity> resultPage = new PageImpl<>(resultList, pageable, totalCount);
+        return resultPage;
     }
 
     public SocialActionEntity save(SocialActionEntity obj) {
@@ -53,12 +70,4 @@ public class SocialActionRepository {
         postgresSocialActionRepository.delete(objEntity);
     }
 
-    // TODO: passar dto de filtro
-//    public List<SocialActionEntity> searchSocialActionsByName(String name) {
-//        return postgresSocialActionRepository.search(name);
-//    }
-
-//    public Page<SocialActionEntity> searchSocialActionsByCustomCriteria(String customCriteria, Pageable pageable) {
-//        return postgresSocialActionRepository.findByCustomCriteria(customCriteria, pageable);
-//    }
 }

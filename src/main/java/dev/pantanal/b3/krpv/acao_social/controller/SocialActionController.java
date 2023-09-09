@@ -2,6 +2,7 @@ package dev.pantanal.b3.krpv.acao_social.controller;
 
 import dev.pantanal.b3.krpv.acao_social.dto.SocialActionDto;
 import dev.pantanal.b3.krpv.acao_social.dto.request.SocialActionCreateDto;
+import dev.pantanal.b3.krpv.acao_social.dto.request.SocialActionParamsDto;
 import dev.pantanal.b3.krpv.acao_social.dto.response.SocialActionResponseDto;
 import dev.pantanal.b3.krpv.acao_social.entity.SocialActionEntity;
 import dev.pantanal.b3.krpv.acao_social.service.SocialActionService;
@@ -15,16 +16,23 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import io.swagger.v3.oas.annotations.Operation;
 
+import static dev.pantanal.b3.krpv.acao_social.controller.SocialActionController.ROUTE_SOCIAL;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+
 @RestController
-@RequestMapping("/v1/social")
+@RequestMapping(ROUTE_SOCIAL)
 public class SocialActionController {
 
     @Autowired
     private SocialActionService service;
+    public static final String ROUTE_SOCIAL = "/v1/social";
 
     @GetMapping
-    public ResponseEntity getAllUsers() {
-        return ResponseEntity.ok("todos os usuarios");
+    @ResponseStatus(HttpStatus.OK)
+    public Page<SocialActionEntity> findAll(Pageable pageable, @Valid SocialActionParamsDto request) {
+        Page<SocialActionEntity> entities = service.findAll(pageable, request);
+        return entities;
     }
 
     @PostMapping
@@ -46,8 +54,8 @@ public class SocialActionController {
                 entity.getName(),
                 entity.getDescription()
         );
-        return new ResponseEntity<>(response, HttpStatus.CREATED);
         // TODO: fazer um handle para gerar esse retorno
+        return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
 }
