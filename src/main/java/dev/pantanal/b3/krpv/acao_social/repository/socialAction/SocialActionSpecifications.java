@@ -21,19 +21,13 @@ public class SocialActionSpecifications {
 
     public static Predicate[] getPredicates(SocialActionParamsDto filters, Root<SocialActionEntity> root, CriteriaBuilder criteriaBuilder) {
         // Crie predicados com base nos filtros em SocialActionParamsDto
-        // Exemplo:
         List<Predicate> predicates = new ArrayList<>();
-
         if (filters.nome() != null) {
             predicates.add(criteriaBuilder.equal(root.get("nome"), filters.nome()));
         }
-
         if (filters.description() != null) {
             predicates.add(criteriaBuilder.equal(root.get("description"), filters.description()));
         }
-
-        // Adicione mais predicados conforme necessário
-
         return predicates.toArray(new Predicate[0]);
     }
 }
