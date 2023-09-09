@@ -11,7 +11,7 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
+// TODO: import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import io.swagger.v3.oas.annotations.Operation;
 
@@ -23,14 +23,13 @@ public class SocialActionController {
     private SocialActionService service;
 
     @GetMapping
-//    @PreAuthorize("hasRole('client_user')")
     public ResponseEntity getAllUsers() {
         return ResponseEntity.ok("todos os usuarios");
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    @PreAuthorize("hasAnyRole('ADMIN')")
+//    @PreAuthorize("hasAnyRole('ADMIN')")
     @Operation(summary = "Cria um endereço", method = "POST")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "Endereço criada com sucesso"),
