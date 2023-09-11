@@ -1,3 +1,6 @@
+logging:
+  level:
+    org.springframework.security: DEBUG
 spring:
   datasource:
     username: sa
@@ -18,3 +21,13 @@ spring:
   flyway:
     enabled: false
     baseline-on-migrate: false
+  security:
+    oauth2:
+      enabled: false
+  autoconfigure:
+    exclude:
+      # Desativa o Spring Security
+      - org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration
+      # Desativa o Spring Security OAuth2
+      - org.springframework.boot.autoconfigure.security.oauth2.client.OAuth2RestOperationsConfiguration
+
