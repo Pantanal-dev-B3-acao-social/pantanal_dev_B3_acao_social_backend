@@ -81,3 +81,19 @@ Spring Cloud Netflix Eureka
 - Foi utilizado o github para gerencia e configuração de versionamento 
 - Kanban para controle de demandas a serem desenvolvidas
 - google docs para brainStorm, elaboração e documentação os requisitos
+
+# Gerencia e configuração
+- criaçaõ de branch
+@master
+pois esta sendo criada a partir da branch master
+ e assim por diantes
+
+@master/54687_feijao
+
+se quiser criar uma branch a partida da feijao fica assim
+
+
+@master/@54687_feijao/89743_pipoca
+```
+- gitflow
+- commit semantico
