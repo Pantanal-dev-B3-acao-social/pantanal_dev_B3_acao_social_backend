@@ -2,6 +2,13 @@
 
 # Descrição
 O projeto consiste em
+Microserviço de gestão de ação social
+
+# Processo de Deploy (ambiente de produção)
+- docker-compose up
+
+# Processo de configuração do ambiente de desenvolvimento
+- docker-compose up
 
 # Funcionalidades
 - Ação social
@@ -10,12 +17,33 @@ O projeto consiste em
   - buscar um
   - buscar todos
   - deletar
+
 # Tecnologias
+- spring boot
+  - spring security
+  - jpa
+  - flyway
+  - h2
+  - spring web
+  - lombok
+  - Junit
+- postgres
+- docker
+- docker-compose
+- keyclock
 
 # Variaveis de ambiente
 SPRING_PROFILES_ACTIVE=test
 
-# Arquitetutra 
+# Arquitetura de integração dos serviços
+- microserviços se comunicando via 
+Spring Cloud Feign
+Spring Cloud RestTemplate
+Spring Cloud OpenFeign
+Spring Cloud Netflix Eureka
+/REST/gRPC/graphQL/rabbitmq/WebSockets/Event Sourcing e CQRS/ SOAP/JMS (Java Message Service)/RMI (Remote Method Invocation)
+
+# Arquitetutra do software
 - controller
   - a camada de controller tem a responsabilidade de receber e retornar requisições HTTP rest
 - service
@@ -40,3 +68,16 @@ SPRING_PROFILES_ACTIVE=test
   - username: funcionario1
   - password: 123
   - client_secret: XHlNeEfmueMrWomAff3SNAccZNGbrOxX
+
+
+# Processo de desenvolvimento
+
+- servidor do discord para comunicação persistente
+  - compartilhamento de conteudos 
+  - compartilhamento de duivadas
+  - tira duvidas técnicas
+  - reuniões sincronas por chamada de voz
+- grupo do whatsApp para comunicação rapida e lembrentes e avisos urgentes
+- Foi utilizado o github para gerencia e configuração de versionamento 
+- Kanban para controle de demandas a serem desenvolvidas
+- google docs para brainStorm, elaboração e documentação os requisitos
