@@ -83,17 +83,20 @@ Spring Cloud Netflix Eureka
 - google docs para brainStorm, elaboração e documentação os requisitos
 
 # Gerencia e configuração
+- proibido commitar diretamente na branch main
+- proibido fazer merge para a main sem Pull Request (PR)
+- PR deve ter como prefixo do nome id do card da demanda e a descrição da demanda
 - criaçaõ de branch
-@master
-pois esta sendo criada a partir da branch master
+@main
+pois esta sendo criada a partir da branch main
  e assim por diantes
 
-@master/54687_feijao
+@main/54687_feijao
 
 se quiser criar uma branch a partida da feijao fica assim
 
 
-@master/@54687_feijao/89743_pipoca
+@main/@54687_feijao/89743_pipoca
 ```
 - gitflow
 - commit semantico
