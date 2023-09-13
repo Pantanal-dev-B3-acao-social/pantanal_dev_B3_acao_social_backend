@@ -3,6 +3,7 @@ package dev.pantanal.b3.krpv.acao_social.controller;
 import dev.pantanal.b3.krpv.acao_social.dto.SocialActionDto;
 import dev.pantanal.b3.krpv.acao_social.dto.request.SocialActionCreateDto;
 import dev.pantanal.b3.krpv.acao_social.dto.request.SocialActionParamsDto;
+import dev.pantanal.b3.krpv.acao_social.dto.request.SocialActionUpdateDto;
 import dev.pantanal.b3.krpv.acao_social.dto.response.SocialActionResponseDto;
 import dev.pantanal.b3.krpv.acao_social.entity.SocialActionEntity;
 import dev.pantanal.b3.krpv.acao_social.service.SocialActionService;
@@ -37,6 +38,20 @@ public class SocialActionController {
         return entities;
     }
 
+    @GetMapping("/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseEntity<SocialActionEntity> findOne(@PathVariable UUID id) {
+        SocialActionEntity entity = service.findById(id);
+        if (entity != null) {
+            return ResponseEntity.ok(entity);
+        } else {
+            // Aqui você pode personalizar a resposta de acordo com o que desejar
+            // Por exemplo, retornar 404 Not Found se a ação social não for encontrada
+            return ResponseEntity.notFound().build();
+        }
+//        return new ResponseEntity<SocialActionEntity>(entity);
+    }
+
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
 //    @PreAuthorize("hasAnyRole('ADMIN')")
@@ -60,19 +75,19 @@ public class SocialActionController {
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
-    @GetMapping("/{id}")
+    @PatchMapping
     @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity<SocialActionEntity> findOne(@PathVariable UUID id) {
-        SocialActionEntity entity = service.findById(id);
-        if (entity != null) {
-            return ResponseEntity.ok(entity);
-        } else {
-            // Aqui você pode personalizar a resposta de acordo com o que desejar
-            // Por exemplo, retornar 404 Not Found se a ação social não for encontrada
-            return ResponseEntity.notFound().build();
-        }
-//        return new ResponseEntity<SocialActionEntity>(entity);
+    public ResponseEntity<SocialActionResponseDto> update(@Valid @RequestBody SocialActionUpdateDto request){
+        SocialActionEntity entity = service.update(request); //Montar metodo update no Service
+        SocialActionResponseDto response = new SocialActionResponseDto(
+                entity.getId(),
+                entity.getName(),
+                entity.getDescription()
+        );
+        //Verificar erro aqui
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
+
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
@@ -87,7 +102,5 @@ public class SocialActionController {
     public void delete(@PathVariable UUID id) {
         service.delete(id);
     }
-
-
 
 }
