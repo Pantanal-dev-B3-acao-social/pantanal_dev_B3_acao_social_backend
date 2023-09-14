@@ -33,6 +33,13 @@ public class SocialActionController {
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
+    @Operation(summary = "Gets Social Actions", method = "GET")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Element(s) found successfully"),
+            @ApiResponse(responseCode = "401", description = "User not authenticated"),
+            @ApiResponse(responseCode = "404", description = "Not found"),
+            @ApiResponse(responseCode = "500", description = "Internal Server Error"),
+    })
     public Page<SocialActionEntity> findAll(Pageable pageable, @Valid SocialActionParamsDto request) {
         Page<SocialActionEntity> entities = service.findAll(pageable, request);
         return entities;
@@ -40,6 +47,13 @@ public class SocialActionController {
 
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
+    @Operation(summary = "Gets one Social Action", method = "GET")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Element found successfully"),
+            @ApiResponse(responseCode = "401", description = "User not authenticated"),
+            @ApiResponse(responseCode = "404", description = "Not found"),
+            @ApiResponse(responseCode = "500", description = "Internal Server Error"),
+    })
     public ResponseEntity<SocialActionEntity> findOne(@PathVariable UUID id) {
         SocialActionEntity entity = service.findById(id);
         if (entity != null) {
@@ -55,14 +69,14 @@ public class SocialActionController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
 //    @PreAuthorize("hasAnyRole('ADMIN')")
-    @Operation(summary = "Cria um endereço", method = "POST")
+    @Operation(summary = "Creates an Social Action", method = "POST")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "201", description = "Endereço criada com sucesso"),
-            @ApiResponse(responseCode = "400", description = "Parâmetros inválidos"),
-            @ApiResponse(responseCode = "401", description = "Usuário não autenticado"),
-            @ApiResponse(responseCode = "404", description = "Endereço não encontrada"),
-            @ApiResponse(responseCode = "422", description = "Dados de requisição inválida"),
-            @ApiResponse(responseCode = "500", description = "Erro ao criar endereço"),
+            @ApiResponse(responseCode = "201", description = "Social action succesfully created"),
+            @ApiResponse(responseCode = "400", description = "Invalid parameters"),
+            @ApiResponse(responseCode = "401", description = "User not authenticated"),
+            @ApiResponse(responseCode = "404", description = "Social action not found"),
+            @ApiResponse(responseCode = "422", description = "Invalid request data"),
+            @ApiResponse(responseCode = "500", description = "Error when creating social action"),
     })
     public ResponseEntity<SocialActionResponseDto> create(@Valid @RequestBody SocialActionCreateDto request) {
         SocialActionEntity entity = service.create(request);
@@ -77,6 +91,15 @@ public class SocialActionController {
 
     @PatchMapping
     @ResponseStatus(HttpStatus.OK)
+    @Operation(summary = "Updates an Social Action", method = "PATCH")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Successfully Updated"),
+            @ApiResponse(responseCode = "400", description = "Invalid parameters"),
+            @ApiResponse(responseCode = "401", description = "User is not authenticated"),
+            @ApiResponse(responseCode = "404", description = "Social Action no found"),
+            @ApiResponse(responseCode = "422", description = "Invalid request data"),
+            @ApiResponse(responseCode = "500", description = "Error when creating social action"),
+    })
     public ResponseEntity<SocialActionResponseDto> update(@Valid @RequestBody SocialActionUpdateDto request){
         SocialActionEntity entity = service.update(request); //Montar metodo update no Service
         SocialActionResponseDto response = new SocialActionResponseDto(
@@ -91,13 +114,13 @@ public class SocialActionController {
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    @Operation(summary = "Exclui uma ação social por ID", method = "DELETE")
+    @Operation(summary = "Deletes an Social Action", method = "DELETE")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "204", description = "Ação social excluída com sucesso"),
-            @ApiResponse(responseCode = "400", description = "ID inválido"),
-            @ApiResponse(responseCode = "401", description = "Usuário não autenticado"),
-            @ApiResponse(responseCode = "404", description = "Ação social não encontrada"),
-            @ApiResponse(responseCode = "500", description = "Erro ao excluir ação social"),
+            @ApiResponse(responseCode = "204", description = "Successfully deleted"),
+            @ApiResponse(responseCode = "400", description = "Invalid Id"),
+            @ApiResponse(responseCode = "401", description = "User not authenticated"),
+            @ApiResponse(responseCode = "404", description = "Social action not found"),
+            @ApiResponse(responseCode = "500", description = "Error when excluding social action"),
     })
     public void delete(@PathVariable UUID id) {
         service.delete(id);
