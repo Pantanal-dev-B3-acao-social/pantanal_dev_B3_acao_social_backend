@@ -44,6 +44,17 @@ public class SocialActionService {
         return obj;
     }
 
+    public SocialActionEntity update(SocialActionUpdateDto request){
+        SocialActionEntity obj = socialActionRepository.findById(request.id());
+        if (request.name() != null){
+            obj.setName(request.name());
+        }
+        if (request.description() != null){
+            obj.setDescription(request.description());
+        }
+        SocialActionEntity updatedObj = socialActionRepository.update(obj);
+        return updatedObj;
+    }
 
     public void delete(UUID id) {
         socialActionRepository.delete(id);

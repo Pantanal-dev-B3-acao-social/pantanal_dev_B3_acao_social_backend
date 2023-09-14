@@ -6,6 +6,6 @@ import java.util.UUID;
 public record SocialActionUpdateDto(
 //        @Null
         UUID id,
-        String nome,
+        String name,
         String description
 ) {}
