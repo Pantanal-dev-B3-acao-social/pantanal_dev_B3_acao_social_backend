@@ -59,11 +59,16 @@ Spring Cloud Netflix Eureka
 - criar client: 
   - client-id: client-id-backend-1
   - Client authentication: on
+    - Standard flow
+    - Direct access grants
+    - Service accounts roles
   - Root URL: http://localhost:3001/
   - Home URL: http://localhost:3001/
   - Valid redirect URIs: http://localhost:3001/*
   - Web origins: *
   - Admin URL: http://localhost:3001/
+
+
 - Cadastrar usuario
   - username: funcionario1
   - depois de salvar, na aba "credentials" adicionar uma senha
