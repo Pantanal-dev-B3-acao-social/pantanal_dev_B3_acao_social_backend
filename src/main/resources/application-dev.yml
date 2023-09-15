@@ -33,7 +33,7 @@ spring:
             provider: realm-pantanal-dev
             client-name: client-id-backend-1
             client-id: client-id-backend-1
-            client-secret: oXHzReNnxzgJX6VnMxhsig0sLaIheqwU
+            client-secret: 7t5FEfDc1VagJE9SOvZCPXUs9bgqig8y
             scope: openid,offline_access,profile
             authorization-grant-type: authorization_code
 #            redirect-uri:

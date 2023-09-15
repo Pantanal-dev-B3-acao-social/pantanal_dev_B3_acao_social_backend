@@ -110,6 +110,12 @@ SPRING_PROFILES_ACTIVE=test
   - Valid redirect URIs: http://localhost:3001/*
   - Web origins: *
   - Admin URL: http://localhost:3001/
+- Cadastrar role
+  - ROLE_SOCIAL_ACTION_CREATE
+  - ROLE_SOCIAL_ACTION_GET_ALL
+  - ROLE_SOCIAL_ACTION_GET_ONE
+  - ROLE_SOCIAL_ACTION_UPDATE
+  - ROLE_SOCIAL_ACTION_DELETE
 - Cadastrar usuario
   - username: funcionario1
   - depois de salvar, na aba "credentials" adicionar uma senha
