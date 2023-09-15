@@ -110,12 +110,13 @@ SPRING_PROFILES_ACTIVE=test
   - Valid redirect URIs: http://localhost:3001/*
   - Web origins: *
   - Admin URL: http://localhost:3001/
+  - Credentials: client_secret: gerar secret e salvar no application.yml e application-dev.yml
 - Cadastrar role
-  - ROLE_SOCIAL_ACTION_CREATE
-  - ROLE_SOCIAL_ACTION_GET_ALL
-  - ROLE_SOCIAL_ACTION_GET_ONE
-  - ROLE_SOCIAL_ACTION_UPDATE
-  - ROLE_SOCIAL_ACTION_DELETE
+  - SOCIAL_ACTION_CREATE
+  - SOCIAL_ACTION_GET_ALL
+  - SOCIAL_ACTION_GET_ONE
+  - SOCIAL_ACTION_UPDATE
+  - SOCIAL_ACTION_DELETE
 - Cadastrar usuario
   - username: funcionario1
   - depois de salvar, na aba "credentials" adicionar uma senha
@@ -124,5 +125,4 @@ SPRING_PROFILES_ACTIVE=test
   - client_id: client-id-backend-1
   - username: funcionario1
   - password: 123
-  - client_secret: oXHzReNnxzgJX6VnMxhsig0sLaIheqwU
-
+ 

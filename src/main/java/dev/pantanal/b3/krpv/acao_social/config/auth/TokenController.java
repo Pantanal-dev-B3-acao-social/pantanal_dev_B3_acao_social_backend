@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.beans.factory.annotation.Value;
 
-@RequestMapping("/token")
+@RequestMapping("/auth/token")
 @RestController
 public class TokenController {
     @Value("${spring.security.oauth2.client.registration.realm-pantanal-dev.client-id}")
@@ -25,8 +25,26 @@ public class TokenController {
     @Value("${spring.security.oauth2.resourceserver.jwt.issuer-uri}")
     private String issuerUri;
 
-    @PostMapping
-    public ResponseEntity<String> token(@RequestBody User user) {
+    /**
+     * Esse token é usado para autenticar e autorizar solicitações a recursos protegidos por um servidor OAuth 2.0 ou OpenID Connect.
+     */
+//    @PostMapping
+    public ResponseEntity<String> clientToken() {
+        HttpHeaders headers = new HttpHeaders();
+        RestTemplate rt = new RestTemplate();
+        headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+        MultiValueMap<String, String> formData = new LinkedMultiValueMap<>();
+        formData.add("grant_type", "password");
+        formData.add("client_secret", clientSecret);
+        formData.add("client_id", clientId);
+        HttpEntity<MultiValueMap<String, String>> httpEntity = new HttpEntity<>(formData, headers);
+        String tokenEndpoint = issuerUri + "/protocol/openid-connect/token";
+        var result = rt.postForEntity(tokenEndpoint, httpEntity, String.class);
+        return result;
+    }
+
+    @PostMapping("/user")
+    public ResponseEntity<String> userToken(@RequestBody User user) {
         HttpHeaders headers = new HttpHeaders();
         RestTemplate rt = new RestTemplate();
         headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);

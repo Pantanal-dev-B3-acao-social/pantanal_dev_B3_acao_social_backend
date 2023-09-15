@@ -32,27 +32,16 @@ public class DefaultSecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.csrf(csrf -> csrf.disable());
-//        http
-//                .authorizeHttpRequests(authorize -> authorize
-//                        .requestMatchers("/public/**").permitAll()
-//                        .requestMatchers("/token/**").permitAll()
-//
-//                        .anyRequest().authenticated()
-//                )
-////                .formLogin(formLogin -> formLogin
-////                        .loginPage("/login")
-////                        .permitAll()
-////                )
-////                .rememberMe(Customizer.withDefaults())
-//        ;
-//        http
-//            .oauth2ResourceServer()
-//            .jwt()
-////                .jwtAuthenticationConverter(jwtAuthConverter)
-//        ;
-//        http
-//            .sessionManagement()
-//            .sessionCreationPolicy(STATELESS);
+//        http.authorizeHttpRequests(
+//            authorize -> authorize
+//                .requestMatchers("/public/**").permitAll()
+//                .requestMatchers("/auth/token/user/**").permitAll()
+//                .anyRequest().authenticated()
+//        );
+        http.oauth2ResourceServer(
+                    oauth2 -> oauth2
+                        .jwt(jwt -> jwt.jwtAuthenticationConverter(new JWTConverter()))
+            );
         return http.build();
     }
 
