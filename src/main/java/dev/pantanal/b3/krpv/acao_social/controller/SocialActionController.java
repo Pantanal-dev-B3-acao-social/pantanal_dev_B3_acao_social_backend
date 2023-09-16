@@ -32,6 +32,7 @@ public class SocialActionController {
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
+    @PreAuthorize("hasAnyRole('SOCIAL_ACTION_GET_ALL')")
     public Page<SocialActionEntity> findAll(Pageable pageable, @Valid SocialActionParamsDto request) {
         Page<SocialActionEntity> entities = service.findAll(pageable, request);
         return entities;

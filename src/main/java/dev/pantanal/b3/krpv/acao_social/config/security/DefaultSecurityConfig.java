@@ -16,7 +16,6 @@ import static org.springframework.security.config.http.SessionCreationPolicy.STA
 @RequiredArgsConstructor
 public class DefaultSecurityConfig {
 
-//    private final JwtAuthConverter jwtAuthConverter;
     @Value("${spring.security.oauth2.client.registration.realm-pantanal-dev.client-id}")
     private String clientId;
 
@@ -32,14 +31,13 @@ public class DefaultSecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.csrf(csrf -> csrf.disable());
-//        http.authorizeHttpRequests(
-//            authorize -> authorize
-//                    // antMatchers nao funciona no security 6.1 Cannot resolve method 'antMatchers' in 'ExpressionInterceptUrlRegistry'
-//                    // mvcMatchers, nao uso mvc, uso web Cannot resolve method 'mvcMatchers' in 'ExpressionInterceptUrlRegistry'
-//                .requestMatchers("/public/**").permitAll()
-//                .requestMatchers("/auth/token/user/**").permitAll()
-//                .anyRequest().authenticated()
-//        );
+        http.authorizeHttpRequests(
+                authorizeConfig -> {
+                    authorizeConfig.requestMatchers("/public").permitAll();
+                    authorizeConfig.requestMatchers("/auth/login").permitAll();
+                    authorizeConfig.anyRequest().authenticated();
+                }
+        );
         http.oauth2ResourceServer(
             oauth2 -> oauth2
                 .jwt(jwt -> jwt.jwtAuthenticationConverter(new JWTConverter()))

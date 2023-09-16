@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.beans.factory.annotation.Value;
 
-@RequestMapping("/auth/token")
+@RequestMapping("/auth")
 @RestController
 public class TokenController {
     @Value("${spring.security.oauth2.client.registration.realm-pantanal-dev.client-id}")
@@ -43,7 +43,7 @@ public class TokenController {
         return result;
     }
 
-    @PostMapping("/user")
+    @PostMapping("/login")
     public ResponseEntity<String> userToken(@RequestBody User user) {
         HttpHeaders headers = new HttpHeaders();
         RestTemplate rt = new RestTemplate();
