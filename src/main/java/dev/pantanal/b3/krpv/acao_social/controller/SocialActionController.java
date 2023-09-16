@@ -12,7 +12,7 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-// TODO: import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import io.swagger.v3.oas.annotations.Operation;
 
@@ -39,7 +39,7 @@ public class SocialActionController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-//    @PreAuthorize("hasAnyRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('SOCIAL_ACTION_CREATE')")
     @Operation(summary = "Cria um endereço", method = "POST")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "Endereço criada com sucesso"),
@@ -62,6 +62,7 @@ public class SocialActionController {
 
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
+    @PreAuthorize("hasAnyRole('SOCIAL_ACTION_GET_ONE')")
     public ResponseEntity<SocialActionEntity> findOne(@PathVariable UUID id) {
         SocialActionEntity entity = service.findById(id);
         if (entity != null) {
@@ -76,6 +77,7 @@ public class SocialActionController {
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
+    @PreAuthorize("hasAnyRole('SOCIAL_ACTION_DELETE')")
     @Operation(summary = "Exclui uma ação social por ID", method = "DELETE")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "204", description = "Ação social excluída com sucesso"),

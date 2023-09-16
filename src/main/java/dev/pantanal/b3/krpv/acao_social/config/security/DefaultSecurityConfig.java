@@ -3,6 +3,7 @@ package dev.pantanal.b3.krpv.acao_social.config.security;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Bean;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.web.SecurityFilterChain;
@@ -11,7 +12,7 @@ import static org.springframework.security.config.http.SessionCreationPolicy.STA
 
 @Configuration
 @EnableWebSecurity
-//@EnableMethodSecurity
+@EnableMethodSecurity
 @RequiredArgsConstructor
 public class DefaultSecurityConfig {
 
@@ -30,26 +31,19 @@ public class DefaultSecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http
-                .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("/public/**").permitAll()
-
-                        .anyRequest().authenticated()
-                )
-                .formLogin(formLogin -> formLogin
-                        .loginPage("/login")
-                        .permitAll()
-                )
-//                .rememberMe(Customizer.withDefaults())
-        ;
-        http
-            .oauth2ResourceServer()
-            .jwt()
-//                .jwtAuthenticationConverter(jwtAuthConverter)
-        ;
-        http
-            .sessionManagement()
-            .sessionCreationPolicy(STATELESS);
+//        http.csrf(csrf -> csrf.disable());
+//        http.authorizeHttpRequests(
+//            authorize -> authorize
+//                    // antMatchers nao funciona no security 6.1 Cannot resolve method 'antMatchers' in 'ExpressionInterceptUrlRegistry'
+//                    // mvcMatchers, nao uso mvc, uso web Cannot resolve method 'mvcMatchers' in 'ExpressionInterceptUrlRegistry'
+//                .requestMatchers("/public/**").permitAll()
+//                .requestMatchers("/auth/token/user/**").permitAll()
+//                .anyRequest().authenticated()
+//        );
+        http.oauth2ResourceServer(
+            oauth2 -> oauth2
+                .jwt(jwt -> jwt.jwtAuthenticationConverter(new JWTConverter()))
+        );
         return http.build();
     }
 

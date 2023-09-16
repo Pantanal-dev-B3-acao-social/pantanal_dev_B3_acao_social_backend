@@ -33,10 +33,10 @@ spring:
             provider: realm-pantanal-dev
             client-name: client-id-backend-1
             client-id: client-id-backend-1
-            client-secret: oXHzReNnxzgJX6VnMxhsig0sLaIheqwU
+            client-secret: ON6xXXyvboYWmFrHqR1UOa4KHkN3vJC5
             scope: openid,offline_access,profile
             authorization-grant-type: authorization_code
-#            redirect-uri:
+#            redirect-uri: http://localhost:
         provider:
           realm-pantanal-dev:
             issuer-uri: ${spring.security.oauth2.resourceserver.jwt.issuer-uri}
