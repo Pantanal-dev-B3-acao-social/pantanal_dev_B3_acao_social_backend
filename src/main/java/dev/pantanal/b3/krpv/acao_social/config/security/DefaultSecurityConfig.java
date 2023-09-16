@@ -31,17 +31,19 @@ public class DefaultSecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http.csrf(csrf -> csrf.disable());
+//        http.csrf(csrf -> csrf.disable());
 //        http.authorizeHttpRequests(
 //            authorize -> authorize
+//                    // antMatchers nao funciona no security 6.1 Cannot resolve method 'antMatchers' in 'ExpressionInterceptUrlRegistry'
+//                    // mvcMatchers, nao uso mvc, uso web Cannot resolve method 'mvcMatchers' in 'ExpressionInterceptUrlRegistry'
 //                .requestMatchers("/public/**").permitAll()
 //                .requestMatchers("/auth/token/user/**").permitAll()
 //                .anyRequest().authenticated()
 //        );
         http.oauth2ResourceServer(
-                    oauth2 -> oauth2
-                        .jwt(jwt -> jwt.jwtAuthenticationConverter(new JWTConverter()))
-            );
+            oauth2 -> oauth2
+                .jwt(jwt -> jwt.jwtAuthenticationConverter(new JWTConverter()))
+        );
         return http.build();
     }
 

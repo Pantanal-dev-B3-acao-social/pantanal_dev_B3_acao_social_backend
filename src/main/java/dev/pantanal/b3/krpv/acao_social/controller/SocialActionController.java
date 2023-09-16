@@ -62,6 +62,7 @@ public class SocialActionController {
 
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
+    @PreAuthorize("hasAnyRole('SOCIAL_ACTION_GET_ONE')")
     public ResponseEntity<SocialActionEntity> findOne(@PathVariable UUID id) {
         SocialActionEntity entity = service.findById(id);
         if (entity != null) {
@@ -76,6 +77,7 @@ public class SocialActionController {
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
+    @PreAuthorize("hasAnyRole('SOCIAL_ACTION_DELETE')")
     @Operation(summary = "Exclui uma ação social por ID", method = "DELETE")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "204", description = "Ação social excluída com sucesso"),
