@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.web.bind.annotation.*;
 import io.swagger.v3.oas.annotations.Operation;
 
@@ -24,6 +25,7 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping(ROUTE_SOCIAL)
+@PreAuthorize("hasAnyRole('SOCIAL_ACTION')")
 public class SocialActionController {
 
     @Autowired
@@ -33,8 +35,8 @@ public class SocialActionController {
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
     @PreAuthorize("hasAnyRole('SOCIAL_ACTION_GET_ALL')")
-    public Page<SocialActionEntity> findAll(Pageable pageable, @Valid SocialActionParamsDto request) {
-        Page<SocialActionEntity> entities = service.findAll(pageable, request);
+    public Page<SocialActionEntity> findAll(JwtAuthenticationToken userLogged, Pageable pageable, @Valid SocialActionParamsDto request) {
+        Page<SocialActionEntity> entities = service.findAll(userLogged, pageable, request);
         return entities;
     }
 

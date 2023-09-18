@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.data.domain.Page;
+import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 
 import java.util.UUID;
 
@@ -31,8 +32,9 @@ public class SocialActionService {
         socialActionRepository.delete(id);
     }
 
-    public Page<SocialActionEntity> findAll(Pageable pageable, SocialActionParamsDto filters) {
-
+    public Page<SocialActionEntity> findAll(JwtAuthenticationToken userLogged, Pageable pageable, SocialActionParamsDto filters) {
+        var id = userLogged.getName();
+        var name = userLogged.getToken().getClaim("preferred_username");
         Page<SocialActionEntity> objects = socialActionRepository.findAll(pageable, filters);
         // lançar exceções
         return objects;

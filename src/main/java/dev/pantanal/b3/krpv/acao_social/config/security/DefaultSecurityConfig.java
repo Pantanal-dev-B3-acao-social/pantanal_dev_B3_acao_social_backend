@@ -6,6 +6,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.provisioning.UserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 import lombok.RequiredArgsConstructor;
 import static org.springframework.security.config.http.SessionCreationPolicy.STATELESS;
@@ -33,8 +34,7 @@ public class DefaultSecurityConfig {
         http.csrf(csrf -> csrf.disable());
         http.authorizeHttpRequests(
                 authorizeConfig -> {
-                    authorizeConfig.requestMatchers("/public").permitAll();
-                    authorizeConfig.requestMatchers("/auth/login").permitAll();
+                    authorizeConfig.requestMatchers("/auth/login", "/public").permitAll();
                     authorizeConfig.anyRequest().authenticated();
                 }
         );
