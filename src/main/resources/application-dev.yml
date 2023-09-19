@@ -1,0 +1,42 @@
+# http://localhost:9090/realms/realm-pantanal-dev/.well-known/openid-configuration
+
+server:
+  port: '3001'
+  host: http://localhost/
+
+spring:
+  flyway:
+    enabled: false
+  datasource:
+    hikari:
+      maxLifetime: '1800000'
+      connectionTimeout: '500000'
+      idleTimeout: '60000'
+      maximumPoolSize: '10'
+    username: test
+    password: test
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:5432/postgres
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    show-sql: true
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://localhost:9090/realms/realm-pantanal-dev
+          jwk-set-uri: ${spring.security.oauth2.resourceserver.jwt.issuer-uri}/protocol/openid-connect/certs
+      client:
+        registration:
+          realm-pantanal-dev:
+            provider: realm-pantanal-dev
+            client-name: client-id-backend-1
+            client-id: client-id-backend-1
+            client-secret: ON6xXXyvboYWmFrHqR1UOa4KHkN3vJC5
+            scope: openid,offline_access,profile
+            authorization-grant-type: authorization_code
+#            redirect-uri: http://localhost:
+        provider:
+          realm-pantanal-dev:
+            issuer-uri: ${spring.security.oauth2.resourceserver.jwt.issuer-uri}

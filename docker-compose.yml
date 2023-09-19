@@ -6,8 +6,8 @@ services:
     ports:
       - 5432:5432
     environment:
-      - POSTGRES_USER=test
-      - POSTGRES_PASSWORD=test
+      - POSTGRES_USER=dev_user
+      - POSTGRES_PASSWORD=dev_password
     volumes:
       - /var/lib/postgresql
     networks:
