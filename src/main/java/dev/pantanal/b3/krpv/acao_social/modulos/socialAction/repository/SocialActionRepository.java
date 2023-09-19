@@ -1,8 +1,9 @@
-package dev.pantanal.b3.krpv.acao_social.repository.socialAction;
+package dev.pantanal.b3.krpv.acao_social.modulos.socialAction.repository;
 
-import dev.pantanal.b3.krpv.acao_social.dto.request.SocialActionParamsDto;
-import dev.pantanal.b3.krpv.acao_social.entity.SocialActionEntity;
+import dev.pantanal.b3.krpv.acao_social.modulos.socialAction.dto.request.SocialActionParamsDto;
+import dev.pantanal.b3.krpv.acao_social.modulos.socialAction.SocialActionEntity;
 import dev.pantanal.b3.krpv.acao_social.exception.ObjectNotFoundException;
+import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.TypedQuery;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import lombok.RequiredArgsConstructor;
@@ -16,13 +17,18 @@ import jakarta.persistence.EntityManager;
 import java.util.List;
 import java.util.UUID;
 import jakarta.persistence.criteria.*;
+import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 @Component
 @RequiredArgsConstructor
+@Repository
 public class SocialActionRepository {
 
-    private final PostgresSocialActionRepository postgresSocialActionRepository;
-    private final EntityManager entityManager;
+    private final SocialActionPostgresRepository postgresSocialActionRepository;
+
+    @PersistenceContext
+        private final EntityManager entityManager;
 
     public SocialActionEntity findById(UUID id) {
         return postgresSocialActionRepository.findById(id)
@@ -53,17 +59,21 @@ public class SocialActionRepository {
         return socialActionEntity;
     }
 
-//    public SocialActionEntity update(SocialActionEntity obj) {
-//        SocialActionEntity entitySaved = find(obj.getId());
-//        if(obj.getName() != null) {
-//            entitySaved.setName(obj.getName());
-//        }
-//        if(obj.getDescription() != null) {
-//            entitySaved.setDescription(obj.getDescription());
-//        }
-//        SocialActionEntity entityUpdated = postgresSocialActionRepository.save(entitySaved);
-//        return entityUpdated;
-//    }
+    @Transactional
+    public SocialActionEntity update(SocialActionEntity obj) {
+
+        SocialActionEntity updatedEntity = entityManager.merge(obj);
+        return updatedEntity;
+
+        //SocialActionEntity entitySaved = find(request.getId());
+        //        if(request.getName() != null) {
+        //            entitySaved.setName(request.getName());
+        //        }
+        //        if(request.getDescription() != null) {
+        //            entitySaved.setDescription(request.getDescription());
+        //        }
+        //SocialActionEntity entityUpdated = postgresSocialActionRepository.save(entitySaved);
+    }
 
     public void delete(UUID id) {
         SocialActionEntity objEntity = findById(id);

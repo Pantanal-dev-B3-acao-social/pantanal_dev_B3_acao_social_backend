@@ -1,15 +1,15 @@
-package dev.pantanal.b3.krpv.acao_social.service;
+package dev.pantanal.b3.krpv.acao_social.modulos.socialAction;
 
-import dev.pantanal.b3.krpv.acao_social.dto.SocialActionDto;
-import dev.pantanal.b3.krpv.acao_social.dto.request.SocialActionCreateDto;
-import dev.pantanal.b3.krpv.acao_social.dto.request.SocialActionParamsDto;
-import dev.pantanal.b3.krpv.acao_social.entity.SocialActionEntity;
-import dev.pantanal.b3.krpv.acao_social.repository.socialAction.SocialActionRepository;
+import dev.pantanal.b3.krpv.acao_social.modulos.socialAction.dto.request.SocialActionCreateDto;
+import dev.pantanal.b3.krpv.acao_social.modulos.socialAction.dto.request.SocialActionParamsDto;
+import dev.pantanal.b3.krpv.acao_social.modulos.socialAction.dto.request.SocialActionUpdateDto;
+import dev.pantanal.b3.krpv.acao_social.modulos.socialAction.repository.SocialActionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.data.domain.Page;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
+
 
 import java.util.UUID;
 
@@ -33,7 +33,8 @@ public class SocialActionService {
     }
 
     public Page<SocialActionEntity> findAll(JwtAuthenticationToken userLogged, Pageable pageable, SocialActionParamsDto filters) {
-        var id = userLogged.getName();
+//        var id = userLogged.getName();
+        var id = userLogged.getToken().getClaim("sub");
         var name = userLogged.getToken().getClaim("preferred_username");
         Page<SocialActionEntity> objects = socialActionRepository.findAll(pageable, filters);
         // lançar exceções
@@ -46,6 +47,20 @@ public class SocialActionService {
         return obj;
     }
 
+    public SocialActionEntity update(SocialActionUpdateDto request){
+        SocialActionEntity obj = socialActionRepository.findById(request.id());
+        if (request.name() != null){
+            obj.setName(request.name());
+        }
+        if (request.description() != null){
+            obj.setDescription(request.description());
+        }
+        SocialActionEntity updatedObj = socialActionRepository.update(obj);
+        return updatedObj;
+    }
 
+//    public void delete(UUID id) {
+//        socialActionRepository.delete(id);
+//    }
 
 }

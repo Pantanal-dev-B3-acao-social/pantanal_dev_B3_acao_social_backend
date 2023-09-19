@@ -1,4 +1,4 @@
-package dev.pantanal.b3.krpv.acao_social.entity;
+package dev.pantanal.b3.krpv.acao_social.modulos.socialAction;
 
 import jakarta.persistence.*;
 import lombok.*;

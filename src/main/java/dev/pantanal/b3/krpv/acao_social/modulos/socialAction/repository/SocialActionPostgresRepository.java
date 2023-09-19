@@ -1,7 +1,7 @@
-package dev.pantanal.b3.krpv.acao_social.repository.socialAction;
+package dev.pantanal.b3.krpv.acao_social.modulos.socialAction.repository;
 
-import dev.pantanal.b3.krpv.acao_social.dto.request.SocialActionParamsDto;
-import dev.pantanal.b3.krpv.acao_social.entity.SocialActionEntity;
+import dev.pantanal.b3.krpv.acao_social.modulos.socialAction.dto.request.SocialActionParamsDto;
+import dev.pantanal.b3.krpv.acao_social.modulos.socialAction.SocialActionEntity;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -11,7 +11,7 @@ import org.springframework.data.jpa.domain.Specification;
 import java.util.UUID;
 
 @Repository
-public interface PostgresSocialActionRepository extends JpaRepository<SocialActionEntity, UUID> {
+public interface SocialActionPostgresRepository extends JpaRepository<SocialActionEntity, UUID> {
 
 //    Page<SocialActionEntity> findAll(Pageable pageable, SocialActionParamsDto filters);
     Page<SocialActionEntity> findAll(Specification<SocialActionEntity> spec, Pageable pageable);
