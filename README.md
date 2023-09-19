@@ -1,8 +1,8 @@
 # pantanal_dev_B3_acao_social
 
 # Descrição
-O projeto consiste em
-Microserviço de gestão de ação social
+- O projeto consiste em uma aplicação monolítica de gestão de ação social.
+- 
 
 # Funcionalidades
 - Ação social
@@ -74,19 +74,30 @@ se quiser criar uma branch a partida da feijao fica assim
 - gitflow
 - commit semantico
 
-
 # Variaveis de ambiente
 SPRING_PROFILES_ACTIVE=test
+SPRING_PROFILES_ACTIVE=dev
 
-# Arquitetura de integração dos serviços
-- microserviços se comunicando via
-  Spring Cloud Feign
-  Spring Cloud RestTemplate
-  Spring Cloud OpenFeign
-  Spring Cloud Netflix Eureka
-  /REST/gRPC/graphQL/rabbitmq/WebSockets/Event Sourcing e CQRS/ SOAP/JMS (Java Message Service)/RMI (Remote Method Invocation)
+# Organização de diretorios
+- os diretorios estão organizados em modulos 
+- apesar de não ser uma arquitetura modular 
+- a equipe optou por esta organização para facilitar na visualizações de arquivos durante o desenvolvimento
 
 # Arquitetutra do software
+- Arquitetura Monolítica
+- A arquitetura do software é inspirada na arquitetura orientada a serviço
+- a maior parte das regras de negocio estão contidas na camada de "service"
+- podem existir algumas regras de negocio voltada para dados em outras cadamadas, principalmente validadores
+- como na camada de DTO, Entity e Migration
+- 
+### SSO
+- optamos por não implementar os serviços de autenticação e autorização
+- optemos por usar uma ferramenta de SSO, no caso o Keyclock
+- em nossa arquitetura, tercerizamos para o Keyclock gerencia tudo do usuário
+- e o backend spring boot somente recebe o ID do user suas autorizações a partir do token da request
+- que ja esta integrado com o spring security e validando a autenticação e autorização antes de executar as ações do controller
+
+### responsabilidade de cada camada de acordo com a arquitetura proposta
 - controller
   - a camada de controller tem a responsabilidade de receber e retornar requisições HTTP rest
 - service
@@ -97,7 +108,7 @@ SPRING_PROFILES_ACTIVE=test
 - repository
 - db/migration/dataDefinitionProduction
 
-# Keyclock
+# Configurações para o Keyclock
 - criar realm: realm-pantanal-dev
 - criar client:
   - client-id: client-id-backend-1
