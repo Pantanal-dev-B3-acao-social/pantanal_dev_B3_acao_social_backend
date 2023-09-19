@@ -2,7 +2,15 @@
 
 # Descrição
 - O projeto consiste em uma aplicação monolítica de gestão de ação social.
-- 
+- Empresa (Company)
+- ONG
+- Ação Social (Social Action) é o projeto de uma ONG
+- Company pode fazer diversos investimentos em uma Social Action
+- Sessão (session) A Social Action pode ocorrer em um ou muitas sessões
+- voluntario (vonluntary) pode se candidatar ou ser convidado para ser da Staff
+- Staff são os voluntarios membros da equipe organizadora de uma ação social
+- o voluntario pode ir em qualquer session para trabalhar
+- a presença do voluntario na sessão deve ser registrada via CPF ou QR code
 
 # Funcionalidades
 - Ação social
@@ -25,6 +33,14 @@
 - docker
 - docker-compose
 - keyclock
+
+# Perfis
+- Admininstrador
+- Gerente da empresa
+- [futuro] funcionario da empresa
+- [futuro] Gerente pela ONG
+- [futuro] funcionario da ONG
+- [futuro] doardor PF
 
 # Processo de desenvolvimento
 
@@ -104,8 +120,14 @@ SPRING_PROFILES_ACTIVE=dev
 - dto
 - entity
 - config
+  - security
+  - annotaion
+  - postgres
 - enum
+  - para evitar valores magicos e constantes soltas, vamos usar enum para estrurar as constantes
+  - serão utilizadas principalmente para status, tipo, categorias, e outras informação que precisam aplcar regra de negocio em condições fixas
 - repository
+  - É uma camada intermediária entre a aplicação e a fonte de dados. Ele fornece métodos para acessar e manipular os dados, como criar, ler, atualizar e excluir (CRUD). O Repository abstrai a complexidade do acesso aos dados subjacentes e fornece uma interface consistente para a aplicação.
 - db/migration/dataDefinitionProduction
 
 # Configurações para o Keyclock
