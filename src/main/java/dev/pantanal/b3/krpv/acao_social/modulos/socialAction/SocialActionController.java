@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 // TODO: import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.web.bind.annotation.*;
 import io.swagger.v3.oas.annotations.Operation;
 
@@ -37,8 +38,8 @@ public class SocialActionController {
             @ApiResponse(responseCode = "404", description = "Not found"),
             @ApiResponse(responseCode = "500", description = "Internal Server Error"),
     })
-    public Page<SocialActionEntity> findAll(Pageable pageable, @Valid SocialActionParamsDto request) {
-        Page<SocialActionEntity> entities = service.findAll(pageable, request);
+    public Page<SocialActionEntity> findAll(JwtAuthenticationToken userLogged, Pageable pageable, @Valid SocialActionParamsDto request) {
+        Page<SocialActionEntity> entities = service.findAll(userLogged, pageable, request);
         return entities;
     }
 

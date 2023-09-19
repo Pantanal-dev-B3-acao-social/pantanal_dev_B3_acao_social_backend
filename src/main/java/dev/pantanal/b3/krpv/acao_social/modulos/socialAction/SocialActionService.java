@@ -58,8 +58,8 @@ public class SocialActionService {
         return updatedObj;
     }
 
-    public void delete(UUID id) {
-        socialActionRepository.delete(id);
-    }
+//    public void delete(UUID id) {
+//        socialActionRepository.delete(id);
+//    }
 
 }
