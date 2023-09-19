@@ -10,6 +10,7 @@ import org.springframework.security.provisioning.UserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 import lombok.RequiredArgsConstructor;
 import static org.springframework.security.config.http.SessionCreationPolicy.STATELESS;
+import static dev.pantanal.b3.krpv.acao_social.modulos.auth.KeyclockAuthController.ROUTE_AUTH;
 
 @Configuration
 @EnableWebSecurity
@@ -34,7 +35,7 @@ public class DefaultSecurityConfig {
         http.csrf(csrf -> csrf.disable());
         http.authorizeHttpRequests(
                 authorizeConfig -> {
-                    authorizeConfig.requestMatchers("/auth/login", "/public").permitAll();
+                    authorizeConfig.requestMatchers(ROUTE_AUTH+"/login", "/public").permitAll();
                     authorizeConfig.anyRequest().authenticated();
                 }
         );
