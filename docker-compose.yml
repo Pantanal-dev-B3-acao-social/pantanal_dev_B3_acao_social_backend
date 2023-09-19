@@ -8,28 +8,39 @@ services:
     environment:
       - POSTGRES_USER=dev_user
       - POSTGRES_PASSWORD=dev_password
+      - POSTGRES_DB=keycloack_postgres_db
     volumes:
       - /var/lib/postgresql
+#      - /var/lib/postgresql/data
     networks:
-      net_postgres:
+      network-social-postgres:
         ipv4_address: 172.16.19.2
 
   keycloak:
     container_name: keycloak
     image: quay.io/keycloak/keycloak:21.1.1
     environment:
-      KEYCLOAK_ADMIN: admin
-      KEYCLOAK_ADMIN_PASSWORD: admin
+      - KC_DB_URL=jdbc:postgresql://postgres_acao_social/keycloack_postgres_db
+      - KEYCLOAK_ADMIN=admin
+      - KEYCLOAK_ADMIN_PASSWORD=admin
+      - KC_DB=postgres
+      - KC_DB_USERNAME=dev_user
+      - KC_DB_PASSWORD=dev_password
     ports:
       - "9090:8080"
     command:
       - "start-dev"
+    depends_on:
+      - postgres
+    networks:
+      - network-social-postgres
+      - network-social-keycloak
 
 networks:
-  keycloak-network:
+  network-social-keycloak:
     driver: bridge
 #    external: true
-  net_postgres:
+  network-social-postgres:
     driver: bridge
     ipam:
       driver: default

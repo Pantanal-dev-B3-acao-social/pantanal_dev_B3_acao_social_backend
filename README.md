@@ -152,7 +152,9 @@ SPRING_PROFILES_ACTIVE=dev
   - SOCIAL_ACTION_DELETE
 - Cadastrar usuario
   - username: funcionario1
+  - password: 123
   - depois de salvar, na aba "credentials" adicionar uma senha
+  - atribuir cargos para o usuario (role mapping)
 - request para autenticação, e retorna access_token
   - grant_type: password
   - client_id: client-id-backend-1

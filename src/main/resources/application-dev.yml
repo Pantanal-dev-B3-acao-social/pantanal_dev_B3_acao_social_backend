@@ -1,4 +1,6 @@
 # http://localhost:9090/realms/realm-pantanal-dev/.well-known/openid-configuration
+#db-name: social_action_postgres_db
+db-name: postgres
 
 server:
   port: '3001'
@@ -13,10 +15,10 @@ spring:
       connectionTimeout: '500000'
       idleTimeout: '60000'
       maximumPoolSize: '10'
-    username: test
-    password: test
+    username: dev_user
+    password: dev_password
     driver-class-name: org.postgresql.Driver
-    url: jdbc:postgresql://localhost:5432/postgres
+    url: jdbc:postgresql://localhost:5432/${db-name}
   jpa:
     hibernate:
       ddl-auto: create-drop
@@ -33,7 +35,7 @@ spring:
             provider: realm-pantanal-dev
             client-name: client-id-backend-1
             client-id: client-id-backend-1
-            client-secret: ON6xXXyvboYWmFrHqR1UOa4KHkN3vJC5
+            client-secret: DEOD8Z9gnWF06pH7FqSN63PkWMlfReWR
             scope: openid,offline_access,profile
             authorization-grant-type: authorization_code
 #            redirect-uri: http://localhost:
