@@ -33,7 +33,8 @@ public class SocialActionService {
     }
 
     public Page<SocialActionEntity> findAll(JwtAuthenticationToken userLogged, Pageable pageable, SocialActionParamsDto filters) {
-        var id = userLogged.getName();
+//        var id = userLogged.getName();
+        var id = userLogged.getToken().getClaim("sub");
         var name = userLogged.getToken().getClaim("preferred_username");
         Page<SocialActionEntity> objects = socialActionRepository.findAll(pageable, filters);
         // lançar exceções
