@@ -1,7 +1,7 @@
-package dev.pantanal.b3.krpv.acao_social.repository.socialAction;
+package dev.pantanal.b3.krpv.acao_social.modulos.socialAction.repository;
 
-import dev.pantanal.b3.krpv.acao_social.dto.request.SocialActionParamsDto;
-import dev.pantanal.b3.krpv.acao_social.entity.SocialActionEntity;
+import dev.pantanal.b3.krpv.acao_social.modulos.socialAction.dto.request.SocialActionParamsDto;
+import dev.pantanal.b3.krpv.acao_social.modulos.socialAction.SocialActionEntity;
 import dev.pantanal.b3.krpv.acao_social.exception.ObjectNotFoundException;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.TypedQuery;
@@ -25,7 +25,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Repository
 public class SocialActionRepository {
 
-    private final PostgresSocialActionRepository postgresSocialActionRepository;
+    private final SocialActionPostgresRepository postgresSocialActionRepository;
 
     @PersistenceContext
         private final EntityManager entityManager;

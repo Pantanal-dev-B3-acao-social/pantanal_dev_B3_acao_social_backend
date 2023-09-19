@@ -1,6 +1,6 @@
-package dev.pantanal.b3.krpv.acao_social.repository.socialAction;
-import dev.pantanal.b3.krpv.acao_social.dto.request.SocialActionParamsDto;
-import dev.pantanal.b3.krpv.acao_social.entity.SocialActionEntity;
+package dev.pantanal.b3.krpv.acao_social.modulos.socialAction.repository;
+import dev.pantanal.b3.krpv.acao_social.modulos.socialAction.dto.request.SocialActionParamsDto;
+import dev.pantanal.b3.krpv.acao_social.modulos.socialAction.SocialActionEntity;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.Predicate;

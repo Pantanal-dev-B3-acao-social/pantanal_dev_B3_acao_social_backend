@@ -1,4 +1,4 @@
-package dev.pantanal.b3.krpv.acao_social.dto.response;
+package dev.pantanal.b3.krpv.acao_social.modulos.socialAction.dto.response;
 
 import java.util.UUID;
 

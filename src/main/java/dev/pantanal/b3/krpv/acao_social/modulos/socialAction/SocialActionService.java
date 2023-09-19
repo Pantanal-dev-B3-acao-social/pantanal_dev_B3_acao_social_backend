@@ -1,17 +1,13 @@
-package dev.pantanal.b3.krpv.acao_social.service;
+package dev.pantanal.b3.krpv.acao_social.modulos.socialAction;
 
-import dev.pantanal.b3.krpv.acao_social.dto.SocialActionDto;
-import dev.pantanal.b3.krpv.acao_social.dto.request.SocialActionCreateDto;
-import dev.pantanal.b3.krpv.acao_social.dto.request.SocialActionParamsDto;
-import dev.pantanal.b3.krpv.acao_social.dto.request.SocialActionUpdateDto;
-import dev.pantanal.b3.krpv.acao_social.entity.SocialActionEntity;
-import dev.pantanal.b3.krpv.acao_social.repository.socialAction.SocialActionRepository;
+import dev.pantanal.b3.krpv.acao_social.modulos.socialAction.dto.request.SocialActionCreateDto;
+import dev.pantanal.b3.krpv.acao_social.modulos.socialAction.dto.request.SocialActionParamsDto;
+import dev.pantanal.b3.krpv.acao_social.modulos.socialAction.dto.request.SocialActionUpdateDto;
+import dev.pantanal.b3.krpv.acao_social.modulos.socialAction.repository.SocialActionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
-import org.springframework.expression.spel.ast.NullLiteral;
 import org.springframework.stereotype.Service;
 import org.springframework.data.domain.Page;
-import java.util.Optional;
 
 
 import java.util.UUID;

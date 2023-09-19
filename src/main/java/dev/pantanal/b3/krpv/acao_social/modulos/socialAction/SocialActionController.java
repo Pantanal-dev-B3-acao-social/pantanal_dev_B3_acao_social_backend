@@ -1,12 +1,9 @@
-package dev.pantanal.b3.krpv.acao_social.controller;
+package dev.pantanal.b3.krpv.acao_social.modulos.socialAction;
 
-import dev.pantanal.b3.krpv.acao_social.dto.SocialActionDto;
-import dev.pantanal.b3.krpv.acao_social.dto.request.SocialActionCreateDto;
-import dev.pantanal.b3.krpv.acao_social.dto.request.SocialActionParamsDto;
-import dev.pantanal.b3.krpv.acao_social.dto.request.SocialActionUpdateDto;
-import dev.pantanal.b3.krpv.acao_social.dto.response.SocialActionResponseDto;
-import dev.pantanal.b3.krpv.acao_social.entity.SocialActionEntity;
-import dev.pantanal.b3.krpv.acao_social.service.SocialActionService;
+import dev.pantanal.b3.krpv.acao_social.modulos.socialAction.dto.request.SocialActionCreateDto;
+import dev.pantanal.b3.krpv.acao_social.modulos.socialAction.dto.request.SocialActionParamsDto;
+import dev.pantanal.b3.krpv.acao_social.modulos.socialAction.dto.request.SocialActionUpdateDto;
+import dev.pantanal.b3.krpv.acao_social.modulos.socialAction.dto.response.SocialActionResponseDto;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
@@ -17,7 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import io.swagger.v3.oas.annotations.Operation;
 
-import static dev.pantanal.b3.krpv.acao_social.controller.SocialActionController.ROUTE_SOCIAL;
+import static dev.pantanal.b3.krpv.acao_social.modulos.socialAction.SocialActionController.ROUTE_SOCIAL;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
