@@ -12,11 +12,20 @@ public class PostgresDatabaseInitialization {
     @Value("${db-name}")
     private String dbName;
 
+    @Value("${spring-boot-environment}")
+    private String environment;
+
     @Bean
-    public CommandLineRunner createDatabase(JdbcTemplate jdbcTemplate) {
+    public CommandLineRunner createDatabase(JdbcTemplate jdbcTemplate, SeedDataService seedDataService) {
         return args -> {
             if (!databaseExists(jdbcTemplate, dbName)) {
                 jdbcTemplate.execute("CREATE DATABASE " + dbName);
+            }
+            /*
+             * Verifique o valor de spring.profiles.active é "development" para executar seed
+             */
+            if ("development".equalsIgnoreCase(environment)) {
+                seedDataService.executeAllSeed();
             }
         };
     }
@@ -32,5 +41,18 @@ public class PostgresDatabaseInitialization {
         } catch (Exception e) {
             return false;
         }
+    }
+
+    /**
+     * determina quais seed irão executar e sua respectiva ordem
+     */
+    private String[] orderExecuteSeeds() {
+        String[] seedsForExecute = {
+//                "db/seed/company_seed.sql",
+//                "db/seed/ong_seed.sql",
+                "db/seed/social_action_seed.ftl",
+//                "db/seed/session_seed.sql",
+        };
+        return seedsForExecute;
     }
 }
