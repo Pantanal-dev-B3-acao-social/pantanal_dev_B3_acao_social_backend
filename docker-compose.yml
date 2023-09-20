@@ -29,8 +29,6 @@ services:
       - "9090:8080"
     command:
       - "start-dev"
-#    volumes:
-#      - ./db/backup_keycloak.sql:/docker-entrypoint-initdb.d/backup_keycloak.sql
     depends_on:
       - postgres
     networks:
