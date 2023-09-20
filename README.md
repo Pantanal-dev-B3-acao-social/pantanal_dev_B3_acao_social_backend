@@ -161,3 +161,17 @@ SPRING_PROFILES_ACTIVE=dev
   - username: funcionario1
   - password: 123
  
+# Banco de ddos
+```bash
+# entra dentro do container docker postgres  keycloack_postgres_db
+$ docker exec -it postgres_acao_social bash
+# entre na databse
+root@24de07c13cb3:/# PGPASSWORD=dev_password psql -U dev_user -d keycloack_postgres_db
+```
+- gerar dump do database do keyclock:
+```bash
+# gera dump
+$ sudo docker exec -u postgres postgres_acao_social pg_dump -U dev_user -d keycloack_postgres_db -f /tmp/backup_keycloak.sql
+# copia o backup de dentro do docker para o a maquina host 
+$ sudo docker cp postgres_acao_social:/tmp/backup_keycloak.sql /home/kaio/Documentos/ufms/pantanal_dev/projeto/acao_social/db/
+```
