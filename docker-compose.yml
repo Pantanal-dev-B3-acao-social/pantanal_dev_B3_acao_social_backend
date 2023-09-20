@@ -10,9 +10,7 @@ services:
       - POSTGRES_PASSWORD=dev_password
       - POSTGRES_DB=keycloack_postgres_db
     volumes:
-#      - ~/Documentos/ufms/pantanal_dev/projeto/acao_social/docker/development/volume:/var/lib/postgresql/data
-#      - /var/lib/postgresql
-      - /var/lib/postgresql/data
+      - ./db/backup_keycloak.sql:/docker-entrypoint-initdb.d/backup_keycloak.sql
     networks:
       network-social-postgres:
         ipv4_address: 172.16.19.2
@@ -31,6 +29,8 @@ services:
       - "9090:8080"
     command:
       - "start-dev"
+#    volumes:
+#      - ./db/backup_keycloak.sql:/docker-entrypoint-initdb.d/backup_keycloak.sql
     depends_on:
       - postgres
     networks:
