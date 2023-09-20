@@ -4,6 +4,6 @@ import java.util.UUID;
 
 public record SocialActionDto (
         UUID id,
-        String nome,
+        String name,
         String description
 ) {}

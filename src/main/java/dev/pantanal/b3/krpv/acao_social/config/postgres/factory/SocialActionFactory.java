@@ -1,20 +1,34 @@
 package dev.pantanal.b3.krpv.acao_social.config.postgres.factory;
-
+import com.github.javafaker.Faker;
+import dev.pantanal.b3.krpv.acao_social.modulos.socialAction.dto.SocialActionDto;
+import org.springframework.stereotype.Component;
+import org.springframework.jdbc.core.JdbcTemplate;
 import java.util.Random;
 import java.util.UUID;
 
+@Component
 public class SocialActionFactory {
     private static final Random random = new Random();
+    private final Faker faker = new Faker();
 
-    public static String generateRandomUsername() {
-        return UUID.randomUUID().toString().substring(0, 8); // Gera um username aleatório de 8 caracteres
+    public SocialActionDto makeFake() {
+        return new SocialActionDto(
+            UUID.randomUUID(),
+            faker.name().fullName(),
+            faker.lorem().sentence()
+        );
     }
 
-    public static String generateRandomEmail() {
-        return "user" + random.nextInt(1000) + "@example.com"; // Gera um email aleatório
-    }
-
-    public static String generateRandomPassword() {
-        return UUID.randomUUID().toString().substring(0, 12); // Gera uma senha aleatória de 12 caracteres
+    public void insert(SocialActionDto socialActionDto, JdbcTemplate jdbcTemplate) {
+        String sql = "INSERT INTO social_action (id, name, description, version, organizer) VALUES (?, ?, ?, ?, ?)";
+        jdbcTemplate.update(
+            sql,
+            socialActionDto.id(),
+            socialActionDto.name(),
+            socialActionDto.description(),
+            1,
+            socialActionDto.description()
+        );
     }
 }
+

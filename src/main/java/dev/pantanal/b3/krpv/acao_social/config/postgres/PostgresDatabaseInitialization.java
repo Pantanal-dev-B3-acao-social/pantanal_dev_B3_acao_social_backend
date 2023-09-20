@@ -25,7 +25,7 @@ public class PostgresDatabaseInitialization {
              * Verifique o valor de spring.profiles.active é "development" para executar seed
              */
             if ("development".equalsIgnoreCase(environment)) {
-                seedDataService.executeAllSeeds(orderExecuteSeeds());
+                seedDataService.executeAllSeed();
             }
         };
     }
@@ -50,7 +50,7 @@ public class PostgresDatabaseInitialization {
         String[] seedsForExecute = {
 //                "db/seed/company_seed.sql",
 //                "db/seed/ong_seed.sql",
-                "db/seed/social_action_seed.sql",
+                "db/seed/social_action_seed.ftl",
 //                "db/seed/session_seed.sql",
         };
         return seedsForExecute;
