@@ -29,6 +29,7 @@
   - spring web
   - lombok
   - Junit
+  - [LOG DE RASTREABILIDADE PARA AUDITORIA]
 - postgres
 - docker
 - docker-compose
@@ -175,3 +176,8 @@ $ sudo docker exec -u postgres postgres_acao_social pg_dump -U dev_user -d keycl
 # copia o backup de dentro do docker para o a maquina host 
 $ sudo docker cp postgres_acao_social:/tmp/backup_keycloak.sql /home/kaio/Documentos/ufms/pantanal_dev/projeto/acao_social/db/
 ```
+- Migration
+  - sempre que criar uma nova tabela, lembre de criar junto sua tabela de auditoria, com o prefixo "z_aud_"
+- Seed
+  - as seed são executada automaticamente no ambiente de "development"
+  - observação: em ambiente de "development" a estrutura do banco de dados esta sendo gerado a partir das migration
