@@ -13,19 +13,18 @@ import java.nio.charset.StandardCharsets;
 @Service
 public class SeedDataService {
 
-    private final JdbcTemplate jdbcTemplate;
+
     private final SocialActionFactory socialActionFactory;
 
     @Autowired
     public SeedDataService(JdbcTemplate jdbcTemplate, SocialActionFactory socialActionFactory) {
-        this.jdbcTemplate = jdbcTemplate;
         this.socialActionFactory = socialActionFactory;
     }
 
     public void executeAllSeed() {
-        this.socialActionFactory.insert(this.socialActionFactory.makeFake(), this.jdbcTemplate);
-//        this.companyFactory.insert(this.companyFactory.makeFake());
-//        this.ongFactory.insert(this.ongFactory.makeFake());
+//        this.companyFactory.insertMany(4);
+//        this.ongFactory.insertMany(10);
+        this.socialActionFactory.insertMany(99);
     }
 
 }
