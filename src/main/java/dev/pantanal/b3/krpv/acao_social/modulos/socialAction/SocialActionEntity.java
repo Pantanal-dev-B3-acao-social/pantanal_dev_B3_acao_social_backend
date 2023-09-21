@@ -6,7 +6,7 @@ import java.util.UUID;
 // TODO: import org.hibernate.envers.Audited;
 
 @Table(name="social_action")
-@Entity(name="socialAction")
+@Entity(name="SocialAction")
 @Data
 @NoArgsConstructor
 @Builder

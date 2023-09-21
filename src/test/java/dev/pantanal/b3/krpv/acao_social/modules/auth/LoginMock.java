@@ -1,4 +1,4 @@
-package dev.pantanal.b3.krpv.acao_social;
+package dev.pantanal.b3.krpv.acao_social.modules.auth;
 
 import dev.pantanal.b3.krpv.acao_social.modulos.auth.KeyclockAuthService;
 import dev.pantanal.b3.krpv.acao_social.modulos.auth.dto.LoginUserDto;
@@ -41,17 +41,5 @@ public class LoginMock {
         return accessToken;
     }
 
-    public String token(LoginUserDto userDto, MockMvc mockMvc) throws Exception {
-        ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.post(ROUTE_AUTH)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content("{\"username\": \" "+userDto.username()+" \",\"password\": \" "+userDto.username()+" \"}")
-        );
-        resultActions
-            .andExpect(MockMvcResultMatchers.status().isOk())
-        ;
-        // TODO:
-//                .andExpect(header().exists("Authorization"))
-//                .andExpect(header().string("Authorization", startsWith("Bearer ")));
-        return resultActions.andReturn().getResponse().getHeader("Authorization");
-    }
+
 }

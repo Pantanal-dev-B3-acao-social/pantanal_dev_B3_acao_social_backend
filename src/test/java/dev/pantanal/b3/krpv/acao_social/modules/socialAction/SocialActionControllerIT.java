@@ -1,7 +1,7 @@
 package dev.pantanal.b3.krpv.acao_social.modules.socialAction;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import dev.pantanal.b3.krpv.acao_social.LoginMock;
+import dev.pantanal.b3.krpv.acao_social.modules.auth.LoginMock;
 import dev.pantanal.b3.krpv.acao_social.config.postgres.factory.SocialActionFactory;
 import dev.pantanal.b3.krpv.acao_social.modulos.auth.dto.LoginUserDto;
 import dev.pantanal.b3.krpv.acao_social.modulos.socialAction.dto.SocialActionDto;
