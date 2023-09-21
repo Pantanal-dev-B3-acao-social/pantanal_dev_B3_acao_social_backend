@@ -1,10 +1,14 @@
 package dev.pantanal.b3.krpv.acao_social.config.postgres.factory;
 import com.github.javafaker.Faker;
+import dev.pantanal.b3.krpv.acao_social.modulos.socialAction.SocialActionEntity;
 import dev.pantanal.b3.krpv.acao_social.modulos.socialAction.dto.SocialActionDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Component;
 import org.springframework.jdbc.core.JdbcTemplate;
+
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 import java.util.UUID;
 
@@ -22,6 +26,18 @@ public class SocialActionFactory {
             UUID.randomUUID(),
             faker.name().fullName(),
             faker.lorem().sentence()
+                // string ongId = findOneRandom("ong");
+                // string levelId = findOneRandom("category_project_level");
+                // string typeId = findOneRandom("category_project_type");
+        );
+    }
+
+    public SocialActionEntity makeFakeEntity() {
+        return new SocialActionEntity(
+                1L,
+                null,
+                faker.name().fullName(),
+                faker.lorem().sentence()
                 // string ongId = findOneRandom("ong");
                 // string levelId = findOneRandom("category_project_level");
                 // string typeId = findOneRandom("category_project_type");
@@ -52,10 +68,14 @@ public class SocialActionFactory {
         );
     }
 
-    public void insertMany(int amount) {
+    public List<SocialActionDto> insertMany(int amount) {
+        List<SocialActionDto> socials = new ArrayList<>();
         for (int i=0; i<amount; i++) {
-            this.insertOne(this.makeFake());
+            SocialActionDto socialActionDto = this.makeFake();
+            socials.add(socialActionDto);
+            this.insertOne(socialActionDto);
         }
+        return socials;
     }
 }
 
