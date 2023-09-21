@@ -30,7 +30,7 @@ services:
     command:
       - "start-dev"
     depends_on:
-      - postgres
+      - postgres_acao_social
     networks:
       - network-social-postgres
       - network-social-keycloak
