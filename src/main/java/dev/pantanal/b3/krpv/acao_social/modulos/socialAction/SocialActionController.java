@@ -54,7 +54,7 @@ public class SocialActionController {
     })
     public ResponseEntity<SocialActionResponseDto> findOne(@PathVariable UUID id) {
         SocialActionEntity entity = service.findById(id);
-        SocialActionResponseDto resObject = new SocialActionResponseDto(
+        SocialActionResponseDto response = new SocialActionResponseDto(
                 entity.getId(),
                 entity.getName(),
                 entity.getDescription(),
@@ -62,7 +62,7 @@ public class SocialActionController {
                 entity.getVersion()
         );
 
-        return new ResponseEntity<SocialActionResponseDto>(resObject, HttpStatus.OK);
+        return new ResponseEntity<SocialActionResponseDto>(response, HttpStatus.OK);
     }
 
     @PostMapping
@@ -77,12 +77,12 @@ public class SocialActionController {
             @ApiResponse(responseCode = "422", description = "Invalid request data"),
             @ApiResponse(responseCode = "500", description = "Error when creating social action"),
     })
-    public ResponseEntity<SocialActionResponseDto> create(@Valid @RequestBody SocialActionCreateDto request) {
+    public ResponseEntity<SocialActionCreateDto> create(@Valid @RequestBody SocialActionCreateDto request) {
         SocialActionEntity entity = service.create(request);
-        SocialActionResponseDto response = new SocialActionResponseDto(
-                entity.getId(),
+        SocialActionCreateDto response = new SocialActionCreateDto(
                 entity.getName(),
-                entity.getDescription()
+                entity.getDescription(),
+                entity.getOrganizer()
         );
         // TODO: fazer um handle para gerar esse retorno
         return new ResponseEntity<>(response, HttpStatus.CREATED);
@@ -99,12 +99,13 @@ public class SocialActionController {
             @ApiResponse(responseCode = "422", description = "Invalid request data"),
             @ApiResponse(responseCode = "500", description = "Error when creating social action"),
     })
-    public ResponseEntity<SocialActionResponseDto> update(@Valid @RequestBody SocialActionUpdateDto request){
+    public ResponseEntity<SocialActionUpdateDto> update(@Valid @RequestBody SocialActionUpdateDto request){
         SocialActionEntity entity = service.update(request); //Montar metodo update no Service
-        SocialActionResponseDto response = new SocialActionResponseDto(
+        SocialActionUpdateDto response = new SocialActionUpdateDto(
                 entity.getId(),
                 entity.getName(),
-                entity.getDescription()
+                entity.getDescription(),
+                entity.getOrganizer()
         );
         //Verificar erro aqui
         return new ResponseEntity<>(response, HttpStatus.OK);
