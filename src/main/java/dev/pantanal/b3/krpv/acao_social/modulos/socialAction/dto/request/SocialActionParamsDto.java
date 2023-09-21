@@ -6,5 +6,7 @@ import lombok.Setter;
 
 public record SocialActionParamsDto(
         String name,
-        String description
+        String description,
+
+        String organizer
 ) {}

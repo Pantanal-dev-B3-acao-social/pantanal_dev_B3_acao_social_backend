@@ -7,5 +7,7 @@ public record SocialActionUpdateDto(
 //        @Null
         UUID id,
         String name,
-        String description
+        String description,
+
+        String organizer
 ) {}

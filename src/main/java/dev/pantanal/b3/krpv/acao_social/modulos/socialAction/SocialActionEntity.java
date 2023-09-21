@@ -26,5 +26,8 @@ public class SocialActionEntity {
     private String name;
     @Column(nullable = false)
     private String description;
+    @Column
+    private String organizer;
+
 
 }

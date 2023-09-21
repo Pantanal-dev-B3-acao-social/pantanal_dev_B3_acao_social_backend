@@ -9,5 +9,8 @@ public record SocialActionCreateDto(
 //        @NotEmpty(message="Campo 'nome' é obrigatório")
 
         String name,
-        String description
+        String description,
+
+        String organizer
+
 ) {}

@@ -52,16 +52,17 @@ public class SocialActionController {
             @ApiResponse(responseCode = "404", description = "Not found"),
             @ApiResponse(responseCode = "500", description = "Internal Server Error"),
     })
-    public ResponseEntity<SocialActionEntity> findOne(@PathVariable UUID id) {
+    public ResponseEntity<SocialActionResponseDto> findOne(@PathVariable UUID id) {
         SocialActionEntity entity = service.findById(id);
-        if (entity != null) {
-            return ResponseEntity.ok(entity);
-        } else {
-            // Aqui você pode personalizar a resposta de acordo com o que desejar
-            // Por exemplo, retornar 404 Not Found se a ação social não for encontrada
-            return ResponseEntity.notFound().build();
-        }
-//        return new ResponseEntity<SocialActionEntity>(entity);
+        SocialActionResponseDto resObject = new SocialActionResponseDto(
+                entity.getId(),
+                entity.getName(),
+                entity.getDescription(),
+                entity.getOrganizer(),
+                entity.getVersion()
+        );
+
+        return new ResponseEntity<SocialActionResponseDto>(resObject, HttpStatus.OK);
     }
 
     @PostMapping
