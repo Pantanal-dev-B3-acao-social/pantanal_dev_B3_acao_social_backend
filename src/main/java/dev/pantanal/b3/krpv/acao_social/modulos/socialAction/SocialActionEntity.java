@@ -1,6 +1,7 @@
 package dev.pantanal.b3.krpv.acao_social.modulos.socialAction;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import java.util.UUID;
 // TODO: import org.hibernate.envers.Audited;
@@ -23,10 +24,13 @@ public class SocialActionEntity {
     @Column(columnDefinition = "uuid")
     private UUID id;
     @Column(nullable = false)
+    @NotNull
     private String name;
     @Column(nullable = false)
+    @NotNull
     private String description;
     @Column
+    @NotNull
     private String organizer;
 
 
