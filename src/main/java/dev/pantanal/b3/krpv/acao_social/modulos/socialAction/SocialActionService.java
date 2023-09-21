@@ -23,6 +23,7 @@ public class SocialActionService {
         SocialActionEntity entity = new SocialActionEntity();
         entity.setName(dataRequest.name());
         entity.setDescription(dataRequest.description());
+        entity.setOrganizer(dataRequest.organizer());
         SocialActionEntity savedObj = socialActionRepository.save(entity);
         // lançar exceções
         return savedObj;

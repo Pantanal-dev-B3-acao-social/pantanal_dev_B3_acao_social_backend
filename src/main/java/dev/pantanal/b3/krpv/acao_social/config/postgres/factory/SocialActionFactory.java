@@ -21,7 +21,10 @@ public class SocialActionFactory {
         return new SocialActionDto(
             UUID.randomUUID(),
             faker.name().fullName(),
-            faker.lorem().sentence()
+            faker.lorem().sentence(),
+                faker.name().title(),
+                faker.number().randomNumber()
+
                 // string ongId = findOneRandom("ong");
                 // string levelId = findOneRandom("category_project_level");
                 // string typeId = findOneRandom("category_project_type");

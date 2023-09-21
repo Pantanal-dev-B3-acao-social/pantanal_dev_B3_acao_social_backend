@@ -1,6 +1,8 @@
 package dev.pantanal.b3.krpv.acao_social.modulos.socialAction;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import java.util.UUID;
@@ -23,8 +25,9 @@ public class SocialActionEntity {
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(columnDefinition = "uuid")
     private UUID id;
-    @Column(nullable = false)
+    @Column
     @NotNull
+    @NotBlank
     private String name;
     @Column(nullable = false)
     @NotNull
