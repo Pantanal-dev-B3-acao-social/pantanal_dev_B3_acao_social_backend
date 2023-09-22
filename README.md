@@ -181,4 +181,5 @@ $ sudo docker cp postgres_acao_social:/tmp/backup_keycloak.sql /home/kaio/Docume
 - Seed
   - as seed são executada automaticamente no ambiente de "development"
   - observação: em ambiente de "development" a estrutura do banco de dados esta sendo gerado a partir das migration
-  - https://github.com/DiUS/java-faker
+- https://github.com/DiUS/java-faker
+- A variavel de ambiente executa o arquivo PostgresDatabaseInitialization (spring.profiles.active: dbinit)

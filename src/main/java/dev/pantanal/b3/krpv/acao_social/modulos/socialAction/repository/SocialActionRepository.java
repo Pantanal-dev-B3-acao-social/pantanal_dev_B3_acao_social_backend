@@ -31,8 +31,8 @@ public class SocialActionRepository {
         private final EntityManager entityManager;
 
     public SocialActionEntity findById(UUID id) {
-        return postgresSocialActionRepository.findById(id)
-                .orElseThrow(() -> new ObjectNotFoundException("registro não encontrado: " + id));
+        SocialActionEntity socialActionEntity = postgresSocialActionRepository.findById(id).orElse(null);
+        return socialActionEntity;
     }
 
     public Page<SocialActionEntity> findAll(Pageable pageable, SocialActionParamsDto filters) {

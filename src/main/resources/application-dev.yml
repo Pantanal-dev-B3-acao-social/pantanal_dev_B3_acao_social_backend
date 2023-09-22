@@ -1,12 +1,22 @@
 # http://localhost:9090/realms/realm-pantanal-dev/.well-known/openid-configuration
 #db-name: social_action_postgres_db
-db-name: postgres
-spring-boot-environment: development
+acao-social:
+  db:
+    active: dbinit
+    db-name: postgres
+  spring-boot:
+    environment: development
+  server:
+    port: '3001'
+    host: http://localhost/
+
 server:
   port: '3001'
   host: http://localhost/
 
 spring:
+#  profiles:
+#    active: dbinit
   flyway:
     enabled: true
     baseline-on-migrate: true
@@ -20,7 +30,7 @@ spring:
     username: dev_user
     password: dev_password
     driver-class-name: org.postgresql.Driver
-    url: jdbc:postgresql://localhost:5432/${db-name}
+    url: jdbc:postgresql://localhost:5432/${acao-social.db.db-name}
   jpa:
     hibernate:
       ddl-auto: none  # Impede a criação automática de tabelas e colunas

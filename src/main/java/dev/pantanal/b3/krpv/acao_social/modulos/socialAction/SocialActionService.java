@@ -1,5 +1,6 @@
 package dev.pantanal.b3.krpv.acao_social.modulos.socialAction;
 
+import dev.pantanal.b3.krpv.acao_social.exception.ObjectNotFoundException;
 import dev.pantanal.b3.krpv.acao_social.modulos.socialAction.dto.request.SocialActionCreateDto;
 import dev.pantanal.b3.krpv.acao_social.modulos.socialAction.dto.request.SocialActionParamsDto;
 import dev.pantanal.b3.krpv.acao_social.modulos.socialAction.dto.request.SocialActionUpdateDto;
@@ -9,6 +10,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.data.domain.Page;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
+import java.util.Optional;
 
 
 import java.util.UUID;
@@ -43,7 +45,9 @@ public class SocialActionService {
 
     public SocialActionEntity findById(UUID id) {
         SocialActionEntity obj = socialActionRepository.findById(id);
-        // lançar exceções
+        if (obj == null) {
+            throw new ObjectNotFoundException("Registro não encontrado: " + id);
+        }
         return obj;
     }
 

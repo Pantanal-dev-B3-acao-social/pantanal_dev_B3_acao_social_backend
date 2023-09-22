@@ -1,26 +1,28 @@
 package dev.pantanal.b3.krpv.acao_social.config.postgres.factory;
+
 import com.github.javafaker.Faker;
 import dev.pantanal.b3.krpv.acao_social.modulos.socialAction.SocialActionEntity;
 import dev.pantanal.b3.krpv.acao_social.modulos.socialAction.dto.SocialActionDto;
+import dev.pantanal.b3.krpv.acao_social.modulos.socialAction.repository.SocialActionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Component;
 import org.springframework.jdbc.core.JdbcTemplate;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
-import java.util.UUID;
+import java.util.*;
 
 @Component
 public class SocialActionFactory {
     private static final Random random = new Random();
     private final Faker faker = new Faker();
+    private final JdbcTemplate jdbcTemplate;
+    @Autowired
+    private SocialActionRepository socialActionRepository;
+
     @Autowired
     public SocialActionFactory(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
-    private final JdbcTemplate jdbcTemplate;
+
     public SocialActionDto makeFake() {
         return new SocialActionDto(
             UUID.randomUUID(),
@@ -56,26 +58,17 @@ public class SocialActionFactory {
         }
     }
 
-    public void insertOne(SocialActionDto socialActionDto) {
-        String sql = "INSERT INTO social_action (id, name, description, version, organizer) VALUES (?, ?, ?, ?, ?)";
-        this.jdbcTemplate.update(
-            sql,
-            socialActionDto.id(),
-            socialActionDto.name(),
-            socialActionDto.description(),
-            1,
-            socialActionDto.description()
-        );
+    public SocialActionEntity insertOne(SocialActionEntity toSave) {
+        SocialActionEntity saved = socialActionRepository.save(toSave);
+        return saved;
     }
 
-    public List<SocialActionDto> insertMany(int amount) {
-        List<SocialActionDto> socials = new ArrayList<>();
+    public List<SocialActionEntity> insertMany(int amount) {
+        List<SocialActionEntity> socials = new ArrayList<>();
         for (int i=0; i<amount; i++) {
-            SocialActionDto socialActionDto = this.makeFake();
-            socials.add(socialActionDto);
-            this.insertOne(socialActionDto);
+            SocialActionEntity socialActionEntity = this.makeFakeEntity();
+            socials.add(this.insertOne(socialActionEntity));
         }
         return socials;
     }
 }
-

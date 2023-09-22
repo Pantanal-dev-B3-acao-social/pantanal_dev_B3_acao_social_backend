@@ -1,5 +1,14 @@
-db-name: postgres
-spring-boot-environment: testing
+acao-social:
+  db:
+    active: dbinit
+    db-name: postgres
+  spring-boot:
+    environment: testing
+  server:
+    port: '3001'
+    host: http://localhost/
+#db-name: postgres
+#spring-boot-environment: testing2
 server:
   port: '3001'
   host: http://localhost/
@@ -16,7 +25,7 @@ spring:
     username: dev_user
     password: dev_password
     driver-class-name: org.postgresql.Driver
-    url: jdbc:postgresql://localhost:5432/${db-name}
+    url: jdbc:postgresql://localhost:5432/${acao-social.db.db-name}
   jpa:
     show-sql: true
     generate-ddl: true
