@@ -8,6 +8,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 // TODO: import org.springframework.security.access.prepost.PreAuthorize;
@@ -16,6 +17,8 @@ import org.springframework.web.bind.annotation.*;
 import io.swagger.v3.oas.annotations.Operation;
 
 import static dev.pantanal.b3.krpv.acao_social.modulos.socialAction.SocialActionController.ROUTE_SOCIAL;
+import static dev.pantanal.b3.krpv.acao_social.utils.Utils.mapEntityPageIntoDtoPage;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -38,9 +41,16 @@ public class SocialActionController {
             @ApiResponse(responseCode = "404", description = "Not found"),
             @ApiResponse(responseCode = "500", description = "Internal Server Error"),
     })
-    public Page<SocialActionEntity> findAll(JwtAuthenticationToken userLogged, Pageable pageable, @Valid SocialActionParamsDto request) {
-        Page<SocialActionEntity> entities = service.findAll(userLogged, pageable, request);
-        return entities;
+    public Page<SocialActionResponseDto> findAll(
+                                            JwtAuthenticationToken userLogged,
+                                            @RequestParam(defaultValue = "0") int page,
+                                            @RequestParam(defaultValue = "10") int size,
+                                            @Valid SocialActionParamsDto request) { //@valid pode servir pra alguma validação futura
+
+        Pageable paging = PageRequest.of(page,size);
+        Page<SocialActionEntity> entities = service.findAll(userLogged, paging, request);
+        Page<SocialActionResponseDto> response = mapEntityPageIntoDtoPage(entities, SocialActionResponseDto.class);
+        return response; //verificar se vai converter certo
     }
 
     @GetMapping("/{id}")
