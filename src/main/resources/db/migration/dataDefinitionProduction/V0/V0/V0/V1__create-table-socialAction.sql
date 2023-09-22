@@ -3,7 +3,7 @@ CREATE TABLE social_action (
     name VARCHAR(255) NOT NULL,
     description VARCHAR(255) NOT NULL,
     version int8,
-    organizer VARCHAR(255) NOT NULL
+--    organizer VARCHAR(255) NOT NULL
 );
 
 CREATE TABLE Z_AUD_SOCIAL_ACTION (
@@ -13,6 +13,6 @@ CREATE TABLE Z_AUD_SOCIAL_ACTION (
     name VARCHAR(255) NOT NULL,
     description VARCHAR(255) NOT NULL,
     version int8,
-    organizer VARCHAR(255) NOT NULL
+--    organizer VARCHAR(255) NOT NULL
 );
 
