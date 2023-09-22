@@ -2,22 +2,16 @@ package dev.pantanal.b3.krpv.acao_social.config.postgres;
 
 import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.CommandLineRunner;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Profile;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 @Configuration
-//@Profile("dbinit")
 public class PostgresDatabaseInitialization {
 
     @Value("${acao-social.db.db-name}")
     private String dbName;
-
     @Value("${acao-social.spring-boot.environment}")
     private String environment;
-
     private final JdbcTemplate jdbcTemplate;
     private final SeedDataService seedDataService;
 
