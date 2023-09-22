@@ -77,7 +77,7 @@ public class SocialActionController {
             @ApiResponse(responseCode = "422", description = "Invalid request data"),
             @ApiResponse(responseCode = "500", description = "Error when creating social action"),
     })
-    public ResponseEntity<SocialActionCreateDto> create(@Valid @RequestBody SocialActionCreateDto request) {
+    public ResponseEntity<SocialActionCreateDto> create(@RequestBody @Valid SocialActionCreateDto request) {
         SocialActionEntity entity = service.create(request);
         SocialActionCreateDto response = new SocialActionCreateDto(
                 entity.getName(),
