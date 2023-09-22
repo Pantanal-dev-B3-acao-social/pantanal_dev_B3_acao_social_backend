@@ -3,6 +3,7 @@
 acao-social:
   db:
     active: dbinit
+#    db-name: postgres_dev
     db-name: postgres
   spring-boot:
     environment: development
@@ -21,19 +22,22 @@ spring:
     enabled: true
     baseline-on-migrate: true
     locations: classpath:db/migration/dataDefinitionDevelopment
+#    locations: classpath:db/migration/dataDefinitionProduction
   datasource:
+    url: jdbc:postgresql://localhost:5432/${acao-social.db.db-name}
+    username: dev_user
+    password: dev_password
+#    initialization-mode: always
+#    schema: db/script/initDbDevelopment.sql
     hikari:
       maxLifetime: '1800000'
       connectionTimeout: '500000'
       idleTimeout: '60000'
       maximumPoolSize: '10'
-    username: dev_user
-    password: dev_password
     driver-class-name: org.postgresql.Driver
-    url: jdbc:postgresql://localhost:5432/${acao-social.db.db-name}
   jpa:
     hibernate:
-      ddl-auto: none  # Impede a criação automática de tabelas e colunas
+      ddl-auto: update  # Impede a criação automática de tabelas e colunas
     show-sql: true
   security:
     oauth2:
