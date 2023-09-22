@@ -5,6 +5,7 @@ acao-social:
     active: dbinit
 #    db-name: postgres_dev
     db-name: postgres
+    sprint-init: classpath:db/script/dev/init_db_development.sql
   spring-boot:
     environment: development
   server:
