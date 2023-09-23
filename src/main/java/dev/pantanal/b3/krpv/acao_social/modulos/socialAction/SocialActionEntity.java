@@ -26,8 +26,9 @@ public class SocialActionEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(columnDefinition = "uuid")
+    @NotNull
     private UUID id;
-    @Column
+    @Column(nullable = false)
     @NotBlank
     private String name;
     @Column(nullable = false)
