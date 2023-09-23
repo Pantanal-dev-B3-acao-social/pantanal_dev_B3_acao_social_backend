@@ -1,10 +1,6 @@
 package dev.pantanal.b3.krpv.acao_social.modulos.socialAction;
 
-import com.querydsl.core.BooleanBuilder;
-import com.querydsl.core.types.Predicate;
 import com.querydsl.core.types.dsl.BooleanExpression;
-import com.querydsl.core.types.dsl.Expressions;
-import com.querydsl.core.types.dsl.StringPath;
 import dev.pantanal.b3.krpv.acao_social.modulos.socialAction.repository.SocialActionPredicates;
 import org.springframework.stereotype.Service;
 import dev.pantanal.b3.krpv.acao_social.modulos.socialAction.dto.request.SocialActionCreateDto;
@@ -13,12 +9,9 @@ import dev.pantanal.b3.krpv.acao_social.modulos.socialAction.dto.request.SocialA
 import dev.pantanal.b3.krpv.acao_social.modulos.socialAction.repository.SocialActionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
-import org.springframework.stereotype.Service;
 import org.springframework.data.domain.Page;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
-import dev.pantanal.b3.krpv.acao_social.modulos.socialAction.QSocialActionEntity;
-
-
+import dev.pantanal.b3.krpv.acao_social.exception.ObjectNotFoundException;
 import java.util.UUID;
 
 @Service
@@ -73,9 +66,5 @@ public class SocialActionService {
         SocialActionEntity updatedObj = socialActionRepository.update(obj);
         return updatedObj;
     }
-
-//    public void delete(UUID id) {
-//        socialActionRepository.delete(id);
-//    }
 
 }
