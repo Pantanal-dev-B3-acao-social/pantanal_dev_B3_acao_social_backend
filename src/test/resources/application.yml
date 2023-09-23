@@ -31,11 +31,13 @@ spring:
     password: dev_password
     driver-class-name: org.postgresql.Driver
     url: jdbc:postgresql://localhost:5432/${acao-social.db.db-name}
+    schema: schema.sql
+#    initialization-mode: always
   jpa:
     show-sql: true
     generate-ddl: true
     hibernate:
-      ddl-auto: validate
+      ddl-auto: create-drop
   security:
     oauth2:
       resourceserver:
