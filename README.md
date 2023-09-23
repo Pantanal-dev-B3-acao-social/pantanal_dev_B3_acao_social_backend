@@ -34,6 +34,7 @@
 - docker
 - docker-compose
 - keyclock
+- spring-data-envers (revisao de mudança do registro)
 
 # Perfis
 - Admininstrador
@@ -101,8 +102,8 @@ SPRING_PROFILES_ACTIVE=dev
 - a equipe optou por esta organização para facilitar na visualizações de arquivos durante o desenvolvimento
 
 # Arquitetutra do software
-- Arquitetura Monolítica
-- A arquitetura do software é inspirada na arquitetura orientada a serviço
+- Arquitetura Monolítica, apesar de ter SSO
+- A arquitetura do software é inspirada na arquitetura baseada em serviço, pois o fluxo das requisições são orientadas por "services" não "domain"
 - a maior parte das regras de negocio estão contidas na camada de "service"
 - podem existir algumas regras de negocio voltada para dados em outras cadamadas, principalmente validadores
 - como na camada de DTO, Entity e Migration
