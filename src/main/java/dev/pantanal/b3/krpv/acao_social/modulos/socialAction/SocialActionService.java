@@ -56,7 +56,9 @@ public class SocialActionService {
 
     public SocialActionEntity findById(UUID id) {
         SocialActionEntity obj = socialActionRepository.findById(id);
-        // lançar exceções
+        if (obj == null) {
+            throw new ObjectNotFoundException("Registro não encontrado: " + id);
+        }
         return obj;
     }
 
