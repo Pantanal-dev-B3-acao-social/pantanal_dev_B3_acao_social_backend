@@ -28,8 +28,8 @@ public class SocialActionFactory {
             UUID.randomUUID(),
             faker.name().fullName(),
             faker.lorem().sentence(),
-                faker.name().title(),
-                faker.number().randomNumber()
+//                faker.name().title(),
+            faker.number().randomNumber()
 
                 // string ongId = findOneRandom("ong");
                 // string levelId = findOneRandom("category_project_level");
@@ -43,6 +43,7 @@ public class SocialActionFactory {
                 null,
                 faker.name().fullName(),
                 faker.lorem().sentence()
+
                 // string ongId = findOneRandom("ong");
                 // string levelId = findOneRandom("category_project_level");
                 // string typeId = findOneRandom("category_project_type");

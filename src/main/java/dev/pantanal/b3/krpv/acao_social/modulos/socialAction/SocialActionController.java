@@ -71,7 +71,7 @@ public class SocialActionController {
                 entity.getId(),
                 entity.getName(),
                 entity.getDescription(),
-                entity.getOrganizer(),
+//                entity.getOrganizer(),
                 entity.getVersion()
         );
 
@@ -94,8 +94,8 @@ public class SocialActionController {
         SocialActionEntity entity = service.create(request);
         SocialActionCreateDto response = new SocialActionCreateDto(
                 entity.getName(),
-                entity.getDescription(),
-                entity.getOrganizer()
+                entity.getDescription()
+//                entity.getOrganizer()
         );
         // TODO: fazer um handle para gerar esse retorno
         return new ResponseEntity<>(response, HttpStatus.CREATED);
@@ -117,8 +117,8 @@ public class SocialActionController {
         SocialActionUpdateDto response = new SocialActionUpdateDto(
                 entity.getId(),
                 entity.getName(),
-                entity.getDescription(),
-                entity.getOrganizer()
+                entity.getDescription()
+//                entity.getOrganizer()
         );
         //Verificar erro aqui
         return new ResponseEntity<>(response, HttpStatus.OK);

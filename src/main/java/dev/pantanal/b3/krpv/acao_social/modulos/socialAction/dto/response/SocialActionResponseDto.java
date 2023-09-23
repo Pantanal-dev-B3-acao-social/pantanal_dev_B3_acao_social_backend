@@ -6,6 +6,6 @@ public record SocialActionResponseDto(
         UUID id,
         String name,
         String description,
-        String organizer,
+//        String organizer,
         long version
 ) {}

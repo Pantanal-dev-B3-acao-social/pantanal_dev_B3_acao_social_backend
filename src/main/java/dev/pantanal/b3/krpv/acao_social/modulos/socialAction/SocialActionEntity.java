@@ -33,9 +33,9 @@ public class SocialActionEntity {
     @Column(nullable = false)
     @NotBlank
     private String description;
-    @Column
-    @NotBlank
-    private String organizer;
+    //@Column
+    //@NotBlank
+    //private String organizer;
 
 
 }

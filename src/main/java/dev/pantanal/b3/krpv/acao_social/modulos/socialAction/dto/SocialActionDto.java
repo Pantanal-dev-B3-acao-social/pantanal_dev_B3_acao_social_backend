@@ -16,8 +16,8 @@ public record SocialActionDto (
         @NotBlank(message= "Campo 'description' não pode estar vazio")
         String description,
 
-        @NotBlank(message= "Campo 'organizer' não pode estar vazio")
-        String organizer,
+//        @NotBlank(message= "Campo 'organizer' não pode estar vazio")
+//        String organizer,
 
         @NotNull
         @NotBlank
