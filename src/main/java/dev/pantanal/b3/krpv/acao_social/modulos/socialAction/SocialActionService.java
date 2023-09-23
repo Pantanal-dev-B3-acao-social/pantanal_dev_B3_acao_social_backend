@@ -1,5 +1,11 @@
 package dev.pantanal.b3.krpv.acao_social.modulos.socialAction;
 
+import com.querydsl.core.BooleanBuilder;
+import com.querydsl.core.types.Predicate;
+import com.querydsl.core.types.dsl.BooleanExpression;
+import com.querydsl.core.types.dsl.Expressions;
+import com.querydsl.core.types.dsl.StringPath;
+import org.springframework.stereotype.Service;
 import dev.pantanal.b3.krpv.acao_social.modulos.socialAction.dto.request.SocialActionCreateDto;
 import dev.pantanal.b3.krpv.acao_social.modulos.socialAction.dto.request.SocialActionParamsDto;
 import dev.pantanal.b3.krpv.acao_social.modulos.socialAction.dto.request.SocialActionUpdateDto;
@@ -9,6 +15,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.data.domain.Page;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
+import dev.pantanal.b3.krpv.acao_social.modulos.socialAction.QSocialActionEntity;
 
 
 import java.util.UUID;
@@ -37,7 +44,24 @@ public class SocialActionService {
 //        var id = userLogged.getName();
         var id = userLogged.getToken().getClaim("sub");
         var name = userLogged.getToken().getClaim("preferred_username");
-        Page<SocialActionEntity> objects = socialActionRepository.findAll(pageable, filters);
+
+        QSocialActionEntity qSocialActionEntity = QSocialActionEntity.socialActionEntity;
+        BooleanExpression predicate = Expressions.asBoolean(true).isTrue();
+
+        if (filters.name() != null){
+            StringPath filterNamePath = qSocialActionEntity.name;
+            predicate = predicate.and(filterNamePath.eq(filters.name()));
+        }
+        if (filters.description() != null){
+            StringPath filterDescriptionPath = qSocialActionEntity.description;
+            predicate = predicate.and(filterDescriptionPath.eq(filters.description()));
+        }
+        if (filters.organizer() != null){
+            StringPath filterOrganizerPath = qSocialActionEntity.organizer;
+            predicate = predicate.and(filterOrganizerPath.eq(filters.organizer()));
+        }
+
+        Page<SocialActionEntity> objects = socialActionRepository.findAll(pageable, predicate);
         // lançar exceções
         return objects;
     }
