@@ -9,6 +9,8 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.SortDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 // TODO: import org.springframework.security.access.prepost.PreAuthorize;
@@ -45,10 +47,11 @@ public class SocialActionController {
             JwtAuthenticationToken userLogged,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
+            @SortDefault(sort="name", direction = Sort.Direction.DESC) Sort sort,
             @Valid SocialActionParamsDto request
     ) {
 
-        Pageable paging = PageRequest.of(page,size);
+        Pageable paging = PageRequest.of(page, size, sort);
         Page<SocialActionEntity> response = service.findAll(userLogged, paging, request);
         //Page<SocialActionResponseDto> response = mapEntityPageIntoDtoPage(entities, SocialActionResponseDto.class);
         return response; //verificar se vai converter certo
