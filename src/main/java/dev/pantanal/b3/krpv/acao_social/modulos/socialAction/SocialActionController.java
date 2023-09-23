@@ -41,15 +41,16 @@ public class SocialActionController {
             @ApiResponse(responseCode = "404", description = "Not found"),
             @ApiResponse(responseCode = "500", description = "Internal Server Error"),
     })
-    public Page<SocialActionResponseDto> findAll(
-                                            JwtAuthenticationToken userLogged,
-                                            @RequestParam(defaultValue = "0") int page,
-                                            @RequestParam(defaultValue = "10") int size,
-                                            @Valid SocialActionParamsDto request) { //@valid pode servir pra alguma validação futura
+    public Page<SocialActionEntity> findAll(
+            JwtAuthenticationToken userLogged,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @Valid SocialActionParamsDto request
+    ) {
 
         Pageable paging = PageRequest.of(page,size);
-        Page<SocialActionEntity> entities = service.findAll(userLogged, paging, request);
-        Page<SocialActionResponseDto> response = mapEntityPageIntoDtoPage(entities, SocialActionResponseDto.class);
+        Page<SocialActionEntity> response = service.findAll(userLogged, paging, request);
+        //Page<SocialActionResponseDto> response = mapEntityPageIntoDtoPage(entities, SocialActionResponseDto.class);
         return response; //verificar se vai converter certo
     }
 

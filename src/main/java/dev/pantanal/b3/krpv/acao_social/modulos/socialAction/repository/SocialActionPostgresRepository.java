@@ -16,8 +16,4 @@ public interface SocialActionPostgresRepository extends JpaRepository<SocialActi
 //    Page<SocialActionEntity> findAll(Pageable pageable, SocialActionParamsDto filters);
     Page<SocialActionEntity> findAll(Specification<SocialActionEntity> spec, Pageable pageable);
 
-    default Page<SocialActionEntity> findAllWithFilters(Pageable pageable, SocialActionParamsDto filters) {
-        Specification<SocialActionEntity> spec = SocialActionSpecifications.byFilters(filters);
-        return findAll(spec, pageable);
-    }
 }

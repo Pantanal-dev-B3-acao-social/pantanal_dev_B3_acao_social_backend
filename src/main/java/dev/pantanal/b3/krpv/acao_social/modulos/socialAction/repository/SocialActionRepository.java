@@ -16,10 +16,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 // TODO: verificar se vamos usar jakarta ou javax
 import jakarta.persistence.EntityManager;
-//import javax.persistence.EntityManager;
 import java.util.List;
 import java.util.UUID;
-import jakarta.persistence.criteria.*;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -39,8 +37,8 @@ public class SocialActionRepository {
     }
 
     public Page<SocialActionEntity> findAll(Pageable pageable, BooleanExpression predicate) {
-        JPAQueryFactory queryFactory = new JPAQueryFactory(entityManager); // Replace with your actual EntityManager instance
-        QSocialActionEntity qSocialActionEntity = QSocialActionEntity.socialActionEntity; // Replace with your actual Q class name
+        JPAQueryFactory queryFactory = new JPAQueryFactory(entityManager);
+        QSocialActionEntity qSocialActionEntity = QSocialActionEntity.socialActionEntity;
 
         List<SocialActionEntity> results = queryFactory.selectFrom(qSocialActionEntity)
                 .where(predicate)
