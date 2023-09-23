@@ -110,6 +110,12 @@
 			<version>5.0.0</version>
 			<classifier>jakarta</classifier>
 		</dependency>
+		<!--		auditoria -->
+		<dependency>
+			<groupId>org.springframework.data</groupId>
+			<artifactId>spring-data-envers</artifactId>
+		</dependency>
+
 	</dependencies>
 
 	<build>

@@ -12,6 +12,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Page;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import dev.pantanal.b3.krpv.acao_social.exception.ObjectNotFoundException;
+import org.springframework.transaction.annotation.Transactional;
+
 import java.util.UUID;
 
 @Service
