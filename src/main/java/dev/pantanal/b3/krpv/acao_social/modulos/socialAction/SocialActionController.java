@@ -8,6 +8,9 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.SortDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -16,6 +19,8 @@ import org.springframework.security.oauth2.server.resource.authentication.JwtAut
 import org.springframework.web.bind.annotation.*;
 import io.swagger.v3.oas.annotations.Operation;
 import static dev.pantanal.b3.krpv.acao_social.modulos.socialAction.SocialActionController.ROUTE_SOCIAL;
+import static dev.pantanal.b3.krpv.acao_social.utils.Utils.mapEntityPageIntoDtoPage;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import java.util.UUID;
@@ -37,9 +42,18 @@ public class SocialActionController {
             @ApiResponse(responseCode = "404", description = "Not found"),
             @ApiResponse(responseCode = "500", description = "Internal Server Error"),
     })
-    public Page<SocialActionEntity> findAll(JwtAuthenticationToken userLogged, Pageable pageable, @Valid SocialActionParamsDto request) {
-        Page<SocialActionEntity> entities = service.findAll(userLogged, pageable, request);
-        return entities;
+    public Page<SocialActionEntity> findAll(
+            JwtAuthenticationToken userLogged,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @SortDefault(sort="name", direction = Sort.Direction.DESC) Sort sort,
+            @Valid SocialActionParamsDto request
+    ) {
+
+        Pageable paging = PageRequest.of(page, size, sort);
+        Page<SocialActionEntity> response = service.findAll(userLogged, paging, request);
+        //Page<SocialActionResponseDto> response = mapEntityPageIntoDtoPage(entities, SocialActionResponseDto.class);
+        return response; //verificar se vai converter certo
     }
 
     @GetMapping("/{id}")
@@ -51,16 +65,17 @@ public class SocialActionController {
             @ApiResponse(responseCode = "404", description = "Not found"),
             @ApiResponse(responseCode = "500", description = "Internal Server Error"),
     })
-    public ResponseEntity<SocialActionEntity> findOne(@PathVariable UUID id) {
+    public ResponseEntity<SocialActionResponseDto> findOne(@PathVariable UUID id) {
         SocialActionEntity entity = service.findById(id);
-        if (entity != null) {
-            return ResponseEntity.ok(entity);
-        } else {
-            // Aqui você pode personalizar a resposta de acordo com o que desejar
-            // Por exemplo, retornar 404 Not Found se a ação social não for encontrada
-            return ResponseEntity.notFound().build();
-        }
-//        return new ResponseEntity<SocialActionEntity>(entity);
+        SocialActionResponseDto response = new SocialActionResponseDto(
+                entity.getId(),
+                entity.getName(),
+                entity.getDescription(),
+//                entity.getOrganizer(),
+                entity.getVersion()
+        );
+
+        return new ResponseEntity<SocialActionResponseDto>(response, HttpStatus.OK);
     }
 
     @PostMapping
@@ -75,12 +90,12 @@ public class SocialActionController {
             @ApiResponse(responseCode = "422", description = "Invalid request data"),
             @ApiResponse(responseCode = "500", description = "Error when creating social action"),
     })
-    public ResponseEntity<SocialActionResponseDto> create(@Valid @RequestBody SocialActionCreateDto request) {
+    public ResponseEntity<SocialActionCreateDto> create(@RequestBody @Valid SocialActionCreateDto request) {
         SocialActionEntity entity = service.create(request);
-        SocialActionResponseDto response = new SocialActionResponseDto(
-                entity.getId(),
+        SocialActionCreateDto response = new SocialActionCreateDto(
                 entity.getName(),
                 entity.getDescription()
+//                entity.getOrganizer()
         );
         // TODO: fazer um handle para gerar esse retorno
         return new ResponseEntity<>(response, HttpStatus.CREATED);
@@ -97,12 +112,13 @@ public class SocialActionController {
             @ApiResponse(responseCode = "422", description = "Invalid request data"),
             @ApiResponse(responseCode = "500", description = "Error when creating social action"),
     })
-    public ResponseEntity<SocialActionResponseDto> update(@Valid @RequestBody SocialActionUpdateDto request){
+    public ResponseEntity<SocialActionUpdateDto> update(@Valid @RequestBody SocialActionUpdateDto request){
         SocialActionEntity entity = service.update(request); //Montar metodo update no Service
-        SocialActionResponseDto response = new SocialActionResponseDto(
+        SocialActionUpdateDto response = new SocialActionUpdateDto(
                 entity.getId(),
                 entity.getName(),
                 entity.getDescription()
+//                entity.getOrganizer()
         );
         //Verificar erro aqui
         return new ResponseEntity<>(response, HttpStatus.OK);
