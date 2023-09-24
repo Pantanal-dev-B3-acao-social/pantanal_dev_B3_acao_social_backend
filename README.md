@@ -184,3 +184,14 @@ $ sudo docker cp postgres_acao_social:/tmp/backup_keycloak.sql /home/kaio/Docume
   - observação: em ambiente de "development" a estrutura do banco de dados esta sendo gerado a partir das migration
 - https://github.com/DiUS/java-faker
 - A variavel de ambiente executa o arquivo PostgresDatabaseInitialization (spring.profiles.active: dbinit)
+
+# Auditoria
+- Revisão de mudanças dos registros
+  - cada vez que um registro é criado ou alterado é criado uma revisao
+  - spring-data-envers
+- Auditoria de ações do usuario logado
+  - https://medium.com/@helder.versatti/implementando-correlation-id-em-uma-aplica%C3%A7%C3%A3o-spring-c9c3a92c67e5
+  - cada request feita, é criada um registro em formato json, com ID unico da request, e quem o usuario que fez esta request
+
+
+

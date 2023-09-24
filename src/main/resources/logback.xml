@@ -1,0 +1,30 @@
+<configuration>
+    <contextName>projeto_acao_social</contextName>
+
+    <!-- Configuração da saída para o console (stdout). -->
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <!-- Encoder: Responsável por transformar a informação capturada no log para o destino de saída. -->
+        <encoder class="ch.qos.logback.core.encoder.LayoutWrappingEncoder">
+            <!-- Layout: Define de que forma o encoder vai apresentar o log em formato JSON. -->
+            <layout class="ch.qos.logback.contrib.json.classic.JsonLayout">
+                <!-- Define o formato de data e hora no JSON. -->
+                <timestampFormat>yyyy-MM-dd'T'HH:mm:ss.SSSX</timestampFormat>
+                <!-- Define um formatador JSON (opcional) para tornar a saída JSON mais legível. -->
+                <jsonFormatter class="ch.qos.logback.contrib.jackson.JacksonJsonFormatter">
+                    <prettyPrint>true</prettyPrint>
+                </jsonFormatter>
+            </layout>
+        </encoder>
+    </appender>
+
+    <!-- Logger: Especifique os pacotes ou classes que você deseja que usem esta configuração de log. -->
+    <logger name="ControllerUsuario" level="debug" />
+
+    <!-- Root logger: Especifica o nível de log para o logger raiz. -->
+    <root level="info">
+        <appender-ref ref="STDOUT" /> <!-- Refere-se ao appender definido anteriormente (STDOUT). -->
+    </root>
+</configuration>
+
+        <!--        logback-json-classic é utilizado para formatar o output em JSON e o logback-jackson é utilizado para formatar cada JSON em uma linha separada.-->
+
