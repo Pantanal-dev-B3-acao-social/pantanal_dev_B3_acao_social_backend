@@ -138,12 +138,10 @@
 			<artifactId>logback-json-classic</artifactId>
 			<version>0.1.5</version>
 		</dependency>
-<!--		<layout class="ch.qos.logback.contrib.json.classic.JsonLayout" >-->
-<!--			<timestampFormat>yyyy-MM-dd'T'HH:mm:ss.SSSX</timestampFormat>-->
-<!--			<jsonFormatter class="ch.qos.logback.contrib.jackson.JacksonJsonFormatter">-->
-<!--				<prettyPrint>true</prettyPrint>-->
-<!--			</jsonFormatter>-->
-<!--		</layout>-->
+		<dependency>
+			<groupId>org.hibernate</groupId>
+			<artifactId>hibernate-envers</artifactId>
+		</dependency>
 	</dependencies>
 
 	<build>

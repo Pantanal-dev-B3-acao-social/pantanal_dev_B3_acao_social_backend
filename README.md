@@ -189,9 +189,10 @@ $ sudo docker cp postgres_acao_social:/tmp/backup_keycloak.sql /home/kaio/Docume
 - Revisão de mudanças dos registros
   - cada vez que um registro é criado ou alterado é criado uma revisao
   - spring-data-envers
+  - createdDate, createdBy, lastModifiedDate, lastModifiedBy, deletedDate, deletedBy
 - Auditoria de ações do usuario logado
   - https://medium.com/@helder.versatti/implementando-correlation-id-em-uma-aplica%C3%A7%C3%A3o-spring-c9c3a92c67e5
-  - cada request feita, é criada um registro em formato json, com ID unico da request, e quem o usuario que fez esta request
-
+  - cada request feita, é criada um registro em formato json no STDOUT, com ID unico para cada request, e quem o usuario ID que fez esta request
+  
 
 

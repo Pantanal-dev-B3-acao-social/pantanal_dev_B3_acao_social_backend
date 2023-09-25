@@ -38,11 +38,7 @@ public class SocialActionService {
         socialActionRepository.delete(id);
     }
 
-    public Page<SocialActionEntity> findAll(JwtAuthenticationToken userLogged, Pageable pageable, SocialActionParamsDto filters) {
-//        var id = userLogged.getName();
-        var id = userLogged.getToken().getClaim("sub");
-        var name = userLogged.getToken().getClaim("preferred_username");
-
+    public Page<SocialActionEntity> findAll(Pageable pageable, SocialActionParamsDto filters) {
         BooleanExpression predicate = socialActionPredicates.buildPredicate(filters);
         Page<SocialActionEntity> objects = socialActionRepository.findAll(pageable, predicate);
         // lançar exceções
@@ -57,8 +53,8 @@ public class SocialActionService {
         return obj;
     }
 
-    public SocialActionEntity update(SocialActionUpdateDto request){
-        SocialActionEntity obj = socialActionRepository.findById(request.id());
+    public SocialActionEntity update(UUID id, SocialActionUpdateDto request){
+        SocialActionEntity obj = socialActionRepository.findById(id);
         if (request.name() != null){
             obj.setName(request.name());
         }

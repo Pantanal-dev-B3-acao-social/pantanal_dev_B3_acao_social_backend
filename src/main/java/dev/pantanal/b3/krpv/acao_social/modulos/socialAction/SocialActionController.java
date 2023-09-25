@@ -43,7 +43,6 @@ public class SocialActionController {
             @ApiResponse(responseCode = "500", description = "Internal Server Error"),
     })
     public Page<SocialActionEntity> findAll(
-            JwtAuthenticationToken userLogged,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
             @SortDefault(sort="name", direction = Sort.Direction.DESC) Sort sort,
@@ -51,9 +50,9 @@ public class SocialActionController {
     ) {
 
         Pageable paging = PageRequest.of(page, size, sort);
-        Page<SocialActionEntity> response = service.findAll(userLogged, paging, request);
+        Page<SocialActionEntity> response = service.findAll(paging, request);
         //Page<SocialActionResponseDto> response = mapEntityPageIntoDtoPage(entities, SocialActionResponseDto.class);
-        return response; //verificar se vai converter certo
+        return response; // TODO: verificar se vai converter certo
     }
 
     @GetMapping("/{id}")
@@ -112,15 +111,13 @@ public class SocialActionController {
             @ApiResponse(responseCode = "422", description = "Invalid request data"),
             @ApiResponse(responseCode = "500", description = "Error when creating social action"),
     })
-    public ResponseEntity<SocialActionUpdateDto> update(@Valid @RequestBody SocialActionUpdateDto request){
-        SocialActionEntity entity = service.update(request); //Montar metodo update no Service
+    public ResponseEntity<SocialActionUpdateDto> update(@PathVariable UUID id, @Valid @RequestBody SocialActionUpdateDto request) {
+        SocialActionEntity entity = service.update(id, request);
         SocialActionUpdateDto response = new SocialActionUpdateDto(
-                entity.getId(),
                 entity.getName(),
                 entity.getDescription()
 //                entity.getOrganizer()
         );
-        //Verificar erro aqui
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
