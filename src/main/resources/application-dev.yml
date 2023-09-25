@@ -39,6 +39,8 @@ spring:
   jpa:
     hibernate:
       ddl-auto: update  # Impede a criação automática de tabelas e colunas
+      hbm2ddl:
+        auto: update
     show-sql: true
   security:
     oauth2:

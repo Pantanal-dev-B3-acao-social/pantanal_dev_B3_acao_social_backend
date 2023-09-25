@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Component;
 import org.springframework.jdbc.core.JdbcTemplate;
+import java.time.LocalDateTime;
 import java.util.*;
 
 @Component
@@ -38,12 +39,21 @@ public class SocialActionFactory {
     }
 
     public SocialActionEntity makeFakeEntity() {
+        String createBy = null;
+        String lastModifiedBy = null;
+        LocalDateTime createdDate = LocalDateTime.now();
+        LocalDateTime lastModifiedDate = createdDate.plusHours(3).plusMinutes(30);
         return new SocialActionEntity(
                 1L,
                 null,
                 faker.name().fullName(),
-                faker.lorem().sentence()
-
+                faker.lorem().sentence(),
+                createBy,
+                lastModifiedBy,
+                createdDate,
+                lastModifiedDate,
+                null,
+                null
                 // string ongId = findOneRandom("ong");
                 // string levelId = findOneRandom("category_project_level");
                 // string typeId = findOneRandom("category_project_type");

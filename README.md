@@ -34,6 +34,7 @@
 - docker
 - docker-compose
 - keyclock
+- spring-data-envers (revisao de mudança do registro)
 
 # Perfis
 - Admininstrador
@@ -101,8 +102,8 @@ SPRING_PROFILES_ACTIVE=dev
 - a equipe optou por esta organização para facilitar na visualizações de arquivos durante o desenvolvimento
 
 # Arquitetutra do software
-- Arquitetura Monolítica
-- A arquitetura do software é inspirada na arquitetura orientada a serviço
+- Arquitetura Monolítica, apesar de ter SSO
+- A arquitetura do software é inspirada na arquitetura baseada em serviço, pois o fluxo das requisições são orientadas por "services" não "domain"
 - a maior parte das regras de negocio estão contidas na camada de "service"
 - podem existir algumas regras de negocio voltada para dados em outras cadamadas, principalmente validadores
 - como na camada de DTO, Entity e Migration
@@ -183,3 +184,15 @@ $ sudo docker cp postgres_acao_social:/tmp/backup_keycloak.sql /home/kaio/Docume
   - observação: em ambiente de "development" a estrutura do banco de dados esta sendo gerado a partir das migration
 - https://github.com/DiUS/java-faker
 - A variavel de ambiente executa o arquivo PostgresDatabaseInitialization (spring.profiles.active: dbinit)
+
+# Auditoria
+- Revisão de mudanças dos registros
+  - cada vez que um registro é criado ou alterado é criado uma revisao
+  - spring-data-envers
+  - createdDate, createdBy, lastModifiedDate, lastModifiedBy, deletedDate, deletedBy
+- Auditoria de ações do usuario logado
+  - https://medium.com/@helder.versatti/implementando-correlation-id-em-uma-aplica%C3%A7%C3%A3o-spring-c9c3a92c67e5
+  - cada request feita, é criada um registro em formato json no STDOUT, com ID unico para cada request, e quem o usuario ID que fez esta request
+  
+
+

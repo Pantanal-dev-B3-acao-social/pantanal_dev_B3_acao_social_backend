@@ -49,21 +49,15 @@ public class SocialActionControllerIT {
 
     @Autowired
     SocialActionFactory socialActionFactory;
-//    private EntityManagerFactory emf;
-//    private EntityManager em;
 
     @BeforeEach
     public void setup() throws Exception {
         //limpar tabela social_action
         tokenUserLogged = loginMock.loginUserMock(new LoginUserDto("funcionario1", "123"));
-//        emf = Persistence.createEntityManagerFactory("test-unit"); // Configure your test persistence unit name
-//        em = emf.createEntityManager();
     }
 
     @AfterEach
     public void tearDown() {
-//        em.close();
-//        emf.close();
     }
 
     @Test
