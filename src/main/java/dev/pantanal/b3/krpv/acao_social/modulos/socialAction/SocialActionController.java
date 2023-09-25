@@ -111,11 +111,13 @@ public class SocialActionController {
             @ApiResponse(responseCode = "422", description = "Invalid request data"),
             @ApiResponse(responseCode = "500", description = "Error when creating social action"),
     })
-    public ResponseEntity<SocialActionUpdateDto> update(@PathVariable UUID id, @Valid @RequestBody SocialActionUpdateDto request) {
+    public ResponseEntity<SocialActionResponseDto> update(@PathVariable UUID id, @Valid @RequestBody SocialActionUpdateDto request) {
         SocialActionEntity entity = service.update(id, request);
-        SocialActionUpdateDto response = new SocialActionUpdateDto(
+        SocialActionResponseDto response = new SocialActionResponseDto(
+                entity.getId(),
                 entity.getName(),
-                entity.getDescription()
+                entity.getDescription(),
+                entity.getVersion()
 //                entity.getOrganizer()
         );
         return new ResponseEntity<>(response, HttpStatus.OK);

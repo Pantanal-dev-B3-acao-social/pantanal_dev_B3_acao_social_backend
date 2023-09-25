@@ -1,6 +1,7 @@
 package dev.pantanal.b3.krpv.acao_social.modules.socialAction;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import dev.pantanal.b3.krpv.acao_social.modules.auth.LoginMock;
 import dev.pantanal.b3.krpv.acao_social.config.postgres.factory.SocialActionFactory;
 import dev.pantanal.b3.krpv.acao_social.modulos.auth.dto.LoginUserDto;
@@ -155,12 +156,11 @@ public class SocialActionControllerIT {
         // Arrange (Organizar)
         SocialActionEntity savedItem = socialActionFactory.insertOne(socialActionFactory.makeFakeEntity());
         // Modifica alguns dados da ação social
-        savedItem.setName("Novo Nome");
-        savedItem.setDescription("Nova Descrição");
-
+        savedItem.setName(savedItem.getName() + "_ATUALIZADO");
+        savedItem.setDescription(savedItem.getDescription() + "_ATUALIZADO");
         ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.registerModule(new JavaTimeModule());
         String updatedSocialActionJson = objectMapper.writeValueAsString(savedItem);
-
         // Act (ação)
         ResultActions resultActions = mockMvc.perform(
                 MockMvcRequestBuilders.patch(ROUTE_SOCIAL + "/{id}", savedItem.getId())
@@ -171,8 +171,9 @@ public class SocialActionControllerIT {
         // Assert (Verificar)
         resultActions
                 .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.name").value("Novo Nome"))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.description").value("Nova Descrição"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.id").value(savedItem.getId().toString()))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.name").value(savedItem.getName()))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.description").value(savedItem.getDescription()))
                 .andDo(MockMvcResultHandlers.print());
     }
 
