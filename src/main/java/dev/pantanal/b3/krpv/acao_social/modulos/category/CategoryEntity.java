@@ -1,4 +1,4 @@
-package dev.pantanal.b3.krpv.acao_social.modulos.socialAction;
+package dev.pantanal.b3.krpv.acao_social.modulos.category;
 
 import dev.pantanal.b3.krpv.acao_social.config.audit.AuditListener;
 import jakarta.persistence.*;
@@ -14,14 +14,12 @@ import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-
 import java.time.LocalDateTime;
-import java.util.Optional;
 import java.util.UUID;
 
-@Table(name="social_action")
-@Entity(name="SocialAction")
-@AuditTable("z_aud_social_action")
+@Table(name="category")
+@Entity(name="Category")
+@AuditTable("z_aud_category")
 @EntityListeners(AuditListener.class)
 @Audited
 @Data
@@ -30,31 +28,35 @@ import java.util.UUID;
 @AllArgsConstructor
 @EqualsAndHashCode
 @ToString
-public class SocialActionEntity {
+public class CategoryEntity {
 
     @Valid
     @Version
     private Long version;
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(columnDefinition = "uuid")
     @NotNull
-    private UUID id;
+    UUID id;
+
     @Column(nullable = false)
     @NotBlank
     private String name;
+
     @Column(nullable = false)
     @NotBlank
     private String description;
-    //@Column
-    //@NotBlank
-    //private String organizer;
+
+    @Column(nullable = false)
+    @NotBlank
+    String code;
 
     @CreatedBy
-    private String createdBy; // TODO: UUID
+    private UUID createdBy;
 
     @LastModifiedBy
-    private String lastModifiedBy; // TODO: UUID
+    private UUID lastModifiedBy;
 
     @CreatedDate
     private LocalDateTime createdDate;
@@ -66,8 +68,7 @@ public class SocialActionEntity {
     private LocalDateTime deletedDate;
 
     @Column(name = "deleted_by")
-    private String deletedBy; // TODO: UUID
-
+    private UUID deletedBy;
 
     @PrePersist
     protected void onCreate() {
@@ -75,7 +76,7 @@ public class SocialActionEntity {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication != null && authentication.isAuthenticated()) {
             String userId = authentication.getName();
-            this.createdBy = userId;
+            this.createdBy = UUID.fromString(userId);
         }
     }
 
@@ -85,7 +86,7 @@ public class SocialActionEntity {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication != null && authentication.isAuthenticated()) {
             String userId = authentication.getName();
-            this.lastModifiedBy = userId;
+            this.lastModifiedBy = UUID.fromString(userId);
         }
     }
 
@@ -95,7 +96,7 @@ public class SocialActionEntity {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication != null && authentication.isAuthenticated()) {
             String userId = authentication.getName();
-            this.deletedBy = userId;
+            this.deletedBy = UUID.fromString(userId);
         }
     }
 

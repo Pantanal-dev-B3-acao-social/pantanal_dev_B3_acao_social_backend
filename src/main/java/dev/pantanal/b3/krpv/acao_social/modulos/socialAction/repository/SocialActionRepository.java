@@ -66,18 +66,8 @@ public class SocialActionRepository {
 
     @Transactional
     public SocialActionEntity update(SocialActionEntity obj) {
-
         SocialActionEntity updatedEntity = entityManager.merge(obj);
         return updatedEntity;
-
-        //SocialActionEntity entitySaved = find(request.getId());
-        //        if(request.getName() != null) {
-        //            entitySaved.setName(request.getName());
-        //        }
-        //        if(request.getDescription() != null) {
-        //            entitySaved.setDescription(request.getDescription());
-        //        }
-        //SocialActionEntity entityUpdated = postgresSocialActionRepository.save(entitySaved);
     }
 
     public void delete(UUID id) {
