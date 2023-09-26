@@ -10,12 +10,8 @@ import lombok.Setter;
 
 public record SocialActionParamsDto(
         @Valid
-
         String name,
-
-        String description,
-
-
-        String organizer
+        String description
+//        String organizer
 
 ) {}
