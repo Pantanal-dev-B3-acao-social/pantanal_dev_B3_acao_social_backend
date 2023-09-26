@@ -1,4 +1,4 @@
-package dev.pantanal.b3.krpv.acao_social.modulos.audit;
+package dev.pantanal.b3.krpv.acao_social.config.audit;
 
 import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
@@ -6,7 +6,7 @@ import org.hibernate.envers.AuditReader;
 import org.hibernate.envers.AuditReaderFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.PathVariable;
+// import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.List;
 import java.util.UUID;

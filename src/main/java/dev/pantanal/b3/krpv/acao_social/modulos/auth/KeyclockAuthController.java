@@ -22,4 +22,10 @@ public class KeyclockAuthController {
         return result;
     }
 
+//    @PostMapping("/logout")
+//    public ResponseEntity<String> logoutUser(@RequestBody LoginUserDto userDto) {
+//        var result = service.logoutUser(userDto);
+//        return result;
+//    }
+
 }
