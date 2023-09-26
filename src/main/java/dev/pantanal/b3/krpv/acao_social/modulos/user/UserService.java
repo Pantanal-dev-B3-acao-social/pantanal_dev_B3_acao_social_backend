@@ -45,6 +45,9 @@ public class UserService {
         return response;
     }
 
+    /*
+    * colocar userLogged no redis
+    */
     public KeycloakUser userInfoLogged (UUID userId, JwtAuthenticationToken userLogged) {
         ResponseEntity<String> responseEntity = userProfile(userId, userLogged);
         if (responseEntity.getStatusCode().is2xxSuccessful()) {
