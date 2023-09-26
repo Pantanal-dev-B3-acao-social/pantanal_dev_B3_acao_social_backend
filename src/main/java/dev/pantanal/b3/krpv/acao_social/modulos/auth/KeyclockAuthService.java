@@ -9,7 +9,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.client.RestTemplate;
 
 @Service
@@ -40,6 +39,7 @@ public class KeyclockAuthService {
         String tokenEndpoint = issuerUri + "/protocol/openid-connect/token";
         var result = rt.postForEntity(tokenEndpoint, httpEntity, String.class);
         return result;
+        // TODO: salvar token no redis
     }
 
     public ResponseEntity<String> loginUser(LoginUserDto userDto) {
@@ -57,4 +57,22 @@ public class KeyclockAuthService {
         var result = rt.postForEntity(tokenEndpoint, httpEntity, String.class);
         return result;
     }
+
+
+//    public ResponseEntity<String> logoutUser(String userId) {
+//        HttpHeaders headers = new HttpHeaders();
+//        RestTemplate rt = new RestTemplate();
+//        headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+//        MultiValueMap<String, String> formData = new LinkedMultiValueMap<>();
+////        formData.add("grant_type", "password");
+////        formData.add("client_secret", clientSecret);
+////        formData.add("client_id", clientId);
+////        formData.add("username", userDto.username());
+////        formData.add("password", userDto.password());
+//        HttpEntity<MultiValueMap<String, String>> httpEntity = new HttpEntity<>(formData, headers);
+//        String tokenEndpoint = issuerUri + "/admin/realms/{realm}/users/"+userId+"/logout";
+//        // TODO: passar TOKEN
+//        var result = rt.postForEntity(tokenEndpoint, httpEntity, String.class);
+//        return result;
+//    }
 }

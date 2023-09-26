@@ -5,13 +5,7 @@ import dev.pantanal.b3.krpv.acao_social.modulos.auth.dto.LoginUserDto;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.ResultActions;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
-import static dev.pantanal.b3.krpv.acao_social.modulos.auth.KeyclockAuthController.ROUTE_AUTH;
 
 @Component
 public class LoginMock {
