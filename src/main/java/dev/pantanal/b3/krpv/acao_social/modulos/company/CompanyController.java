@@ -1,6 +1,7 @@
 package dev.pantanal.b3.krpv.acao_social.modulos.company;
 
 import dev.pantanal.b3.krpv.acao_social.modulos.company.dto.request.CompanyCreateDto;
+import dev.pantanal.b3.krpv.acao_social.modulos.company.dto.request.CompanyUpdateDto;
 import dev.pantanal.b3.krpv.acao_social.modulos.company.dto.response.CompanyResponseDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -68,5 +69,29 @@ public class CompanyController {
         );
         // TODO: fazer um handle para gerar esse retorno
         return new ResponseEntity<>(response, HttpStatus.CREATED);
+    }
+
+    @PatchMapping("/{id}")
+    //@PreAuthorize("hasAnyRole('COMPANY_UPDATE')")
+    @ResponseStatus(HttpStatus.OK)
+    @Operation(summary = "Updates an Company", method = "PATCH")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Successfully Updated"),
+            @ApiResponse(responseCode = "400", description = "Invalid parameters"),
+            @ApiResponse(responseCode = "401", description = "User is not authenticated"),
+            @ApiResponse(responseCode = "404", description = "Company no found"),
+            @ApiResponse(responseCode = "422", description = "Invalid request data"),
+            @ApiResponse(responseCode = "500", description = "Error when creating social action"),
+    })
+    public ResponseEntity<CompanyResponseDto> update(@PathVariable UUID id, @Valid @RequestBody CompanyUpdateDto request) {
+        CompanyEntity entity = service.update(id, request);
+        CompanyResponseDto response = new CompanyResponseDto(
+                entity.getId(),
+                entity.getName(),
+                entity.getDescription(),
+                entity.getCnpj(),
+                entity.getVersion()
+        );
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 }

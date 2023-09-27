@@ -1,8 +1,8 @@
 package dev.pantanal.b3.krpv.acao_social.modulos.company;
 
 import dev.pantanal.b3.krpv.acao_social.exception.ObjectNotFoundException;
-import dev.pantanal.b3.krpv.acao_social.modulos.category.CategoryEntity;
 import dev.pantanal.b3.krpv.acao_social.modulos.company.dto.request.CompanyCreateDto;
+import dev.pantanal.b3.krpv.acao_social.modulos.company.dto.request.CompanyUpdateDto;
 import dev.pantanal.b3.krpv.acao_social.modulos.company.repository.CompanyRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -30,4 +30,20 @@ public class CompanyService {
         }
         return obj;
     }
+
+    public CompanyEntity update(UUID id, CompanyUpdateDto request) {
+        CompanyEntity obj = repository.findById(id);
+        if (request.name() != null) {
+            obj.setName(request.name());
+        }
+        if (request.description() != null) {
+            obj.setDescription(request.description());
+        }
+        if (request.cnpj() != null) {
+            obj.setCnpj(request.cnpj());
+        }
+        CompanyEntity updatedObj = repository.update(obj);
+        return updatedObj;
+    }
 }
+
