@@ -1,9 +1,5 @@
 package dev.pantanal.b3.krpv.acao_social.modulos.company;
 
-import dev.pantanal.b3.krpv.acao_social.modulos.category.CompanyEntity;
-import dev.pantanal.b3.krpv.acao_social.modulos.category.CompanyService;
-import dev.pantanal.b3.krpv.acao_social.modulos.category.dto.request.CompanyCreateDto;
-import dev.pantanal.b3.krpv.acao_social.modulos.category.dto.response.CompanyResponseDto;
 import dev.pantanal.b3.krpv.acao_social.modulos.company.dto.request.CompanyCreateDto;
 import dev.pantanal.b3.krpv.acao_social.modulos.company.dto.response.CompanyResponseDto;
 import io.swagger.v3.oas.annotations.Operation;
