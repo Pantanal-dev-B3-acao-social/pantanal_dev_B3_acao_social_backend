@@ -5,6 +5,8 @@ import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 
+import java.util.UUID;
+
 @Component
 public class FindRegisterRandom {
 
@@ -15,11 +17,11 @@ public class FindRegisterRandom {
     }
 
     // TODO: converter para UUID
-    public String execute(String table, Integer amount) {
+    public UUID execute(String table, Integer amount) {
         String sql = "SELECT * FROM "+ table +" ORDER BY RANDOM() LIMIT " + amount + ";";
         try {
             String id = jdbcTemplate.queryForObject(sql, String.class);
-            return id;
+            return UUID.fromString(id);
         } catch (EmptyResultDataAccessException e) {
             // Trate o caso em que a tabela está vazia
             // TODO: lançar exceção

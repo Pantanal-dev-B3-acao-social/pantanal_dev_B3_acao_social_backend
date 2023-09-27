@@ -61,11 +61,11 @@ public class CategoryFactory {
     }
 
     public List<CategoryEntity> insertMany(int amount) {
-        List<CategoryEntity> socials = new ArrayList<>();
+        List<CategoryEntity> entities = new ArrayList<>();
         for (int i=0; i<amount; i++) {
-            CategoryEntity socialActionEntity = this.makeFakeEntity();
-            socials.add(this.insertOne(socialActionEntity));
+            CategoryEntity entity = this.makeFakeEntity();
+            entities.add(this.insertOne(entity));
         }
-        return socials;
+        return entities;
     }
 }

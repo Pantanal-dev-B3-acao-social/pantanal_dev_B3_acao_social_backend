@@ -6,7 +6,9 @@ import dev.pantanal.b3.krpv.acao_social.modulos.ong.dto.request.OngUpdateDto;
 import dev.pantanal.b3.krpv.acao_social.modulos.ong.dto.response.OngResponseDto;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import jakarta.annotation.Nullable;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -74,7 +76,15 @@ public class OngController {
         OngEntity entity = service.create(request);
         OngResponseDto response = new OngResponseDto(
                 entity.getId(),
-                entity.getName()
+                entity.getName(),
+                entity.getCnpj(),
+                entity.getManagerId(),
+                entity.getCreatedBy(),
+                entity.getLastModifiedBy(),
+                entity.getCreatedDate(),
+                entity.getLastModifiedDate(),
+                entity.getDeletedDate(),
+                entity.getDeletedBy()
         );
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
@@ -99,11 +109,8 @@ public class OngController {
                 entity.getManagerId(),
                 entity.getCreatedBy(),
                 entity.getLastModifiedBy(),
-                entity.getLocalDateTime(),
                 entity.getCreatedDate(),
-                entity.getLocalDateTime(),
                 entity.getLastModifiedDate(),
-                entity.getLocalDateTime(),
                 entity.getDeletedDate(),
                 entity.getDeletedBy()
         );

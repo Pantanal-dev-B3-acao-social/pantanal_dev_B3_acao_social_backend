@@ -40,12 +40,14 @@ public class OngFactory {
         LocalDateTime lastModifiedDate = createdDate.plusHours(3).plusMinutes(30);
         String name = faker.name().fullName();
         String code = generatorCode.execute(name);
+        String cnpj = "";
+        UUID managerId = UUID.randomUUID();
         return new OngEntity(
                 1L,
                 UUID.randomUUID(),
                 name,
-                faker.lorem().sentence(),
-                code,
+                cnpj,
+                managerId,
                 createBy,
                 lastModifiedBy,
                 createdDate,

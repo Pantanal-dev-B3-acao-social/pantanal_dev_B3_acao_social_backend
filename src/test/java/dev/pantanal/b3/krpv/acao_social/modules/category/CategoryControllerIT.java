@@ -37,11 +37,15 @@ public class CategoryControllerIT {
 
     @Autowired
     ObjectMapper mapper;
+
     @Autowired
     LoginMock loginMock;
+
     @Autowired
     CategoryRepository categoryRepository;
+
     private String tokenUserLogged;
+
     @Autowired
     CategoryFactory categoryFactory;
 
@@ -68,8 +72,8 @@ public class CategoryControllerIT {
         );
         // Assert (Verificar)
         perform
-                .andExpect(MockMvcResultMatchers.status().isOk())
                 .andDo(MockMvcResultHandlers.print())
+                .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.content").isArray())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.content", hasSize(3)));
         int i = 0;
