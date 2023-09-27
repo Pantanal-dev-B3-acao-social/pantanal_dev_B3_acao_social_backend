@@ -1,9 +1,9 @@
 package dev.pantanal.b3.krpv.acao_social.config.postgres.factory;
 
 import com.github.javafaker.Faker;
-import dev.pantanal.b3.krpv.acao_social.modulos.company.repository.socialAction.SocialActionEntity;
-import dev.pantanal.b3.krpv.acao_social.modulos.company.repository.socialAction.dto.SocialActionDto;
-import dev.pantanal.b3.krpv.acao_social.modulos.company.repository.socialAction.repository.SocialActionRepository;
+import dev.pantanal.b3.krpv.acao_social.modulos.socialAction.SocialActionEntity;
+import dev.pantanal.b3.krpv.acao_social.modulos.socialAction.dto.SocialActionDto;
+import dev.pantanal.b3.krpv.acao_social.modulos.socialAction.repository.SocialActionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Component;
