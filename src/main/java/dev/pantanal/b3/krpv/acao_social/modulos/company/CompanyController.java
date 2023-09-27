@@ -1,6 +1,9 @@
 package dev.pantanal.b3.krpv.acao_social.modulos.company;
 
+import dev.pantanal.b3.krpv.acao_social.modulos.company.CompanyEntity;
+import dev.pantanal.b3.krpv.acao_social.modulos.category.dto.request.CategoryParamsDto;
 import dev.pantanal.b3.krpv.acao_social.modulos.company.dto.request.CompanyCreateDto;
+import dev.pantanal.b3.krpv.acao_social.modulos.company.dto.request.CompanyParamsDto;
 import dev.pantanal.b3.krpv.acao_social.modulos.company.dto.request.CompanyUpdateDto;
 import dev.pantanal.b3.krpv.acao_social.modulos.company.dto.response.CompanyResponseDto;
 import io.swagger.v3.oas.annotations.Operation;
@@ -8,6 +11,11 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.SortDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -23,6 +31,27 @@ public class CompanyController {
     @Autowired
     private CompanyService service;
     public static final String ROUTE_COMPANY = "/v1/company";
+
+    @GetMapping
+    @ResponseStatus(HttpStatus.OK)
+    //@PreAuthorize("hasAnyRole('COMPANY_GET_ALL')")
+    @Operation(summary = "Gets Companies", method = "GET")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Element(s) found successfully"),
+            @ApiResponse(responseCode = "401", description = "User not authenticated"),
+            @ApiResponse(responseCode = "404", description = "Not found"),
+            @ApiResponse(responseCode = "500", description = "Internal Server Error"),
+    })
+    public Page<CompanyEntity> findAll(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @SortDefault(sort="name", direction = Sort.Direction.DESC) Sort sort,
+            @Valid CompanyParamsDto request
+    ) {
+        Pageable paging = PageRequest.of(page, size, sort);
+        Page<CompanyEntity> response = service.findAll(paging, request);
+        return response; // TODO: verificar se vai converter certo
+    }
 
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)

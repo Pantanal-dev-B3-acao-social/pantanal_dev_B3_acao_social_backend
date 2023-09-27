@@ -37,10 +37,11 @@ public class SocialActionRepository {
     @PersistenceContext
         private final EntityManager entityManager;
 
-    public SocialActionEntity findById(UUID id) {
-        SocialActionEntity socialActionEntity = postgresSocialActionRepository.findById(id).orElse(null);
+    public SocialActionEntity save(SocialActionEntity obj) {
+        SocialActionEntity socialActionEntity = postgresSocialActionRepository.save(obj);
         return socialActionEntity;
     }
+
 
     public Page<SocialActionEntity> findAll(Pageable pageable, BooleanExpression predicate) {
         JPAQueryFactory queryFactory = new JPAQueryFactory(entityManager);
@@ -61,8 +62,8 @@ public class SocialActionRepository {
         return new PageImpl<>(results,pageable,total);
     }
 
-    public SocialActionEntity save(SocialActionEntity obj) {
-        SocialActionEntity socialActionEntity = postgresSocialActionRepository.save(obj);
+    public SocialActionEntity findById(UUID id) {
+        SocialActionEntity socialActionEntity = postgresSocialActionRepository.findById(id).orElse(null);
         return socialActionEntity;
     }
 
