@@ -1,5 +1,7 @@
 package dev.pantanal.b3.krpv.acao_social.modulos.socialAction.repository;
 
+import com.querydsl.core.types.Order;
+import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import dev.pantanal.b3.krpv.acao_social.modulos.socialAction.QSocialActionEntity;

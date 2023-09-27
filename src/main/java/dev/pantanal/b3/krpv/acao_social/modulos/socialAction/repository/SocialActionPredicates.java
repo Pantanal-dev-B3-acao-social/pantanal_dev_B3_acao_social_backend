@@ -16,7 +16,7 @@ public class SocialActionPredicates {
 
         if (filters.name() != null){
             StringPath filterNamePath = qSocialActionEntity.name;
-            predicate = predicate.and(filterNamePath.like(filters.name()+ "%"));
+            predicate = predicate.and(filterNamePath.like(filters.name() + "%"));
         }
         if (filters.description() != null){
             StringPath filterDescriptionPath = qSocialActionEntity.description;
