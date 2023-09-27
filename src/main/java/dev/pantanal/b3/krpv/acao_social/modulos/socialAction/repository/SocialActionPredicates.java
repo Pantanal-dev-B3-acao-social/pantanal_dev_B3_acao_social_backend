@@ -16,16 +16,16 @@ public class SocialActionPredicates {
 
         if (filters.name() != null){
             StringPath filterNamePath = qSocialActionEntity.name;
-            predicate = predicate.and(filterNamePath.like(filters.name()+ "%"));
+            predicate = predicate.and(filterNamePath.like(filters.name() + "%"));
         }
         if (filters.description() != null){
             StringPath filterDescriptionPath = qSocialActionEntity.description;
             predicate = predicate.and(filterDescriptionPath.eq(filters.description()));
         }
-        if (filters.organizer() != null){
-            StringPath filterOrganizerPath = qSocialActionEntity.organizer;
-            predicate = predicate.and(filterOrganizerPath.eq(filters.organizer()));
-        }
+//        if (filters.organizer() != null){
+//            StringPath filterOrganizerPath = qSocialActionEntity.organizer;
+//            predicate = predicate.and(filterOrganizerPath.eq(filters.organizer()));
+//        }
         return predicate;
     }
 

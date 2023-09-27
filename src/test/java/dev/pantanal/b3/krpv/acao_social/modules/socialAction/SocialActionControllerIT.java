@@ -93,6 +93,39 @@ public class SocialActionControllerIT {
     }
 
     @Test
+    @DisplayName("lista paginada,filtrada e ordenada de ações sociais com sucesso")
+    void findAllSocialActionWithFilters() throws Exception {
+        // Arrange (Organizar)
+        List<SocialActionEntity> saved = socialActionFactory.insertMany(3);
+        long versionTestLong = 1;
+        // Prepare filters, sorting, and paging parameters
+        String filter = saved.get(0).getName(); //check for Filter
+        String sort = "ASC";    //Check for Sorting
+        int pageNumber = 0;
+        int pageSize = 1;
+
+        // Act (ação)
+        ResultActions perform = mockMvc.perform(
+                MockMvcRequestBuilders.get(ROUTE_SOCIAL)
+                        .param("name", filter)
+                        .param("sort", sort)
+                        .param("page", String.valueOf(pageNumber))
+                        .param("size", String.valueOf(pageSize))
+                        .header("Authorization", "Bearer " + tokenUserLogged)
+        );
+
+        // Assert (Verificar)
+        perform
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.content").isArray())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.content", hasSize(1))) //should match the page size
+                .andExpect(MockMvcResultMatchers.jsonPath("$.content[0].id").value(saved.get(0).getId().toString()))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.content[0].name").value(saved.get(0).getName()))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.content[0]description").value(saved.get(0).getDescription()));
+    }
+
+    @Test
     @DisplayName("salva uma nova ação social com sucesso")
     void saveOneSocialAction() throws Exception {
         // Arrange (Organizar)
