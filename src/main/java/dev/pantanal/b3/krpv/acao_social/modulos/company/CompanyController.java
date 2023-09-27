@@ -12,6 +12,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.UUID;
+
 import static dev.pantanal.b3.krpv.acao_social.modulos.company.CompanyController.ROUTE_COMPANY;
 
 @RestController
@@ -20,9 +22,32 @@ public class CompanyController {
     @Autowired
     private CompanyService service;
     public static final String ROUTE_COMPANY = "/v1/company";
+
+    @GetMapping("/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    //@PreAuthorize("hasAnyRole('COMPANY_GET_ONE')")
+    @Operation(summary = "Gets one Company", method = "GET")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Element found successfully"),
+            @ApiResponse(responseCode = "401", description = "User not authenticated"),
+            @ApiResponse(responseCode = "404", description = "Not found"),
+            @ApiResponse(responseCode = "500", description = "Internal Server Error"),
+    })
+    public ResponseEntity<CompanyResponseDto> findOne(@PathVariable UUID id) {
+        CompanyEntity entity = service.findById(id);
+        CompanyResponseDto response = new CompanyResponseDto(
+                entity.getId(),
+                entity.getName(),
+                entity.getDescription(),
+                entity.getCnpj(),
+                entity.getVersion()
+        );
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    @PreAuthorize("hasAnyRole('Company_CREATE')")
+    //@PreAuthorize("hasAnyRole('COMPANY_CREATE')")
     @Operation(summary = "Creates an Company", method = "POST")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "Company succesfully created"),
