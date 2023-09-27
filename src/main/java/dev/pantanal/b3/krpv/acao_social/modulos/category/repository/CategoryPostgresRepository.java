@@ -1,7 +1,7 @@
 package dev.pantanal.b3.krpv.acao_social.modulos.category.repository;
 
 import dev.pantanal.b3.krpv.acao_social.modulos.category.CategoryEntity;
-import dev.pantanal.b3.krpv.acao_social.modulos.socialAction.SocialActionEntity;
+import dev.pantanal.b3.krpv.acao_social.modulos.company.repository.socialAction.SocialActionEntity;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;

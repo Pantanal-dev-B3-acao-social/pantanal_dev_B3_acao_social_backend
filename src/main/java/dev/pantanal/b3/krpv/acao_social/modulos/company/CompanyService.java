@@ -45,5 +45,7 @@ public class CompanyService {
         CompanyEntity updatedObj = repository.update(obj);
         return updatedObj;
     }
+
+    public void delete(UUID id) { repository.delete(id); }
 }
 

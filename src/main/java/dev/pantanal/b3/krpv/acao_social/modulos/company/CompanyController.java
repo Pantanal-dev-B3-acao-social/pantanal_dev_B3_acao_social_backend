@@ -94,4 +94,20 @@ public class CompanyController {
         );
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
+
+    @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    //@PreAuthorize("hasAnyRole('COMPANY_DELETE')")
+    @Operation(summary = "Deletes an Company", method = "DELETE")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "204", description = "Successfully deleted"),
+            @ApiResponse(responseCode = "400", description = "Invalid Id"),
+            @ApiResponse(responseCode = "401", description = "User not authenticated"),
+            @ApiResponse(responseCode = "404", description = "Company not found"),
+            @ApiResponse(responseCode = "500", description = "Error when excluding company"),
+    })
+    public void delete(@PathVariable UUID id) {
+        service.delete(id);
+    }
+
 }
