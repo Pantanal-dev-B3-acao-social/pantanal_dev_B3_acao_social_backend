@@ -19,9 +19,9 @@ import java.util.UUID;
 
 @Table(name="category")
 @Entity(name="Category")
-@AuditTable("z_aud_category")
+//@AuditTable("z_aud_category")
+//@Audited
 @EntityListeners(AuditListener.class)
-@Audited
 @Data
 @NoArgsConstructor
 @Builder

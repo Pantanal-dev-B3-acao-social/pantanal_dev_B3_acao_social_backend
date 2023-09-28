@@ -27,6 +27,7 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping(ROUTE_SOCIAL)
+@PreAuthorize("hasAnyRole('SOCIAL_ACTION')")
 public class SocialActionController {
 
     @Autowired
