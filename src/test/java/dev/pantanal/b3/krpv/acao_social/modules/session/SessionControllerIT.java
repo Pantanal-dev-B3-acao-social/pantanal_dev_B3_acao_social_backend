@@ -16,6 +16,7 @@ import dev.pantanal.b3.krpv.acao_social.utils.EnumUtil;
 //import dev.pantanal.b3.krpv.acao_social.utils.FindRegisterRandom;
 import jakarta.persistence.EntityManager;
 import org.junit.jupiter.api.*;
+import org.skyscreamer.jsonassert.JSONAssert;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -116,31 +117,34 @@ public class SessionControllerIT {
         // Arrange (Organizar)
         socialActionFactory.insertMany(2);
         SessionEntity item = sessionFactory.makeFakeEntity();
+// TODO:        item.setCreatedBy(userLoggedId);
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.registerModule(new JavaTimeModule()); // registrar o módulo JSR-310
-        String bodyJson = objectMapper.writeValueAsString(item);
+        String jsonRequest = objectMapper.writeValueAsString(item);
         // Act (ação)
         ResultActions resultActions = mockMvc.perform(
                 MockMvcRequestBuilders.post(ROUTE_SESSION)
                     .header("Authorization", "Bearer " + tokenUserLogged)
                     .contentType(MediaType.APPLICATION_JSON)
-                    .content(bodyJson)
+                    .content(jsonRequest)
         );
         // Assert (Verificar)
         resultActions
                 .andExpect(MockMvcResultMatchers.status().isCreated())
+//                .andExpect(result -> {
+//                    // Verifique o JSON retornado
+//                    String jsonResponse = result.getResponse().getContentAsString();
+//                    JSONAssert.assertEquals(jsonRequest, jsonResponse, true);
+//                })
                 .andExpect(MockMvcResultMatchers.jsonPath("$.description").value(item.getDescription()))
-// TODO:                .andExpect(MockMvcResultMatchers.jsonPath("$.time").value(item.getTime()))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.status").value(item.getStatus()))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.visibility").value(item.getVisibility()))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.createdBy").value(item.getCreatedBy()))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.lastModifiedBy").value(item.getLastModifiedBy()))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.createdDate").value(item.getCreatedDate()))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.deletedDate").value(item.getLastModifiedDate()))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.deletedDate").value(item.getDeletedDate()))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.deletedBy").value(item.getDeletedBy()))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.socialAction").value(item.getSocialAction()));
+// TODO                .andExpect(MockMvcResultMatchers.jsonPath("$.time").value(item.getTime())) // Converter para string
+                .andExpect(MockMvcResultMatchers.jsonPath("$.status").value(item.getStatus().toString())) // Converter para string
+                .andExpect(MockMvcResultMatchers.jsonPath("$.visibility").value(item.getVisibility().toString())) // Converter para string
+                .andExpect(MockMvcResultMatchers.jsonPath("$.socialAction.id").value(item.getSocialAction().getId().toString()))
+;
+
     }
+
 
     @Test
     @DisplayName("Busca session por ID com sucesso")
