@@ -204,3 +204,15 @@ Neste cenário, quando o usuário recebe um cargo, ele tem o mesmo cargo em toda
 # Melhorias futuras
 - implementar integração do Spring Boot com Redis
   - armazenar detalhes do usuario no Redis
+
+# Testes
+- estamos usando como base principal os testes de integração, que apesar de mais custosos para implementar
+- agregam uma boa cobertura de testes, desde a funcionalidade em si estar funcionando e sua respectiva regra de negocio
+- até integração com outros serviços
+  - não estamos mockando o banco de dados e nem o SSO
+  - cada caso de teste usa realmente o keyclock para autenticar e autorizar
+  - verificando se o usuario esta autenticado para executar a action do controller, caso seja necessário 
+  - verificando se o usuario tem a permissão para executar a action do controller, caso seja necessário
+  - o banco de dados é realmente o postgres, para que garanta que restrições seja as mesmas do ambiente de produção
+  - desta forma garantimos que os erros de consistencia sejam validados
+  - todo caso de teste esta em uma transaction que faz rollback apos terminar  
