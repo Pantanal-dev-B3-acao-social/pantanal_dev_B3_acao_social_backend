@@ -20,7 +20,7 @@ public class CategoryRepository {
     private final CategoryPostgresRepository categoryPostgresRepository;
 
     @PersistenceContext
-        private final EntityManager entityManager;
+    private final EntityManager entityManager;
 
     public CategoryEntity findById(UUID id) {
         CategoryEntity categoryEntity = categoryPostgresRepository.findById(id).orElse(null);

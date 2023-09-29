@@ -1,7 +1,9 @@
-package dev.pantanal.b3.krpv.acao_social.modulos.socialAction;
+package dev.pantanal.b3.krpv.acao_social.modulos.session;
 
 import dev.pantanal.b3.krpv.acao_social.config.audit.AuditListener;
-import dev.pantanal.b3.krpv.acao_social.modulos.session.SessionEntity;
+import dev.pantanal.b3.krpv.acao_social.modulos.session.enums.StatusEnum;
+import dev.pantanal.b3.krpv.acao_social.modulos.session.enums.VisibilityEnum;
+import dev.pantanal.b3.krpv.acao_social.modulos.socialAction.SocialActionEntity;
 import jakarta.persistence.*;
 import jakarta.validation.Valid;
 //import jakarta.validation.constraints.NotBlank;
@@ -17,14 +19,12 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 
 import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
-@Table(name="social_action")
-@Entity(name="SocialAction")
+@Table(name="session")
+@Entity(name="Session")
 @EntityListeners(AuditListener.class)
-//@AuditTable("z_aud_social_action")
+//@AuditTable("z_aud_session")
 //@Audited
 @Data
 @NoArgsConstructor
@@ -32,30 +32,35 @@ import java.util.UUID;
 @AllArgsConstructor
 @EqualsAndHashCode
 @ToString
-public class SocialActionEntity {
+public class SessionEntity {
 
     @Valid
     @Version
     private Long version;
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(columnDefinition = "uuid")
     @NotNull
-    private UUID id;
-    @Column(nullable = false)
-//    @NotBlank
-    private String name;
+    UUID id;
+
     @Column(nullable = false)
 //    @NotBlank
     private String description;
 
+    private LocalDateTime time;
+
+    private StatusEnum status;
+
+    private VisibilityEnum visibility;
+
     @CreatedBy
     @Column(name = "created_by")
-    private UUID createdBy; // TODO: UUID
+    private UUID createdBy;
 
     @LastModifiedBy
     @Column(name = "last_modified_by")
-    private UUID lastModifiedBy; // TODO: UUID
+    private UUID lastModifiedBy;
 
     @CreatedDate
     @Column(name = "created_date")
@@ -69,10 +74,20 @@ public class SocialActionEntity {
     private LocalDateTime deletedDate;
 
     @Column(name = "deleted_by")
-    private UUID deletedBy; // TODO: UUID
+    private UUID deletedBy;
 
-//    @OneToMany(mappedBy = "socialAction", cascade = CascadeType.ALL)
-//    private List<SessionEntity> sessions;
+    @ManyToOne
+    @JoinColumn(name = "social_action_id", nullable = false)
+    private SocialActionEntity socialAction;
+
+// oneToMany
+// private LocalEntity local;
+// ManyToOne
+// private Presence presences;
+// ManyToOne
+// private ResourceEntity[] resources;
+
+
 
     @PrePersist
     protected void onCreate() {
@@ -103,5 +118,4 @@ public class SocialActionEntity {
             this.deletedBy = UUID.fromString(userId);
         }
     }
-
 }

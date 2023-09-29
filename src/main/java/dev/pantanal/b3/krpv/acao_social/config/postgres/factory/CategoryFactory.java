@@ -3,7 +3,6 @@ package dev.pantanal.b3.krpv.acao_social.config.postgres.factory;
 import com.github.javafaker.Faker;
 import dev.pantanal.b3.krpv.acao_social.modulos.category.CategoryEntity;
 import dev.pantanal.b3.krpv.acao_social.modulos.category.repository.CategoryRepository;
-import dev.pantanal.b3.krpv.acao_social.utils.FindRegisterRandom;
 import dev.pantanal.b3.krpv.acao_social.utils.GeneratorCode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -29,8 +28,6 @@ public class CategoryFactory {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    @Autowired
-    private FindRegisterRandom findRegisterRandom;
 
     public CategoryEntity makeFakeEntity() {
         UUID createBy = UUID.randomUUID();
