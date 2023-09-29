@@ -63,11 +63,11 @@ public class OngFactory {
     }
 
     public List<OngEntity> insertMany(int amount) {
-        List<OngEntity> socials = new ArrayList<>();
+        List<OngEntity> ongs = new ArrayList<>();
         for (int i=0; i<amount; i++) {
             OngEntity ongEntity = this.makeFakeEntity();
-            socials.add(this.insertOne(ongEntity));
+            ongs.add(this.insertOne(ongEntity));
         }
-        return socials;
+        return ongs;
     }
 }
