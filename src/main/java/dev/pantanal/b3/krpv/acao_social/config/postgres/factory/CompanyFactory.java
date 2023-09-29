@@ -58,15 +58,15 @@ public class CompanyFactory {
     }
 
     public CompanyEntity insertOne(CompanyEntity toSave) {
-        CompanyRepository saved = companyRepository.save(toSave);
+        CompanyEntity saved = repository.save(toSave);
         return saved;
     }
 
     public List<CategoryEntity> insertMany(int amount) {
         List<CategoryEntity> socials = new ArrayList<>();
         for (int i=0; i<amount; i++) {
-            CategoryEntity socialActionEntity = this.makeFakeEntity();
-            socials.add(this.insertOne(socialActionEntity));
+            CompanyEntity companyEntity = this.makeFakeEntity();
+            socials.add(this.insertOne(companyEntity));
         }
         return socials;
     }
