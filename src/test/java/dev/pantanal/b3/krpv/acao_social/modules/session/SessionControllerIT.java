@@ -13,17 +13,14 @@ import dev.pantanal.b3.krpv.acao_social.modulos.session.repository.SessionPostgr
 import dev.pantanal.b3.krpv.acao_social.modulos.session.repository.SessionRepository;
 import dev.pantanal.b3.krpv.acao_social.modulos.socialAction.SocialActionEntity;
 import dev.pantanal.b3.krpv.acao_social.utils.EnumUtil;
-//import dev.pantanal.b3.krpv.acao_social.utils.FindRegisterRandom;
 import dev.pantanal.b3.krpv.acao_social.utils.FindRegisterRandom;
 import jakarta.persistence.EntityManager;
 import org.junit.jupiter.api.*;
-import org.skyscreamer.jsonassert.JSONAssert;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.RowMapper;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
@@ -33,11 +30,9 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
-
 import static dev.pantanal.b3.krpv.acao_social.modulos.session.SessionController.ROUTE_SESSION;
 import static org.hamcrest.Matchers.hasSize;
 
@@ -54,16 +49,18 @@ public class SessionControllerIT {
 
     @Autowired
     ObjectMapper mapper;
+
     @Autowired
     LoginMock loginMock;
+
     @Autowired
     SessionRepository sessionRepository;
+
     private String tokenUserLogged;
+
     @Autowired
     SessionFactory sessionFactory;
 
-//    @Autowired
-//    private EntityManager entityManager;
     @Autowired
     private EntityManager entityManager;
 
@@ -88,6 +85,7 @@ public class SessionControllerIT {
         // Arrange (Organizar)
         socialActionFactory.insertMany(2);
         List<SessionEntity> saved = sessionFactory.insertMany(4);
+        // TODO:        item.setCreatedBy(userLoggedId);
         // Act (ação)
         ResultActions perform = mockMvc.perform(
                 MockMvcRequestBuilders.get(ROUTE_SESSION)
@@ -107,6 +105,7 @@ public class SessionControllerIT {
                     .andExpect(MockMvcResultMatchers.jsonPath("$.content[" + i + "].time").value(item.getTime()))
                     .andExpect(MockMvcResultMatchers.jsonPath("$.content[" + i + "].status").value(item.getStatus()))
                     .andExpect(MockMvcResultMatchers.jsonPath("$.content[" + i + "].visibility").value(item.getVisibility()))
+// TODO:                   .andExpect(MockMvcResultMatchers.jsonPath(userLoggedId.toString()).value(item.getCreatedBy()))
                     .andExpect(MockMvcResultMatchers.jsonPath("$.content[" + i + "].createdBy").value(item.getCreatedBy()))
                     .andExpect(MockMvcResultMatchers.jsonPath("$.content[" + i + "].lastModifiedBy").value(item.getLastModifiedBy()))
                     .andExpect(MockMvcResultMatchers.jsonPath("$.content[" + i + "].createdDate").value(item.getCreatedDate()))
@@ -156,6 +155,7 @@ public class SessionControllerIT {
         List<SessionEntity> saved = sessionFactory.insertMany(3);
         SessionEntity item = saved.get(0);
         DateTimeFormatter formatter = DateTimeFormatter.ISO_LOCAL_DATE_TIME; // Formate o LocalDateTime esperado
+        // TODO:        item.setCreatedBy(userLoggedId);
         String createdByString = Optional.ofNullable(item.getCreatedBy()).map(UUID::toString).orElse(null);
         String lastModifiedByString = Optional.ofNullable(item.getLastModifiedBy()).map(UUID::toString).orElse(null);
         String deletedByString = Optional.ofNullable(item.getDeletedBy()).map(UUID::toString).orElse(null);
@@ -210,6 +210,7 @@ public class SessionControllerIT {
         socialActionFactory.insertMany(2);
         SessionEntity item = sessionFactory.insertOne(sessionFactory.makeFakeEntity());
         // Modifica alguns dados da session
+// TODO:        item.setCreatedBy(userLoggedId);
         item.setDescription(item.getDescription() + "_ATUALIZADO");
         LocalDateTime timeUpdated = item.getTime().plusHours(2).plusMinutes(40);
         item.setTime(timeUpdated);
@@ -220,6 +221,7 @@ public class SessionControllerIT {
         FindRegisterRandom findRegisterRandom = new FindRegisterRandom<SocialActionEntity>(entityManager);
         List<SocialActionEntity> socialActions = findRegisterRandom.execute("social_action", 1, SocialActionEntity.class);
         item.setSocialAction(socialActions.get(0));
+// TODO: quais dados falta modificar para testar?
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.registerModule(new JavaTimeModule());
         String updatedSessionJson = objectMapper.writeValueAsString(item);
