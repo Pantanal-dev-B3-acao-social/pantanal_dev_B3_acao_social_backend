@@ -11,6 +11,25 @@
 - Staff são os voluntarios membros da equipe organizadora de uma ação social
 - o voluntario pode ir em qualquer session para trabalhar
 - a presença do voluntario na sessão deve ser registrada via CPF ou QR code
+- Categoria
+  - nivel da ação social
+  - tipo da ação social
+  - categoria da doação
+  - categoria da sessão
+  - categoria do investimento 
+  - categirua do recurso
+- Midia social
+  - midias sociais da ação social
+  - midias sociais da empresa
+  - midias sociais da ONG
+- Recursos
+  - recursos da sessão
+  - recursos da ação social
+  - recursos da ong
+  - recursos da empresa
+  - recursos doados
+  - recursos comprados com dinheiro de investimento da empresa
+  - recursos comprados com dinheiro de doação de pessoa fisica
 
 # Funcionalidades
 - Ação social
