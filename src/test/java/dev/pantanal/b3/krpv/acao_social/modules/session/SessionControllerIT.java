@@ -14,6 +14,7 @@ import dev.pantanal.b3.krpv.acao_social.modulos.session.repository.SessionReposi
 import dev.pantanal.b3.krpv.acao_social.modulos.socialAction.SocialActionEntity;
 import dev.pantanal.b3.krpv.acao_social.utils.EnumUtil;
 //import dev.pantanal.b3.krpv.acao_social.utils.FindRegisterRandom;
+import dev.pantanal.b3.krpv.acao_social.utils.FindRegisterRandom;
 import jakarta.persistence.EntityManager;
 import org.junit.jupiter.api.*;
 import org.skyscreamer.jsonassert.JSONAssert;
@@ -34,6 +35,9 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
+
 import static dev.pantanal.b3.krpv.acao_social.modulos.session.SessionController.ROUTE_SESSION;
 import static org.hamcrest.Matchers.hasSize;
 
@@ -60,6 +64,8 @@ public class SessionControllerIT {
 
 //    @Autowired
 //    private EntityManager entityManager;
+    @Autowired
+    private EntityManager entityManager;
 
     @Autowired
     JdbcTemplate jdbcTemplate;
@@ -104,7 +110,7 @@ public class SessionControllerIT {
                     .andExpect(MockMvcResultMatchers.jsonPath("$.content[" + i + "].createdBy").value(item.getCreatedBy()))
                     .andExpect(MockMvcResultMatchers.jsonPath("$.content[" + i + "].lastModifiedBy").value(item.getLastModifiedBy()))
                     .andExpect(MockMvcResultMatchers.jsonPath("$.content[" + i + "].createdDate").value(item.getCreatedDate()))
-                    .andExpect(MockMvcResultMatchers.jsonPath("$.content[" + i + "].deletedDate").value(item.getLastModifiedDate()))
+                    .andExpect(MockMvcResultMatchers.jsonPath("$.content[" + i + "].lastModifiedDate").value(item.getLastModifiedDate()))
                     .andExpect(MockMvcResultMatchers.jsonPath("$.content[" + i + "].deletedDate").value(item.getDeletedDate()))
                     .andExpect(MockMvcResultMatchers.jsonPath("$.content[" + i + "].deletedBy").value(item.getDeletedBy()))
                     .andExpect(MockMvcResultMatchers.jsonPath("$.content[" + i + "].socialAction").value(item.getSocialAction()));
@@ -149,27 +155,31 @@ public class SessionControllerIT {
         socialActionFactory.insertMany(2);
         List<SessionEntity> saved = sessionFactory.insertMany(3);
         SessionEntity item = saved.get(0);
+        DateTimeFormatter formatter = DateTimeFormatter.ISO_LOCAL_DATE_TIME; // Formate o LocalDateTime esperado
+        String createdByString = Optional.ofNullable(item.getCreatedBy()).map(UUID::toString).orElse(null);
+        String lastModifiedByString = Optional.ofNullable(item.getLastModifiedBy()).map(UUID::toString).orElse(null);
+        String deletedByString = Optional.ofNullable(item.getDeletedBy()).map(UUID::toString).orElse(null);
+        String deletedDateString = Optional.ofNullable(item.getDeletedDate()).map(LocalDateTime::toString).orElse(null);
         // Act (ação)
-        ResultActions perform = mockMvc.perform(
+        ResultActions resultActions = mockMvc.perform(
                 MockMvcRequestBuilders.get(ROUTE_SESSION + "/{id}", item.getId().toString())
                         .header("Authorization", "Bearer " + tokenUserLogged)
         );
         // Assert (Verificar)
-        perform
+        resultActions
                 .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.content").isNotEmpty())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.id").value(item.getId().toString()))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.description").value(item.getDescription()))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.time").value(item.getTime()))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.status").value(item.getStatus()))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.visibility").value(item.getVisibility()))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.createdBy").value(item.getCreatedBy()))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.lastModifiedBy").value(item.getLastModifiedBy()))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.createdDate").value(item.getCreatedDate()))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.deletedDate").value(item.getLastModifiedDate()))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.deletedDate").value(item.getDeletedDate()))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.deletedBy").value(item.getDeletedBy()))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.socialAction").value(item.getSocialAction()));
+                .andExpect(MockMvcResultMatchers.jsonPath("$.time").value(item.getTime().format(formatter))) // Compare como string formatada
+                .andExpect(MockMvcResultMatchers.jsonPath("$.status").value(item.getStatus().toString()))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.visibility").value(item.getVisibility().toString()))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.socialAction.id").value(item.getSocialAction().getId().toString()))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.createdBy").value(createdByString))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.lastModifiedBy").value(lastModifiedByString))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.createdDate").value(item.getCreatedDate().format(formatter)))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.lastModifiedDate").value(item.getLastModifiedDate().format(formatter)))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.deletedDate").value(deletedDateString))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.deletedBy").value(deletedByString));
     }
 
     @Test
@@ -207,13 +217,18 @@ public class SessionControllerIT {
         item.setStatus(statusEnum);
         VisibilityEnum visibilityEnum = new EnumUtil<VisibilityEnum>().getRandomValueDiff(item.getVisibility());
         item.setVisibility(visibilityEnum);
-//        FindRegisterRandom findRegisterRandom = new FindRegisterRandom<SocialActionEntity>(entityManager);
-//        List<SocialActionEntity> socialActions = findRegisterRandom.execute("social_action", 1, SocialActionEntity.class);
-//        item.setSocialAction(socialActions.get(0));
-        item.setSocialAction(null);
+        FindRegisterRandom findRegisterRandom = new FindRegisterRandom<SocialActionEntity>(entityManager);
+        List<SocialActionEntity> socialActions = findRegisterRandom.execute("social_action", 1, SocialActionEntity.class);
+        item.setSocialAction(socialActions.get(0));
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.registerModule(new JavaTimeModule());
         String updatedSessionJson = objectMapper.writeValueAsString(item);
+        DateTimeFormatter formatter = DateTimeFormatter.ISO_LOCAL_DATE_TIME; // Formate o LocalDateTime esperado
+        String createdByString = Optional.ofNullable(item.getCreatedBy()).map(UUID::toString).orElse(null);
+        String lastModifiedByString = Optional.ofNullable(item.getLastModifiedBy()).map(UUID::toString).orElse(null);
+        String deletedByString = Optional.ofNullable(item.getDeletedBy()).map(UUID::toString).orElse(null);
+        String deletedDateString = Optional.ofNullable(item.getDeletedDate()).map(LocalDateTime::toString).orElse(null);
+        String expectedTime = item.getTime().format(formatter); // Formate o LocalDateTime esperado
         // Act (ação)
         ResultActions resultActions = mockMvc.perform(
                 MockMvcRequestBuilders.patch(ROUTE_SESSION + "/{id}", item.getId())
@@ -224,18 +239,17 @@ public class SessionControllerIT {
         // Assert (Verificar)
         resultActions
                 .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.content").isNotEmpty())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.id").value(item.getId().toString()))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.description").value(item.getDescription()))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.time").value(item.getTime()))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.status").value(item.getStatus()))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.visibility").value(item.getVisibility()))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.createdBy").value(item.getCreatedBy()))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.lastModifiedBy").value(item.getLastModifiedBy()))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.createdDate").value(item.getCreatedDate()))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.deletedDate").value(item.getLastModifiedDate()))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.deletedDate").value(item.getDeletedDate()))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.deletedBy").value(item.getDeletedBy()))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.socialAction").value(item.getSocialAction()));
+                .andExpect(MockMvcResultMatchers.jsonPath("$.time").value(expectedTime)) // Compare como string formatada
+                .andExpect(MockMvcResultMatchers.jsonPath("$.status").value(item.getStatus().toString()))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.visibility").value(item.getVisibility().toString()))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.socialAction.id").value(item.getSocialAction().getId().toString()))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.createdBy").value(createdByString))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.lastModifiedBy").value(lastModifiedByString))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.createdDate").value(item.getCreatedDate().format(formatter)))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.lastModifiedDate").value(item.getLastModifiedDate().format(formatter)))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.deletedDate").value(deletedDateString))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.deletedBy").value(deletedByString));
     }
 }
