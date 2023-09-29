@@ -1,6 +1,12 @@
 CREATE TABLE social_action (
-    id UUID PRIMARY KEY UNIQUE NOT NULL,
+    id UUID PRIMARY KEY,
     name VARCHAR(255) NOT NULL,
     description VARCHAR(255) NOT NULL,
-    version int8
+    created_by UUID,
+    last_modified_by UUID,
+    created_date TIMESTAMP,
+    last_modified_date TIMESTAMP,
+    deleted_date TIMESTAMP,
+    deleted_by UUID,
+    version BIGINT
 );
