@@ -31,6 +31,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import static dev.pantanal.b3.krpv.acao_social.modulos.session.SessionController.ROUTE_SESSION;
@@ -121,6 +122,8 @@ public class SessionControllerIT {
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.registerModule(new JavaTimeModule()); // registrar o módulo JSR-310
         String jsonRequest = objectMapper.writeValueAsString(item);
+        DateTimeFormatter formatter = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
+        String expectedTime = item.getTime().format(formatter); // Formate o LocalDateTime esperado
         // Act (ação)
         ResultActions resultActions = mockMvc.perform(
                 MockMvcRequestBuilders.post(ROUTE_SESSION)
@@ -131,18 +134,11 @@ public class SessionControllerIT {
         // Assert (Verificar)
         resultActions
                 .andExpect(MockMvcResultMatchers.status().isCreated())
-//                .andExpect(result -> {
-//                    // Verifique o JSON retornado
-//                    String jsonResponse = result.getResponse().getContentAsString();
-//                    JSONAssert.assertEquals(jsonRequest, jsonResponse, true);
-//                })
                 .andExpect(MockMvcResultMatchers.jsonPath("$.description").value(item.getDescription()))
-// TODO                .andExpect(MockMvcResultMatchers.jsonPath("$.time").value(item.getTime())) // Converter para string
-                .andExpect(MockMvcResultMatchers.jsonPath("$.status").value(item.getStatus().toString())) // Converter para string
-                .andExpect(MockMvcResultMatchers.jsonPath("$.visibility").value(item.getVisibility().toString())) // Converter para string
-                .andExpect(MockMvcResultMatchers.jsonPath("$.socialAction.id").value(item.getSocialAction().getId().toString()))
-;
-
+                .andExpect(MockMvcResultMatchers.jsonPath("$.time").value(expectedTime)) // Compare como string formatada
+                .andExpect(MockMvcResultMatchers.jsonPath("$.status").value(item.getStatus().toString()))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.visibility").value(item.getVisibility().toString()))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.socialAction.id").value(item.getSocialAction().getId().toString()));
     }
 
 
