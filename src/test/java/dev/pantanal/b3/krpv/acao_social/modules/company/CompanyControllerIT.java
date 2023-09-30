@@ -80,7 +80,8 @@ public class CompanyControllerIT {
             perform
                     .andExpect(MockMvcResultMatchers.jsonPath("$.content[" + i + "].id").value(item.getId().toString()))
                     .andExpect(MockMvcResultMatchers.jsonPath("$.content[" + i + "].name").value(item.getName()))
-                    .andExpect(MockMvcResultMatchers.jsonPath("$.content[" + i + "].description").value(item.getDescription()));
+                    .andExpect(MockMvcResultMatchers.jsonPath("$.content[" + i + "].description").value(item.getDescription()))
+                    .andExpect(MockMvcResultMatchers.jsonPath("$.content[" + i + "].cnpj").value(item.getCnpj()));
             i++;
         }
     }
@@ -115,7 +116,8 @@ public class CompanyControllerIT {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.content", hasSize(1))) //should match the page size
                 .andExpect(MockMvcResultMatchers.jsonPath("$.content[0].id").value(saved.get(0).getId().toString()))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.content[0].name").value(saved.get(0).getName()))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.content[0]description").value(saved.get(0).getDescription()));
+                .andExpect(MockMvcResultMatchers.jsonPath("$.content[0]description").value(saved.get(0).getDescription()))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.content[0].cnpj").value(saved.get(0).getCnpj()));
     }
 
     @Test
@@ -124,6 +126,7 @@ public class CompanyControllerIT {
         // Arrange (Organizar)
         CompanyEntity item = companyfactory.makeFakeEntity();
         ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.registerModule(new JavaTimeModule());
         String socialActionJson = objectMapper.writeValueAsString(item);
         // Act (ação)
         ResultActions resultActions = mockMvc.perform(
@@ -160,6 +163,7 @@ public class CompanyControllerIT {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.id").value(item.getId().toString()))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.name").value(item.getName()))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.description").value(item.getDescription()))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.cnpj").value(item.getCnpj()))
                 .andDo(MockMvcResultHandlers.print());
     }
 
@@ -206,6 +210,7 @@ public class CompanyControllerIT {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.id").value(savedItem.getId().toString()))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.name").value(savedItem.getName()))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.description").value(savedItem.getDescription()))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.cnpj").value(savedItem.getCnpj()))
                 .andDo(MockMvcResultHandlers.print());
     }
 
