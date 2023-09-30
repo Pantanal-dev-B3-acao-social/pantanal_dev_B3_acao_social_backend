@@ -22,12 +22,10 @@ public class CategoryFactory {
     private CategoryRepository categoryRepository;
     @Autowired
     private GeneratorCode generatorCode;
-
     @Autowired
     public CategoryFactory(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
-
 
     public CategoryEntity makeFakeEntity() {
         UUID createBy = UUID.randomUUID();

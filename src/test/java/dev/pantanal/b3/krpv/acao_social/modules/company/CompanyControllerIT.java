@@ -10,17 +10,26 @@ import dev.pantanal.b3.krpv.acao_social.modulos.company.repository.CompanyPostgr
 import dev.pantanal.b3.krpv.acao_social.modulos.company.repository.CompanyRepository;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.test.annotation.Rollback;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
+import org.springframework.transaction.annotation.Transactional;
+
 import java.util.List;
 
 import static dev.pantanal.b3.krpv.acao_social.modulos.company.CompanyController.ROUTE_COMPANY;
 import static org.hamcrest.Matchers.hasSize;
 
+@SpringBootTest
+@AutoConfigureMockMvc
+@Transactional
+@Rollback
 public class CompanyControllerIT {
     @Autowired
     MockMvc mockMvc;
