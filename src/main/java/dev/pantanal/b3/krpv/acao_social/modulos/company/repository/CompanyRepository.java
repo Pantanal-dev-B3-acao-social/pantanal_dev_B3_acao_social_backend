@@ -1,12 +1,10 @@
 package dev.pantanal.b3.krpv.acao_social.modulos.company.repository;
 
-import com.github.javafaker.Company;
+
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import dev.pantanal.b3.krpv.acao_social.modulos.category.CategoryEntity;
 import dev.pantanal.b3.krpv.acao_social.modulos.company.CompanyEntity;
 import dev.pantanal.b3.krpv.acao_social.modulos.company.QCompanyEntity;
-import dev.pantanal.b3.krpv.acao_social.modulos.socialAction.SocialActionEntity;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import lombok.RequiredArgsConstructor;
