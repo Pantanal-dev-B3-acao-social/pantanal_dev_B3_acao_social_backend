@@ -1,6 +1,7 @@
 package dev.pantanal.b3.krpv.acao_social.modulos.category.repository;
 
 import dev.pantanal.b3.krpv.acao_social.modulos.category.CategoryEntity;
+import dev.pantanal.b3.krpv.acao_social.modulos.category.CategoryEntity;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
