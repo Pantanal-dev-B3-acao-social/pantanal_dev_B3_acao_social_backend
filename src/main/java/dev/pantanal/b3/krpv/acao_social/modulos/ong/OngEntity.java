@@ -1,7 +1,9 @@
 package dev.pantanal.b3.krpv.acao_social.modulos.ong;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 import lombok.*;
+import org.hibernate.validator.constraints.br.CNPJ;
 import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedBy;
@@ -29,10 +31,12 @@ public class OngEntity {
     @Column(nullable = false)
     private String name;
     @Column(nullable = false)
+    @NotBlank
+    @CNPJ
     private String cnpj;
 
-    @Column(nullable = false)
-    private UUID managerId;
+//    @Column(nullable = false)
+//    private UUID managerId;
 
     @CreatedBy
     private UUID createdBy;

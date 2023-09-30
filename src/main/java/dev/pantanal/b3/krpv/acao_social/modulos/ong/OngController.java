@@ -62,7 +62,7 @@ public class OngController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    @PreAuthorize("hasAnyRole('ONG_CREATE')")
+    //@PreAuthorize("hasAnyRole('ONG_CREATE')")
     @Operation(summary = "Creates a Ong", method = "POST")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "Ong succesfully created"),
@@ -78,7 +78,7 @@ public class OngController {
                 entity.getId(),
                 entity.getName(),
                 entity.getCnpj(),
-                entity.getManagerId(),
+              //  entity.getManagerId(),
                 entity.getCreatedBy(),
                 entity.getLastModifiedBy(),
                 entity.getCreatedDate(),
@@ -106,7 +106,7 @@ public class OngController {
                 entity.getId(),
                 entity.getName(),
                 entity.getCnpj(),
-                entity.getManagerId(),
+        //        entity.getManagerId(),
                 entity.getCreatedBy(),
                 entity.getLastModifiedBy(),
                 entity.getCreatedDate(),

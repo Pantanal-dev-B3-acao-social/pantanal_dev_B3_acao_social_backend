@@ -10,7 +10,7 @@ public record OngResponseDto (
     @NotNull
     String name,
     String cnpj,
-    UUID managerId,
+   // UUID managerId,
     UUID createdBy,
     @Nullable
     UUID lastModifiedBy,

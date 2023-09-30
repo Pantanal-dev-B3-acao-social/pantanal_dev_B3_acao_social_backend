@@ -9,8 +9,8 @@ import java.util.UUID;
 public record OngParamsDto (
 
         String name,
-        String cnpj,
-        UUID managerId
+        String cnpj
+      //  UUID managerId
 
 
 ) {}

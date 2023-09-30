@@ -6,7 +6,7 @@ public record OngDto (
 
         UUID id,
         String name,
-        String cnpj,
-        UUID managerId
+        String cnpj
+       // UUID managerId
 
 ) {}

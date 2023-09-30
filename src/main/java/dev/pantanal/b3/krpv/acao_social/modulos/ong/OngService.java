@@ -20,7 +20,7 @@ public class OngService {
         OngEntity entity = new OngEntity();
         entity.setName(dataRequest.name());
         entity.setCnpj(dataRequest.cnpj());
-        entity.setManagerId(dataRequest.managerId());
+//        entity.setManagerId(dataRequest.managerId());
         OngEntity savedObj = ongRepository.save(entity);
         return savedObj;
     }
@@ -51,9 +51,9 @@ public class OngService {
         if (request.cnpj() != null){
             obj.setCnpj(request.cnpj());
         }
-        if (request.managerId() != null){
-            obj.setManagerId(request.managerId());
-        }
+//        if (request.managerId() != null){
+//            obj.setManagerId(request.managerId());
+//        }
         OngEntity updatedObj = ongRepository.update(obj);
         return updatedObj;
     }

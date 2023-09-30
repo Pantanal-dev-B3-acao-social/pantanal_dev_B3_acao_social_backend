@@ -47,7 +47,7 @@ public class OngFactory {
                 UUID.randomUUID(),
                 name,
                 cnpj,
-                managerId,
+//                managerId,
                 createBy,
                 lastModifiedBy,
                 createdDate,
