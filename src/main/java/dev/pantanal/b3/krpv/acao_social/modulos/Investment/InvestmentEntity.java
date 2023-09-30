@@ -61,7 +61,7 @@ public class InvestmentEntity {
 
     @Column(nullable = false)
     @NotBlank
-    private LocalDateTime aprovedAt;
+    private LocalDateTime approvedAt;
 
     @CreatedBy
     private UUID createdBy;
