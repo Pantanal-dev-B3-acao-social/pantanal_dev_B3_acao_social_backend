@@ -41,10 +41,6 @@ public class CompanyEntity {
     @NotNull
     UUID id;
 
-    //@OneToOne
-    //@JoinColumn("director_Company")
-    //private instance of the entity
-
     @Column(nullable = false)
     @NotBlank
     private String name;
@@ -76,6 +72,10 @@ public class CompanyEntity {
 
     @Column(name = "deleted_by")
     private UUID deletedBy;
+
+    //@OneToMany
+    //@JoinColumn("manager_id")
+    //private Manager[] manager
 
     @PrePersist
     protected void onCreate() {
