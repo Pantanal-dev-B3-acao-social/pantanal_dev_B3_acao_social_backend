@@ -57,6 +57,9 @@ public class CategoryService {
 
     public CategoryEntity update(UUID id, CategoryUpdateDto request){
         CategoryEntity obj = categoryRepository.findById(id);
+        if (obj == null) {
+            throw new ObjectNotFoundException("Registro não encontrado: " + id);
+        }
         if (request.name() != null) {
             obj.setName(request.name());
         }
