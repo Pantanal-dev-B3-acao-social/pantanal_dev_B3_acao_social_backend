@@ -1,5 +1,6 @@
 package dev.pantanal.b3.krpv.acao_social.config.postgres;
 
+import dev.pantanal.b3.krpv.acao_social.config.postgres.factory.CategoryFactory;
 import dev.pantanal.b3.krpv.acao_social.config.postgres.factory.SessionFactory;
 import dev.pantanal.b3.krpv.acao_social.config.postgres.factory.SocialActionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,18 +16,22 @@ public class SeedDataService {
 
     private final SocialActionFactory socialActionFactory;
     private final SessionFactory sessionFactory;
+    private final CategoryFactory categoryFactory;
 
     @Autowired
     public SeedDataService(
             JdbcTemplate jdbcTemplate,
             SocialActionFactory socialActionFactory,
-            SessionFactory sessionFactory
+            SessionFactory sessionFactory,
+            CategoryFactory categoryFactory
     ) {
         this.socialActionFactory = socialActionFactory;
         this.sessionFactory = sessionFactory;
+        this.categoryFactory = categoryFactory;
     }
 
     public void executeAllSeed() {
+        this.categoryFactory.insertMany(100);
 //        this.companyFactory.insertMany(4);
 //        this.ongFactory.insertMany(10);
         this.socialActionFactory.insertMany(20);

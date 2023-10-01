@@ -1,9 +1,9 @@
 package dev.pantanal.b3.krpv.acao_social.modulos.session.enums;
 
 public enum VisibilityEnum {
-    PUBLIC_INTERNALLY("Público somente para internos"),
-    PUBLIC_EXTERNALLY("Público tambem para externos"),
-    PRIVATE("Privado");
+    PUBLIC_INTERNALLY("Público somente para internos da empresa"),
+    PUBLIC_EXTERNALLY("Público tambem para externos da empresa"),
+    PRIVATE("Privado para todos");
 
     private final String label;
 

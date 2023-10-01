@@ -5,7 +5,7 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import dev.pantanal.b3.krpv.acao_social.config.postgres.factory.CategoryFactory;
 import dev.pantanal.b3.krpv.acao_social.modules.auth.LoginMock;
 import dev.pantanal.b3.krpv.acao_social.modulos.auth.dto.LoginUserDto;
-import dev.pantanal.b3.krpv.acao_social.modulos.category.CategoryEntity;
+import dev.pantanal.b3.krpv.acao_social.modulos.category.entity.CategoryEntity;
 import dev.pantanal.b3.krpv.acao_social.modulos.category.repository.CategoryPostgresRepository;
 import dev.pantanal.b3.krpv.acao_social.modulos.category.repository.CategoryRepository;
 import org.junit.jupiter.api.*;

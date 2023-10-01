@@ -1,7 +1,8 @@
 package dev.pantanal.b3.krpv.acao_social.config.postgres.factory;
 
 import com.github.javafaker.Faker;
-import dev.pantanal.b3.krpv.acao_social.modulos.category.CategoryEntity;
+import dev.pantanal.b3.krpv.acao_social.modulos.category.entity.CategoryEntity;
+import dev.pantanal.b3.krpv.acao_social.modulos.category.entity.CategorySocialActionTypeEntity;
 import dev.pantanal.b3.krpv.acao_social.modulos.category.repository.CategoryRepository;
 import dev.pantanal.b3.krpv.acao_social.utils.GeneratorCode;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,6 +38,7 @@ public class CategoryFactory {
         LocalDateTime lastModifiedDate = createdDate.plusHours(3).plusMinutes(30);
         String name = faker.name().fullName();
         String code = generatorCode.execute(name);
+        List<CategorySocialActionTypeEntity> categoriesTypes = null;
         return new CategoryEntity(
                 1L,
                 UUID.randomUUID(),
@@ -48,7 +50,8 @@ public class CategoryFactory {
                 createdDate,
                 lastModifiedDate,
                 null,
-                deleteBy
+                deleteBy,
+                categoriesTypes
         );
     }
 

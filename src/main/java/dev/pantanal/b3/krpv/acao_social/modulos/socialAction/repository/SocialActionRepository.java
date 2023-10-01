@@ -35,7 +35,7 @@ public class SocialActionRepository {
     private final SocialActionPostgresRepository postgresSocialActionRepository;
 
     @PersistenceContext
-        private final EntityManager entityManager;
+    private final EntityManager entityManager;
 
     public SocialActionEntity findById(UUID id) {
         SocialActionEntity socialActionEntity = postgresSocialActionRepository.findById(id).orElse(null);

@@ -1,10 +1,9 @@
-package dev.pantanal.b3.krpv.acao_social.modulos.socialAction;
+package dev.pantanal.b3.krpv.acao_social.modulos.category.entity;
 
 import dev.pantanal.b3.krpv.acao_social.config.audit.AuditListener;
-import dev.pantanal.b3.krpv.acao_social.modulos.category.entity.CategorySocialActionTypeEntity;
+import dev.pantanal.b3.krpv.acao_social.modulos.socialAction.SocialActionEntity;
 import jakarta.persistence.*;
 import jakarta.validation.Valid;
-//import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import org.springframework.data.annotation.CreatedBy;
@@ -13,47 +12,47 @@ import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.UUID;
 
-@Table(name="social_action")
-@Entity(name="SocialAction")
-@EntityListeners(AuditListener.class)
-//@AuditTable("z_aud_social_action")
+@Table(name="category_social_action_type")
+@Entity(name="CategorySocialActionType")
+//@AuditTable("z_aud_category_social_action_type")
 //@Audited
+@EntityListeners(AuditListener.class)
 @Data
 @NoArgsConstructor
 @Builder
 @AllArgsConstructor
 @EqualsAndHashCode
 @ToString
-public class SocialActionEntity {
+public class CategorySocialActionTypeEntity {
 
     @Valid
     @Version
     private Long version;
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(columnDefinition = "uuid")
     @NotNull
-    private UUID id;
-    @Column(nullable = false)
-//    @NotBlank
-    private String name;
-    @Column(nullable = false)
-//    @NotBlank
-    private String description;
+    UUID id;
+
+    @ManyToOne
+    @JoinColumn(name = "category_id")
+    private CategoryEntity categoryEntity;
+
+    @ManyToOne
+    @JoinColumn(name = "social_action_id")
+    private SocialActionEntity socialActionEntity;
 
     @CreatedBy
     @Column(name = "created_by")
-    private UUID createdBy; // TODO: UUID
+    private UUID createdBy;
 
     @LastModifiedBy
     @Column(name = "last_modified_by")
-    private UUID lastModifiedBy; // TODO: UUID
+    private UUID lastModifiedBy;
 
     @CreatedDate
     @Column(name = "created_date")
@@ -67,19 +66,7 @@ public class SocialActionEntity {
     private LocalDateTime deletedDate;
 
     @Column(name = "deleted_by")
-    private UUID deletedBy; // TODO: UUID
-
-    /**
-     * mappedBy: o nome do atributo na tabela CategorySocialActionTypeEntity que faz referencia a esta tabela
-     * cascade = CascadeType.PERSIST faz com que se salvar SocialActionEntity passando uma entidade de CategorySocialActionTypeEntity ambas serão salvas juntas
-     * orphanRemoval = true faz com que SocialActionEntity é optional ter preenchido alguma CategorySocialActionTypeEntity
-     */
-//    @Optional
-    @OneToMany(mappedBy = "socialActionEntity", orphanRemoval = true)
-    private List<CategorySocialActionTypeEntity> categorySocialActionTypeEntities = new ArrayList<>();
-
-//    @OneToMany(mappedBy = "socialAction", cascade = CascadeType.ALL)
-//    private List<SessionEntity> sessions;
+    private UUID deletedBy;
 
     @PrePersist
     protected void onCreate() {
