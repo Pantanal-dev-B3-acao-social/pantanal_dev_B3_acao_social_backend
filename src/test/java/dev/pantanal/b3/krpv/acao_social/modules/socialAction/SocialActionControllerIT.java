@@ -2,6 +2,7 @@ package dev.pantanal.b3.krpv.acao_social.modules.socialAction;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import dev.pantanal.b3.krpv.acao_social.config.postgres.factory.CategoryFactory;
 import dev.pantanal.b3.krpv.acao_social.modules.auth.LoginMock;
 import dev.pantanal.b3.krpv.acao_social.config.postgres.factory.SocialActionFactory;
 import dev.pantanal.b3.krpv.acao_social.modulos.auth.dto.LoginUserDto;
@@ -42,13 +43,13 @@ public class SocialActionControllerIT {
     ObjectMapper mapper;
     @Autowired
     LoginMock loginMock;
-
     @Autowired
     SocialActionRepository socialActionRepository;
     private String tokenUserLogged;
-
     @Autowired
-    SocialActionFactory socialActionFactory;
+    private CategoryFactory categoryFactory;
+    @Autowired
+    private SocialActionFactory socialActionFactory;
 
     @BeforeEach
     public void setup() throws Exception {
@@ -64,6 +65,7 @@ public class SocialActionControllerIT {
     @DisplayName("lista paginada de ações sociais com sucesso")
     void findAllSocialAction() throws Exception {
         // Arrange (Organizar)
+        categoryFactory.insertMany(2);
         List<SocialActionEntity> saved = socialActionFactory.insertMany(3);
         // Act (ação)
         ResultActions perform = mockMvc.perform(
@@ -90,6 +92,7 @@ public class SocialActionControllerIT {
     @DisplayName("lista paginada,filtrada e ordenada de ações sociais com sucesso")
     void findAllSocialActionWithFilters() throws Exception {
         // Arrange (Organizar)
+        categoryFactory.insertMany(2);
         List<SocialActionEntity> saved = socialActionFactory.insertMany(3);
         long versionTestLong = 1;
         // Prepare filters, sorting, and paging parameters
@@ -123,8 +126,10 @@ public class SocialActionControllerIT {
     @DisplayName("salva uma nova ação social com sucesso")
     void saveOneSocialAction() throws Exception {
         // Arrange (Organizar)
-        SocialActionDto item = socialActionFactory.makeFake();
+        categoryFactory.insertMany(2);
+        SocialActionEntity item = socialActionFactory.makeFakeEntity();
         ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.registerModule(new JavaTimeModule());
         String socialActionJson = objectMapper.writeValueAsString(item);
         // Act (ação)
         ResultActions resultActions = mockMvc.perform(
@@ -137,8 +142,8 @@ public class SocialActionControllerIT {
         resultActions
                 // antes verificar se esta vazio
 //                .andExpect(MockMvcResultMatchers.jsonPath("$.content").isNotEmpty())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.name").value(item.name()))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.description").value(item.description()))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.name").value(item.getName()))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.description").value(item.getDescription()))
                 .andDo(MockMvcResultHandlers.print());
     }
 
@@ -147,6 +152,7 @@ public class SocialActionControllerIT {
     @DisplayName("Busca ação social por ID com sucesso")
     void findByIdSocialAction() throws Exception {
         // Arrange (Organizar)
+        categoryFactory.insertMany(2);
         List<SocialActionEntity> saved = socialActionFactory.insertMany(3);
         SocialActionEntity item = saved.get(0);
         // Act (ação)
@@ -167,6 +173,7 @@ public class SocialActionControllerIT {
     @DisplayName("Exclui uma ação social com sucesso")
     void deleteSocialAction() throws Exception {
         // Arrange (Organizar)
+        categoryFactory.insertMany(2);
         SocialActionEntity savedItem = socialActionFactory.insertOne(socialActionFactory.makeFakeEntity());
         // Act (ação)
         ResultActions resultActions = mockMvc.perform(
@@ -186,6 +193,7 @@ public class SocialActionControllerIT {
     @DisplayName("Atualiza uma ação social com sucesso")
     void updateSocialAction() throws Exception {
         // Arrange (Organizar)
+        categoryFactory.insertMany(2);
         SocialActionEntity savedItem = socialActionFactory.insertOne(socialActionFactory.makeFakeEntity());
         // Modifica alguns dados da ação social
         savedItem.setName(savedItem.getName() + "_ATUALIZADO");

@@ -4,6 +4,7 @@ import dev.pantanal.b3.krpv.acao_social.modulos.category.dto.request.CategoryCre
 import dev.pantanal.b3.krpv.acao_social.modulos.category.dto.request.CategoryParamsDto;
 import dev.pantanal.b3.krpv.acao_social.modulos.category.dto.request.CategoryUpdateDto;
 import dev.pantanal.b3.krpv.acao_social.modulos.category.dto.response.CategoryResponseDto;
+import dev.pantanal.b3.krpv.acao_social.modulos.category.entity.CategoryEntity;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;

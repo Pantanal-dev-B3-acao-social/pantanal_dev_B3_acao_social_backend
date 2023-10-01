@@ -1,7 +1,7 @@
 package dev.pantanal.b3.krpv.acao_social.modulos.category.repository;
 
 import com.querydsl.core.types.dsl.BooleanExpression;
-import dev.pantanal.b3.krpv.acao_social.modulos.category.CategoryEntity;
+import dev.pantanal.b3.krpv.acao_social.modulos.category.entity.CategoryEntity;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import lombok.RequiredArgsConstructor;

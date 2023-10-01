@@ -18,7 +18,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import java.util.UUID;
-import org.springframework.jdbc.core.RowMapper;
 
 @Component
 public class SessionFactory {
@@ -47,7 +46,7 @@ public class SessionFactory {
         LocalDateTime createdDate = LocalDateTime.now();
         LocalDateTime lastModifiedDate = createdDate.plusHours(3).plusMinutes(30);
         LocalDateTime time = lastModifiedDate.plusHours(2).plusMinutes(40);
-        FindRegisterRandom findRegisterRandom = new FindRegisterRandom<SocialActionEntity>(entityManager);
+        FindRegisterRandom<SocialActionEntity> findRegisterRandom = new FindRegisterRandom<SocialActionEntity>(entityManager);
         List<SocialActionEntity> socialActions = findRegisterRandom.execute("social_action", 1, SocialActionEntity.class);
         StatusEnum statusEnum = new EnumUtil<StatusEnum>().getRandomValue(StatusEnum.class);
         VisibilityEnum visibilityEnum = new EnumUtil<VisibilityEnum>().getRandomValue(VisibilityEnum.class);

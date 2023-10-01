@@ -5,6 +5,7 @@ import dev.pantanal.b3.krpv.acao_social.exception.ObjectNotFoundException;
 import dev.pantanal.b3.krpv.acao_social.modulos.category.dto.request.CategoryCreateDto;
 import dev.pantanal.b3.krpv.acao_social.modulos.category.dto.request.CategoryParamsDto;
 import dev.pantanal.b3.krpv.acao_social.modulos.category.dto.request.CategoryUpdateDto;
+import dev.pantanal.b3.krpv.acao_social.modulos.category.entity.CategoryEntity;
 import dev.pantanal.b3.krpv.acao_social.modulos.category.repository.CategoryPredicates;
 import dev.pantanal.b3.krpv.acao_social.modulos.category.repository.CategoryRepository;
 import dev.pantanal.b3.krpv.acao_social.utils.GeneratorCode;

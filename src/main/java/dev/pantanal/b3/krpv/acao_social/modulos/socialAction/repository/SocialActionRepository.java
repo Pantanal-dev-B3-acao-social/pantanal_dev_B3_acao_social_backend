@@ -35,7 +35,7 @@ public class SocialActionRepository {
     private final SocialActionPostgresRepository postgresSocialActionRepository;
 
     @PersistenceContext
-        private final EntityManager entityManager;
+    private final EntityManager entityManager;
 
     public SocialActionEntity save(SocialActionEntity obj) {
         SocialActionEntity socialActionEntity = postgresSocialActionRepository.save(obj);

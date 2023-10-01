@@ -1,9 +1,12 @@
 package dev.pantanal.b3.krpv.acao_social.config.postgres.factory;
 
 import com.github.javafaker.Faker;
+import dev.pantanal.b3.krpv.acao_social.modulos.category.entity.CategorySocialActionTypeEntity;
+import dev.pantanal.b3.krpv.acao_social.modulos.category.repository.CategorySocialActionTypePostgresRepository;
 import dev.pantanal.b3.krpv.acao_social.modulos.socialAction.SocialActionEntity;
 import dev.pantanal.b3.krpv.acao_social.modulos.socialAction.dto.SocialActionDto;
 import dev.pantanal.b3.krpv.acao_social.modulos.socialAction.repository.SocialActionRepository;
+import jakarta.persistence.EntityManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Component;
@@ -18,7 +21,10 @@ public class SocialActionFactory {
     private final JdbcTemplate jdbcTemplate;
     @Autowired
     private SocialActionRepository socialActionRepository;
-
+    @Autowired
+    private CategorySocialActionTypeFactory categorySocialActionTypeFactory;
+    @Autowired
+    private EntityManager entityManager;
     @Autowired
     public SocialActionFactory(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
@@ -43,22 +49,19 @@ public class SocialActionFactory {
         UUID lastModifiedBy = null;
         LocalDateTime createdDate = LocalDateTime.now();
         LocalDateTime lastModifiedDate = createdDate.plusHours(3).plusMinutes(30);
-        return new SocialActionEntity(
-                1L,
-                null,
-                faker.name().fullName(),
-                faker.lorem().sentence(),
-                createdBy,
-                lastModifiedBy,
-                createdDate,
-                lastModifiedDate,
-                null,
-                null
+        SocialActionEntity socialCreated = new SocialActionEntity();
+        socialCreated.setVersion(1L);
+        socialCreated.setName(faker.name().fullName());
+        socialCreated.setDescription(faker.lorem().sentence());
+        socialCreated.setCreatedBy(createdBy);
+        socialCreated.setCreatedDate(createdDate);
+        socialCreated.setLastModifiedBy(lastModifiedBy);
+        socialCreated.setLastModifiedDate(lastModifiedDate);
 //                ,SessionEntity
                 // string ongId = findOneRandom("ong");
                 // string levelId = findOneRandom("category_project_level");
                 // string typeId = findOneRandom("category_project_type");
-        );
+        return socialCreated;
     }
 
     public String findOneRandom(String table) {
@@ -75,7 +78,10 @@ public class SocialActionFactory {
 
     public SocialActionEntity insertOne(SocialActionEntity toSave) {
         SocialActionEntity saved = socialActionRepository.save(toSave);
-        return saved;
+        int randomNumber = random.nextInt(3);
+        categorySocialActionTypeFactory.insertManyFakeEntities(saved, null, randomNumber);
+        // TODO: carregar relacionamentos de categoria
+        return socialActionRepository.findById(saved.getId());
     }
 
     public List<SocialActionEntity> insertMany(int amount) {

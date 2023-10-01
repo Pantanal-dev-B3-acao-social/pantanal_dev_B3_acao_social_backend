@@ -1,13 +1,12 @@
-package dev.pantanal.b3.krpv.acao_social.modulos.category;
+package dev.pantanal.b3.krpv.acao_social.modulos.category.entity;
 
 import dev.pantanal.b3.krpv.acao_social.config.audit.AuditListener;
+import dev.pantanal.b3.krpv.acao_social.modulos.category.entity.CategorySocialActionTypeEntity;
 import jakarta.persistence.*;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
-import org.hibernate.envers.AuditTable;
-import org.hibernate.envers.Audited;
 import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedBy;
@@ -15,6 +14,8 @@ import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 @Table(name="category")
@@ -53,15 +54,19 @@ public class CategoryEntity {
     String code;
 
     @CreatedBy
+    @Column(name = "created_by")
     private UUID createdBy;
 
     @LastModifiedBy
+    @Column(name = "last_modified_by")
     private UUID lastModifiedBy;
 
     @CreatedDate
+    @Column(name = "created_date")
     private LocalDateTime createdDate;
 
     @LastModifiedDate
+    @Column(name = "last_modified_date")
     private LocalDateTime lastModifiedDate;
 
     @Column(name = "deleted_date")
@@ -69,6 +74,9 @@ public class CategoryEntity {
 
     @Column(name = "deleted_by")
     private UUID deletedBy;
+
+    @OneToMany(mappedBy = "categoryEntity")
+    private List<CategorySocialActionTypeEntity> cs = new ArrayList<>();
 
     @PrePersist
     protected void onCreate() {

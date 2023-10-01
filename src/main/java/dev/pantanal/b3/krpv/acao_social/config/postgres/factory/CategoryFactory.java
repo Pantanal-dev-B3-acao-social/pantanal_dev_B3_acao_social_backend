@@ -1,7 +1,8 @@
 package dev.pantanal.b3.krpv.acao_social.config.postgres.factory;
 
 import com.github.javafaker.Faker;
-import dev.pantanal.b3.krpv.acao_social.modulos.category.CategoryEntity;
+import dev.pantanal.b3.krpv.acao_social.modulos.category.entity.CategoryEntity;
+import dev.pantanal.b3.krpv.acao_social.modulos.category.entity.CategorySocialActionTypeEntity;
 import dev.pantanal.b3.krpv.acao_social.modulos.category.repository.CategoryRepository;
 import dev.pantanal.b3.krpv.acao_social.utils.GeneratorCode;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,25 +30,20 @@ public class CategoryFactory {
 
     public CategoryEntity makeFakeEntity() {
         UUID createBy = UUID.randomUUID();
-        UUID deleteBy = null;
-        UUID lastModifiedBy = null;
         LocalDateTime createdDate = LocalDateTime.now();
         LocalDateTime lastModifiedDate = createdDate.plusHours(3).plusMinutes(30);
         String name = faker.name().fullName();
         String code = generatorCode.execute(name);
-        return new CategoryEntity(
-                1L,
-                UUID.randomUUID(),
-                name,
-                faker.lorem().sentence(),
-                code,
-                createBy,
-                lastModifiedBy,
-                createdDate,
-                lastModifiedDate,
-                null,
-                deleteBy
-        );
+        CategoryEntity categoryEntity = new CategoryEntity();
+        categoryEntity.setVersion(1L);
+        categoryEntity.setId(UUID.randomUUID());
+        categoryEntity.setName(name);
+        categoryEntity.setDescription(faker.lorem().sentence());
+        categoryEntity.setCode(code);
+        categoryEntity.setCreatedBy(createBy);
+        categoryEntity.setCreatedDate(createdDate);
+        categoryEntity.setLastModifiedDate(lastModifiedDate);
+        return categoryEntity;
     }
 
     public CategoryEntity insertOne(CategoryEntity toSave) {

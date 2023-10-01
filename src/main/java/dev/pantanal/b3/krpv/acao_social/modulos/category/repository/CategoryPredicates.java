@@ -3,7 +3,7 @@ package dev.pantanal.b3.krpv.acao_social.modulos.category.repository;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.core.types.dsl.StringPath;
-import dev.pantanal.b3.krpv.acao_social.modulos.category.QCategoryEntity;
+import dev.pantanal.b3.krpv.acao_social.modulos.category.entity.QCategoryEntity;
 import dev.pantanal.b3.krpv.acao_social.modulos.category.dto.request.CategoryParamsDto;
 import org.springframework.stereotype.Component;
 
