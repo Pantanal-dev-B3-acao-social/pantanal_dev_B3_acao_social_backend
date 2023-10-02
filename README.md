@@ -235,6 +235,9 @@ Neste cenário, quando o usuário recebe um cargo, ele tem o mesmo cargo em toda
   - o banco de dados é realmente o postgres, para que garanta que restrições seja as mesmas do ambiente de produção
   - desta forma garantimos que os erros de consistencia sejam validados
   - todo caso de teste esta em uma transaction que faz rollback apos terminar
+  - ao preparar os casos de teste, as vezes é preciso inserir dados fake para poder usados como base dos testes
+    - o problema de que ao inserir dados pelo teste nao tem userLoggedId, e para resolver este problema foi criado uma classe LoginMock que é capaz de mock do spring security o userlogged 
+    - desta forma quando o teste inserir um registro no DB, será o user do token como createdBy UUID
 - possibilidade de melhoria nos teste, os testes foram inicialmente criados para contemplar somente o caso de sucesso com todos os campos sendo passados
   - criar testes de casos de falha
   - criar testes de casos de sucesso somente com campos obrigatorio
