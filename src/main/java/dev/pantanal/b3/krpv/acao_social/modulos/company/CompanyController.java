@@ -70,7 +70,13 @@ public class CompanyController {
                 entity.getName(),
                 entity.getDescription(),
                 entity.getCnpj(),
-                entity.getVersion()
+                entity.getVersion(),
+                entity.getCreatedBy(),
+                entity.getLastModifiedBy(),
+                entity.getCreatedDate(),
+                entity.getLastModifiedDate(),
+                entity.getDeletedDate(),
+                entity.getDeletedBy()
         );
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
@@ -94,7 +100,13 @@ public class CompanyController {
                 entity.getName(),
                 entity.getDescription(),
                 entity.getCnpj(),
-                entity.getVersion()
+                entity.getVersion(),
+                entity.getCreatedBy(),
+                entity.getLastModifiedBy(),
+                entity.getCreatedDate(),
+                entity.getLastModifiedDate(),
+                entity.getDeletedDate(),
+                entity.getDeletedBy()
         );
         // TODO: fazer um handle para gerar esse retorno
         return new ResponseEntity<>(response, HttpStatus.CREATED);
@@ -119,7 +131,13 @@ public class CompanyController {
                 entity.getName(),
                 entity.getDescription(),
                 entity.getCnpj(),
-                entity.getVersion()
+                entity.getVersion(),
+                entity.getCreatedBy(),
+                entity.getLastModifiedBy(),
+                entity.getCreatedDate(),
+                entity.getLastModifiedDate(),
+                entity.getDeletedDate(),
+                entity.getDeletedBy()
         );
         return new ResponseEntity<>(response, HttpStatus.OK);
     }

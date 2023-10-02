@@ -3,10 +3,12 @@ package dev.pantanal.b3.krpv.acao_social.modules.session;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import dev.pantanal.b3.krpv.acao_social.config.postgres.factory.CategoryFactory;
+import dev.pantanal.b3.krpv.acao_social.config.postgres.factory.CategoryGroupFactory;
 import dev.pantanal.b3.krpv.acao_social.config.postgres.factory.SessionFactory;
 import dev.pantanal.b3.krpv.acao_social.config.postgres.factory.SocialActionFactory;
 import dev.pantanal.b3.krpv.acao_social.modules.auth.LoginMock;
 import dev.pantanal.b3.krpv.acao_social.modulos.auth.dto.LoginUserDto;
+import dev.pantanal.b3.krpv.acao_social.modulos.category.modules.categoryGroup.CategoryGroupEntity;
 import dev.pantanal.b3.krpv.acao_social.modulos.session.SessionEntity;
 import dev.pantanal.b3.krpv.acao_social.modulos.session.enums.StatusEnum;
 import dev.pantanal.b3.krpv.acao_social.modulos.session.enums.VisibilityEnum;
@@ -31,6 +33,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -63,13 +66,19 @@ public class SessionControllerIT {
     JdbcTemplate jdbcTemplate;
     @Autowired
     private CategoryFactory categoryFactory;
-
     @Autowired
     private SocialActionFactory socialActionFactory;
+    @Autowired
+    CategoryGroupFactory categoryGroupFactory;
 
     @BeforeEach
     public void setup() throws Exception {
         tokenUserLogged = loginMock.loginUserMock(new LoginUserDto("funcionario1", "123"));
+        List<CategoryGroupEntity> groupEntities = new ArrayList<>();
+        CategoryGroupEntity groupEntity = categoryGroupFactory.makeFakeEntity("session", "grupo de categorias para usar na SESSÃO da ação social");
+        CategoryGroupEntity groupSaved = categoryGroupFactory.insertOne(groupEntity);
+        groupEntities.add(groupSaved);
+        categoryFactory.insertMany(1, groupEntities);
     }
 
     @AfterEach
@@ -80,7 +89,6 @@ public class SessionControllerIT {
     @DisplayName("lista paginada de session com sucesso")
     void findAllSession() throws Exception {
         // Arrange (Organizar)
-        categoryFactory.insertMany(2);
         socialActionFactory.insertMany(2);
         List<SessionEntity> saved = sessionFactory.insertMany(4);
         // TODO:        item.setCreatedBy(userLoggedId);
@@ -119,7 +127,6 @@ public class SessionControllerIT {
     @DisplayName("salva uma nova session com sucesso")
     void saveOneSession() throws Exception {
         // Arrange (Organizar)
-        categoryFactory.insertMany(2);
         socialActionFactory.insertMany(2);
         SessionEntity item = sessionFactory.makeFakeEntity();
 // TODO:        item.setCreatedBy(userLoggedId);
@@ -149,6 +156,7 @@ public class SessionControllerIT {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.lastModifiedDate").isEmpty())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.deletedDate").isEmpty())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.deletedBy").isEmpty());
+//        testar groupCategory
     }
 
 
@@ -156,7 +164,6 @@ public class SessionControllerIT {
     @DisplayName("Busca session por ID com sucesso")
     void findByIdSession() throws Exception {
         // Arrange (Organizar)
-        categoryFactory.insertMany(2);
         socialActionFactory.insertMany(2);
         List<SessionEntity> saved = sessionFactory.insertMany(3);
         SessionEntity item = saved.get(0);
@@ -192,7 +199,6 @@ public class SessionControllerIT {
     @DisplayName("(hard-delete) Exclui uma session com sucesso")
     void deleteSession() throws Exception {
         // Arrange (Organizar)
-        categoryFactory.insertMany(2);
         socialActionFactory.insertMany(2);
         SessionEntity savedItem = sessionFactory.insertOne(sessionFactory.makeFakeEntity());
         // Act (ação)
@@ -214,7 +220,6 @@ public class SessionControllerIT {
     @DisplayName("Atualiza uma session com sucesso")
     void updateSession() throws Exception {
         // Arrange (Organizar)
-        categoryFactory.insertMany(2);
         socialActionFactory.insertMany(2);
         SessionEntity item = sessionFactory.insertOne(sessionFactory.makeFakeEntity());
         // Modifica alguns dados da session

@@ -79,8 +79,9 @@ public class CategoryEntity {
     private UUID deletedBy;
 
     @OneToMany(mappedBy = "categoryEntity")
-    private List<CategorySocialActionTypeEntity> cs = new ArrayList<>();
+    private List<CategorySocialActionTypeEntity> categorySocialActionTypeEntities = new ArrayList<>();
 
+    @NotNull
     @ManyToOne
     @JoinColumn(name = "category_group_id")
     private CategoryGroupEntity categoryGroup;

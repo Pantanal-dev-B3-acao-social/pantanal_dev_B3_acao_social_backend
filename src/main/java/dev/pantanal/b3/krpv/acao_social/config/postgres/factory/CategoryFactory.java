@@ -3,6 +3,7 @@ package dev.pantanal.b3.krpv.acao_social.config.postgres.factory;
 import com.github.javafaker.Faker;
 import dev.pantanal.b3.krpv.acao_social.modulos.category.entity.CategoryEntity;
 import dev.pantanal.b3.krpv.acao_social.modulos.category.entity.CategorySocialActionTypeEntity;
+import dev.pantanal.b3.krpv.acao_social.modulos.category.modules.categoryGroup.CategoryGroupEntity;
 import dev.pantanal.b3.krpv.acao_social.modulos.category.repository.CategoryRepository;
 import dev.pantanal.b3.krpv.acao_social.utils.GeneratorCode;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,10 +29,9 @@ public class CategoryFactory {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public CategoryEntity makeFakeEntity() {
+    public CategoryEntity makeFakeEntity(CategoryGroupEntity groupEntity) {
         UUID createBy = UUID.randomUUID();
         LocalDateTime createdDate = LocalDateTime.now();
-        LocalDateTime lastModifiedDate = createdDate.plusHours(3).plusMinutes(30);
         String name = faker.name().fullName();
         String code = generatorCode.execute(name);
         CategoryEntity categoryEntity = new CategoryEntity();
@@ -42,7 +42,7 @@ public class CategoryFactory {
         categoryEntity.setCode(code);
         categoryEntity.setCreatedBy(createBy);
         categoryEntity.setCreatedDate(createdDate);
-        categoryEntity.setLastModifiedDate(lastModifiedDate);
+        categoryEntity.setCategoryGroup(groupEntity);
         return categoryEntity;
     }
 
@@ -51,10 +51,12 @@ public class CategoryFactory {
         return saved;
     }
 
-    public List<CategoryEntity> insertMany(int amount) {
+    public List<CategoryEntity> insertMany(int amount, List<CategoryGroupEntity> groupEntities) {
         List<CategoryEntity> entities = new ArrayList<>();
+        Integer indexGroup = random.nextInt(groupEntities.size());
+        CategoryGroupEntity groupEntity = groupEntities.get(indexGroup);
         for (int i=0; i<amount; i++) {
-            CategoryEntity entity = this.makeFakeEntity();
+            CategoryEntity entity = this.makeFakeEntity(groupEntity);
             entities.add(this.insertOne(entity));
         }
         return entities;

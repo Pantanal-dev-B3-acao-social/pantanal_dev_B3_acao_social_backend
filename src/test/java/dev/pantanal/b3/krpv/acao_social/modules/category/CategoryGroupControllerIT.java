@@ -88,7 +88,7 @@ public class CategoryGroupControllerIT {
     @DisplayName("salva uma nova grupo de categoria com sucesso")
     void saveOneCategoryGroup() throws Exception {
         // Arrange (Organizar)
-        CategoryGroupEntity item = categoryGroupFactory.makeFakeEntity();
+        CategoryGroupEntity item = categoryGroupFactory.makeFakeEntity(null, null);
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.registerModule(new JavaTimeModule()); // registrar o módulo JSR-310
         String bodyJson = objectMapper.writeValueAsString(item);
@@ -147,7 +147,7 @@ public class CategoryGroupControllerIT {
     @DisplayName("(hard-delete) Exclui uma grupo de categoria com sucesso")
     void deleteCategoryGroup() throws Exception {
         // Arrange (Organizar)
-        CategoryGroupEntity savedItem = categoryGroupFactory.insertOne(categoryGroupFactory.makeFakeEntity());
+        CategoryGroupEntity savedItem = categoryGroupFactory.insertOne(categoryGroupFactory.makeFakeEntity(null, null));
         // Act (ação)
         ResultActions resultActions = mockMvc.perform(
                 MockMvcRequestBuilders.delete(ROUTE_CATEGORY_GROUP + "/{id}", savedItem.getId())
@@ -167,7 +167,7 @@ public class CategoryGroupControllerIT {
     @DisplayName("Atualiza uma grupo de categoria com sucesso")
     void updateCategoryGroup() throws Exception {
         // Arrange (Organizar)
-        CategoryGroupEntity item = categoryGroupFactory.insertOne(categoryGroupFactory.makeFakeEntity());
+        CategoryGroupEntity item = categoryGroupFactory.insertOne(categoryGroupFactory.makeFakeEntity(null, null));
         DateTimeFormatter formatter = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
         // Modifica alguns dados da grupo de categoria
         item.setName(item.getName() + "_ATUALIZADO");

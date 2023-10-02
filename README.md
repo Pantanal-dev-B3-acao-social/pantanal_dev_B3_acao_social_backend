@@ -234,4 +234,10 @@ Neste cenário, quando o usuário recebe um cargo, ele tem o mesmo cargo em toda
   - verificando se o usuario tem a permissão para executar a action do controller, caso seja necessário
   - o banco de dados é realmente o postgres, para que garanta que restrições seja as mesmas do ambiente de produção
   - desta forma garantimos que os erros de consistencia sejam validados
-  - todo caso de teste esta em uma transaction que faz rollback apos terminar  
+  - todo caso de teste esta em uma transaction que faz rollback apos terminar
+- possibilidade de melhoria nos teste, os testes foram inicialmente criados para contemplar somente o caso de sucesso com todos os campos sendo passados
+  - criar testes de casos de falha
+  - criar testes de casos de sucesso somente com campos obrigatorio
+
+
+

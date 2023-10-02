@@ -28,17 +28,20 @@ public class CategoryGroupFactory {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public CategoryGroupEntity makeFakeEntity() {
+    public CategoryGroupEntity makeFakeEntity(String nameSuggestion, String descriptionSuggestion) {
+        String nameFake = faker.name().fullName();
+        String descriptionFake = faker.lorem().sentence();
+        String name = nameSuggestion == null ? nameFake : nameSuggestion;
+        String description = descriptionSuggestion == null ? descriptionFake : descriptionSuggestion;
         UUID createBy = UUID.randomUUID();
         LocalDateTime createdDate = LocalDateTime.now();
         LocalDateTime lastModifiedDate = createdDate.plusHours(3).plusMinutes(30);
-        String name = faker.name().fullName();
         String code = generatorCode.execute(name);
         CategoryGroupEntity categoryGroupEntity = new CategoryGroupEntity();
         categoryGroupEntity.setVersion(1L);
         categoryGroupEntity.setId(UUID.randomUUID());
         categoryGroupEntity.setName(name);
-        categoryGroupEntity.setDescription(faker.lorem().sentence());
+        categoryGroupEntity.setDescription(description);
         categoryGroupEntity.setCode(code);
         categoryGroupEntity.setVisibility(VisibilityCategoryGroupEnum.PUBLIC_EXTERNALLY);
         categoryGroupEntity.setCreatedBy(createBy);
@@ -55,7 +58,7 @@ public class CategoryGroupFactory {
     public List<CategoryGroupEntity> insertMany(int amount) {
         List<CategoryGroupEntity> entities = new ArrayList<>();
         for (int i=0; i<amount; i++) {
-            CategoryGroupEntity entity = this.makeFakeEntity();
+            CategoryGroupEntity entity = this.makeFakeEntity(null, null);
             entities.add(this.insertOne(entity));
         }
         return entities;

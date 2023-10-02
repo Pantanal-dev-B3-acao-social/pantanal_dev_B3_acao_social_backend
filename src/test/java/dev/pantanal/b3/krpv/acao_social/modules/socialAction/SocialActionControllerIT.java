@@ -3,11 +3,12 @@ package dev.pantanal.b3.krpv.acao_social.modules.socialAction;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import dev.pantanal.b3.krpv.acao_social.config.postgres.factory.CategoryFactory;
+import dev.pantanal.b3.krpv.acao_social.config.postgres.factory.CategoryGroupFactory;
 import dev.pantanal.b3.krpv.acao_social.modules.auth.LoginMock;
 import dev.pantanal.b3.krpv.acao_social.config.postgres.factory.SocialActionFactory;
 import dev.pantanal.b3.krpv.acao_social.modulos.auth.dto.LoginUserDto;
+import dev.pantanal.b3.krpv.acao_social.modulos.category.modules.categoryGroup.CategoryGroupEntity;
 import dev.pantanal.b3.krpv.acao_social.modulos.socialAction.SocialActionEntity;
-import dev.pantanal.b3.krpv.acao_social.modulos.socialAction.dto.SocialActionDto;
 import dev.pantanal.b3.krpv.acao_social.modulos.socialAction.repository.SocialActionPostgresRepository;
 import dev.pantanal.b3.krpv.acao_social.modulos.socialAction.repository.SocialActionRepository;
 import org.junit.jupiter.api.*;
@@ -23,8 +24,8 @@ import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.transaction.annotation.Transactional;
 import static org.hamcrest.Matchers.hasSize;
+import java.util.ArrayList;
 import java.util.List;
-
 import static dev.pantanal.b3.krpv.acao_social.modulos.socialAction.SocialActionController.ROUTE_SOCIAL;
 
 @SpringBootTest
@@ -50,11 +51,18 @@ public class SocialActionControllerIT {
     private CategoryFactory categoryFactory;
     @Autowired
     private SocialActionFactory socialActionFactory;
+    @Autowired
+    CategoryGroupFactory categoryGroupFactory;
 
     @BeforeEach
     public void setup() throws Exception {
         // TODO: limpar tabela social_action
         tokenUserLogged = loginMock.loginUserMock(new LoginUserDto("funcionario1", "123"));
+        List<CategoryGroupEntity> groupEntities = new ArrayList<>();
+        CategoryGroupEntity groupEntity = categoryGroupFactory.makeFakeEntity("social action", "grupo de categorias para usar na AÇÃO SOCIAL");
+        CategoryGroupEntity groupSaved = categoryGroupFactory.insertOne(groupEntity);
+        groupEntities.add(groupSaved);
+        categoryFactory.insertMany(1, groupEntities);
     }
 
     @AfterEach
@@ -65,7 +73,6 @@ public class SocialActionControllerIT {
     @DisplayName("lista paginada de ações sociais com sucesso")
     void findAllSocialAction() throws Exception {
         // Arrange (Organizar)
-        categoryFactory.insertMany(2);
         List<SocialActionEntity> saved = socialActionFactory.insertMany(3);
         // Act (ação)
         ResultActions perform = mockMvc.perform(
@@ -92,7 +99,6 @@ public class SocialActionControllerIT {
     @DisplayName("lista paginada,filtrada e ordenada de ações sociais com sucesso")
     void findAllSocialActionWithFilters() throws Exception {
         // Arrange (Organizar)
-        categoryFactory.insertMany(2);
         List<SocialActionEntity> saved = socialActionFactory.insertMany(3);
         long versionTestLong = 1;
         // Prepare filters, sorting, and paging parameters
@@ -120,13 +126,13 @@ public class SocialActionControllerIT {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.content[0].id").value(saved.get(0).getId().toString()))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.content[0].name").value(saved.get(0).getName()))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.content[0]description").value(saved.get(0).getDescription()));
+        
     }
 
     @Test
     @DisplayName("salva uma nova ação social com sucesso")
     void saveOneSocialAction() throws Exception {
         // Arrange (Organizar)
-        categoryFactory.insertMany(2);
         SocialActionEntity item = socialActionFactory.makeFakeEntity();
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.registerModule(new JavaTimeModule());
@@ -145,6 +151,7 @@ public class SocialActionControllerIT {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.name").value(item.getName()))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.description").value(item.getDescription()))
                 .andDo(MockMvcResultHandlers.print());
+//        testar groupCategory
     }
 
 
@@ -152,7 +159,6 @@ public class SocialActionControllerIT {
     @DisplayName("Busca ação social por ID com sucesso")
     void findByIdSocialAction() throws Exception {
         // Arrange (Organizar)
-        categoryFactory.insertMany(2);
         List<SocialActionEntity> saved = socialActionFactory.insertMany(3);
         SocialActionEntity item = saved.get(0);
         // Act (ação)
@@ -173,7 +179,6 @@ public class SocialActionControllerIT {
     @DisplayName("Exclui uma ação social com sucesso")
     void deleteSocialAction() throws Exception {
         // Arrange (Organizar)
-        categoryFactory.insertMany(2);
         SocialActionEntity savedItem = socialActionFactory.insertOne(socialActionFactory.makeFakeEntity());
         // Act (ação)
         ResultActions resultActions = mockMvc.perform(
@@ -193,7 +198,6 @@ public class SocialActionControllerIT {
     @DisplayName("Atualiza uma ação social com sucesso")
     void updateSocialAction() throws Exception {
         // Arrange (Organizar)
-        categoryFactory.insertMany(2);
         SocialActionEntity savedItem = socialActionFactory.insertOne(socialActionFactory.makeFakeEntity());
         // Modifica alguns dados da ação social
         savedItem.setName(savedItem.getName() + "_ATUALIZADO");

@@ -71,7 +71,13 @@ public class SocialActionController {
                 entity.getId(),
                 entity.getName(),
                 entity.getDescription(),
-                entity.getVersion()
+                entity.getVersion(),
+                entity.getCreatedBy(),
+                entity.getLastModifiedBy(),
+                entity.getCreatedDate(),
+                entity.getLastModifiedDate(),
+                entity.getDeletedDate(),
+                entity.getDeletedBy()
         );
         return new ResponseEntity<SocialActionResponseDto>(response, HttpStatus.OK);
     }
@@ -116,8 +122,13 @@ public class SocialActionController {
                 entity.getId(),
                 entity.getName(),
                 entity.getDescription(),
-                entity.getVersion()
-//                entity.getOrganizer()
+                entity.getVersion(),
+                entity.getCreatedBy(),
+                entity.getLastModifiedBy(),
+                entity.getCreatedDate(),
+                entity.getLastModifiedDate(),
+                entity.getDeletedDate(),
+                entity.getDeletedBy()
         );
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
