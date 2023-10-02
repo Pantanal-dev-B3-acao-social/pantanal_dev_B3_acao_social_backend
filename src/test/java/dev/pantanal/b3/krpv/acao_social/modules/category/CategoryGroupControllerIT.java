@@ -42,11 +42,13 @@ public class CategoryGroupControllerIT {
     GenerateTokenUserForLogged generateTokenUserForLogged;
     @Autowired
     LoginMock loginMock;
+    private DateTimeFormatter formatter;
 
     @BeforeEach
     public void setup() throws Exception {
         tokenUserLogged = generateTokenUserForLogged.loginUserMock(new LoginUserDto("funcionario1", "123"));
         loginMock.authenticateWithToken(tokenUserLogged);
+        this.formatter = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
     }
 
     @AfterEach
@@ -126,7 +128,6 @@ public class CategoryGroupControllerIT {
         // Arrange (Organizar)
         List<CategoryGroupEntity> saved = categoryGroupFactory.insertMany(3);
         CategoryGroupEntity item = saved.get(0);
-        DateTimeFormatter formatter = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
         // Act (ação)
         ResultActions perform = mockMvc.perform(
                 MockMvcRequestBuilders.get(ROUTE_CATEGORY_GROUP + "/{id}", item.getId().toString())
@@ -173,7 +174,6 @@ public class CategoryGroupControllerIT {
     void updateCategoryGroup() throws Exception {
         // Arrange (Organizar)
         CategoryGroupEntity item = categoryGroupFactory.insertOne(categoryGroupFactory.makeFakeEntity(null, null));
-        DateTimeFormatter formatter = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
         // Modifica alguns dados da grupo de categoria
         item.setName(item.getName() + "_ATUALIZADO");
         item.setDescription(item.getDescription() + "_ATUALIZADO");

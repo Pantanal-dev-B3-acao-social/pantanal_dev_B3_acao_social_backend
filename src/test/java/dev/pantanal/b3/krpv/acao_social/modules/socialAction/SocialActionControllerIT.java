@@ -25,6 +25,8 @@ import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.transaction.annotation.Transactional;
 import static org.hamcrest.Matchers.hasSize;
+
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import static dev.pantanal.b3.krpv.acao_social.modulos.socialAction.SocialActionController.ROUTE_SOCIAL;
@@ -56,6 +58,7 @@ public class SocialActionControllerIT {
     GenerateTokenUserForLogged generateTokenUserForLogged;
     @Autowired
     LoginMock loginMock;
+    private DateTimeFormatter formatter;
 
     @BeforeEach
     public void setup() throws Exception {
@@ -66,6 +69,7 @@ public class SocialActionControllerIT {
         CategoryGroupEntity groupSaved = categoryGroupFactory.insertOne(groupEntity);
         groupEntities.add(groupSaved);
         categoryFactory.insertMany(1, groupEntities);
+        this.formatter = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
     }
 
     @AfterEach

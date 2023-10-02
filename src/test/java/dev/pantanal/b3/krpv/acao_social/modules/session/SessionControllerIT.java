@@ -71,6 +71,7 @@ public class SessionControllerIT {
     GenerateTokenUserForLogged generateTokenUserForLogged;
     @Autowired
     LoginMock loginMock;
+    private DateTimeFormatter formatter;
 
     @BeforeEach
     public void setup() throws Exception {
@@ -81,6 +82,7 @@ public class SessionControllerIT {
         CategoryGroupEntity groupSaved = categoryGroupFactory.insertOne(groupEntity);
         groupEntities.add(groupSaved);
         categoryFactory.insertMany(1, groupEntities);
+        this.formatter = DateTimeFormatter.ISO_LOCAL_DATE_TIME; // Formate o LocalDateTime esperado
     }
 
     @AfterEach
@@ -135,7 +137,6 @@ public class SessionControllerIT {
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.registerModule(new JavaTimeModule()); // registrar o módulo JSR-310
         String jsonRequest = objectMapper.writeValueAsString(item);
-        DateTimeFormatter formatter = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
         String expectedTime = item.getTime().format(formatter); // Formate o LocalDateTime esperado
         // Act (ação)
         ResultActions resultActions = mockMvc.perform(
@@ -169,7 +170,6 @@ public class SessionControllerIT {
         socialActionFactory.insertMany(2);
         List<SessionEntity> saved = sessionFactory.insertMany(3);
         SessionEntity item = saved.get(0);
-        DateTimeFormatter formatter = DateTimeFormatter.ISO_LOCAL_DATE_TIME; // Formate o LocalDateTime esperado
         // TODO:        item.setCreatedBy(userLoggedId);
         String createdByString = Optional.ofNullable(item.getCreatedBy()).map(UUID::toString).orElse(null);
         String lastModifiedByString = Optional.ofNullable(item.getLastModifiedBy()).map(UUID::toString).orElse(null);
@@ -240,7 +240,6 @@ public class SessionControllerIT {
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.registerModule(new JavaTimeModule());
         String updatedSessionJson = objectMapper.writeValueAsString(item);
-        DateTimeFormatter formatter = DateTimeFormatter.ISO_LOCAL_DATE_TIME; // Formate o LocalDateTime esperado
         String createdByString = Optional.ofNullable(item.getCreatedBy()).map(UUID::toString).orElse(null);
         String lastModifiedByString = Optional.ofNullable(item.getLastModifiedBy()).map(UUID::toString).orElse(null);
         String deletedByString = Optional.ofNullable(item.getDeletedBy()).map(UUID::toString).orElse(null);
