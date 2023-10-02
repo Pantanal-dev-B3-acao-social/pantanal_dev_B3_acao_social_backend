@@ -3,7 +3,7 @@ package dev.pantanal.b3.krpv.acao_social.modules.category;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import dev.pantanal.b3.krpv.acao_social.config.postgres.factory.CategoryGroupFactory;
-import dev.pantanal.b3.krpv.acao_social.modules.auth.LoginMock;
+import dev.pantanal.b3.krpv.acao_social.utils.GenerateTokenUserForLogged;
 import dev.pantanal.b3.krpv.acao_social.modulos.auth.dto.LoginUserDto;
 import dev.pantanal.b3.krpv.acao_social.modulos.category.modules.categoryGroup.CategoryGroupEntity;
 import dev.pantanal.b3.krpv.acao_social.modulos.category.modules.categoryGroup.repository.CategoryGroupRepository;
@@ -32,7 +32,7 @@ public class CategoryGroupControllerIT {
     @Autowired
     MockMvc mockMvc;
     @Autowired
-    LoginMock loginMock;
+    GenerateTokenUserForLogged loginMock;
     @Autowired
     CategoryGroupRepository categoryGroupRepository;
     private String tokenUserLogged;

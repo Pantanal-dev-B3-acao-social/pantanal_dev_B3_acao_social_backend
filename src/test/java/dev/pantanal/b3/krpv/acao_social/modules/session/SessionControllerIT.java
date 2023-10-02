@@ -6,7 +6,7 @@ import dev.pantanal.b3.krpv.acao_social.config.postgres.factory.CategoryFactory;
 import dev.pantanal.b3.krpv.acao_social.config.postgres.factory.CategoryGroupFactory;
 import dev.pantanal.b3.krpv.acao_social.config.postgres.factory.SessionFactory;
 import dev.pantanal.b3.krpv.acao_social.config.postgres.factory.SocialActionFactory;
-import dev.pantanal.b3.krpv.acao_social.modules.auth.LoginMock;
+import dev.pantanal.b3.krpv.acao_social.utils.GenerateTokenUserForLogged;
 import dev.pantanal.b3.krpv.acao_social.modulos.auth.dto.LoginUserDto;
 import dev.pantanal.b3.krpv.acao_social.modulos.category.modules.categoryGroup.CategoryGroupEntity;
 import dev.pantanal.b3.krpv.acao_social.modulos.session.SessionEntity;
@@ -54,7 +54,7 @@ public class SessionControllerIT {
     @Autowired
     ObjectMapper mapper;
     @Autowired
-    LoginMock loginMock;
+    GenerateTokenUserForLogged loginMock;
     @Autowired
     SessionRepository sessionRepository;
     private String tokenUserLogged;

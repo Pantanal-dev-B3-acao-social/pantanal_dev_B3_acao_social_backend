@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import dev.pantanal.b3.krpv.acao_social.config.postgres.factory.CategoryFactory;
 import dev.pantanal.b3.krpv.acao_social.config.postgres.factory.CategoryGroupFactory;
-import dev.pantanal.b3.krpv.acao_social.modules.auth.LoginMock;
+import dev.pantanal.b3.krpv.acao_social.utils.GenerateTokenUserForLogged;
 import dev.pantanal.b3.krpv.acao_social.config.postgres.factory.SocialActionFactory;
 import dev.pantanal.b3.krpv.acao_social.modulos.auth.dto.LoginUserDto;
 import dev.pantanal.b3.krpv.acao_social.modulos.category.modules.categoryGroup.CategoryGroupEntity;
@@ -43,7 +43,7 @@ public class SocialActionControllerIT {
     @Autowired
     ObjectMapper mapper;
     @Autowired
-    LoginMock loginMock;
+    GenerateTokenUserForLogged loginMock;
     @Autowired
     SocialActionRepository socialActionRepository;
     private String tokenUserLogged;
@@ -126,7 +126,7 @@ public class SocialActionControllerIT {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.content[0].id").value(saved.get(0).getId().toString()))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.content[0].name").value(saved.get(0).getName()))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.content[0]description").value(saved.get(0).getDescription()));
-        
+
     }
 
     @Test

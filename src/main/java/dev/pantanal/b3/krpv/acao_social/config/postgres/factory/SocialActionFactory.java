@@ -45,19 +45,13 @@ public class SocialActionFactory {
     }
 
     public SocialActionEntity makeFakeEntity() {
-        UUID createdBy = UUID.randomUUID();
-        UUID lastModifiedBy = null;
-        LocalDateTime createdDate = LocalDateTime.now();
-        LocalDateTime lastModifiedDate = createdDate.plusHours(3).plusMinutes(30);
         SocialActionEntity socialCreated = new SocialActionEntity();
         socialCreated.setVersion(1L);
         socialCreated.setName(faker.name().fullName());
         socialCreated.setDescription(faker.lorem().sentence());
-        socialCreated.setCreatedBy(createdBy);
-        socialCreated.setCreatedDate(createdDate);
-        socialCreated.setLastModifiedBy(lastModifiedBy);
-        socialCreated.setLastModifiedDate(lastModifiedDate);
-//                ,SessionEntity
+//        socialCreated.setCreatedBy(createdBy);
+//        socialCreated.setCreatedDate(createdDate);
+                // SessionEntity
                 // string ongId = findOneRandom("ong");
                 // string levelId = findOneRandom("category_project_level");
                 // string typeId = findOneRandom("category_project_type");

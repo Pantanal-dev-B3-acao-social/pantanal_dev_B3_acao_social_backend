@@ -3,7 +3,7 @@ package dev.pantanal.b3.krpv.acao_social.modules.company;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import dev.pantanal.b3.krpv.acao_social.config.postgres.factory.CompanyFactory;
-import dev.pantanal.b3.krpv.acao_social.modules.auth.LoginMock;
+import dev.pantanal.b3.krpv.acao_social.utils.GenerateTokenUserForLogged;
 import dev.pantanal.b3.krpv.acao_social.modulos.auth.dto.LoginUserDto;
 import dev.pantanal.b3.krpv.acao_social.modulos.company.CompanyEntity;
 import dev.pantanal.b3.krpv.acao_social.modulos.company.repository.CompanyPostgresRepository;
@@ -40,7 +40,7 @@ public class CompanyControllerIT {
     @Autowired
     ObjectMapper mapper;
     @Autowired
-    LoginMock loginMock;
+    GenerateTokenUserForLogged loginMock;
 
     @Autowired
     CompanyRepository companyRepository;

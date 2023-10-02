@@ -11,15 +11,9 @@ import java.util.List;
 @Component
 public class FindRegisterRandom<T> {
 
-//    @Autowired
-//    @Qualifier("unidadePersistencia1")
-//    private EntityManagerFactory entityManagerFactory;
-
     private final EntityManager entityManager;
 
-//    @Autowired
     public FindRegisterRandom (EntityManager entityManager) {
-//        this.entityManager = this.entityManagerFactory();
         this.entityManager = entityManager;
     }
 

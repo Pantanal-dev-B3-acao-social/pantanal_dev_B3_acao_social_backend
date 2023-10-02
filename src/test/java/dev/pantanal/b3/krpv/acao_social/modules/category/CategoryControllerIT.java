@@ -4,12 +4,13 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import dev.pantanal.b3.krpv.acao_social.config.postgres.factory.CategoryFactory;
 import dev.pantanal.b3.krpv.acao_social.config.postgres.factory.CategoryGroupFactory;
-import dev.pantanal.b3.krpv.acao_social.modules.auth.LoginMock;
+import dev.pantanal.b3.krpv.acao_social.utils.GenerateTokenUserForLogged;
 import dev.pantanal.b3.krpv.acao_social.modulos.auth.dto.LoginUserDto;
 import dev.pantanal.b3.krpv.acao_social.modulos.category.entity.CategoryEntity;
 import dev.pantanal.b3.krpv.acao_social.modulos.category.modules.categoryGroup.CategoryGroupEntity;
 import dev.pantanal.b3.krpv.acao_social.modulos.category.repository.CategoryPostgresRepository;
 import dev.pantanal.b3.krpv.acao_social.modulos.category.repository.CategoryRepository;
+import dev.pantanal.b3.krpv.acao_social.utils.LoginMock;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -24,7 +25,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.transaction.annotation.Transactional;
 import static dev.pantanal.b3.krpv.acao_social.modulos.category.CategoryController.ROUTE_CATEGORY;
 
-import java.util.ArrayList;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import static org.hamcrest.Matchers.hasSize;
 
@@ -35,12 +36,12 @@ import static org.hamcrest.Matchers.hasSize;
 public class CategoryControllerIT {
     @Autowired
     MockMvc mockMvc;
-
     @Autowired
     CategoryPostgresRepository categoryPostgresRepository;
-
     @Autowired
     ObjectMapper mapper;
+    @Autowired
+    GenerateTokenUserForLogged generateTokenUserForLogged;
     @Autowired
     LoginMock loginMock;
     @Autowired
@@ -54,8 +55,8 @@ public class CategoryControllerIT {
 
     @BeforeEach
     public void setup() throws Exception {
-        // TODO: limpar tabela category
-        tokenUserLogged = loginMock.loginUserMock(new LoginUserDto("funcionario1", "123"));
+        tokenUserLogged = generateTokenUserForLogged.loginUserMock(new LoginUserDto("funcionario1", "123"));
+        loginMock.authenticateWithToken(tokenUserLogged);
         this.groupEntities = categoryGroupFactory.insertMany(2);
     }
 
@@ -106,6 +107,7 @@ public class CategoryControllerIT {
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.registerModule(new JavaTimeModule()); // registrar o módulo JSR-310
         String bodyJson = objectMapper.writeValueAsString(item);
+        DateTimeFormatter formatter = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
         // Act (ação)
         ResultActions resultActions = mockMvc.perform(
                 MockMvcRequestBuilders.post(ROUTE_CATEGORY)
@@ -121,7 +123,8 @@ public class CategoryControllerIT {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.description").value(item.getDescription()))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.code").value(item.getCode()))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.categoryGroup.id").value(item.getCategoryGroup().getId().toString()))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.createdBy").isNotEmpty())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.createdBy").value(loginMock.extractUserIdFromJwt(tokenUserLogged)))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.createdDate").isNotEmpty())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.lastModifiedBy").isEmpty())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.createdDate").isNotEmpty())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.lastModifiedDate").isEmpty())
@@ -184,9 +187,11 @@ public class CategoryControllerIT {
         // Modifica alguns dados da categoria
         item.setName(item.getName() + "_ATUALIZADO");
         item.setDescription(item.getDescription() + "_ATUALIZADO");
+        item.setCategoryGroup(this.groupEntities.get(1));
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.registerModule(new JavaTimeModule());
         String updatedCategoryJson = objectMapper.writeValueAsString(item);
+        DateTimeFormatter formatter = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
         // Act (ação)
         ResultActions resultActions = mockMvc.perform(
                 MockMvcRequestBuilders.patch(ROUTE_CATEGORY + "/{id}", item.getId())
@@ -202,10 +207,10 @@ public class CategoryControllerIT {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.description").value(item.getDescription()))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.code").value(item.getCode()))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.categoryGroup.id").value(item.getCategoryGroup().getId().toString()))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.createdBy").isNotEmpty())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.lastModifiedBy").isNotEmpty())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.createdDate").isNotEmpty())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.lastModifiedDate").isNotEmpty())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.createdBy").value(item.getCreatedBy().toString()))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.lastModifiedBy").value(loginMock.extractUserIdFromJwt(tokenUserLogged)))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.createdDate").value(item.getCreatedDate().format(formatter)))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.lastModifiedDate").value(item.getLastModifiedDate().format(formatter)))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.deletedDate").isEmpty())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.deletedBy").isEmpty());
     }
