@@ -142,7 +142,13 @@ public class SessionControllerIT {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.time").value(expectedTime)) // Compare como string formatada
                 .andExpect(MockMvcResultMatchers.jsonPath("$.status").value(item.getStatus().toString()))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.visibility").value(item.getVisibility().toString()))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.socialAction.id").value(item.getSocialAction().getId().toString()));
+                .andExpect(MockMvcResultMatchers.jsonPath("$.socialAction.id").value(item.getSocialAction().getId().toString()))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.createdBy").isNotEmpty())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.lastModifiedBy").isEmpty())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.createdDate").isNotEmpty())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.lastModifiedDate").isEmpty())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.deletedDate").isEmpty())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.deletedBy").isEmpty());
     }
 
 

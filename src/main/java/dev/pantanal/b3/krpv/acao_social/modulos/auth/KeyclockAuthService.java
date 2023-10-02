@@ -44,7 +44,6 @@ public class KeyclockAuthService {
 
     public ResponseEntity<String> loginUser(LoginUserDto userDto) {
         HttpHeaders headers = new HttpHeaders();
-        RestTemplate rt = new RestTemplate();
         headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
         MultiValueMap<String, String> formData = new LinkedMultiValueMap<>();
         formData.add("grant_type", "password");
@@ -54,10 +53,10 @@ public class KeyclockAuthService {
         formData.add("password", userDto.password());
         HttpEntity<MultiValueMap<String, String>> httpEntity = new HttpEntity<>(formData, headers);
         String tokenEndpoint = issuerUri + "/protocol/openid-connect/token";
+        RestTemplate rt = new RestTemplate();
         var result = rt.postForEntity(tokenEndpoint, httpEntity, String.class);
         return result;
     }
-
 
 //    public ResponseEntity<String> logoutUser(String userId) {
 //        HttpHeaders headers = new HttpHeaders();

@@ -9,8 +9,6 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 
 @Configuration
-//@DependsOn("flywayConfig")
-//@Order(4)
 @Component
 public class PostgresDatabaseInitialization {
 

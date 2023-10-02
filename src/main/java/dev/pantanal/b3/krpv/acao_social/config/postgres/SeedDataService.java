@@ -10,8 +10,6 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
 @Service
-//@DependsOn("postgresDatabaseInitialization")
-//@Order(5)
 public class SeedDataService {
 
     private final SocialActionFactory socialActionFactory;
