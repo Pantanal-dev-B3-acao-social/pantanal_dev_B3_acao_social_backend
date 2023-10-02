@@ -17,6 +17,7 @@ import dev.pantanal.b3.krpv.acao_social.modulos.session.repository.SessionReposi
 import dev.pantanal.b3.krpv.acao_social.modulos.socialAction.SocialActionEntity;
 import dev.pantanal.b3.krpv.acao_social.utils.EnumUtil;
 import dev.pantanal.b3.krpv.acao_social.utils.FindRegisterRandom;
+import dev.pantanal.b3.krpv.acao_social.utils.LoginMock;
 import jakarta.persistence.EntityManager;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,14 +48,10 @@ import static org.hamcrest.Matchers.hasSize;
 public class SessionControllerIT {
     @Autowired
     MockMvc mockMvc;
-
     @Autowired
     SessionPostgresRepository sessionPostgresRepository;
-
     @Autowired
     ObjectMapper mapper;
-    @Autowired
-    GenerateTokenUserForLogged loginMock;
     @Autowired
     SessionRepository sessionRepository;
     private String tokenUserLogged;
@@ -70,10 +67,15 @@ public class SessionControllerIT {
     private SocialActionFactory socialActionFactory;
     @Autowired
     CategoryGroupFactory categoryGroupFactory;
+    @Autowired
+    GenerateTokenUserForLogged generateTokenUserForLogged;
+    @Autowired
+    LoginMock loginMock;
 
     @BeforeEach
     public void setup() throws Exception {
-        tokenUserLogged = loginMock.loginUserMock(new LoginUserDto("funcionario1", "123"));
+        tokenUserLogged = generateTokenUserForLogged.loginUserMock(new LoginUserDto("funcionario1", "123"));
+        loginMock.authenticateWithToken(tokenUserLogged);
         List<CategoryGroupEntity> groupEntities = new ArrayList<>();
         CategoryGroupEntity groupEntity = categoryGroupFactory.makeFakeEntity("session", "grupo de categorias para usar na SESSÃO da ação social");
         CategoryGroupEntity groupSaved = categoryGroupFactory.insertOne(groupEntity);

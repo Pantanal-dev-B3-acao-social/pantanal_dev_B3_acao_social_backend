@@ -8,6 +8,7 @@ import dev.pantanal.b3.krpv.acao_social.modulos.auth.dto.LoginUserDto;
 import dev.pantanal.b3.krpv.acao_social.modulos.company.CompanyEntity;
 import dev.pantanal.b3.krpv.acao_social.modulos.company.repository.CompanyPostgresRepository;
 import dev.pantanal.b3.krpv.acao_social.modulos.company.repository.CompanyRepository;
+import dev.pantanal.b3.krpv.acao_social.utils.LoginMock;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -40,19 +41,19 @@ public class CompanyControllerIT {
     @Autowired
     ObjectMapper mapper;
     @Autowired
-    GenerateTokenUserForLogged loginMock;
-
-    @Autowired
     CompanyRepository companyRepository;
     private String tokenUserLogged;
-
     @Autowired
     CompanyFactory companyfactory;
+    @Autowired
+    GenerateTokenUserForLogged generateTokenUserForLogged;
+    @Autowired
+    LoginMock loginMock;
 
     @BeforeEach
     public void setup() throws Exception {
-        // TODO: limpar tabela social_action
-        tokenUserLogged = loginMock.loginUserMock(new LoginUserDto("funcionario1", "123"));
+        tokenUserLogged = generateTokenUserForLogged.loginUserMock(new LoginUserDto("funcionario1", "123"));
+        loginMock.authenticateWithToken(tokenUserLogged);
     }
 
     @AfterEach

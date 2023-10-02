@@ -7,6 +7,7 @@ import dev.pantanal.b3.krpv.acao_social.utils.GenerateTokenUserForLogged;
 import dev.pantanal.b3.krpv.acao_social.modulos.auth.dto.LoginUserDto;
 import dev.pantanal.b3.krpv.acao_social.modulos.category.modules.categoryGroup.CategoryGroupEntity;
 import dev.pantanal.b3.krpv.acao_social.modulos.category.modules.categoryGroup.repository.CategoryGroupRepository;
+import dev.pantanal.b3.krpv.acao_social.utils.LoginMock;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -32,16 +33,20 @@ public class CategoryGroupControllerIT {
     @Autowired
     MockMvc mockMvc;
     @Autowired
-    GenerateTokenUserForLogged loginMock;
-    @Autowired
     CategoryGroupRepository categoryGroupRepository;
     private String tokenUserLogged;
     @Autowired
     CategoryGroupFactory categoryGroupFactory;
 
+    @Autowired
+    GenerateTokenUserForLogged generateTokenUserForLogged;
+    @Autowired
+    LoginMock loginMock;
+
     @BeforeEach
     public void setup() throws Exception {
-        tokenUserLogged = loginMock.loginUserMock(new LoginUserDto("funcionario1", "123"));
+        tokenUserLogged = generateTokenUserForLogged.loginUserMock(new LoginUserDto("funcionario1", "123"));
+        loginMock.authenticateWithToken(tokenUserLogged);
     }
 
     @AfterEach

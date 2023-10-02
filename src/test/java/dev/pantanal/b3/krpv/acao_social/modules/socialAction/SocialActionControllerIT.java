@@ -11,6 +11,7 @@ import dev.pantanal.b3.krpv.acao_social.modulos.category.modules.categoryGroup.C
 import dev.pantanal.b3.krpv.acao_social.modulos.socialAction.SocialActionEntity;
 import dev.pantanal.b3.krpv.acao_social.modulos.socialAction.repository.SocialActionPostgresRepository;
 import dev.pantanal.b3.krpv.acao_social.modulos.socialAction.repository.SocialActionRepository;
+import dev.pantanal.b3.krpv.acao_social.utils.LoginMock;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -43,8 +44,6 @@ public class SocialActionControllerIT {
     @Autowired
     ObjectMapper mapper;
     @Autowired
-    GenerateTokenUserForLogged loginMock;
-    @Autowired
     SocialActionRepository socialActionRepository;
     private String tokenUserLogged;
     @Autowired
@@ -53,11 +52,15 @@ public class SocialActionControllerIT {
     private SocialActionFactory socialActionFactory;
     @Autowired
     CategoryGroupFactory categoryGroupFactory;
+    @Autowired
+    GenerateTokenUserForLogged generateTokenUserForLogged;
+    @Autowired
+    LoginMock loginMock;
 
     @BeforeEach
     public void setup() throws Exception {
-        // TODO: limpar tabela social_action
-        tokenUserLogged = loginMock.loginUserMock(new LoginUserDto("funcionario1", "123"));
+        tokenUserLogged = generateTokenUserForLogged.loginUserMock(new LoginUserDto("funcionario1", "123"));
+        loginMock.authenticateWithToken(tokenUserLogged);
         List<CategoryGroupEntity> groupEntities = new ArrayList<>();
         CategoryGroupEntity groupEntity = categoryGroupFactory.makeFakeEntity("social action", "grupo de categorias para usar na AÇÃO SOCIAL");
         CategoryGroupEntity groupSaved = categoryGroupFactory.insertOne(groupEntity);
