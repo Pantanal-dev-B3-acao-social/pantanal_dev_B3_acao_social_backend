@@ -1,11 +1,9 @@
 package dev.pantanal.b3.krpv.acao_social.modulos.category.entity;
 
 import dev.pantanal.b3.krpv.acao_social.config.audit.AuditListener;
-import dev.pantanal.b3.krpv.acao_social.modulos.category.enums.VisibilityCategoryEnum;
-import dev.pantanal.b3.krpv.acao_social.modulos.category.modules.categoryGroup.CategoryGroupEntity;
+import dev.pantanal.b3.krpv.acao_social.modulos.socialAction.SocialActionEntity;
 import jakarta.persistence.*;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import org.springframework.data.annotation.CreatedBy;
@@ -15,13 +13,11 @@ import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.UUID;
 
-@Table(name="category")
-@Entity(name="Category")
-//@AuditTable("z_aud_category")
+@Table(name="category_interested_action_type")
+@Entity(name="CategoryInterestedActionType")
+//@AuditTable("z_aud_category_interested_action_type")
 //@Audited
 @EntityListeners(AuditListener.class)
 @Data
@@ -30,7 +26,7 @@ import java.util.UUID;
 @AllArgsConstructor
 @EqualsAndHashCode
 @ToString
-public class CategoryEntity {
+public class CategoryInterestedActionTypeEntity {
 
     @Valid
     @Version
@@ -42,19 +38,13 @@ public class CategoryEntity {
     @NotNull
     UUID id;
 
-    @Column(nullable = false)
-    @NotBlank
-    private String name;
+    @ManyToOne
+    @JoinColumn(name = "category_id")
+    private CategoryEntity categoryEntity;
 
-    @Column(nullable = false)
-    @NotBlank
-    private String description;
-
-    @Column(nullable = false)
-    @NotBlank
-    String code;
-
-    private VisibilityCategoryEnum visibility;
+//    @ManyToOne
+//    @JoinColumn(name = "user_id")
+    private UUID userId;
 
     @CreatedBy
     @Column(name = "created_by")
@@ -77,13 +67,6 @@ public class CategoryEntity {
 
     @Column(name = "deleted_by")
     private UUID deletedBy;
-
-    @OneToMany(mappedBy = "categoryEntity")
-    private List<CategorySocialActionTypeEntity> cs = new ArrayList<>();
-
-    @ManyToOne
-    @JoinColumn(name = "category_group_id")
-    private CategoryGroupEntity categoryGroup;
 
     @PrePersist
     protected void onCreate() {

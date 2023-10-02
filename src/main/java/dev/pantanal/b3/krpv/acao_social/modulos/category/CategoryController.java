@@ -48,7 +48,7 @@ public class CategoryController {
     ) {
         Pageable paging = PageRequest.of(page, size, sort);
         Page<CategoryEntity> response = service.findAll(paging, request);
-        return response; // TODO: verificar se vai converter certo
+        return response;
     }
 
     @GetMapping("/{id}")
@@ -94,7 +94,6 @@ public class CategoryController {
                 entity.getCode(),
                 entity.getVersion()
         );
-        // TODO: fazer um handle para gerar esse retorno
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
