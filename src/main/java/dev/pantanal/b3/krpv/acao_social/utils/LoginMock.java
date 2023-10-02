@@ -24,7 +24,7 @@ public class LoginMock {
 
     public void authenticateWithToken(String jwtToken) {
         JWTClaimsSet claim = decodeJwtToken(jwtToken);
-        String jwtTokenString = claim.toString();
+//        String jwtTokenString = claim.toString();
         Jwt jwt = Jwt.withTokenValue(jwtToken)
                 .header("alg", "RS256")
                 .header("typ", "JWT")
@@ -38,16 +38,16 @@ public class LoginMock {
         SecurityContextHolder.getContext().setAuthentication(jwtAuthenticationToken);
     }
 
-    private String generatorToken (LoginUserDto loginUserDto) {
-        String tokenUserLogged = "";
-        ResponseEntity<String> responseLogin = keyclockAuthService.loginUser(loginUserDto);
-        if (responseLogin.getStatusCode().is2xxSuccessful()) {
-            tokenUserLogged = responseLogin.getBody();
-        } else {
-            throw new RuntimeException("Falha ao autenticar o usuário fictício");
-        }
-        return tokenUserLogged;
-    }
+//    private String generatorToken (LoginUserDto loginUserDto) {
+//        String tokenUserLogged = "";
+//        ResponseEntity<String> responseLogin = keyclockAuthService.loginUser(loginUserDto);
+//        if (responseLogin.getStatusCode().is2xxSuccessful()) {
+//            tokenUserLogged = responseLogin.getBody();
+//        } else {
+//            throw new RuntimeException("Falha ao autenticar o usuário fictício");
+//        }
+//        return tokenUserLogged;
+//    }
 
     private JWTClaimsSet decodeJwtToken(String jwtToken) {
         try {
