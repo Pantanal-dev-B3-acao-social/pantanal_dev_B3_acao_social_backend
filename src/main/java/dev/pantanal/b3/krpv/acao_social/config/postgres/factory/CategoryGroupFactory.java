@@ -33,20 +33,13 @@ public class CategoryGroupFactory {
         String descriptionFake = faker.lorem().sentence();
         String name = nameSuggestion == null ? nameFake : nameSuggestion;
         String description = descriptionSuggestion == null ? descriptionFake : descriptionSuggestion;
-        UUID createBy = UUID.randomUUID();
-        LocalDateTime createdDate = LocalDateTime.now();
-        LocalDateTime lastModifiedDate = createdDate.plusHours(3).plusMinutes(30);
         String code = generatorCode.execute(name);
         CategoryGroupEntity categoryGroupEntity = new CategoryGroupEntity();
         categoryGroupEntity.setVersion(1L);
-        categoryGroupEntity.setId(UUID.randomUUID());
         categoryGroupEntity.setName(name);
         categoryGroupEntity.setDescription(description);
         categoryGroupEntity.setCode(code);
         categoryGroupEntity.setVisibility(VisibilityCategoryGroupEnum.PUBLIC_EXTERNALLY);
-        categoryGroupEntity.setCreatedBy(createBy);
-        categoryGroupEntity.setCreatedDate(createdDate);
-        categoryGroupEntity.setLastModifiedDate(lastModifiedDate);
         return categoryGroupEntity;
     }
 

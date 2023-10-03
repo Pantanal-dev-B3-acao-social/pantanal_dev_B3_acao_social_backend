@@ -81,12 +81,14 @@ public class CategoryGroupControllerIT {
                     .andExpect(MockMvcResultMatchers.jsonPath("$.content[" + i + "].categoryGroupEntity.id").value(item.getCategoryGroupEntity().getId()))
                     .andExpect(MockMvcResultMatchers.jsonPath("$.content[" + i + "].visibility").value(item.getVisibility()))
                     .andExpect(MockMvcResultMatchers.jsonPath("$.content[" + i + "].categories").value(item.getCategories()))
+                    .andExpect(MockMvcResultMatchers.jsonPath("$.content[" + i + "].createdBy").isNotEmpty())
+                    .andExpect(MockMvcResultMatchers.jsonPath("$.content[" + i + "].createdDate").isNotEmpty())
                     .andExpect(MockMvcResultMatchers.jsonPath("$.content[" + i + "].createdBy").value(item.getCreatedBy()))
                     .andExpect(MockMvcResultMatchers.jsonPath("$.content[" + i + "].lastModifiedBy").value(item.getLastModifiedBy()))
-                    .andExpect(MockMvcResultMatchers.jsonPath("$.content[" + i + "].createdDate").value(item.getCreatedDate()))
-                    .andExpect(MockMvcResultMatchers.jsonPath("$.content[" + i + "].lastModifiedDate").value(item.getLastModifiedDate()))
-                    .andExpect(MockMvcResultMatchers.jsonPath("$.content[" + i + "].deletedDate").value(item.getDeletedDate()))
-                    .andExpect(MockMvcResultMatchers.jsonPath("$.content[" + i + "].deletedBy").value(item.getDeletedBy()));
+                    .andExpect(MockMvcResultMatchers.jsonPath("$.content[" + i + "].createdDate").value(item.getCreatedDate().format(formatter)))
+                    .andExpect(MockMvcResultMatchers.jsonPath("$.content[" + i + "].lastModifiedDate").value(item.getLastModifiedDate().format(formatter)))
+                    .andExpect(MockMvcResultMatchers.jsonPath("$.content[" + i + "].deletedDate").isEmpty())
+                    .andExpect(MockMvcResultMatchers.jsonPath("$.content[" + i + "].deletedBy").isEmpty());
             i++;
         }
     }
@@ -115,6 +117,7 @@ public class CategoryGroupControllerIT {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.code").value(item.getCode()))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.visibility").value(item.getVisibility().toString()))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.createdBy").isNotEmpty())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.createdBy").value(loginMock.extractUserIdFromJwt(tokenUserLogged)))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.lastModifiedBy").isEmpty())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.createdDate").isNotEmpty())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.lastModifiedDate").isEmpty())
@@ -141,12 +144,20 @@ public class CategoryGroupControllerIT {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.description").value(item.getDescription()))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.code").value(item.getCode()))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.visibility").value(item.getVisibility().toString()))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.createdBy").isNotEmpty())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.createdDate").isNotEmpty())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.createdBy").value(item.getCreatedBy().toString()))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.lastModifiedBy").isEmpty())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.createdDate").value(item.getCreatedDate().format(formatter)))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.lastModifiedDate").value(item.getLastModifiedDate().format(formatter)))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.deletedDate").isEmpty())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.deletedBy").value(item.getDeletedBy()));
+                .andExpect(MockMvcResultMatchers.jsonPath("$.deletedBy").isEmpty())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.lastModifiedBy").value(
+                        item.getLastModifiedBy() == null  ?
+                                null : item.getLastModifiedBy().toString())
+                )
+                .andExpect(MockMvcResultMatchers.jsonPath("$.lastModifiedDate").value(
+                        item.getLastModifiedDate() == null ?
+                                null : item.getLastModifiedDate().format(formatter))
+                );
     }
 
     @Test
@@ -195,8 +206,11 @@ public class CategoryGroupControllerIT {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.description").value(item.getDescription()))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.code").value(item.getCode()))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.visibility").value(item.getVisibility().toString()))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.createdBy").isNotEmpty())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.createdDate").isNotEmpty())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.lastModifiedBy").isNotEmpty())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.lastModifiedDate").isNotEmpty())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.createdBy").value(item.getCreatedBy().toString()))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.lastModifiedBy").isEmpty())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.createdDate").value(item.getCreatedDate().format(formatter)))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.lastModifiedDate").value(item.getLastModifiedDate().format(formatter)))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.deletedDate").isEmpty())

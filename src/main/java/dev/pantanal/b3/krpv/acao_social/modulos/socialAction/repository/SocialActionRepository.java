@@ -70,6 +70,7 @@ public class SocialActionRepository {
     @Transactional
     public SocialActionEntity update(SocialActionEntity obj) {
         SocialActionEntity updatedEntity = entityManager.merge(obj);
+        entityManager.flush(); // Força o Hibernate a disparar eventos JPA @PreUpdate
         return updatedEntity;
     }
 

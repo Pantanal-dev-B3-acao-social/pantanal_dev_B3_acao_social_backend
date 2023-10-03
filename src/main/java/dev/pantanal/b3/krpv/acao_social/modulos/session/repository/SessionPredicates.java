@@ -22,10 +22,13 @@ public class SessionPredicates {
             StringPath filterPath = qSocialActionEntity.description;
             predicate = predicate.and(filterPath.eq(filters.description()));
         }
-        if (filters.time() != null) {
-            // TODO assim que implementa filter do LocalDateTime?
-            DateTimePath<LocalDateTime> filterPath = qSocialActionEntity.time;
-            predicate = predicate.and(filterPath.eq(filters.time()));
+        if (filters.dateStartTime() != null) {
+            DateTimePath<LocalDateTime> filterPath = qSocialActionEntity.dateStartTime;
+            predicate = predicate.and(filterPath.eq(filters.dateStartTime()));
+        }
+        if (filters.dateEndTime() != null) {
+            DateTimePath<LocalDateTime> filterPath = qSocialActionEntity.dateEndTime;
+            predicate = predicate.and(filterPath.eq(filters.dateEndTime()));
         }
         if (filters.status() != null) {
             EnumPath<StatusEnum> filterPath = qSocialActionEntity.status;

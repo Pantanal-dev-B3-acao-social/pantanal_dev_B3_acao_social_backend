@@ -9,7 +9,8 @@ import java.util.UUID;
 public record SessionParamsDto (
         String description,
         SocialActionEntity socialAction,
-        LocalDateTime time,
+        LocalDateTime dateStartTime,
+        LocalDateTime dateEndTime,
         StatusEnum status,
         VisibilityEnum visibility,
         UUID createdBy,

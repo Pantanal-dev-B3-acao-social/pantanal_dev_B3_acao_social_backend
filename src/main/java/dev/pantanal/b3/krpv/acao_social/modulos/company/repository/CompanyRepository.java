@@ -58,6 +58,7 @@ public class CompanyRepository {
     @Transactional
     public CompanyEntity update(CompanyEntity obj) {
         CompanyEntity companyEntity = entityManager.merge(obj);
+        entityManager.flush(); // Força o Hibernate a disparar eventos JPA @PreUpdate
         return companyEntity;
     }
 

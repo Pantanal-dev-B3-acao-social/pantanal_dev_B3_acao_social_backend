@@ -38,7 +38,6 @@ public class CategoryFactory {
         String code = generatorCode.execute(name);
         CategoryEntity categoryEntity = new CategoryEntity();
         categoryEntity.setVersion(1L);
-        categoryEntity.setId(UUID.randomUUID());
         categoryEntity.setName(name);
         categoryEntity.setDescription(faker.lorem().sentence());
         categoryEntity.setCode(code);

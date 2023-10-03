@@ -40,6 +40,7 @@ public class CategoryGroupRepository {
     @Transactional
     public CategoryGroupEntity update(CategoryGroupEntity obj) {
         CategoryGroupEntity updatedEntity = entityManager.merge(obj);
+        entityManager.flush(); // Força o Hibernate a disparar eventos JPA @PreUpdate
         return updatedEntity;
     }
 

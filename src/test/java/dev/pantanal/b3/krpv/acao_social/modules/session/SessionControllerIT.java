@@ -112,17 +112,19 @@ public class SessionControllerIT {
             perform
                     .andExpect(MockMvcResultMatchers.jsonPath("$.content[" + i + "].id").value(item.getId().toString()))
                     .andExpect(MockMvcResultMatchers.jsonPath("$.content[" + i + "].description").value(item.getDescription()))
-                    .andExpect(MockMvcResultMatchers.jsonPath("$.content[" + i + "].time").value(item.getTime()))
+                    .andExpect(MockMvcResultMatchers.jsonPath("$.content[" + i + "].dateStartTime").value(item.getDateStartTime()))
+                    .andExpect(MockMvcResultMatchers.jsonPath("$.content[" + i + "].DateEndTime").value(item.getDateEndTime()))
                     .andExpect(MockMvcResultMatchers.jsonPath("$.content[" + i + "].status").value(item.getStatus()))
                     .andExpect(MockMvcResultMatchers.jsonPath("$.content[" + i + "].visibility").value(item.getVisibility()))
-// TODO:                   .andExpect(MockMvcResultMatchers.jsonPath(userLoggedId.toString()).value(item.getCreatedBy()))
-                    .andExpect(MockMvcResultMatchers.jsonPath("$.content[" + i + "].createdBy").value(item.getCreatedBy()))
-                    .andExpect(MockMvcResultMatchers.jsonPath("$.content[" + i + "].lastModifiedBy").value(item.getLastModifiedBy()))
-                    .andExpect(MockMvcResultMatchers.jsonPath("$.content[" + i + "].createdDate").value(item.getCreatedDate()))
-                    .andExpect(MockMvcResultMatchers.jsonPath("$.content[" + i + "].lastModifiedDate").value(item.getLastModifiedDate()))
-                    .andExpect(MockMvcResultMatchers.jsonPath("$.content[" + i + "].deletedDate").value(item.getDeletedDate()))
-                    .andExpect(MockMvcResultMatchers.jsonPath("$.content[" + i + "].deletedBy").value(item.getDeletedBy()))
-                    .andExpect(MockMvcResultMatchers.jsonPath("$.content[" + i + "].socialAction").value(item.getSocialAction()));
+                    .andExpect(MockMvcResultMatchers.jsonPath("$.content[" + i + "].createdBy").isNotEmpty())
+                    .andExpect(MockMvcResultMatchers.jsonPath("$.content[" + i + "].createdDate").isNotEmpty())
+                    .andExpect(MockMvcResultMatchers.jsonPath("$.content[" + i + "].createdBy").value(item.getCreatedBy().toString()))
+                    .andExpect(MockMvcResultMatchers.jsonPath("$.content[" + i + "].lastModifiedBy").value(item.getLastModifiedBy().toString()))
+                    .andExpect(MockMvcResultMatchers.jsonPath("$.content[" + i + "].createdDate").value(item.getCreatedDate().format(formatter)))
+                    .andExpect(MockMvcResultMatchers.jsonPath("$.content[" + i + "].lastModifiedDate").value(item.getLastModifiedDate().format(formatter)))
+                    .andExpect(MockMvcResultMatchers.jsonPath("$.content[" + i + "].deletedDate").isEmpty())
+                    .andExpect(MockMvcResultMatchers.jsonPath("$.content[" + i + "].deletedBy").isEmpty())
+                    .andExpect(MockMvcResultMatchers.jsonPath("$.content[" + i + "].socialAction").value(item.getSocialAction().getId().toString()));
             i++;
         }
     }
@@ -137,7 +139,8 @@ public class SessionControllerIT {
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.registerModule(new JavaTimeModule()); // registrar o módulo JSR-310
         String jsonRequest = objectMapper.writeValueAsString(item);
-        String expectedTime = item.getTime().format(formatter); // Formate o LocalDateTime esperado
+        String expectedStartTime = item.getDateStartTime().format(formatter); // Formate o LocalDateTime esperado
+        String expectedEndTime = item.getDateEndTime().format(formatter); // Formate o LocalDateTime esperado
         // Act (ação)
         ResultActions resultActions = mockMvc.perform(
                 MockMvcRequestBuilders.post(ROUTE_SESSION)
@@ -148,8 +151,10 @@ public class SessionControllerIT {
         // Assert (Verificar)
         resultActions
                 .andExpect(MockMvcResultMatchers.status().isCreated())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.id").isNotEmpty())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.description").value(item.getDescription()))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.time").value(expectedTime)) // Compare como string formatada
+                .andExpect(MockMvcResultMatchers.jsonPath("$.dateStartTime").value(expectedStartTime))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.dateEndTime").value(expectedEndTime))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.status").value(item.getStatus().toString()))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.visibility").value(item.getVisibility().toString()))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.socialAction.id").value(item.getSocialAction().getId().toString()))
@@ -185,7 +190,8 @@ public class SessionControllerIT {
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.id").value(item.getId().toString()))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.description").value(item.getDescription()))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.time").value(item.getTime().format(formatter))) // Compare como string formatada
+                .andExpect(MockMvcResultMatchers.jsonPath("$.dateStartTime").value(item.getDateStartTime().format(formatter)))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.dateEndTime").value(item.getDateEndTime().format(formatter)))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.status").value(item.getStatus().toString()))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.visibility").value(item.getVisibility().toString()))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.socialAction.id").value(item.getSocialAction().getId().toString()))
@@ -227,8 +233,10 @@ public class SessionControllerIT {
         // Modifica alguns dados da session
 // TODO:        item.setCreatedBy(userLoggedId);
         item.setDescription(item.getDescription() + "_ATUALIZADO");
-        LocalDateTime timeUpdated = item.getTime().plusHours(2).plusMinutes(40);
-        item.setTime(timeUpdated);
+        LocalDateTime dateStart = item.getDateStartTime().plusHours(2).plusMinutes(40);
+        LocalDateTime dateEnd = dateStart.plusHours(2).plusMinutes(0);
+        item.setDateStartTime(dateStart);
+        item.setDateEndTime(dateEnd);
         StatusEnum statusEnum = new EnumUtil<StatusEnum>().getRandomValueDiff(item.getStatus());
         item.setStatus(statusEnum);
         VisibilityEnum visibilityEnum = new EnumUtil<VisibilityEnum>().getRandomValueDiff(item.getVisibility());
@@ -244,7 +252,6 @@ public class SessionControllerIT {
         String lastModifiedByString = Optional.ofNullable(item.getLastModifiedBy()).map(UUID::toString).orElse(null);
         String deletedByString = Optional.ofNullable(item.getDeletedBy()).map(UUID::toString).orElse(null);
         String deletedDateString = Optional.ofNullable(item.getDeletedDate()).map(LocalDateTime::toString).orElse(null);
-        String expectedTime = item.getTime().format(formatter); // Formate o LocalDateTime esperado
         // Act (ação)
         ResultActions resultActions = mockMvc.perform(
                 MockMvcRequestBuilders.patch(ROUTE_SESSION + "/{id}", item.getId())
@@ -257,7 +264,8 @@ public class SessionControllerIT {
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.id").value(item.getId().toString()))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.description").value(item.getDescription()))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.time").value(expectedTime)) // Compare como string formatada
+                .andExpect(MockMvcResultMatchers.jsonPath("$.dateStartTime").value(item.getDateStartTime().format(formatter)))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.dateEndTime").value(item.getDateEndTime().format(formatter)))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.status").value(item.getStatus().toString()))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.visibility").value(item.getVisibility().toString()))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.socialAction.id").value(item.getSocialAction().getId().toString()))

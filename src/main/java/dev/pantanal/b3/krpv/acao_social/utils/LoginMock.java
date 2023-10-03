@@ -2,9 +2,7 @@ package dev.pantanal.b3.krpv.acao_social.utils;
 
 import com.nimbusds.jwt.*;
 import dev.pantanal.b3.krpv.acao_social.modulos.auth.KeyclockAuthService;
-import dev.pantanal.b3.krpv.acao_social.modulos.auth.dto.LoginUserDto;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
@@ -38,16 +36,6 @@ public class LoginMock {
         SecurityContextHolder.getContext().setAuthentication(jwtAuthenticationToken);
     }
 
-//    private String generatorToken (LoginUserDto loginUserDto) {
-//        String tokenUserLogged = "";
-//        ResponseEntity<String> responseLogin = keyclockAuthService.loginUser(loginUserDto);
-//        if (responseLogin.getStatusCode().is2xxSuccessful()) {
-//            tokenUserLogged = responseLogin.getBody();
-//        } else {
-//            throw new RuntimeException("Falha ao autenticar o usuário fictício");
-//        }
-//        return tokenUserLogged;
-//    }
 
     private JWTClaimsSet decodeJwtToken(String jwtToken) {
         try {

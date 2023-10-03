@@ -40,6 +40,7 @@ public class SessionRepository {
     @Transactional
     public SessionEntity update(SessionEntity obj) {
         SessionEntity updatedEntity = entityManager.merge(obj);
+        entityManager.flush(); // Força o Hibernate a disparar eventos JPA @PreUpdate
         return updatedEntity;
     }
 
