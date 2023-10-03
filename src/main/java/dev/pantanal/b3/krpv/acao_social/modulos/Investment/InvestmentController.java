@@ -1,8 +1,7 @@
 package dev.pantanal.b3.krpv.acao_social.modulos.Investment;
 
 import dev.pantanal.b3.krpv.acao_social.modulos.Investment.dto.request.InvestmentCreateDto;
-import dev.pantanal.b3.krpv.acao_social.modulos.Investment.dto.response.InvestmentResponseDto;
-import dev.pantanal.b3.krpv.acao_social.modulos.Investment.InvestmentEntity;
+import dev.pantanal.b3.krpv.acao_social.modulos.Investment.dto.request.InvestmentUpdateDto;
 import dev.pantanal.b3.krpv.acao_social.modulos.Investment.dto.response.InvestmentResponseDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -69,6 +68,30 @@ public class InvestmentController {
         );
         return new ResponseEntity<>(response, HttpStatus.CREATED);
 
+    }
+
+    @PatchMapping("/{id}")
+    @PreAuthorize("hasAnyRole('CATEGORY_UPDATE')")
+    @ResponseStatus(HttpStatus.OK)
+    @Operation(summary = "Updates an Category", method = "PATCH")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Successfully Updated"),
+            @ApiResponse(responseCode = "400", description = "Invalid parameters"),
+            @ApiResponse(responseCode = "401", description = "User is not authenticated"),
+            @ApiResponse(responseCode = "404", description = "Category no found"),
+            @ApiResponse(responseCode = "422", description = "Invalid request data"),
+            @ApiResponse(responseCode = "500", description = "Error when creating social action"),
+    })
+    public ResponseEntity<InvestmentResponseDto> update(@PathVariable UUID id, @Valid @RequestBody InvestmentUpdateDto request) {
+        InvestmentEntity entity = service.update(id, request);
+        InvestmentResponseDto response = new InvestmentResponseDto(
+                id,
+                entity.getValue_money(),
+                entity.getDate(),
+                entity.getMotivation(),
+                entity.getApprovedAt()
+        );
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
 
