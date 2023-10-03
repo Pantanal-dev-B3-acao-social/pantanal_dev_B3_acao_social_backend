@@ -4,12 +4,17 @@ import dev.pantanal.b3.krpv.acao_social.modulos.ong.dto.request.OngCreateDto;
 import dev.pantanal.b3.krpv.acao_social.modulos.ong.dto.request.OngParamsDto;
 import dev.pantanal.b3.krpv.acao_social.modulos.ong.dto.request.OngUpdateDto;
 import dev.pantanal.b3.krpv.acao_social.modulos.ong.dto.response.OngResponseDto;
+import dev.pantanal.b3.krpv.acao_social.modulos.ong.OngEntity;
+import dev.pantanal.b3.krpv.acao_social.modulos.ong.dto.request.OngParamsDto;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.annotation.Nullable;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.SortDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -37,9 +42,17 @@ public class OngController {
             @ApiResponse(responseCode = "404", description = "Not found"),
             @ApiResponse(responseCode = "500", description = "Internal Server Error"),
     })
-    public Page<OngEntity> findAll(Pageable pageable, @Valid OngParamsDto request) {
-        Page<OngEntity> entities = service.findAll(pageable, request);
-        return entities;
+    public Page<OngEntity> findAll(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @SortDefault(sort="name", direction = Sort.Direction.DESC) Sort sort,
+            @Valid OngParamsDto request
+    ) {
+
+        Pageable paging = PageRequest.of(page, size, sort);
+        Page<OngEntity> response = service.findAll(paging, request);
+        //Page<OngResponseDto> response = mapEntityPageIntoDtoPage(entities, OngResponseDto.class);
+        return response;
     }
 
     @GetMapping("/{id}")

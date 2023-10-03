@@ -1,14 +1,18 @@
 package dev.pantanal.b3.krpv.acao_social.modulos.ong;
 
+import com.querydsl.core.types.dsl.BooleanExpression;
 import dev.pantanal.b3.krpv.acao_social.exception.ObjectNotFoundException;
 import dev.pantanal.b3.krpv.acao_social.modulos.ong.dto.request.OngCreateDto;
 import dev.pantanal.b3.krpv.acao_social.modulos.ong.dto.request.OngParamsDto;
 import dev.pantanal.b3.krpv.acao_social.modulos.ong.dto.request.OngUpdateDto;
 import dev.pantanal.b3.krpv.acao_social.modulos.ong.repository.OngRepository;
+import dev.pantanal.b3.krpv.acao_social.modulos.ong.OngEntity;
+import dev.pantanal.b3.krpv.acao_social.modulos.ong.dto.request.OngParamsDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.data.domain.Page;
+import dev.pantanal.b3.krpv.acao_social.modulos.ong.repository.OngPredicates;
 import java.util.UUID;
 
 @Service
@@ -30,7 +34,8 @@ public class OngService {
     }
 
     public Page<OngEntity> findAll(Pageable pageable, OngParamsDto filters) {
-        Page<OngEntity> objects = ongRepository.findAll(pageable, filters);
+        BooleanExpression predicate = OngPredicates.buildPredicate(filters);
+        Page<OngEntity> objects = ongRepository.findAll(pageable, predicate);
         // lançar exceções
         return objects;
     }
