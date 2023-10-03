@@ -1,6 +1,6 @@
 create table investment(
     id UUID PRIMARY KEY UNIQUE NOT NULL,
-    value_money int8 NOT NULL,
+    value_money NUMERIC NOT NULL,
     date_ TIMESTAMP NOT NULL,
     motivation VARCHAR(255) NOT NULL,
     approved_by TIMESTAMP NOT NULL,

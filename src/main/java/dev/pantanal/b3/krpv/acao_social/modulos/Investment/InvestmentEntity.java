@@ -44,7 +44,7 @@ public class InvestmentEntity {
 
     @Column(nullable = false)
     //@NotBlank
-    private long value_money;
+    private Double value_money;
 
     @Column(nullable = false)
     //@NotBlank

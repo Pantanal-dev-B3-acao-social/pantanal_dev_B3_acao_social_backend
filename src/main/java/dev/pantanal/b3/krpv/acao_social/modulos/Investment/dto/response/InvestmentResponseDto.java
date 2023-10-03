@@ -13,7 +13,7 @@ public record InvestmentResponseDto(
         UUID id,
 
         @NotBlank(message = "field value_money can not be empty")
-        long value_money,
+        Double value_money,
 
         @NotBlank(message = "field date can not be empty")
         LocalDateTime date,

@@ -31,7 +31,7 @@ public class InvestmentFactory {
         UUID lastModifiedBy = null;
         LocalDateTime createdDate = LocalDateTime.now();
         LocalDateTime lastModifiedDate = createdDate.plusHours(3).plusMinutes(30);
-        long value_money = faker.number().randomNumber();
+        Double value_money = faker.number().randomDouble(2, 10000, 100);
         LocalDateTime date = LocalDateTime.now();
         String motivation = faker.lorem().sentence();
         LocalDateTime approvedAt = LocalDateTime.now();
