@@ -18,12 +18,12 @@ import org.springframework.security.core.context.SecurityContextHolder;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
-
+//Implementar foreign key pra social action
 @Table(name="investment")
 @Entity(name="Investiment")
-@AuditTable("z_aud_investment")
-@EntityListeners(AuditListener.class)
-@Audited
+//@AuditTable("z_aud_investment")
+//@EntityListeners(AuditListener.class)
+//@Audited
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -43,12 +43,12 @@ public class InvestmentEntity {
     UUID id;
 
     @Column(nullable = false)
-    @NotBlank
+    //@NotBlank
     private long value_money;
 
     @Column(nullable = false)
-    @NotBlank
-    @PastOrPresent
+    //@NotBlank
+    //@PastOrPresent
     private LocalDateTime date;
 
     @Column(nullable = false)
@@ -60,7 +60,8 @@ public class InvestmentEntity {
 //    private Person person;
 
     @Column(nullable = false)
-    @NotBlank
+    //@NotBlank
+    //@PastOrPresent
     private LocalDateTime approvedAt;
 
     @CreatedBy

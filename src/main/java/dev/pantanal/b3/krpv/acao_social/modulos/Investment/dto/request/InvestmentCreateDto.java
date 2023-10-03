@@ -10,16 +10,16 @@ import java.time.LocalDateTime;
 public record InvestmentCreateDto(
 
         @Valid
-        @NotBlank(message = "field value_money can not be empty")
+        //@NotBlank(message = "field value_money can not be empty")
         long value_money,
 
-        @NotBlank(message = "field date can not be empty")
+        //@NotBlank(message = "field date can not be empty")
         LocalDateTime date,
 
         @NotBlank(message = "field motivation can not be empty")
         String motivation,
 
-        @NotBlank(message = "field approvedAt can not be empty")
+        //@NotBlank(message = "field approvedAt can not be empty")
         LocalDateTime approvedAt
 
 ) {

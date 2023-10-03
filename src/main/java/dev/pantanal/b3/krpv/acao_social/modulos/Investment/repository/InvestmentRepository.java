@@ -8,6 +8,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
+
+import java.util.UUID;
+
 @Component
 @RequiredArgsConstructor
 @Repository
@@ -20,5 +23,9 @@ public class InvestmentRepository {
     public InvestmentEntity save(InvestmentEntity entityObj) {
         InvestmentEntity investmentEntity = investmentPostgresRepository.save(entityObj);
         return investmentEntity;
+    }
+
+    public InvestmentEntity findById(UUID id) {
+        return investmentPostgresRepository.findById(id).orElse(null);
     }
 }
