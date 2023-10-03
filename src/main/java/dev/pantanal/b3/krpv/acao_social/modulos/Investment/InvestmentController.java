@@ -71,16 +71,16 @@ public class InvestmentController {
     }
 
     @PatchMapping("/{id}")
-    @PreAuthorize("hasAnyRole('CATEGORY_UPDATE')")
+    //@PreAuthorize("hasAnyRole('INVESTMENT_UPDATE')")
     @ResponseStatus(HttpStatus.OK)
     @Operation(summary = "Updates an Category", method = "PATCH")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Successfully Updated"),
             @ApiResponse(responseCode = "400", description = "Invalid parameters"),
             @ApiResponse(responseCode = "401", description = "User is not authenticated"),
-            @ApiResponse(responseCode = "404", description = "Category no found"),
+            @ApiResponse(responseCode = "404", description = "Investment no found"),
             @ApiResponse(responseCode = "422", description = "Invalid request data"),
-            @ApiResponse(responseCode = "500", description = "Error when creating social action"),
+            @ApiResponse(responseCode = "500", description = "Error when creating Investment"),
     })
     public ResponseEntity<InvestmentResponseDto> update(@PathVariable UUID id, @Valid @RequestBody InvestmentUpdateDto request) {
         InvestmentEntity entity = service.update(id, request);
@@ -94,5 +94,19 @@ public class InvestmentController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
+    @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    //@PreAuthorize("hasAnyRole('INVESTMENT_DELETE')")
+    @Operation(summary = "Deletes an Investment", method = "DELETE")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "204", description = "Successfully deleted"),
+            @ApiResponse(responseCode = "400", description = "Invalid Id"),
+            @ApiResponse(responseCode = "401", description = "User not authenticated"),
+            @ApiResponse(responseCode = "404", description = "Investment not found"),
+            @ApiResponse(responseCode = "500", description = "Error when excluding Investment"),
+    })
+    public void delete(@PathVariable UUID id) {
+        service.delete(id);
+    }
 
 }

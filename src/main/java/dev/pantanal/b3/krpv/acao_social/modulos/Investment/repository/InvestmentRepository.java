@@ -21,17 +21,21 @@ public class InvestmentRepository {
     private InvestmentPostgresRepository investmentPostgresRepository;
     @PersistenceContext
     private final EntityManager entityManager;
+    public InvestmentEntity findById(UUID id) {
+        return investmentPostgresRepository.findById(id).orElse(null);
+    }
+
     public InvestmentEntity save(InvestmentEntity entityObj) {
         InvestmentEntity investmentEntity = investmentPostgresRepository.save(entityObj);
         return investmentEntity;
     }
 
-    public InvestmentEntity findById(UUID id) {
-        return investmentPostgresRepository.findById(id).orElse(null);
-    }
-
     @Transactional
     public InvestmentEntity update(InvestmentEntity obj) {
         return entityManager.merge(obj);
+    }
+
+    public void delete(UUID id) {
+        investmentPostgresRepository.deleteById(id);
     }
 }

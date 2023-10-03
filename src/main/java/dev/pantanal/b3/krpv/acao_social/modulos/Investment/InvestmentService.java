@@ -15,6 +15,14 @@ public class InvestmentService {
     @Autowired
     private InvestmentRepository repository;
 
+    public InvestmentEntity findById(UUID id) {
+        InvestmentEntity obj= repository.findById(id);
+        if (obj == null) {
+            throw new ObjectNotFoundException("Registro não encontrado: " + id);
+        }
+        return obj;
+    }
+
     public InvestmentEntity create(InvestmentCreateDto request) {
         InvestmentEntity newInvestiment = new InvestmentEntity();
         newInvestiment.setValue_money(request.value_money());
@@ -23,14 +31,6 @@ public class InvestmentService {
         newInvestiment.setApprovedAt(request.approvedAt());
         InvestmentEntity savedInvestment = repository.save(newInvestiment);
         return savedInvestment;
-    }
-
-    public InvestmentEntity findById(UUID id) {
-        InvestmentEntity obj= repository.findById(id);
-        if (obj == null) {
-            throw new ObjectNotFoundException("Registro não encontrado: " + id);
-        }
-        return obj;
     }
 
     public InvestmentEntity update(UUID id, InvestmentUpdateDto request) {
@@ -52,4 +52,5 @@ public class InvestmentService {
         }
         return repository.update(obj);
     }
+    public void delete(UUID id) {repository.delete(id);}
 }
