@@ -18,7 +18,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
-@Table(name="company",  uniqueConstraints = @UniqueConstraint(columnNames = "cnpj"))
+@Table(name="company")
 @Entity(name="Company")
 @AuditTable("z_aud_company")
 @EntityListeners(AuditListener.class)

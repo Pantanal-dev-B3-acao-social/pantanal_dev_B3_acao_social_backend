@@ -30,27 +30,6 @@ public class CategoryController {
     private CategoryService service;
     public static final String ROUTE_CATEGORY = "/v1/category";
 
-    @GetMapping
-    @ResponseStatus(HttpStatus.OK)
-    @PreAuthorize("hasAnyRole('CATEGORY_GET_ALL')")
-    @Operation(summary = "Gets Categories", method = "GET")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Element(s) found successfully"),
-            @ApiResponse(responseCode = "401", description = "User not authenticated"),
-            @ApiResponse(responseCode = "404", description = "Not found"),
-            @ApiResponse(responseCode = "500", description = "Internal Server Error"),
-    })
-    public Page<CategoryEntity> findAll(
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size,
-            @SortDefault(sort="name", direction = Sort.Direction.DESC) Sort sort,
-            @Valid CategoryParamsDto request
-    ) {
-        Pageable paging = PageRequest.of(page, size, sort);
-        Page<CategoryEntity> response = service.findAll(paging, request);
-        return response; // TODO: verificar se vai converter certo
-    }
-
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
     @PreAuthorize("hasAnyRole('CATEGORY_GET_ONE')")
@@ -71,6 +50,27 @@ public class CategoryController {
                 entity.getVersion()
         );
         return new ResponseEntity<CategoryResponseDto>(response, HttpStatus.OK);
+    }
+
+    @GetMapping
+    @ResponseStatus(HttpStatus.OK)
+    @PreAuthorize("hasAnyRole('CATEGORY_GET_ALL')")
+    @Operation(summary = "Gets Categories", method = "GET")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Element(s) found successfully"),
+            @ApiResponse(responseCode = "401", description = "User not authenticated"),
+            @ApiResponse(responseCode = "404", description = "Not found"),
+            @ApiResponse(responseCode = "500", description = "Internal Server Error"),
+    })
+    public Page<CategoryEntity> findAll(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @SortDefault(sort="name", direction = Sort.Direction.DESC) Sort sort,
+            @Valid CategoryParamsDto request
+    ) {
+        Pageable paging = PageRequest.of(page, size, sort);
+        Page<CategoryEntity> response = service.findAll(paging, request);
+        return response; // TODO: verificar se vai converter certo
     }
 
     @PostMapping
@@ -137,6 +137,5 @@ public class CategoryController {
     public void delete(@PathVariable UUID id) {
         service.delete(id);
     }
-
 
 }
