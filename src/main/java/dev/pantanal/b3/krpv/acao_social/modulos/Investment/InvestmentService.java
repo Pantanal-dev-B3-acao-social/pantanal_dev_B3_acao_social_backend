@@ -1,10 +1,15 @@
 package dev.pantanal.b3.krpv.acao_social.modulos.Investment;
 
+import com.querydsl.core.types.dsl.BooleanExpression;
 import dev.pantanal.b3.krpv.acao_social.exception.ObjectNotFoundException;
 import dev.pantanal.b3.krpv.acao_social.modulos.Investment.dto.request.InvestmentCreateDto;
+import dev.pantanal.b3.krpv.acao_social.modulos.Investment.dto.request.InvestmentParamsDto;
 import dev.pantanal.b3.krpv.acao_social.modulos.Investment.dto.request.InvestmentUpdateDto;
+import dev.pantanal.b3.krpv.acao_social.modulos.Investment.repository.InvestmentPredicates;
 import dev.pantanal.b3.krpv.acao_social.modulos.Investment.repository.InvestmentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.UUID;
@@ -14,14 +19,8 @@ public class InvestmentService {
 
     @Autowired
     private InvestmentRepository repository;
-
-    public InvestmentEntity findById(UUID id) {
-        InvestmentEntity obj= repository.findById(id);
-        if (obj == null) {
-            throw new ObjectNotFoundException("Registro não encontrado: " + id);
-        }
-        return obj;
-    }
+    @Autowired
+    private InvestmentPredicates investmentPredicates;
 
     public InvestmentEntity create(InvestmentCreateDto request) {
         InvestmentEntity newInvestiment = new InvestmentEntity();
@@ -33,6 +32,19 @@ public class InvestmentService {
         return savedInvestment;
     }
 
+    public Page<InvestmentEntity> findAll(Pageable pageable, InvestmentParamsDto request) {
+        BooleanExpression predicate = investmentPredicates.buildPredicate(request);
+        Page<InvestmentEntity> objects = repository.findAll(pageable, predicate);
+        return objects;
+    }
+
+    public InvestmentEntity findById(UUID id) {
+        InvestmentEntity obj= repository.findById(id);
+        if (obj == null) {
+            throw new ObjectNotFoundException("Registro não encontrado: " + id);
+        }
+        return obj;
+    }
     public InvestmentEntity update(UUID id, InvestmentUpdateDto request) {
         InvestmentEntity obj = repository.findById(id);
         if (obj == null){
@@ -52,5 +64,6 @@ public class InvestmentService {
         }
         return repository.update(obj);
     }
+
     public void delete(UUID id) {repository.delete(id);}
 }

@@ -1,13 +1,21 @@
 package dev.pantanal.b3.krpv.acao_social.modulos.Investment;
 
 import dev.pantanal.b3.krpv.acao_social.modulos.Investment.dto.request.InvestmentCreateDto;
+import dev.pantanal.b3.krpv.acao_social.modulos.Investment.dto.request.InvestmentParamsDto;
 import dev.pantanal.b3.krpv.acao_social.modulos.Investment.dto.request.InvestmentUpdateDto;
 import dev.pantanal.b3.krpv.acao_social.modulos.Investment.dto.response.InvestmentResponseDto;
+import dev.pantanal.b3.krpv.acao_social.modulos.Investment.InvestmentEntity;
+import dev.pantanal.b3.krpv.acao_social.modulos.category.dto.request.CategoryParamsDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.SortDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -44,6 +52,27 @@ public class InvestmentController {
                 entity.getApprovedAt()
         );
         return new ResponseEntity<InvestmentResponseDto>(response, HttpStatus.OK);
+    }
+
+    @GetMapping
+    @ResponseStatus(HttpStatus.OK)
+    @PreAuthorize("hasAnyRole('INVESTMENT_GET_ALL')")
+    @Operation(summary = "Gets Investments", method = "GET")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Element(s) found successfully"),
+            @ApiResponse(responseCode = "401", description = "User not authenticated"),
+            @ApiResponse(responseCode = "404", description = "Not found"),
+            @ApiResponse(responseCode = "500", description = "Internal Server Error"),
+    })
+    public Page<InvestmentEntity> findAll(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @SortDefault(sort="name", direction = Sort.Direction.DESC) Sort sort,
+            @Valid InvestmentParamsDto request
+    ) {
+        Pageable paging = PageRequest.of(page, size, sort);
+        Page<InvestmentEntity> response = service.findAll(paging, request);
+        return response; // TODO: verificar se vai converter certo
     }
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)

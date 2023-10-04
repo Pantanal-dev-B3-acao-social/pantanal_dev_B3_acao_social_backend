@@ -12,6 +12,7 @@ create table investment(
     deleted_date TIMESTAMP,
     deleted_by UUID,
     social_action_id UUID NOT NULL,
+    company_id UUID NOT NULL,
 
     Foreign key (social_action_id) REFERENCES social_action(id)
 )
