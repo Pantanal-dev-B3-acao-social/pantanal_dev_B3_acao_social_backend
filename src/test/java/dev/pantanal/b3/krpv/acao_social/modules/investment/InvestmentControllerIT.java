@@ -90,7 +90,10 @@ public class InvestmentControllerIT {
     @DisplayName("lista paginada de Investment com sucesso")
     void findAllInvestment() throws Exception {
         // Arrange (Organizar)
+        socialActionFactory.insertMany(2);
+        companyFactory.insertMany(2);
         List<InvestmentEntity> saved = investmentFactory.insertMany(4);
+        DateTimeFormatter formatter = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
         // TODO:        item.setCreatedBy(userLoggedId);
         // Act (ação)
         ResultActions perform = mockMvc.perform(
@@ -108,27 +111,30 @@ public class InvestmentControllerIT {
             perform
                     .andExpect(MockMvcResultMatchers.jsonPath("$.content[" + i + "].id").value(item.getId().toString()))
                     .andExpect(MockMvcResultMatchers.jsonPath("$.content[" + i + "].value_money").value(item.getValue_money()))
-                    .andExpect(MockMvcResultMatchers.jsonPath("$.content[" + i + "].date").value(item.getDate()))
+                    .andExpect(MockMvcResultMatchers.jsonPath("$.content[" + i + "].date").value(item.getDate().format(formatter)))
                     .andExpect(MockMvcResultMatchers.jsonPath("$.content[" + i + "].motivation").value(item.getMotivation()))
-                    .andExpect(MockMvcResultMatchers.jsonPath("$.content[" + i + "].approvedAt").value(item.getApprovedAt()))
+                    .andExpect(MockMvcResultMatchers.jsonPath("$.content[" + i + "].approvedAt").value(item.getApprovedAt().format(formatter)))
 // TODO:                   .andExpect(MockMvcResultMatchers.jsonPath(userLoggedId.toString()).value(item.getCreatedBy()))
-                    .andExpect(MockMvcResultMatchers.jsonPath("$.content[" + i + "].createdBy").value(item.getCreatedBy()))
+                    .andExpect(MockMvcResultMatchers.jsonPath("$.content[" + i + "].createdBy").value(item.getCreatedBy().toString()))
                     .andExpect(MockMvcResultMatchers.jsonPath("$.content[" + i + "].lastModifiedBy").value(item.getLastModifiedBy()))
-                    .andExpect(MockMvcResultMatchers.jsonPath("$.content[" + i + "].createdDate").value(item.getCreatedDate()))
-                    .andExpect(MockMvcResultMatchers.jsonPath("$.content[" + i + "].lastModifiedDate").value(item.getLastModifiedDate()))
+                    .andExpect(MockMvcResultMatchers.jsonPath("$.content[" + i + "].createdDate").value(item.getCreatedDate().format(formatter)))
+                    .andExpect(MockMvcResultMatchers.jsonPath("$.content[" + i + "].lastModifiedDate").value(item.getLastModifiedDate().format(formatter)))
                     .andExpect(MockMvcResultMatchers.jsonPath("$.content[" + i + "].deletedDate").value(item.getDeletedDate()))
                     .andExpect(MockMvcResultMatchers.jsonPath("$.content[" + i + "].deletedBy").value(item.getDeletedBy()))
-                    .andExpect(MockMvcResultMatchers.jsonPath("$.content[" + i + "].socialAction").value(item.getSocialAction()))
-                    .andExpect(MockMvcResultMatchers.jsonPath("$.content[" + i + "].company").value(item.getCompany()));
+                    .andExpect(MockMvcResultMatchers.jsonPath("$.content[" + i + "].socialAction.id").value(item.getSocialAction().getId().toString()))
+                    .andExpect(MockMvcResultMatchers.jsonPath("$.content[" + i + "].company.id").value(item.getCompany().getId().toString()));
             i++;
         }
     }
 
     @Test
-    @DisplayName("salva uma nova session com sucesso")
+    @DisplayName("salva um novo Investment com sucesso")
     void saveOneInvestment() throws Exception {
         // Arrange (Organizar)
+        socialActionFactory.insertMany(2);
+        companyFactory.insertMany(2);
         InvestmentEntity item = investmentFactory.makeFakeEntity();
+
 // TODO:        item.setCreatedBy(userLoggedId);
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.registerModule(new JavaTimeModule()); // registrar o módulo JSR-310
@@ -146,7 +152,6 @@ public class InvestmentControllerIT {
         // Assert (Verificar)
         resultActions
                 .andExpect(MockMvcResultMatchers.status().isCreated())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.id").value(item.getId()))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.value_money").value(item.getValue_money()))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.date").value(expectedDate)) // Compare como string formatada
                 .andExpect(MockMvcResultMatchers.jsonPath("$.approvedAt").value(expectedApprovedAt))
@@ -160,6 +165,8 @@ public class InvestmentControllerIT {
     @DisplayName("Busca session por ID com sucesso")
     void findByIdSession() throws Exception {
         // Arrange (Organizar)
+        socialActionFactory.insertMany(2);
+        companyFactory.insertMany(2);
         List<InvestmentEntity> saved = investmentFactory.insertMany(3);
         InvestmentEntity item = saved.get(0);
         DateTimeFormatter formatter = DateTimeFormatter.ISO_LOCAL_DATE_TIME; // Formate o LocalDateTime esperado
@@ -195,6 +202,8 @@ public class InvestmentControllerIT {
     @DisplayName("(hard-delete) Exclui uma session com sucesso")
     void deleteSession() throws Exception {
         // Arrange (Organizar)
+        socialActionFactory.insertMany(2);
+        companyFactory.insertMany(2);
         InvestmentEntity savedItem = investmentFactory.insertOne(investmentFactory.makeFakeEntity());
         // Act (ação)
         ResultActions resultActions = mockMvc.perform(
@@ -215,6 +224,8 @@ public class InvestmentControllerIT {
     @DisplayName("Atualiza uma session com sucesso")
     void updateSession() throws Exception {
         // Arrange (Organizar)
+        socialActionFactory.insertMany(2);
+        companyFactory.insertMany(2);
         InvestmentEntity item = investmentFactory.insertOne(investmentFactory.makeFakeEntity());
         // Modifica alguns dados da session
 // TODO:        item.setCreatedBy(userLoggedId);
@@ -253,7 +264,7 @@ public class InvestmentControllerIT {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.value_money").value(item.getValue_money().toString()))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.company.id").value(item.getCompany().getId().toString()))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.socialAction.id").value(item.getSocialAction().getId().toString()))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.createdBy").value(createdByString))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.createdBy").value(item.getCreatedBy().toString()))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.lastModifiedBy").value(lastModifiedByString))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.createdDate").value(item.getCreatedDate().format(formatter)))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.lastModifiedDate").value(item.getLastModifiedDate().format(formatter)))

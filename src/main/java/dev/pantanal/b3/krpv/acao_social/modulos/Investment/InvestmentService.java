@@ -28,6 +28,8 @@ public class InvestmentService {
         newInvestiment.setDate(request.date());
         newInvestiment.setMotivation(request.motivation());
         newInvestiment.setApprovedAt(request.approvedAt());
+        newInvestiment.setSocialAction(request.socialAction());
+        newInvestiment.setCompany(request.company());
         InvestmentEntity savedInvestment = repository.save(newInvestiment);
         return savedInvestment;
     }

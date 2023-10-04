@@ -3,6 +3,10 @@ package dev.pantanal.b3.krpv.acao_social.config.postgres.factory;
 import com.github.javafaker.Faker;
 import dev.pantanal.b3.krpv.acao_social.modulos.Investment.InvestmentEntity;
 import dev.pantanal.b3.krpv.acao_social.modulos.Investment.repository.InvestmentRepository;
+import dev.pantanal.b3.krpv.acao_social.modulos.company.CompanyEntity;
+import dev.pantanal.b3.krpv.acao_social.modulos.socialAction.SocialActionEntity;
+import dev.pantanal.b3.krpv.acao_social.utils.FindRegisterRandom;
+import jakarta.persistence.EntityManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
@@ -17,6 +21,8 @@ public class InvestmentFactory {
     private static final Random random = new Random();
     private final Faker faker = new Faker();
     private final JdbcTemplate jdbcTemplate;
+    @Autowired
+    private EntityManager entityManager;
     @Autowired
     private InvestmentRepository repository;
     @Autowired
@@ -38,6 +44,10 @@ public class InvestmentFactory {
         LocalDateTime date = LocalDateTime.now();
         String motivation = faker.lorem().sentence();
         LocalDateTime approvedAt = LocalDateTime.now();
+        FindRegisterRandom findRegisterRandomSocial = new FindRegisterRandom<SocialActionEntity>(entityManager);
+        List<SocialActionEntity> socialActions = findRegisterRandomSocial.execute("social_action", 1, SocialActionEntity.class);
+        FindRegisterRandom findRandomCompany = new FindRegisterRandom<CompanyEntity>(entityManager);
+        List<CompanyEntity> company = findRandomCompany.execute("company", 1, CompanyEntity.class);
         return new InvestmentEntity(
                 1L,
                 UUID.randomUUID(),
@@ -51,8 +61,8 @@ public class InvestmentFactory {
                 lastModifiedDate,
                 null,
                 deleteBy,
-                socialActionFactory.makeFakeEntity(),
-                companyFactory.makeFakeEntity()
+                socialActions.get(0),
+                company.get(0)
         );
     }
 
@@ -64,8 +74,8 @@ public class InvestmentFactory {
     public List<InvestmentEntity> insertMany(int amount) {
         List<InvestmentEntity> investments = new ArrayList<>();
         for (int i=0; i<amount; i++) {
-            InvestmentEntity socialActionEntity = this.makeFakeEntity();
-            investments.add(this.insertOne(socialActionEntity));
+            InvestmentEntity investment = this.makeFakeEntity();
+            investments.add(this.insertOne(investment));
         }
         return investments;
     }

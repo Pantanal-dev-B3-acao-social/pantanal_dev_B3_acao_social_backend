@@ -1,5 +1,7 @@
 package dev.pantanal.b3.krpv.acao_social.modulos.Investment.dto.request;
 
+import dev.pantanal.b3.krpv.acao_social.modulos.company.CompanyEntity;
+import dev.pantanal.b3.krpv.acao_social.modulos.socialAction.SocialActionEntity;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import org.springframework.cglib.core.Local;
@@ -20,7 +22,11 @@ public record InvestmentCreateDto(
         String motivation,
 
         //@NotBlank(message = "field approvedAt can not be empty")
-        LocalDateTime approvedAt
+        LocalDateTime approvedAt,
+
+        SocialActionEntity socialAction,
+
+        CompanyEntity company
 
 ) {
 }

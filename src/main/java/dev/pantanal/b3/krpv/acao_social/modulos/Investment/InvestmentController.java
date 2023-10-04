@@ -46,7 +46,15 @@ public class InvestmentController {
                 entity.getValue_money(),
                 entity.getDate(),
                 entity.getMotivation(),
-                entity.getApprovedAt()
+                entity.getApprovedAt(),
+                entity.getSocialAction(),
+                entity.getCompany(),
+                entity.getCreatedBy(),
+                entity.getLastModifiedBy(),
+                entity.getCreatedDate(),
+                entity.getLastModifiedDate(),
+                entity.getDeletedDate(),
+                entity.getDeletedBy()
         );
         return new ResponseEntity<InvestmentResponseDto>(response, HttpStatus.OK);
     }
@@ -90,7 +98,16 @@ public class InvestmentController {
                 entity.getValue_money(),
                 entity.getDate(),
                 entity.getMotivation(),
-                entity.getApprovedAt()
+                entity.getApprovedAt(),
+                entity.getSocialAction(),
+                entity.getCompany(),
+                entity.getCreatedBy(),
+                entity.getLastModifiedBy(),
+                entity.getCreatedDate(),
+                entity.getLastModifiedDate(),
+                entity.getDeletedDate(),
+                entity.getDeletedBy()
+
         );
         return new ResponseEntity<>(response, HttpStatus.CREATED);
 
@@ -115,7 +132,15 @@ public class InvestmentController {
                 entity.getValue_money(),
                 entity.getDate(),
                 entity.getMotivation(),
-                entity.getApprovedAt()
+                entity.getApprovedAt(),
+                entity.getSocialAction(),
+                entity.getCompany(),
+                entity.getCreatedBy(),
+                entity.getLastModifiedBy(),
+                entity.getCreatedDate(),
+                entity.getLastModifiedDate(),
+                entity.getDeletedDate(),
+                entity.getDeletedBy()
         );
         return new ResponseEntity<>(response, HttpStatus.OK);
     }

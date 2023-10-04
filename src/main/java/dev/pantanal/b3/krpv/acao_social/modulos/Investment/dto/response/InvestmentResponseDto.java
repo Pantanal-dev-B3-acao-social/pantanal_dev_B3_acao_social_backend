@@ -1,6 +1,8 @@
 package dev.pantanal.b3.krpv.acao_social.modulos.Investment.dto.response;
 
 
+import dev.pantanal.b3.krpv.acao_social.modulos.company.CompanyEntity;
+import dev.pantanal.b3.krpv.acao_social.modulos.socialAction.SocialActionEntity;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import java.time.LocalDateTime;
@@ -22,7 +24,27 @@ public record InvestmentResponseDto(
         String motivation,
 
         @NotBlank(message = "field approvedAt can not be empty")
-        LocalDateTime approvedAt
+        LocalDateTime approvedAt,
+
+        SocialActionEntity socialAction,
+
+        CompanyEntity company,
+
+        @NotBlank(message= "Campo 'createdBy' não pode estar vazio")
+        UUID createdBy,
+
+        UUID lastModifiedBy,
+
+        @NotBlank(message= "Campo 'createdDate' não pode estar vazio")
+        LocalDateTime createdDate,
+
+        LocalDateTime lastModifiedDate,
+
+        LocalDateTime deletedDate,
+
+        UUID deletedBy
+
+
 
 ) {
 }

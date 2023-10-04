@@ -6,8 +6,6 @@ import jakarta.validation.constraints.NotBlank;
 import java.time.LocalDateTime;
 
 public record InvestmentUpdateDto(
-
-        @Valid
         //@NotBlank(message = "field value_money can not be empty")
         Double value_money,
 
