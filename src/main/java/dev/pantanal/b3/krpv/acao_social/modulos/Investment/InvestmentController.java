@@ -4,8 +4,6 @@ import dev.pantanal.b3.krpv.acao_social.modulos.Investment.dto.request.Investmen
 import dev.pantanal.b3.krpv.acao_social.modulos.Investment.dto.request.InvestmentParamsDto;
 import dev.pantanal.b3.krpv.acao_social.modulos.Investment.dto.request.InvestmentUpdateDto;
 import dev.pantanal.b3.krpv.acao_social.modulos.Investment.dto.response.InvestmentResponseDto;
-import dev.pantanal.b3.krpv.acao_social.modulos.Investment.InvestmentEntity;
-import dev.pantanal.b3.krpv.acao_social.modulos.category.dto.request.CategoryParamsDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -20,7 +18,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.UUID;
 
 import static dev.pantanal.b3.krpv.acao_social.modulos.Investment.InvestmentController.ROUTE_INVESTMENT;
@@ -56,7 +53,7 @@ public class InvestmentController {
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    @PreAuthorize("hasAnyRole('INVESTMENT_GET_ALL')")
+//    @PreAuthorize("hasAnyRole('INVESTMENT_GET_ALL')")
     @Operation(summary = "Gets Investments", method = "GET")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Element(s) found successfully"),
