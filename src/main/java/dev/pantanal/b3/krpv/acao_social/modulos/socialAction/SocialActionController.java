@@ -23,7 +23,10 @@ import static dev.pantanal.b3.krpv.acao_social.utils.Utils.mapEntityPageIntoDtoP
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+
+import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping(ROUTE_SOCIAL)
@@ -67,17 +70,24 @@ public class SocialActionController {
     })
     public ResponseEntity<SocialActionResponseDto> findOne(@PathVariable UUID id) {
         SocialActionEntity entity = service.findById(id);
+        List<UUID> categoryIds = entity.getCategorySocialActionTypeEntities().stream()
+                .map(category -> category.getId())
+                .collect(Collectors.toList());
+        List<UUID> categoryLevelIds = null;
+        List<UUID> categoryTypeIds = null;
         SocialActionResponseDto response = new SocialActionResponseDto(
                 entity.getId(),
                 entity.getName(),
                 entity.getDescription(),
-                entity.getVersion(),
                 entity.getCreatedBy(),
                 entity.getLastModifiedBy(),
                 entity.getCreatedDate(),
                 entity.getLastModifiedDate(),
                 entity.getDeletedDate(),
-                entity.getDeletedBy()
+                entity.getDeletedBy(),
+                categoryTypeIds,
+                categoryLevelIds
+
         );
         return new ResponseEntity<SocialActionResponseDto>(response, HttpStatus.OK);
     }
@@ -94,14 +104,25 @@ public class SocialActionController {
             @ApiResponse(responseCode = "422", description = "Invalid request data"),
             @ApiResponse(responseCode = "500", description = "Error when creating social action"),
     })
-    public ResponseEntity<SocialActionCreateDto> create(@RequestBody @Valid SocialActionCreateDto request) {
+    public ResponseEntity<SocialActionResponseDto> create(@RequestBody @Valid SocialActionCreateDto request) {
         SocialActionEntity entity = service.create(request);
-        SocialActionCreateDto response = new SocialActionCreateDto(
+        List<UUID> categoryTypeIds = entity.getCategorySocialActionTypeEntities().stream()
+                .map(category -> category.getId())
+                .collect(Collectors.toList());
+        List<UUID> categoryLevelIds = null;
+        SocialActionResponseDto response = new SocialActionResponseDto(
+                entity.getId(),
                 entity.getName(),
-                entity.getDescription()
-//                entity.getOrganizer()
+                entity.getDescription(),
+                entity.getCreatedBy(),
+                entity.getLastModifiedBy(),
+                entity.getCreatedDate(),
+                entity.getLastModifiedDate(),
+                entity.getDeletedDate(),
+                entity.getDeletedBy(),
+                categoryTypeIds,
+                categoryLevelIds
         );
-        // TODO: fazer um handle para gerar esse retorno
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
@@ -118,17 +139,22 @@ public class SocialActionController {
     })
     public ResponseEntity<SocialActionResponseDto> update(@PathVariable UUID id, @Valid @RequestBody SocialActionUpdateDto request) {
         SocialActionEntity entity = service.update(id, request);
+        List<UUID> categoryTypeIds = entity.getCategorySocialActionTypeEntities().stream()
+                .map(category -> category.getId())
+                .collect(Collectors.toList());
+        List<UUID> categoryLevelIds = null;
         SocialActionResponseDto response = new SocialActionResponseDto(
                 entity.getId(),
                 entity.getName(),
                 entity.getDescription(),
-                entity.getVersion(),
                 entity.getCreatedBy(),
                 entity.getLastModifiedBy(),
                 entity.getCreatedDate(),
                 entity.getLastModifiedDate(),
                 entity.getDeletedDate(),
-                entity.getDeletedBy()
+                entity.getDeletedBy(),
+                categoryTypeIds,
+                categoryLevelIds
         );
         return new ResponseEntity<>(response, HttpStatus.OK);
     }

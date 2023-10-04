@@ -3,7 +3,6 @@ package dev.pantanal.b3.krpv.acao_social.modulos.category.dto.response;
 import dev.pantanal.b3.krpv.acao_social.modulos.category.modules.categoryGroup.CategoryGroupEntity;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-
 import java.time.LocalDateTime;
 import java.util.UUID;
 

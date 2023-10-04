@@ -29,7 +29,7 @@ import java.util.UUID;
 @Builder
 @AllArgsConstructor
 @EqualsAndHashCode
-@ToString
+//@ToString
 public class CategoryEntity {
 
     @Valid
@@ -79,11 +79,13 @@ public class CategoryEntity {
     private UUID deletedBy;
 
     @OneToMany(mappedBy = "categoryEntity")
+    @ToString.Exclude
     private List<CategorySocialActionTypeEntity> categorySocialActionTypeEntities = new ArrayList<>();
 
     @NotNull
     @ManyToOne
     @JoinColumn(name = "category_group_id")
+    @ToString.Exclude
     private CategoryGroupEntity categoryGroup;
 
     @PrePersist

@@ -5,7 +5,6 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 
 public record CategoryParamsDto (
-        @Valid
         String name,
         String description,
         String code,

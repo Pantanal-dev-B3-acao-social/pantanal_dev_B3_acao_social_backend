@@ -1,16 +1,19 @@
 package dev.pantanal.b3.krpv.acao_social.modulos.socialAction.dto.response;
 
+import dev.pantanal.b3.krpv.acao_social.modulos.category.entity.CategorySocialActionTypeEntity;
 import jakarta.validation.constraints.NotBlank;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.UUID;
 
 public record SocialActionResponseDto(
+        @NotBlank(message= "Campo 'id' não pode estar vazio")
         UUID id,
+        @NotBlank(message= "Campo 'name' não pode estar vazio")
         String name,
+        @NotBlank(message= "Campo 'description' não pode estar vazio")
         String description,
-//        String organizer,
-        long version,
         @NotBlank(message= "Campo 'createdBy' não pode estar vazio")
         UUID createdBy,
         UUID lastModifiedBy,
@@ -18,5 +21,7 @@ public record SocialActionResponseDto(
         LocalDateTime createdDate,
         LocalDateTime lastModifiedDate,
         LocalDateTime deletedDate,
-        UUID deletedBy
+        UUID deletedBy,
+        List<UUID> categoryTypeIds,
+        List<UUID> categoryLevelIds
 ) {}

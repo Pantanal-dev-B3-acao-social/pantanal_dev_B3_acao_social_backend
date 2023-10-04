@@ -4,6 +4,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import dev.pantanal.b3.krpv.acao_social.config.postgres.factory.CategoryFactory;
 import dev.pantanal.b3.krpv.acao_social.config.postgres.factory.CategoryGroupFactory;
+import dev.pantanal.b3.krpv.acao_social.config.postgres.factory.CategorySocialActionTypeFactory;
+import dev.pantanal.b3.krpv.acao_social.modulos.category.entity.CategoryEntity;
+import dev.pantanal.b3.krpv.acao_social.modulos.category.entity.CategorySocialActionTypeEntity;
+import dev.pantanal.b3.krpv.acao_social.modulos.category.repository.CategorySocialActionTypePostgresRepository;
 import dev.pantanal.b3.krpv.acao_social.utils.GenerateTokenUserForLogged;
 import dev.pantanal.b3.krpv.acao_social.config.postgres.factory.SocialActionFactory;
 import dev.pantanal.b3.krpv.acao_social.modulos.auth.dto.LoginUserDto;
@@ -17,19 +21,24 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.transaction.annotation.Transactional;
+
+import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.Matchers.hasSize;
 
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 import static dev.pantanal.b3.krpv.acao_social.modulos.socialAction.SocialActionController.ROUTE_SOCIAL;
+import com.fasterxml.jackson.databind.JsonNode;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -39,10 +48,11 @@ import static dev.pantanal.b3.krpv.acao_social.modulos.socialAction.SocialAction
 public class SocialActionControllerIT {
     @Autowired
     MockMvc mockMvc;
-
+    private static final Random random = new Random();
     @Autowired
     SocialActionPostgresRepository socialActionPostgresRepository;
-
+    @Autowired
+    private CategorySocialActionTypeFactory categorySocialActionTypeFactory;
     @Autowired
     ObjectMapper mapper;
     @Autowired
@@ -59,17 +69,24 @@ public class SocialActionControllerIT {
     @Autowired
     LoginMock loginMock;
     private DateTimeFormatter formatter;
+    List<CategorySocialActionTypeEntity> categorySocialActionTypeEntities;
+    List<CategoryEntity> categories;
+    ObjectMapper objectMapper;
+    @Autowired
+    CategorySocialActionTypePostgresRepository categorySocialActionTypePostgresRepository;
 
     @BeforeEach
     public void setup() throws Exception {
-        tokenUserLogged = generateTokenUserForLogged.loginUserMock(new LoginUserDto("funcionario1", "123"));
-        loginMock.authenticateWithToken(tokenUserLogged);
+        this.tokenUserLogged = generateTokenUserForLogged.loginUserMock(new LoginUserDto("funcionario1", "123"));
+        this.loginMock.authenticateWithToken(tokenUserLogged);
         List<CategoryGroupEntity> groupEntities = new ArrayList<>();
         CategoryGroupEntity groupEntity = categoryGroupFactory.makeFakeEntity("social action", "grupo de categorias para usar na AÇÃO SOCIAL");
         CategoryGroupEntity groupSaved = categoryGroupFactory.insertOne(groupEntity);
         groupEntities.add(groupSaved);
-        categoryFactory.insertMany(1, groupEntities);
+        this.categories = categoryFactory.insertMany(6, groupEntities);
         this.formatter = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
+        this.objectMapper = new ObjectMapper();
+        this.objectMapper.registerModule(new JavaTimeModule());
     }
 
     @AfterEach
@@ -97,7 +114,22 @@ public class SocialActionControllerIT {
             perform
                     .andExpect(MockMvcResultMatchers.jsonPath("$.content[" + i + "].id").value(item.getId().toString()))
                     .andExpect(MockMvcResultMatchers.jsonPath("$.content[" + i + "].name").value(item.getName()))
-                    .andExpect(MockMvcResultMatchers.jsonPath("$.content[" + i + "].description").value(item.getDescription()));
+                    .andExpect(MockMvcResultMatchers.jsonPath("$.content[" + i + "].description").value(item.getDescription()))
+                    .andExpect(MockMvcResultMatchers.jsonPath("$.content[" + i + "].categorySocialActionTypeEntities").value(item.getCategorySocialActionTypeEntities()))
+                    .andExpect(MockMvcResultMatchers.jsonPath("$.content[" + i + "].createdBy").isNotEmpty())
+                    .andExpect(MockMvcResultMatchers.jsonPath("$.content[" + i + "].createdDate").isNotEmpty())
+                    .andExpect(MockMvcResultMatchers.jsonPath("$.content[" + i + "].createdBy").value(item.getCreatedBy().toString()))
+                    .andExpect(MockMvcResultMatchers.jsonPath("$.lastModifiedBy").value(
+                            item.getLastModifiedBy() == null  ?
+                                    null : item.getLastModifiedBy().toString())
+                    )
+                    .andExpect(MockMvcResultMatchers.jsonPath("$.lastModifiedDate").value(
+                            item.getLastModifiedDate() == null ?
+                                    null : item.getLastModifiedDate().format(formatter))
+                    )
+                    .andExpect(MockMvcResultMatchers.jsonPath("$.content[" + i + "].createdDate").value(item.getCreatedDate().format(formatter)))
+                    .andExpect(MockMvcResultMatchers.jsonPath("$.content[" + i + "].deletedDate").isEmpty())
+                    .andExpect(MockMvcResultMatchers.jsonPath("$.content[" + i + "].deletedBy").isEmpty());
             i++;
         }
     }
@@ -127,12 +159,24 @@ public class SocialActionControllerIT {
         // Assert (Verificar)
         perform
                 .andExpect(MockMvcResultMatchers.status().isOk())
-                .andDo(MockMvcResultHandlers.print())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.content").isArray())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.content", hasSize(1))) //should match the page size
-                .andExpect(MockMvcResultMatchers.jsonPath("$.content[0].id").value(saved.get(0).getId().toString()))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.content[0].name").value(saved.get(0).getName()))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.content[0]description").value(saved.get(0).getDescription()));
+                .andExpect(MockMvcResultMatchers.jsonPath("$.content", hasSize(3))) ;
+        int i = 0;
+        for (SocialActionEntity item : saved) {
+            perform
+                    .andExpect(MockMvcResultMatchers.jsonPath("$.content[" + i + "].id").value(item.getId().toString()))
+                    .andExpect(MockMvcResultMatchers.jsonPath("$.content[" + i + "].name").value(item.getName()))
+                    .andExpect(MockMvcResultMatchers.jsonPath("$.content[" + i + "].description").value(item.getDescription()))
+                    .andExpect(MockMvcResultMatchers.jsonPath("$.content[" + i + "].createdBy").isNotEmpty())
+                    .andExpect(MockMvcResultMatchers.jsonPath("$.content[" + i + "].createdDate").isNotEmpty())
+                    .andExpect(MockMvcResultMatchers.jsonPath("$.content[" + i + "].createdBy").value(item.getCreatedBy().toString()))
+                    .andExpect(MockMvcResultMatchers.jsonPath("$.content[" + i + "].lastModifiedBy").value(item.getLastModifiedBy().toString()))
+                    .andExpect(MockMvcResultMatchers.jsonPath("$.content[" + i + "].createdDate").value(item.getCreatedDate().format(formatter)))
+                    .andExpect(MockMvcResultMatchers.jsonPath("$.content[" + i + "].lastModifiedDate").value(item.getLastModifiedDate().format(formatter)))
+                    .andExpect(MockMvcResultMatchers.jsonPath("$.content[" + i + "].deletedDate").isEmpty())
+                    .andExpect(MockMvcResultMatchers.jsonPath("$.content[" + i + "].deletedBy").isEmpty());
+            i++;
+        }
 
     }
 
@@ -141,23 +185,52 @@ public class SocialActionControllerIT {
     void saveOneSocialAction() throws Exception {
         // Arrange (Organizar)
         SocialActionEntity item = socialActionFactory.makeFakeEntity();
-        ObjectMapper objectMapper = new ObjectMapper();
-        objectMapper.registerModule(new JavaTimeModule());
-        String socialActionJson = objectMapper.writeValueAsString(item);
+        Map<String, Object> makeBody = new HashMap<>();
+        makeBody.put("name", item.getName());
+        makeBody.put("description", item.getDescription());
+        makeBody.put("version", item.getVersion());
+        List<UUID> forCategoryTypeIds = categories.stream()
+                .map(category -> category.getId())
+                .collect(Collectors.toList());
+        makeBody.put("categoryTypeIds", forCategoryTypeIds);
+        String jsonRequest = objectMapper.writeValueAsString(makeBody);
         // Act (ação)
         ResultActions resultActions = mockMvc.perform(
                 MockMvcRequestBuilders.post(ROUTE_SOCIAL)
                     .header("Authorization", "Bearer " + tokenUserLogged)
                     .contentType(MediaType.APPLICATION_JSON)
-                    .content(socialActionJson)
+                    .content(jsonRequest)
         );
         // Assert (Verificar)
+        MvcResult mvcResult = resultActions.andReturn();
+        MockHttpServletResponse response = mvcResult.getResponse();
+        String jsonResponse = response.getContentAsString();
+        JsonNode jsonNode = objectMapper.readTree(jsonResponse);
+        String socialActionId = jsonNode.get("id").asText();
+        List<CategorySocialActionTypeEntity> categoryTypesEntities = categorySocialActionTypePostgresRepository.findBySocialActionEntityId(
+                UUID.fromString(socialActionId)
+        );
+        List<String> categoryTypeIds = categoryTypesEntities.stream()
+                .map(categoryLevel -> categoryLevel.getId().toString())
+                .collect(Collectors.toList());
+        List<UUID> categoryLevelIds = null;
         resultActions
-                // antes verificar se esta vazio
-//                .andExpect(MockMvcResultMatchers.jsonPath("$.content").isNotEmpty())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.id").isNotEmpty())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.name").value(item.getName()))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.description").value(item.getDescription()))
-                .andDo(MockMvcResultHandlers.print());
+                .andExpect(MockMvcResultMatchers.jsonPath("$.categoryTypeIds").isArray())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.categoryTypeIds", hasSize(categoryTypeIds.size())))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.categoryTypeIds", containsInAnyOrder(categoryTypeIds.toArray())))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.categoryLevelIds").value(categoryLevelIds))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.createdBy").isNotEmpty())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.createdDate").isNotEmpty())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.createdBy").value(loginMock.extractUserIdFromJwt(tokenUserLogged)))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.createdDate").isNotEmpty())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.lastModifiedBy").isEmpty())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.createdDate").isNotEmpty())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.lastModifiedDate").isEmpty())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.deletedDate").isEmpty())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.deletedBy").isEmpty());
 //        testar groupCategory
     }
 
@@ -179,7 +252,20 @@ public class SocialActionControllerIT {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.id").value(item.getId().toString()))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.name").value(item.getName()))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.description").value(item.getDescription()))
-                .andDo(MockMvcResultHandlers.print());
+                .andExpect(MockMvcResultMatchers.jsonPath("$.createdBy").isNotEmpty())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.createdDate").isNotEmpty())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.createdBy").value(item.getCreatedBy().toString()))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.lastModifiedBy").value(
+                        item.getLastModifiedBy() == null  ?
+                                null : item.getLastModifiedBy().toString())
+                )
+                .andExpect(MockMvcResultMatchers.jsonPath("$.createdDate").value(item.getCreatedDate().format(this.formatter)))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.lastModifiedDate").value(
+                        item.getLastModifiedDate() == null ?
+                                null : item.getLastModifiedDate().format(formatter))
+                )
+                .andExpect(MockMvcResultMatchers.jsonPath("$.deletedDate").isEmpty())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.deletedBy").isEmpty());
     }
 
     @Test
@@ -205,16 +291,14 @@ public class SocialActionControllerIT {
     @DisplayName("Atualiza uma ação social com sucesso")
     void updateSocialAction() throws Exception {
         // Arrange (Organizar)
-        SocialActionEntity savedItem = socialActionFactory.insertOne(socialActionFactory.makeFakeEntity());
+        SocialActionEntity item = socialActionFactory.insertOne(socialActionFactory.makeFakeEntity());
         // Modifica alguns dados da ação social
-        savedItem.setName(savedItem.getName() + "_ATUALIZADO");
-        savedItem.setDescription(savedItem.getDescription() + "_ATUALIZADO");
-        ObjectMapper objectMapper = new ObjectMapper();
-        objectMapper.registerModule(new JavaTimeModule());
-        String updatedSocialActionJson = objectMapper.writeValueAsString(savedItem);
+        item.setName(item.getName() + "_ATUALIZADO");
+        item.setDescription(item.getDescription() + "_ATUALIZADO");
+        String updatedSocialActionJson = objectMapper.writeValueAsString(item);
         // Act (ação)
         ResultActions resultActions = mockMvc.perform(
-                MockMvcRequestBuilders.patch(ROUTE_SOCIAL + "/{id}", savedItem.getId())
+                MockMvcRequestBuilders.patch(ROUTE_SOCIAL + "/{id}", item.getId())
                         .header("Authorization", "Bearer " + tokenUserLogged)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(updatedSocialActionJson)
@@ -222,10 +306,17 @@ public class SocialActionControllerIT {
         // Assert (Verificar)
         resultActions
                 .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.id").value(savedItem.getId().toString()))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.name").value(savedItem.getName()))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.description").value(savedItem.getDescription()))
-                .andDo(MockMvcResultHandlers.print());
+                .andExpect(MockMvcResultMatchers.jsonPath("$.id").value(item.getId().toString()))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.name").value(item.getName()))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.description").value(item.getDescription()))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.createdBy").isNotEmpty())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.createdDate").isNotEmpty())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.createdBy").value(item.getCreatedBy().toString()))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.createdDate").value(item.getCreatedDate().format(formatter)))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.lastModifiedBy").value(loginMock.extractUserIdFromJwt(tokenUserLogged)))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.lastModifiedDate").value(item.getLastModifiedDate().format(formatter)))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.deletedDate").isEmpty())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.deletedBy").isEmpty());
     }
 
 }

@@ -37,6 +37,15 @@ public class SocialActionRepository {
     @PersistenceContext
     private final EntityManager entityManager;
 
+    public SocialActionEntity findByIdWithCategories(UUID id) {
+        return entityManager.createQuery(
+            "SELECT sa FROM SocialAction sa LEFT JOIN FETCH sa.categorySocialActionTypeEntities WHERE sa.id = :id",
+            SocialActionEntity.class
+        )
+            .setParameter("id", id)
+            .getSingleResult();
+    }
+
     public SocialActionEntity save(SocialActionEntity obj) {
         SocialActionEntity socialActionEntity = postgresSocialActionRepository.save(obj);
         return socialActionEntity;

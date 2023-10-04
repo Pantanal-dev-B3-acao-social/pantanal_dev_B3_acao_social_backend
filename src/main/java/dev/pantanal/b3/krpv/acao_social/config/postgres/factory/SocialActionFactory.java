@@ -22,26 +22,10 @@ public class SocialActionFactory {
     @Autowired
     private SocialActionRepository socialActionRepository;
     @Autowired
-    private CategorySocialActionTypeFactory categorySocialActionTypeFactory;
-    @Autowired
     private EntityManager entityManager;
     @Autowired
     public SocialActionFactory(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
-    }
-
-    public SocialActionDto makeFake() {
-        return new SocialActionDto(
-            UUID.randomUUID(),
-            faker.name().fullName(),
-            faker.lorem().sentence(),
-//                faker.name().title(),
-            faker.number().randomNumber()
-
-                // string ongId = findOneRandom("ong");
-                // string levelId = findOneRandom("category_project_level");
-                // string typeId = findOneRandom("category_project_type");
-        );
     }
 
     public SocialActionEntity makeFakeEntity() {
@@ -49,8 +33,6 @@ public class SocialActionFactory {
         socialCreated.setVersion(1L);
         socialCreated.setName(faker.name().fullName());
         socialCreated.setDescription(faker.lorem().sentence());
-//        socialCreated.setCreatedBy(createdBy);
-//        socialCreated.setCreatedDate(createdDate);
                 // SessionEntity
                 // string ongId = findOneRandom("ong");
                 // string levelId = findOneRandom("category_project_level");
@@ -71,11 +53,8 @@ public class SocialActionFactory {
     }
 
     public SocialActionEntity insertOne(SocialActionEntity toSave) {
-        SocialActionEntity saved = socialActionRepository.save(toSave);
-        int randomNumber = random.nextInt(3);
-        categorySocialActionTypeFactory.insertManyFakeEntities(saved, null, randomNumber);
-        // TODO: carregar relacionamentos de categoria
-        return socialActionRepository.findById(saved.getId());
+        SocialActionEntity socialActionEntity = socialActionRepository.save(toSave);
+        return socialActionRepository.findById(socialActionEntity.getId());
     }
 
     public List<SocialActionEntity> insertMany(int amount) {
