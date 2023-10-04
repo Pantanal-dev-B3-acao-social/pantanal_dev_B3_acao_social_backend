@@ -2,11 +2,11 @@ package dev.pantanal.b3.krpv.acao_social.modulos.company;
 
 import com.querydsl.core.types.dsl.BooleanExpression;
 import dev.pantanal.b3.krpv.acao_social.exception.ObjectNotFoundException;
+import dev.pantanal.b3.krpv.acao_social.modulos.company.repository.CompanyRepository;
 import dev.pantanal.b3.krpv.acao_social.modulos.company.dto.request.CompanyCreateDto;
 import dev.pantanal.b3.krpv.acao_social.modulos.company.dto.request.CompanyParamsDto;
 import dev.pantanal.b3.krpv.acao_social.modulos.company.dto.request.CompanyUpdateDto;
 import dev.pantanal.b3.krpv.acao_social.modulos.company.repository.CompanyPredicates;
-import dev.pantanal.b3.krpv.acao_social.modulos.company.repository.CompanyRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
