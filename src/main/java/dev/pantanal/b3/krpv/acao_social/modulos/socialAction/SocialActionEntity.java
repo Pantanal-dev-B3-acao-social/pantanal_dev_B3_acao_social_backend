@@ -76,11 +76,11 @@ public class SocialActionEntity {
      * orphanRemoval = true faz com que SocialActionEntity é optional ter preenchido alguma CategorySocialActionTypeEntity
      */
 //    @Optional
-    @OneToMany(mappedBy = "socialActionEntity", orphanRemoval = true, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "socialActionEntity", orphanRemoval = true, cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @ToString.Exclude
     private List<CategorySocialActionTypeEntity> categorySocialActionTypeEntities = new ArrayList<>();
 
-    @OneToMany(mappedBy = "socialAction", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "socialAction", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @ToString.Exclude
     private List<SessionEntity> sessionsEntities;
 
