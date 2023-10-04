@@ -7,20 +7,21 @@ import dev.pantanal.b3.krpv.acao_social.modulos.ong.QOngEntity;
 import dev.pantanal.b3.krpv.acao_social.modulos.ong.dto.request.OngParamsDto;
 import org.springframework.stereotype.Component;
 
+@Component
 public class OngPredicates {
 
-    public BooleanExpression buildPredicate(OngParamsDto filters){
+    public static BooleanExpression buildPredicate(OngParamsDto filters){
 
         QOngEntity qOngEntity = QOngEntity.ongEntity;
         BooleanExpression predicate = Expressions.asBoolean(true).isTrue();
 
         if (filters.name() != null) {
-            StringPath filterPath =  qOngEntity.name;
-            predicate = predicate.and(filterPath.like(filters.name()+ "%"));
+            StringPath filterNamePath =  qOngEntity.name;
+            predicate = predicate.and(filterNamePath.like(filters.name()+ "%"));
         }
         if (filters.cnpj() != null) {
-            StringPath filterPath = qOngEntity.cnpj;
-            predicate = predicate.and(filterPath.eq(filters.cnpj()));
+            StringPath filterCnpjPath = qOngEntity.cnpj;
+            predicate = predicate.and(filterCnpjPath.eq(filters.cnpj()));
         }
         return predicate;
     }

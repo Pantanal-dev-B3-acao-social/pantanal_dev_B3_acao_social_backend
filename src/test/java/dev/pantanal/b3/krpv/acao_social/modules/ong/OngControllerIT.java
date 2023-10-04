@@ -26,7 +26,6 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.transaction.annotation.Transactional;
 
 import static dev.pantanal.b3.krpv.acao_social.modulos.ong.OngController.ROUTE_ONG;
-import static dev.pantanal.b3.krpv.acao_social.modulos.ong.OngController.ROUTE_ONG;
 import java.util.List;
 import static org.hamcrest.Matchers.hasSize;
 

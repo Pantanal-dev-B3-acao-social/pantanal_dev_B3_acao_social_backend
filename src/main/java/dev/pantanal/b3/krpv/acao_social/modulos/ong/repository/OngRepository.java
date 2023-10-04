@@ -1,12 +1,12 @@
 package dev.pantanal.b3.krpv.acao_social.modulos.ong.repository;
 
-import com.github.javafaker.Ong;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import dev.pantanal.b3.krpv.acao_social.modulos.category.OngEntity;
+import dev.pantanal.b3.krpv.acao_social.modulos.ong.OngEntity;
 import dev.pantanal.b3.krpv.acao_social.modulos.ong.OngEntity;
 import dev.pantanal.b3.krpv.acao_social.modulos.ong.QOngEntity;
 import dev.pantanal.b3.krpv.acao_social.modulos.ong.dto.request.OngParamsDto;
+import dev.pantanal.b3.krpv.acao_social.modulos.ong.OngEntity;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import lombok.RequiredArgsConstructor;
@@ -37,7 +37,7 @@ public class OngRepository {
         return ongEntity;
     }
 
-    public Page<OngEntity> findAll(Pageable pageable, OngParamsDto filters) {
+    public Page<OngEntity> findAll(Pageable pageable, BooleanExpression predicate) {
         JPAQueryFactory queryFactory = new JPAQueryFactory(entityManager);
         QOngEntity qOngEntity = QOngEntity.ongEntity;
 
