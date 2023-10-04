@@ -1,6 +1,8 @@
 package dev.pantanal.b3.krpv.acao_social.modulos.Investment;
 
 import dev.pantanal.b3.krpv.acao_social.config.audit.AuditListener;
+import dev.pantanal.b3.krpv.acao_social.modulos.company.CompanyEntity;
+import dev.pantanal.b3.krpv.acao_social.modulos.socialAction.SocialActionEntity;
 import jakarta.persistence.*;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
@@ -81,6 +83,14 @@ public class InvestmentEntity {
 
     @Column(name = "deleted_by")
     private UUID deletedBy;
+
+    @ManyToOne
+    @JoinColumn(name="social_action_id", nullable = false)
+    private SocialActionEntity socialAction;
+
+    @ManyToOne
+    @JoinColumn(name="company_id", nullable = false)
+    private CompanyEntity company;
 
     @PrePersist
     protected void onCreate() {

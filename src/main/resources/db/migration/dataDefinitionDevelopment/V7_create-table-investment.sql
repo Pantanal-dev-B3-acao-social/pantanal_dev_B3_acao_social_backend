@@ -14,5 +14,6 @@ create table investment(
     social_action_id UUID NOT NULL,
     company_id UUID NOT NULL,
 
-    Foreign key (social_action_id) REFERENCES social_action(id)
+    Foreign key (social_action_id) REFERENCES social_action(id),
+    Foreign key (company_id) REFERENCES company(id)
 )

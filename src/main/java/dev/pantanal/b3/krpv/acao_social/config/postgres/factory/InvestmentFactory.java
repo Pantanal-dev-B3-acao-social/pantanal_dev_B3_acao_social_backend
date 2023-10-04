@@ -19,7 +19,10 @@ public class InvestmentFactory {
     private final JdbcTemplate jdbcTemplate;
     @Autowired
     private InvestmentRepository repository;
-
+    @Autowired
+    SocialActionFactory socialActionFactory;
+    @Autowired
+    CompanyFactory companyFactory;
     @Autowired
     public InvestmentFactory(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
@@ -47,7 +50,9 @@ public class InvestmentFactory {
                 createdDate,
                 lastModifiedDate,
                 null,
-                deleteBy
+                deleteBy,
+                socialActionFactory.makeFakeEntity(),
+                companyFactory.makeFakeEntity()
         );
     }
 
