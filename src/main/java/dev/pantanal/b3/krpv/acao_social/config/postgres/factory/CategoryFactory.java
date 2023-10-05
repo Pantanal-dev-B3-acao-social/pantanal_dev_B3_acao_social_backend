@@ -29,6 +29,9 @@ public class CategoryFactory {
     @Autowired
     private GeneratorCode generatorCode;
     @Autowired
+    private CategoryGroupFactory categoryGroupFactory;
+
+    @Autowired
     public CategoryFactory(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
@@ -59,5 +62,15 @@ public class CategoryFactory {
             entities.add(this.insertOne(entity));
         }
         return entities;
+    }
+
+    public List<CategoryEntity> makeFakeByGroup (int amount, String nameGroup, String descriptionGroup) {
+        // cria grupo de categoria e categorias para TIPO
+        List<CategoryGroupEntity> typesGroupEntities = new ArrayList<>();
+        CategoryGroupEntity typeGroupEntity = categoryGroupFactory.makeFakeEntity(nameGroup, descriptionGroup);
+        CategoryGroupEntity typeGroupSaved = categoryGroupFactory.insertOne(typeGroupEntity);
+        typesGroupEntities.add(typeGroupSaved);
+        List<CategoryEntity> categoriesType = insertMany(amount, typesGroupEntities);
+        return categoriesType;
     }
 }

@@ -91,7 +91,16 @@ public class SocialActionService {
                 }
 
             }
-            obj.setCategorySocialActionTypeEntities(categorySocialActionTypeEntityList);
+            // Obtenha a lista existente atual de CategorySocialActionTypeEntity
+            List<CategorySocialActionTypeEntity> existingCategories = obj.getCategorySocialActionTypeEntities();
+            // Remova os itens antigos que não estão na nova lista
+            existingCategories.removeIf(existingCategory -> !categorySocialActionTypeEntityList.contains(existingCategory));
+            // Adicione os novos itens à lista existente
+            existingCategories.addAll(categorySocialActionTypeEntityList);
+            // Atualize a lista de CategorySocialActionTypeEntity na entidade SocialActionEntity
+            obj.setCategorySocialActionTypeEntities(existingCategories);
+            // TODO: estou atualizando, preciso add novo, e remover os antigos
+//            obj.setCategorySocialActionTypeEntities(categorySocialActionTypeEntityList);
         }
         SocialActionEntity updatedObj = socialActionRepository.update(obj);
         return updatedObj;

@@ -79,36 +79,22 @@ public class SessionControllerIT {
     @Autowired
     LoginMock loginMock;
     private DateTimeFormatter formatter;
+    ObjectMapper objectMapper;
 
     @BeforeEach
     public void setup() throws Exception {
         tokenUserLogged = generateTokenUserForLogged.loginUserMock(new LoginUserDto("funcionario1", "123"));
         loginMock.authenticateWithToken(tokenUserLogged);
-        List<CategoryGroupEntity> groupEntities = new ArrayList<>();
-        CategoryGroupEntity groupEntity = categoryGroupFactory.makeFakeEntity("session", "grupo de categorias para usar na SESSÃO da ação social");
-        CategoryGroupEntity groupSaved = categoryGroupFactory.insertOne(groupEntity);
-        groupEntities.add(groupSaved);
-        categoryFactory.insertMany(1, groupEntities);
-        this.formatter = DateTimeFormatter.ISO_LOCAL_DATE_TIME; // Formate o LocalDateTime esperado
         //
-//        List<CategoryGroupEntity> typesGroupEntities = new ArrayList<>();
-//        // cria grupo de categoria e categorias para TIPO
-//        CategoryGroupEntity typeGroupEntity = categoryGroupFactory.makeFakeEntity("social action type", "grupo de categorias para usar no TIPO de ação social");
-//        CategoryGroupEntity typeGroupSaved = categoryGroupFactory.insertOne(typeGroupEntity);
-//        typesGroupEntities.add(typeGroupSaved);
-//        this.categoriesType = categoryFactory.insertMany(6, typesGroupEntities);
-//        // cria grupo de categoria e categorias para LEVEL
-//        List<CategoryGroupEntity> levelGroupEntities = new ArrayList<>();
-//        CategoryGroupEntity levelGroupEntity = categoryGroupFactory.makeFakeEntity("social action level", "grupo de categorias para usar no NÍVEL de ação social");
-//        levelGroupEntities.add(levelGroupEntity);
-//        this.categoriesLevel = categoryFactory.insertMany(6, levelGroupEntities);
-//        forCategoryTypeIds = categoriesType.stream()
-//                .map(category -> category.getId())
-//                .collect(Collectors.toList());
-//        forCategoryLevelIds = categoriesLevel.stream()
-//                .map(category -> category.getId())
-//                .collect(Collectors.toList());
-//        socialActionFactory.insertMany(2, forCategoryTypeIds, forCategoryLevelIds);
+        List<CategoryEntity> categoriesType = categoryFactory.makeFakeByGroup(2, "social action type", "grupo de categorias para usar no TIPO de ação social");
+        List<CategoryEntity> categoriesLevel = categoryFactory.makeFakeByGroup(2, "social action level", "grupo de categorias para usar no NÍVEL de ação social");
+        List<SocialActionEntity> socialActionEntities = socialActionFactory.insertManyFull(3, categoriesType, categoriesLevel);this.formatter = DateTimeFormatter.ISO_LOCAL_DATE_TIME; // Formate o LocalDateTime esperado
+        List<CategoryEntity> categoryEntities = categoryFactory.makeFakeByGroup(2, "session", "grupo de categorias para usar na SESSÃO da ação social");
+        // formatar data hora
+        this.formatter = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
+        // mapper
+        this.objectMapper = new ObjectMapper();
+        this.objectMapper.registerModule(new JavaTimeModule());
     }
 
     @AfterEach
@@ -159,12 +145,7 @@ public class SessionControllerIT {
     void saveOneSession() throws Exception {
         // Arrange (Organizar)
         SessionEntity item = sessionFactory.makeFakeEntity();
-// TODO:        item.setCreatedBy(userLoggedId);
-        ObjectMapper objectMapper = new ObjectMapper();
-        objectMapper.registerModule(new JavaTimeModule()); // registrar o módulo JSR-310
         String jsonRequest = objectMapper.writeValueAsString(item);
-        String expectedStartTime = item.getDateStartTime().format(formatter); // Formate o LocalDateTime esperado
-        String expectedEndTime = item.getDateEndTime().format(formatter); // Formate o LocalDateTime esperado
         // Act (ação)
         ResultActions resultActions = mockMvc.perform(
                 MockMvcRequestBuilders.post(ROUTE_SESSION)
@@ -177,8 +158,8 @@ public class SessionControllerIT {
                 .andExpect(MockMvcResultMatchers.status().isCreated())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.id").isNotEmpty())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.description").value(item.getDescription()))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.dateStartTime").value(expectedStartTime))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.dateEndTime").value(expectedEndTime))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.dateStartTime").value(item.getDateStartTime().format(formatter)))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.dateEndTime").value(item.getDateEndTime().format(formatter)))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.status").value(item.getStatus().toString()))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.visibility").value(item.getVisibility().toString()))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.socialAction.id").value(item.getSocialAction().getId().toString()))
@@ -266,8 +247,6 @@ public class SessionControllerIT {
         List<SocialActionEntity> socialActions = findRegisterRandom.execute("social_action", 1, SocialActionEntity.class);
         item.setSocialAction(socialActions.get(0));
 // TODO: quais dados falta modificar para testar?
-        ObjectMapper objectMapper = new ObjectMapper();
-        objectMapper.registerModule(new JavaTimeModule());
         String updatedSessionJson = objectMapper.writeValueAsString(item);
         String createdByString = Optional.ofNullable(item.getCreatedBy()).map(UUID::toString).orElse(null);
         String lastModifiedByString = Optional.ofNullable(item.getLastModifiedBy()).map(UUID::toString).orElse(null);

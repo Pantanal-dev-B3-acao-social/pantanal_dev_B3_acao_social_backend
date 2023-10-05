@@ -43,8 +43,8 @@ public class CategorySocialActionTypeEntity {
     @JoinColumn(name = "category_id")
     private CategoryEntity categoryEntity;
 
-    //    @JsonIgnore
-    @ManyToOne(fetch = FetchType.LAZY /*, cascade = CascadeType.DETACH */ )
+    @ManyToOne()
+    @JsonIgnore
     @JoinColumn(name = "social_action_id")
     private SocialActionEntity socialActionEntity;
 

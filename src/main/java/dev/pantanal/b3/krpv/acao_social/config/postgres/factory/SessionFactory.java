@@ -40,9 +40,6 @@ public class SessionFactory {
     }
 
     public SessionEntity makeFakeEntity() {
-        UUID createdBy = UUID.randomUUID();
-        UUID deleteBy = null;
-        UUID lastModifiedBy = null;
         LocalDateTime createdDate = LocalDateTime.now();
         LocalDateTime lastModifiedDate = createdDate.plusHours(3).plusMinutes(30);
         LocalDateTime dateStart = lastModifiedDate.plusHours(2).plusMinutes(40);

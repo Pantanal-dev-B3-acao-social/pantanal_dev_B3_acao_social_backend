@@ -16,8 +16,8 @@ public record SessionResponseDto (
         String description,
         @NotNull(message= "Campo 'socialAction' não pode estar vazio")
         SocialActionEntity socialAction,
-        LocalDateTime dateStart,
-        LocalDateTime dateEnd,
+        LocalDateTime dateStartTime,
+        LocalDateTime dateEndTime,
         @NotNull(message= "Campo 'status' não pode estar vazio")
         StatusEnum status,
         @NotNull(message= "Campo 'visibility' não pode estar vazio")

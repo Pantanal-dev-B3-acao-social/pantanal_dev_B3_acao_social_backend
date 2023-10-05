@@ -3,6 +3,7 @@ package dev.pantanal.b3.krpv.acao_social.config.postgres.factory;
 import com.github.javafaker.Faker;
 import dev.pantanal.b3.krpv.acao_social.modulos.category.entity.CategoryEntity;
 import dev.pantanal.b3.krpv.acao_social.modulos.category.entity.CategorySocialActionTypeEntity;
+import dev.pantanal.b3.krpv.acao_social.modulos.category.modules.categoryGroup.CategoryGroupEntity;
 import dev.pantanal.b3.krpv.acao_social.modulos.category.repository.CategoryRepository;
 import dev.pantanal.b3.krpv.acao_social.modulos.category.repository.CategorySocialActionTypePostgresRepository;
 import dev.pantanal.b3.krpv.acao_social.modulos.socialAction.SocialActionEntity;
@@ -15,6 +16,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.jdbc.core.JdbcTemplate;
 import java.time.LocalDateTime;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Component
 public class SocialActionFactory {
@@ -81,4 +83,21 @@ public class SocialActionFactory {
         }
         return socials;
     }
+
+    public List<SocialActionEntity> insertManyFull(
+            int amount,
+            List<CategoryEntity> categoriesType,
+            List<CategoryEntity> categoriesLevel
+    ) {
+        List<UUID> forCategoryTypeIds = categoriesType.stream()
+                .map(category -> category.getId())
+                .collect(Collectors.toList());
+        List<UUID> forCategoryLevelIds = categoriesLevel.stream()
+                .map(category -> category.getId())
+                .collect(Collectors.toList());
+        List<SocialActionEntity> saved = insertMany(amount, forCategoryTypeIds, forCategoryLevelIds);
+        return saved;
+    }
+
+
 }
