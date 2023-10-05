@@ -317,11 +317,11 @@ public class SocialActionControllerIT {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.createdBy").isNotEmpty())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.createdDate").isNotEmpty())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.createdBy").value(item.getCreatedBy().toString()))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.createdDate").value(item.getCreatedDate().format(this.formatter)))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.lastModifiedBy").value(
                         item.getLastModifiedBy() == null  ?
                                 null : item.getLastModifiedBy().toString())
                 )
-                .andExpect(MockMvcResultMatchers.jsonPath("$.createdDate").value(item.getCreatedDate().format(this.formatter)))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.lastModifiedDate").value(
                         item.getLastModifiedDate() == null ?
                                 null : item.getLastModifiedDate().format(formatter))

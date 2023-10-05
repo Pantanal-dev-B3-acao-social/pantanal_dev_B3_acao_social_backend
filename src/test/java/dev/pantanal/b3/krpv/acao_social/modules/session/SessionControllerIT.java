@@ -200,11 +200,17 @@ public class SessionControllerIT {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.visibility").value(item.getVisibility().toString()))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.socialAction.id").value(item.getSocialAction().getId().toString()))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.createdBy").value(createdByString))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.lastModifiedBy").value(lastModifiedByString))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.createdDate").value(item.getCreatedDate().format(formatter)))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.lastModifiedDate").value(item.getLastModifiedDate().format(formatter)))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.deletedDate").value(deletedDateString))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.deletedBy").value(deletedByString));
+                .andExpect(MockMvcResultMatchers.jsonPath("$.deletedBy").value(deletedByString))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.lastModifiedBy").value(
+                        item.getLastModifiedBy() == null  ?
+                                null : item.getLastModifiedBy().toString())
+                )
+                .andExpect(MockMvcResultMatchers.jsonPath("$.lastModifiedDate").value(
+                        item.getLastModifiedDate() == null ?
+                                null : item.getLastModifiedDate().format(formatter))
+                );
     }
 
     @Test
