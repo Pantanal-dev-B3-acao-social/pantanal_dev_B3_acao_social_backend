@@ -20,6 +20,8 @@ public class CompanyFactory {
     private final JdbcTemplate jdbcTemplate;
     @Autowired
     private CompanyRepository repository;
+    @Autowired
+    GeraCNPJ geradorDeCNPJ;
 
     @Autowired
     public CompanyFactory(JdbcTemplate jdbcTemplate) {
@@ -33,10 +35,7 @@ public class CompanyFactory {
         LocalDateTime createdDate = LocalDateTime.now();
         LocalDateTime lastModifiedDate = createdDate.plusHours(3).plusMinutes(30);
         String name = faker.name().fullName();
-        GeraCNPJ geradorDeCNPJ = new GeraCNPJ();
         String cnpj = geradorDeCNPJ.cnpj(true);
-
-
         return new CompanyEntity(
                 1L,
                 UUID.randomUUID(),
