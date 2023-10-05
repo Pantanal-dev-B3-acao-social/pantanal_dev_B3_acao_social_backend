@@ -57,7 +57,7 @@ public class CategoryGroupEntity {
 
     @ManyToOne
     @JoinColumn(name = "category_group_id")
-    private CategoryGroupEntity categoryGroupEntity;
+    private CategoryGroupEntity parentCategoryGroupEntity;
 
     private VisibilityCategoryGroupEnum visibility;
 

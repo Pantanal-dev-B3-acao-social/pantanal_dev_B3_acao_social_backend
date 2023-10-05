@@ -13,7 +13,7 @@ public class CategoryGroupPredicates {
 
     public BooleanExpression buildPredicate(CategoryGroupParamsDto filters){
 
-        QCategoryGroupEntity q = QCategoryGroupEntity.categoryGroupEntity1;
+        QCategoryGroupEntity q = QCategoryGroupEntity.categoryGroupEntity;
         BooleanExpression predicate = Expressions.asBoolean(true).isTrue();
 
         if (filters.name() != null) {

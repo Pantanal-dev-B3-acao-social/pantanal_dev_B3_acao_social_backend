@@ -41,10 +41,10 @@ public class SeedDataService {
 
     public void executeAllSeed() {
         // Arrange (Organizar) category
-        List<CategoryGroupEntity> groupEntities = this.categoryGroupFactory.insertMany(4);
+        List<CategoryGroupEntity> groupEntities = this.categoryGroupFactory.insertMany(4, null);
         // Arrange (Organizar) social action
         List<CategoryGroupEntity> typesGroupEntities = new ArrayList<>();
-        CategoryGroupEntity typeGroupEntity = categoryGroupFactory.makeFakeEntity("social action type", "grupo de categorias para usar no TIPO de ação social");
+        CategoryGroupEntity typeGroupEntity = categoryGroupFactory.makeFakeEntity("social action type", "grupo de categorias para usar no TIPO de ação social", null);
         CategoryGroupEntity typeGroupSaved = categoryGroupFactory.insertOne(typeGroupEntity);
         typesGroupEntities.add(typeGroupSaved);
         List<CategoryEntity> categoriesType = categoryFactory.insertMany(6, typesGroupEntities); // as 6 categorias pertencem a este grupo

@@ -28,7 +28,11 @@ public class CategoryGroupFactory {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public CategoryGroupEntity makeFakeEntity(String nameSuggestion, String descriptionSuggestion) {
+    public CategoryGroupEntity makeFakeEntity(
+        String nameSuggestion,
+        String descriptionSuggestion,
+        CategoryGroupEntity parentGroup
+    ) {
         String nameFake = faker.name().fullName();
         String descriptionFake = faker.lorem().sentence();
         String name = nameSuggestion == null ? nameFake : nameSuggestion;
@@ -40,6 +44,7 @@ public class CategoryGroupFactory {
         categoryGroupEntity.setDescription(description);
         categoryGroupEntity.setCode(code);
         categoryGroupEntity.setVisibility(VisibilityCategoryGroupEnum.PUBLIC_EXTERNALLY);
+        categoryGroupEntity.setParentCategoryGroupEntity(parentGroup);
         return categoryGroupEntity;
     }
 
@@ -48,10 +53,10 @@ public class CategoryGroupFactory {
         return saved;
     }
 
-    public List<CategoryGroupEntity> insertMany(int amount) {
+    public List<CategoryGroupEntity> insertMany(int amount, CategoryGroupEntity parentGroup) {
         List<CategoryGroupEntity> entities = new ArrayList<>();
         for (int i=0; i<amount; i++) {
-            CategoryGroupEntity entity = this.makeFakeEntity(null, null);
+            CategoryGroupEntity entity = this.makeFakeEntity(null, null, parentGroup);
             entities.add(this.insertOne(entity));
         }
         return entities;
