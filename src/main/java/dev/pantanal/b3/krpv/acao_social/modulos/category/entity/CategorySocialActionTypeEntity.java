@@ -1,5 +1,6 @@
 package dev.pantanal.b3.krpv.acao_social.modulos.category.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import dev.pantanal.b3.krpv.acao_social.config.audit.AuditListener;
 import dev.pantanal.b3.krpv.acao_social.modulos.socialAction.SocialActionEntity;
 import jakarta.persistence.*;
@@ -38,11 +39,12 @@ public class CategorySocialActionTypeEntity {
     @NotNull
     UUID id;
 
-    @ManyToOne
+    @ManyToOne(/* fetch = FetchType.EAGER */)
     @JoinColumn(name = "category_id")
     private CategoryEntity categoryEntity;
 
-    @ManyToOne
+    //    @JsonIgnore
+    @ManyToOne(fetch = FetchType.LAZY /*, cascade = CascadeType.DETACH */ )
     @JoinColumn(name = "social_action_id")
     private SocialActionEntity socialActionEntity;
 

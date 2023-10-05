@@ -12,18 +12,13 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.SortDefault;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.web.bind.annotation.*;
 import io.swagger.v3.oas.annotations.Operation;
 import static dev.pantanal.b3.krpv.acao_social.modulos.socialAction.SocialActionController.ROUTE_SOCIAL;
-import static dev.pantanal.b3.krpv.acao_social.utils.Utils.mapEntityPageIntoDtoPage;
-
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -52,11 +47,10 @@ public class SocialActionController {
             @SortDefault(sort="name", direction = Sort.Direction.DESC) Sort sort,
             @Valid SocialActionParamsDto request
     ) {
-
         Pageable paging = PageRequest.of(page, size, sort);
-        Page<SocialActionEntity> response = service.findAll(paging, request);
-        //Page<SocialActionResponseDto> response = mapEntityPageIntoDtoPage(entities, SocialActionResponseDto.class);
-        return response; // TODO: verificar se vai converter certo
+        Page<SocialActionEntity> entities = service.findAll(paging, request);
+//        Page<SocialActionResponseDto> response = mapEntityPageIntoDtoPage(entities, SocialActionResponseDto.class);
+        return entities; // TODO: verificar se vai converter certo
     }
 
     @GetMapping("/{id}")
@@ -70,11 +64,10 @@ public class SocialActionController {
     })
     public ResponseEntity<SocialActionResponseDto> findOne(@PathVariable UUID id) {
         SocialActionEntity entity = service.findById(id);
-        List<UUID> categoryIds = entity.getCategorySocialActionTypeEntities().stream()
+        List<UUID> categoryTypeIds = entity.getCategorySocialActionTypeEntities().stream()
                 .map(category -> category.getId())
                 .collect(Collectors.toList());
         List<UUID> categoryLevelIds = null;
-        List<UUID> categoryTypeIds = null;
         SocialActionResponseDto response = new SocialActionResponseDto(
                 entity.getId(),
                 entity.getName(),

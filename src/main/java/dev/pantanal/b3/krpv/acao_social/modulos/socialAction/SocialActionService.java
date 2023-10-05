@@ -4,6 +4,7 @@ import com.querydsl.core.types.dsl.BooleanExpression;
 import dev.pantanal.b3.krpv.acao_social.modulos.category.entity.CategoryEntity;
 import dev.pantanal.b3.krpv.acao_social.modulos.category.entity.CategorySocialActionTypeEntity;
 import dev.pantanal.b3.krpv.acao_social.modulos.category.repository.CategoryRepository;
+import dev.pantanal.b3.krpv.acao_social.modulos.category.repository.CategorySocialActionTypePostgresRepository;
 import dev.pantanal.b3.krpv.acao_social.modulos.socialAction.repository.SocialActionPredicates;
 import org.springframework.stereotype.Service;
 import dev.pantanal.b3.krpv.acao_social.modulos.socialAction.dto.request.SocialActionCreateDto;
@@ -14,6 +15,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Page;
 import dev.pantanal.b3.krpv.acao_social.exception.ObjectNotFoundException;
+
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -25,21 +29,25 @@ public class SocialActionService {
     private CategoryRepository categoryRepository;
     @Autowired
     private SocialActionPredicates socialActionPredicates;
+    @Autowired
+    private CategorySocialActionTypePostgresRepository categorySocialActionTypePostgresRepository;
 
     public SocialActionEntity create(SocialActionCreateDto dataRequest) {
         SocialActionEntity toSave = new SocialActionEntity();
         toSave.setName(dataRequest.name());
         toSave.setDescription(dataRequest.description());
+        SocialActionEntity socialActionSaved = socialActionRepository.save(toSave);
         for (UUID categoryId : dataRequest.categoryTypeIds()) {
             CategoryEntity categoryEntity = categoryRepository.findById(categoryId);
             if (categoryEntity != null) {
                 CategorySocialActionTypeEntity typeCategory = new CategorySocialActionTypeEntity();
                 typeCategory.setCategoryEntity(categoryEntity);
-                typeCategory.setSocialActionEntity(toSave);
-                toSave.getCategorySocialActionTypeEntities().add(typeCategory);
+                typeCategory.setSocialActionEntity(socialActionSaved);
+                categorySocialActionTypePostgresRepository.save(typeCategory);
+//                typeCategory.setSocialActionEntity(toSave);
+                socialActionSaved.getCategorySocialActionTypeEntities().add(typeCategory);
             }
         }
-        SocialActionEntity socialActionSaved = socialActionRepository.save(toSave);
         return socialActionSaved;
     }
 
@@ -55,7 +63,7 @@ public class SocialActionService {
     }
 
     public SocialActionEntity findById(UUID id) {
-        SocialActionEntity obj = socialActionRepository.findById(id);
+        SocialActionEntity obj = socialActionRepository.findByIdWithCategories(id);
         if (obj == null) {
             throw new ObjectNotFoundException("Registro não encontrado: " + id);
         }
@@ -69,6 +77,21 @@ public class SocialActionService {
         }
         if (request.description() != null){
             obj.setDescription(request.description());
+        }
+        if (request.categoryTypeIds() != null) {
+            List<CategorySocialActionTypeEntity> categorySocialActionTypeEntityList = new ArrayList<>();
+            for (UUID categoryId : request.categoryTypeIds()) {
+                CategoryEntity categoryEntity = categoryRepository.findById(categoryId);
+                if (categoryEntity != null) {
+                    CategorySocialActionTypeEntity typeCategory = new CategorySocialActionTypeEntity();
+                    typeCategory.setCategoryEntity(categoryEntity);
+                    typeCategory.setSocialActionEntity(obj);
+                    CategorySocialActionTypeEntity categorySocialActionTypeEntity = categorySocialActionTypePostgresRepository.save(typeCategory);
+                    categorySocialActionTypeEntityList.add(categorySocialActionTypeEntity);
+                }
+
+            }
+            obj.setCategorySocialActionTypeEntities(categorySocialActionTypeEntityList);
         }
         SocialActionEntity updatedObj = socialActionRepository.update(obj);
         return updatedObj;

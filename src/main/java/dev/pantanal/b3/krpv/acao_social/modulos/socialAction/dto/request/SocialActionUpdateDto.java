@@ -12,5 +12,6 @@ import java.util.UUID;
 public record SocialActionUpdateDto(
         String name,
         String description,
-        List<CategorySocialActionTypeEntity> categorySocialActionTypeEntities
+        List<UUID> categoryTypeIds,
+        List<UUID> categoryLevelIds
 ) {}

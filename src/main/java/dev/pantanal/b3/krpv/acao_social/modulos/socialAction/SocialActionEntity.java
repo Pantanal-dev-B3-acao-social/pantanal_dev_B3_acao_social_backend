@@ -1,5 +1,6 @@
 package dev.pantanal.b3.krpv.acao_social.modulos.socialAction;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import dev.pantanal.b3.krpv.acao_social.config.audit.AuditListener;
 import dev.pantanal.b3.krpv.acao_social.modulos.category.entity.CategorySocialActionTypeEntity;
 import dev.pantanal.b3.krpv.acao_social.modulos.session.SessionEntity;

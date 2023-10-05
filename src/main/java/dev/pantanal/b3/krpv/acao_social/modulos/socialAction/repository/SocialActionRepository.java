@@ -2,6 +2,7 @@ package dev.pantanal.b3.krpv.acao_social.modulos.socialAction.repository;
 
 import com.querydsl.core.types.Order;
 import com.querydsl.core.types.OrderSpecifier;
+import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import dev.pantanal.b3.krpv.acao_social.modulos.socialAction.QSocialActionEntity;
@@ -55,19 +56,25 @@ public class SocialActionRepository {
     public Page<SocialActionEntity> findAll(Pageable pageable, BooleanExpression predicate) {
         JPAQueryFactory queryFactory = new JPAQueryFactory(entityManager);
         QSocialActionEntity qSocialActionEntity = QSocialActionEntity.socialActionEntity;
-
-        List<SocialActionEntity> results = queryFactory.selectFrom(qSocialActionEntity)
-                .where(predicate)
-                .offset(pageable.getOffset())
-                .limit(pageable.getPageSize())
-                .fetch();
+        List<SocialActionEntity> results = queryFactory.select(
+                        Projections.bean(
+                                SocialActionEntity.class,
+                                qSocialActionEntity.id,
+                                qSocialActionEntity.name,
+                                qSocialActionEntity.description
+                        )
+        )
+            .from(qSocialActionEntity)
+            .where(predicate)
+            .offset(pageable.getOffset())
+            .limit(pageable.getPageSize())
+            .fetch();
         long total = queryFactory.query()
-                .select(qSocialActionEntity)
-                .from(qSocialActionEntity)
-                .where(predicate)
-                .fetch()
-                .stream().count();
-
+            .select(qSocialActionEntity)
+            .from(qSocialActionEntity)
+            .where(predicate)
+            .fetch()
+            .stream().count();
         return new PageImpl<>(results,pageable,total);
     }
 

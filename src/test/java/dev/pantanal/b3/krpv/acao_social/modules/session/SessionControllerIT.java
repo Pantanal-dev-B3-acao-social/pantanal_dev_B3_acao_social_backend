@@ -6,6 +6,7 @@ import dev.pantanal.b3.krpv.acao_social.config.postgres.factory.CategoryFactory;
 import dev.pantanal.b3.krpv.acao_social.config.postgres.factory.CategoryGroupFactory;
 import dev.pantanal.b3.krpv.acao_social.config.postgres.factory.SessionFactory;
 import dev.pantanal.b3.krpv.acao_social.config.postgres.factory.SocialActionFactory;
+import dev.pantanal.b3.krpv.acao_social.modulos.category.entity.CategoryEntity;
 import dev.pantanal.b3.krpv.acao_social.utils.GenerateTokenUserForLogged;
 import dev.pantanal.b3.krpv.acao_social.modulos.auth.dto.LoginUserDto;
 import dev.pantanal.b3.krpv.acao_social.modulos.category.modules.categoryGroup.CategoryGroupEntity;
@@ -38,6 +39,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
+
 import static dev.pantanal.b3.krpv.acao_social.modulos.session.SessionController.ROUTE_SESSION;
 import static org.hamcrest.Matchers.hasSize;
 
@@ -69,6 +72,10 @@ public class SessionControllerIT {
     CategoryGroupFactory categoryGroupFactory;
     @Autowired
     GenerateTokenUserForLogged generateTokenUserForLogged;
+    List<CategoryEntity> categoriesType;
+    List<CategoryEntity> categoriesLevel;
+    List<UUID> forCategoryTypeIds;
+    List<UUID> forCategoryLevelIds;
     @Autowired
     LoginMock loginMock;
     private DateTimeFormatter formatter;
@@ -83,6 +90,25 @@ public class SessionControllerIT {
         groupEntities.add(groupSaved);
         categoryFactory.insertMany(1, groupEntities);
         this.formatter = DateTimeFormatter.ISO_LOCAL_DATE_TIME; // Formate o LocalDateTime esperado
+        //
+//        List<CategoryGroupEntity> typesGroupEntities = new ArrayList<>();
+//        // cria grupo de categoria e categorias para TIPO
+//        CategoryGroupEntity typeGroupEntity = categoryGroupFactory.makeFakeEntity("social action type", "grupo de categorias para usar no TIPO de ação social");
+//        CategoryGroupEntity typeGroupSaved = categoryGroupFactory.insertOne(typeGroupEntity);
+//        typesGroupEntities.add(typeGroupSaved);
+//        this.categoriesType = categoryFactory.insertMany(6, typesGroupEntities);
+//        // cria grupo de categoria e categorias para LEVEL
+//        List<CategoryGroupEntity> levelGroupEntities = new ArrayList<>();
+//        CategoryGroupEntity levelGroupEntity = categoryGroupFactory.makeFakeEntity("social action level", "grupo de categorias para usar no NÍVEL de ação social");
+//        levelGroupEntities.add(levelGroupEntity);
+//        this.categoriesLevel = categoryFactory.insertMany(6, levelGroupEntities);
+//        forCategoryTypeIds = categoriesType.stream()
+//                .map(category -> category.getId())
+//                .collect(Collectors.toList());
+//        forCategoryLevelIds = categoriesLevel.stream()
+//                .map(category -> category.getId())
+//                .collect(Collectors.toList());
+//        socialActionFactory.insertMany(2, forCategoryTypeIds, forCategoryLevelIds);
     }
 
     @AfterEach
@@ -93,7 +119,6 @@ public class SessionControllerIT {
     @DisplayName("lista paginada de session com sucesso")
     void findAllSession() throws Exception {
         // Arrange (Organizar)
-        socialActionFactory.insertMany(2);
         List<SessionEntity> saved = sessionFactory.insertMany(4);
         // TODO:        item.setCreatedBy(userLoggedId);
         // Act (ação)
@@ -133,7 +158,6 @@ public class SessionControllerIT {
     @DisplayName("salva uma nova session com sucesso")
     void saveOneSession() throws Exception {
         // Arrange (Organizar)
-        socialActionFactory.insertMany(2);
         SessionEntity item = sessionFactory.makeFakeEntity();
 // TODO:        item.setCreatedBy(userLoggedId);
         ObjectMapper objectMapper = new ObjectMapper();
@@ -172,7 +196,6 @@ public class SessionControllerIT {
     @DisplayName("Busca session por ID com sucesso")
     void findByIdSession() throws Exception {
         // Arrange (Organizar)
-        socialActionFactory.insertMany(2);
         List<SessionEntity> saved = sessionFactory.insertMany(3);
         SessionEntity item = saved.get(0);
         // TODO:        item.setCreatedBy(userLoggedId);
@@ -207,7 +230,6 @@ public class SessionControllerIT {
     @DisplayName("(hard-delete) Exclui uma session com sucesso")
     void deleteSession() throws Exception {
         // Arrange (Organizar)
-        socialActionFactory.insertMany(2);
         SessionEntity savedItem = sessionFactory.insertOne(sessionFactory.makeFakeEntity());
         // Act (ação)
         ResultActions resultActions = mockMvc.perform(
@@ -228,7 +250,6 @@ public class SessionControllerIT {
     @DisplayName("Atualiza uma session com sucesso")
     void updateSession() throws Exception {
         // Arrange (Organizar)
-        socialActionFactory.insertMany(2);
         SessionEntity item = sessionFactory.insertOne(sessionFactory.makeFakeEntity());
         // Modifica alguns dados da session
 // TODO:        item.setCreatedBy(userLoggedId);

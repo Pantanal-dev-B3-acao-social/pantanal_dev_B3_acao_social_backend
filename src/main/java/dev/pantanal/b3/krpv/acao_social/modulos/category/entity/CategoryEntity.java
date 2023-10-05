@@ -78,7 +78,7 @@ public class CategoryEntity {
     @Column(name = "deleted_by")
     private UUID deletedBy;
 
-    @OneToMany(mappedBy = "categoryEntity")
+    @OneToMany(mappedBy = "categoryEntity", orphanRemoval = true, cascade = CascadeType.DETACH , fetch = FetchType.LAZY)
     @ToString.Exclude
     private List<CategorySocialActionTypeEntity> categorySocialActionTypeEntities = new ArrayList<>();
 
