@@ -30,6 +30,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -64,6 +65,7 @@ public class PersonControllerIT {
     ObjectMapper objectMapper;
     UUID userIdLoggedFuncionarioCompany;
     UUID userIdLoggedGerenteCompany;
+    List<UUID> usersIds = new ArrayList<>();
 
     @BeforeEach
     public void setup() throws Exception {
@@ -76,7 +78,11 @@ public class PersonControllerIT {
         this.objectMapper.registerModule(new JavaTimeModule());
         // user keyclock
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        userIdLoggedFuncionarioCompany = UUID.fromString(authentication.getName());;
+        userIdLoggedFuncionarioCompany = UUID.fromString(authentication.getName());
+        int amount = 4;
+        for(int i = 0; i < amount; i++) {
+            usersIds.add(UUID.randomUUID());
+        }
     }
 
     @AfterEach
@@ -87,7 +93,7 @@ public class PersonControllerIT {
     @DisplayName("lista paginada de person com sucesso")
     void findAllSession() throws Exception {
         // Arrange (Organizar)
-        List<PersonEntity> saved = personFactory.insertMany(4, UUID.randomUUID());
+        List<PersonEntity> saved = personFactory.insertMany(usersIds.size(), usersIds);
         // Act (ação)
         ResultActions perform = mockMvc.perform(
                 MockMvcRequestBuilders.get(ROUTE_PERSON)
@@ -160,7 +166,7 @@ public class PersonControllerIT {
     @DisplayName("Busca person por ID com sucesso")
     void findByIdSession() throws Exception {
         // Arrange (Organizar)
-        List<PersonEntity> saved = personFactory.insertMany(3, UUID.randomUUID());
+        List<PersonEntity> saved = personFactory.insertMany(usersIds.size(), usersIds);
         PersonEntity item = saved.get(0);
         // TODO:        item.setCreatedBy(userLoggedId);
         String createdByString = Optional.ofNullable(item.getCreatedBy()).map(UUID::toString).orElse(null);

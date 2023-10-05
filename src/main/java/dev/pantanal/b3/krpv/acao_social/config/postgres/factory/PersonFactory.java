@@ -5,6 +5,7 @@ import dev.pantanal.b3.krpv.acao_social.modulos.person.PersonEntity;
 import dev.pantanal.b3.krpv.acao_social.modulos.person.enums.StatusEnum;
 import dev.pantanal.b3.krpv.acao_social.modulos.person.repository.PersonRepository;
 import dev.pantanal.b3.krpv.acao_social.utils.EnumUtil;
+import dev.pantanal.b3.krpv.acao_social.utils.GeneretorCpf;
 import dev.pantanal.b3.krpv.acao_social.utils.GeraCNPJ;
 import jakarta.persistence.EntityManager;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,7 +29,7 @@ public class PersonFactory {
     @Autowired
     private EntityManager entityManager;
     @Autowired
-    GeraCNPJ geradorDeCNPJ;
+    GeneretorCpf generetorCpf;
 
     @Autowired
     public PersonFactory(
@@ -40,11 +41,11 @@ public class PersonFactory {
     public PersonEntity makeFakeEntity(UUID userId) {
         LocalDateTime dataBirth = LocalDateTime.now();
         StatusEnum statusEnum = new EnumUtil<StatusEnum>().getRandomValue(StatusEnum.class);
-        String cnpj = geradorDeCNPJ.cnpj(true);
+        String cpf = generetorCpf.cpf(true);
         PersonEntity personEntity = new PersonEntity();
         personEntity.setName(faker.lorem().sentence());
         personEntity.setDateBirth(dataBirth);
-        personEntity.setCpf(cnpj);
+        personEntity.setCpf(cpf);
         personEntity.setUserId(userId);
         personEntity.setStatus(statusEnum);
         return personEntity;
@@ -55,10 +56,10 @@ public class PersonFactory {
         return saved;
     }
 
-    public List<PersonEntity> insertMany(int amount, UUID userId) {
+    public List<PersonEntity> insertMany(int amount, List<UUID> usersIds) {
         List<PersonEntity> entities = new ArrayList<>();
         for (int i=0; i<amount; i++) {
-            PersonEntity entity = this.makeFakeEntity(userId);
+            PersonEntity entity = this.makeFakeEntity(usersIds.get(i));
             entities.add(this.insertOne(entity));
         }
         return entities;
