@@ -1,5 +1,6 @@
 package dev.pantanal.b3.krpv.acao_social.modulos.company.repository;
 
+
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import dev.pantanal.b3.krpv.acao_social.modulos.company.CompanyEntity;
@@ -14,6 +15,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
+
 import java.util.List;
 import java.util.UUID;
 
