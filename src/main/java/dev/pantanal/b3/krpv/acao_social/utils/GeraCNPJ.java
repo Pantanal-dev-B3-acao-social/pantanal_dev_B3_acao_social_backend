@@ -1,5 +1,8 @@
 package dev.pantanal.b3.krpv.acao_social.utils;
 
+import org.springframework.stereotype.Component;
+
+@Component
 public class GeraCNPJ {
     private int randomiza(int n) {
         int ranNum = (int) (Math.random() * n);
