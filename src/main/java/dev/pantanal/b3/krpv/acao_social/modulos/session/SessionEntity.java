@@ -45,10 +45,13 @@ public class SessionEntity {
     UUID id;
 
     @Column(nullable = false)
-//    @NotBlank
     private String description;
 
-    private LocalDateTime time;
+    @Column(name = "date_start_time")
+    private LocalDateTime dateStartTime;
+
+    @Column(name = "date_end_time")
+    private LocalDateTime dateEndTime;
 
     private StatusEnum status;
 

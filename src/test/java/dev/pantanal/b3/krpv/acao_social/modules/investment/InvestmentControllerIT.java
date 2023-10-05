@@ -2,22 +2,19 @@ package dev.pantanal.b3.krpv.acao_social.modules.investment;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import dev.pantanal.b3.krpv.acao_social.config.postgres.factory.CategoryFactory;
 import dev.pantanal.b3.krpv.acao_social.config.postgres.factory.CompanyFactory;
 import dev.pantanal.b3.krpv.acao_social.config.postgres.factory.InvestmentFactory;
-import dev.pantanal.b3.krpv.acao_social.config.postgres.factory.SessionFactory;
 import dev.pantanal.b3.krpv.acao_social.config.postgres.factory.SocialActionFactory;
-import dev.pantanal.b3.krpv.acao_social.modules.auth.LoginMock;
 import dev.pantanal.b3.krpv.acao_social.modulos.Investment.InvestmentEntity;
 import dev.pantanal.b3.krpv.acao_social.modulos.Investment.repository.InvestmentRepository;
 import dev.pantanal.b3.krpv.acao_social.modulos.auth.dto.LoginUserDto;
-import dev.pantanal.b3.krpv.acao_social.modulos.Investment.InvestmentEntity;
-import dev.pantanal.b3.krpv.acao_social.modulos.session.enums.StatusEnum;
-import dev.pantanal.b3.krpv.acao_social.modulos.session.enums.VisibilityEnum;
 import dev.pantanal.b3.krpv.acao_social.modulos.Investment.repository.InvestmentPostgresRepository;
-import dev.pantanal.b3.krpv.acao_social.modulos.session.repository.SessionRepository;
+import dev.pantanal.b3.krpv.acao_social.modulos.category.entity.CategoryEntity;
+import dev.pantanal.b3.krpv.acao_social.modulos.company.CompanyEntity;
 import dev.pantanal.b3.krpv.acao_social.modulos.socialAction.SocialActionEntity;
-import dev.pantanal.b3.krpv.acao_social.utils.EnumUtil;
-import dev.pantanal.b3.krpv.acao_social.utils.FindRegisterRandom;
+import dev.pantanal.b3.krpv.acao_social.utils.GenerateTokenUserForLogged;
+import dev.pantanal.b3.krpv.acao_social.utils.LoginMock;
 import jakarta.persistence.EntityManager;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,13 +29,11 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.transaction.annotation.Transactional;
-
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
-
 import static dev.pantanal.b3.krpv.acao_social.modulos.Investment.InvestmentController.ROUTE_INVESTMENT;
 import static org.hamcrest.Matchers.hasSize;
 
@@ -76,10 +71,31 @@ public class InvestmentControllerIT {
     private SocialActionFactory socialActionFactory;
     @Autowired
     private CompanyFactory companyFactory;
+    @Autowired
+    GenerateTokenUserForLogged generateTokenUserForLogged;
+    private DateTimeFormatter formatter;
+    ObjectMapper objectMapper;
+    @Autowired
+    private CategoryFactory categoryFactory;
+    List<CompanyEntity> companyEntities;
 
     @BeforeEach
     public void setup() throws Exception {
-        tokenUserLogged = loginMock.loginUserMock(new LoginUserDto("funcionario1", "123"));
+        // token de login
+        this.tokenUserLogged = generateTokenUserForLogged.loginUserMock(new LoginUserDto("funcionario1", "123"));
+        this.loginMock.authenticateWithToken(tokenUserLogged);
+        // SOCIAL ACTION
+        List<CategoryEntity> categoriesType = categoryFactory.makeFakeByGroup(2, "social action type", "grupo de categorias para usar no TIPO de ação social");
+        List<CategoryEntity> categoriesLevel = categoryFactory.makeFakeByGroup(2, "social action level", "grupo de categorias para usar no NÍVEL de ação social");
+        List<SocialActionEntity> socialActionEntities = socialActionFactory.insertManyFull(3, categoriesType, categoriesLevel);this.formatter = DateTimeFormatter.ISO_LOCAL_DATE_TIME; // Formate o LocalDateTime esperado
+        List<CategoryEntity> categoryEntities = categoryFactory.makeFakeByGroup(2, "session", "grupo de categorias para usar na SESSÃO da ação social");
+        // COMPANY
+        this.companyEntities = companyFactory.insertMany(2);
+        // formatar data hora
+        this.formatter = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
+        // mapper
+        this.objectMapper = new ObjectMapper();
+        this.objectMapper.registerModule(new JavaTimeModule());
     }
 
     @AfterEach
@@ -90,8 +106,6 @@ public class InvestmentControllerIT {
     @DisplayName("lista paginada de Investment com sucesso")
     void findAllInvestment() throws Exception {
         // Arrange (Organizar)
-        socialActionFactory.insertMany(2);
-        companyFactory.insertMany(2);
         List<InvestmentEntity> saved = investmentFactory.insertMany(4);
         DateTimeFormatter formatter = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
         // TODO:        item.setCreatedBy(userLoggedId);
@@ -114,7 +128,7 @@ public class InvestmentControllerIT {
                     .andExpect(MockMvcResultMatchers.jsonPath("$.content[" + i + "].date").value(item.getDate().format(formatter)))
                     .andExpect(MockMvcResultMatchers.jsonPath("$.content[" + i + "].motivation").value(item.getMotivation()))
                     .andExpect(MockMvcResultMatchers.jsonPath("$.content[" + i + "].approvedAt").value(item.getApprovedAt().format(formatter)))
-// TODO:                   .andExpect(MockMvcResultMatchers.jsonPath(userLoggedId.toString()).value(item.getCreatedBy()))
+                    // TODO:                   .andExpect(MockMvcResultMatchers.jsonPath(userLoggedId.toString()).value(item.getCreatedBy()))
                     .andExpect(MockMvcResultMatchers.jsonPath("$.content[" + i + "].createdBy").value(item.getCreatedBy().toString()))
                     .andExpect(MockMvcResultMatchers.jsonPath("$.content[" + i + "].lastModifiedBy").value(item.getLastModifiedBy()))
                     .andExpect(MockMvcResultMatchers.jsonPath("$.content[" + i + "].createdDate").value(item.getCreatedDate().format(formatter)))
@@ -131,17 +145,9 @@ public class InvestmentControllerIT {
     @DisplayName("salva um novo Investment com sucesso")
     void saveOneInvestment() throws Exception {
         // Arrange (Organizar)
-        socialActionFactory.insertMany(2);
-        companyFactory.insertMany(2);
         InvestmentEntity item = investmentFactory.makeFakeEntity();
-
-// TODO:        item.setCreatedBy(userLoggedId);
-        ObjectMapper objectMapper = new ObjectMapper();
-        objectMapper.registerModule(new JavaTimeModule()); // registrar o módulo JSR-310
+        // TODO:        item.setCreatedBy(userLoggedId);
         String jsonRequest = objectMapper.writeValueAsString(item);
-        DateTimeFormatter formatter = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
-        String expectedDate = item.getDate().format(formatter); // Formate o LocalDateTime esperado
-        String expectedApprovedAt = item.getApprovedAt().format(formatter);
         // Act (ação)
         ResultActions resultActions = mockMvc.perform(
                 MockMvcRequestBuilders.post(ROUTE_INVESTMENT)
@@ -153,8 +159,8 @@ public class InvestmentControllerIT {
         resultActions
                 .andExpect(MockMvcResultMatchers.status().isCreated())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.value_money").value(item.getValue_money()))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.date").value(expectedDate)) // Compare como string formatada
-                .andExpect(MockMvcResultMatchers.jsonPath("$.approvedAt").value(expectedApprovedAt))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.date").value(item.getDate().format(formatter)))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.approvedAt").value(item.getApprovedAt().format(formatter)))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.motivation").value(item.getMotivation()))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.socialAction.id").value(item.getSocialAction().getId().toString()))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.company.id").value(item.getCompany().getId().toString()));
@@ -165,11 +171,8 @@ public class InvestmentControllerIT {
     @DisplayName("Busca session por ID com sucesso")
     void findByIdSession() throws Exception {
         // Arrange (Organizar)
-        socialActionFactory.insertMany(2);
-        companyFactory.insertMany(2);
         List<InvestmentEntity> saved = investmentFactory.insertMany(3);
         InvestmentEntity item = saved.get(0);
-        DateTimeFormatter formatter = DateTimeFormatter.ISO_LOCAL_DATE_TIME; // Formate o LocalDateTime esperado
         // TODO:        item.setCreatedBy(userLoggedId);
         String createdByString = Optional.ofNullable(item.getCreatedBy()).map(UUID::toString).orElse(null);
         String lastModifiedByString = Optional.ofNullable(item.getLastModifiedBy()).map(UUID::toString).orElse(null);
@@ -202,8 +205,6 @@ public class InvestmentControllerIT {
     @DisplayName("(hard-delete) Exclui uma session com sucesso")
     void deleteSession() throws Exception {
         // Arrange (Organizar)
-        socialActionFactory.insertMany(2);
-        companyFactory.insertMany(2);
         InvestmentEntity savedItem = investmentFactory.insertOne(investmentFactory.makeFakeEntity());
         // Act (ação)
         ResultActions resultActions = mockMvc.perform(
@@ -224,8 +225,6 @@ public class InvestmentControllerIT {
     @DisplayName("Atualiza uma session com sucesso")
     void updateSession() throws Exception {
         // Arrange (Organizar)
-        socialActionFactory.insertMany(2);
-        companyFactory.insertMany(2);
         InvestmentEntity item = investmentFactory.insertOne(investmentFactory.makeFakeEntity());
         // Modifica alguns dados da session
 // TODO:        item.setCreatedBy(userLoggedId);
@@ -236,17 +235,12 @@ public class InvestmentControllerIT {
         item.setApprovedAt(approvedAtUpdated);
         item.setMotivation(item.getMotivation() + "_Atualizado");
 // TODO: quais dados falta modificar para testar?
-        ObjectMapper objectMapper = new ObjectMapper();
-        objectMapper.registerModule(new JavaTimeModule());
-        String updatedSessionJson = objectMapper.writeValueAsString(item); //Suspeito erro
-        DateTimeFormatter formatter = DateTimeFormatter.ISO_LOCAL_DATE_TIME; // Formate o LocalDateTime esperado
-
-        String createdByString = Optional.ofNullable(item.getCreatedBy()).map(UUID::toString).orElse(null);
+        String updatedSessionJson = objectMapper.writeValueAsString(item); // TODO: Suspeito erro
+        // TODO: nao utilizado
+//        String createdByString = Optional.ofNullable(item.getCreatedBy()).map(UUID::toString).orElse(null);
         String lastModifiedByString = Optional.ofNullable(item.getLastModifiedBy()).map(UUID::toString).orElse(null);
         String deletedByString = Optional.ofNullable(item.getDeletedBy()).map(UUID::toString).orElse(null);
         String deletedDateString = Optional.ofNullable(item.getDeletedDate()).map(LocalDateTime::toString).orElse(null);
-        String expectedDate = item.getDate().format(formatter); // Formate o LocalDateTime esperado
-        String expectedApprovedAt = item.getApprovedAt().format(formatter); // Formate o LocalDateTime esperado
         // Act (ação)
         ResultActions resultActions = mockMvc.perform(
                 MockMvcRequestBuilders.patch(ROUTE_INVESTMENT + "/{id}", item.getId())
@@ -259,8 +253,8 @@ public class InvestmentControllerIT {
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.id").value(item.getId().toString()))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.motivation").value(item.getMotivation()))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.date").value(expectedDate)) // Compare como string formatada
-                .andExpect(MockMvcResultMatchers.jsonPath("$.approvedAt").value(expectedApprovedAt)) // Compare como string formatada
+                .andExpect(MockMvcResultMatchers.jsonPath("$.date").value(item.getDate().format(formatter)))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.approvedAt").value(item.getApprovedAt().format(formatter)))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.value_money").value(item.getValue_money().toString()))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.company.id").value(item.getCompany().getId().toString()))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.socialAction.id").value(item.getSocialAction().getId().toString()))

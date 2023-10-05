@@ -10,7 +10,8 @@ public record SessionCreateDto (
         String description,
 //        @NotBlank(message= "Campo 'socialAction' não pode estar vazio")
         SocialActionEntity socialAction,
-        LocalDateTime time,
+        LocalDateTime dateStartTime,
+        LocalDateTime dateEndTime,
         StatusEnum status,
 //        @NotBlank(message= "Campo 'visibility' não pode estar vazio")
         VisibilityEnum visibility

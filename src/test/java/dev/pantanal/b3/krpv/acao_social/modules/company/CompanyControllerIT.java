@@ -3,11 +3,12 @@ package dev.pantanal.b3.krpv.acao_social.modules.company;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import dev.pantanal.b3.krpv.acao_social.config.postgres.factory.CompanyFactory;
-import dev.pantanal.b3.krpv.acao_social.modules.auth.LoginMock;
+import dev.pantanal.b3.krpv.acao_social.utils.GenerateTokenUserForLogged;
 import dev.pantanal.b3.krpv.acao_social.modulos.auth.dto.LoginUserDto;
 import dev.pantanal.b3.krpv.acao_social.modulos.company.CompanyEntity;
 import dev.pantanal.b3.krpv.acao_social.modulos.company.repository.CompanyPostgresRepository;
 import dev.pantanal.b3.krpv.acao_social.modulos.company.repository.CompanyRepository;
+import dev.pantanal.b3.krpv.acao_social.utils.LoginMock;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -21,6 +22,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 import static dev.pantanal.b3.krpv.acao_social.modulos.company.CompanyController.ROUTE_COMPANY;
@@ -40,19 +42,21 @@ public class CompanyControllerIT {
     @Autowired
     ObjectMapper mapper;
     @Autowired
-    LoginMock loginMock;
-
-    @Autowired
     CompanyRepository companyRepository;
     private String tokenUserLogged;
-
     @Autowired
     CompanyFactory companyfactory;
+    @Autowired
+    GenerateTokenUserForLogged generateTokenUserForLogged;
+    @Autowired
+    LoginMock loginMock;
+    private DateTimeFormatter formatter;
 
     @BeforeEach
     public void setup() throws Exception {
-        // TODO: limpar tabela social_action
-        tokenUserLogged = loginMock.loginUserMock(new LoginUserDto("funcionario1", "123"));
+        tokenUserLogged = generateTokenUserForLogged.loginUserMock(new LoginUserDto("funcionario1", "123"));
+        loginMock.authenticateWithToken(tokenUserLogged);
+        this.formatter = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
     }
 
     @AfterEach

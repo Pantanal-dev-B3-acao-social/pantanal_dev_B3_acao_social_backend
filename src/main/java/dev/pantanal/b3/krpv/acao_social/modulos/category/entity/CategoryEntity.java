@@ -1,7 +1,8 @@
 package dev.pantanal.b3.krpv.acao_social.modulos.category.entity;
 
 import dev.pantanal.b3.krpv.acao_social.config.audit.AuditListener;
-import dev.pantanal.b3.krpv.acao_social.modulos.category.entity.CategorySocialActionTypeEntity;
+import dev.pantanal.b3.krpv.acao_social.modulos.category.enums.VisibilityCategoryEnum;
+import dev.pantanal.b3.krpv.acao_social.modulos.category.modules.categoryGroup.CategoryGroupEntity;
 import jakarta.persistence.*;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
@@ -28,7 +29,7 @@ import java.util.UUID;
 @Builder
 @AllArgsConstructor
 @EqualsAndHashCode
-@ToString
+//@ToString
 public class CategoryEntity {
 
     @Valid
@@ -53,6 +54,8 @@ public class CategoryEntity {
     @NotBlank
     String code;
 
+    private VisibilityCategoryEnum visibility;
+
     @CreatedBy
     @Column(name = "created_by")
     private UUID createdBy;
@@ -75,8 +78,15 @@ public class CategoryEntity {
     @Column(name = "deleted_by")
     private UUID deletedBy;
 
-    @OneToMany(mappedBy = "categoryEntity")
-    private List<CategorySocialActionTypeEntity> cs = new ArrayList<>();
+    @OneToMany(mappedBy = "categoryEntity", orphanRemoval = true, cascade = CascadeType.DETACH , fetch = FetchType.LAZY)
+    @ToString.Exclude
+    private List<CategorySocialActionTypeEntity> categorySocialActionTypeEntities = new ArrayList<>();
+
+    @NotNull
+    @ManyToOne
+    @JoinColumn(name = "category_group_id")
+    @ToString.Exclude
+    private CategoryGroupEntity categoryGroup;
 
     @PrePersist
     protected void onCreate() {

@@ -30,28 +30,6 @@ public class CategoryController {
     private CategoryService service;
     public static final String ROUTE_CATEGORY = "/v1/category";
 
-    @GetMapping("/{id}")
-    @ResponseStatus(HttpStatus.OK)
-    @PreAuthorize("hasAnyRole('CATEGORY_GET_ONE')")
-    @Operation(summary = "Gets one Category", method = "GET")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Element found successfully"),
-            @ApiResponse(responseCode = "401", description = "User not authenticated"),
-            @ApiResponse(responseCode = "404", description = "Not found"),
-            @ApiResponse(responseCode = "500", description = "Internal Server Error"),
-    })
-    public ResponseEntity<CategoryResponseDto> findOne(@PathVariable UUID id) {
-        CategoryEntity entity = service.findById(id);
-        CategoryResponseDto response = new CategoryResponseDto(
-                entity.getId(),
-                entity.getName(),
-                entity.getDescription(),
-                entity.getCode(),
-                entity.getVersion()
-        );
-        return new ResponseEntity<CategoryResponseDto>(response, HttpStatus.OK);
-    }
-
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
     @PreAuthorize("hasAnyRole('CATEGORY_GET_ALL')")
@@ -70,7 +48,36 @@ public class CategoryController {
     ) {
         Pageable paging = PageRequest.of(page, size, sort);
         Page<CategoryEntity> response = service.findAll(paging, request);
-        return response; // TODO: verificar se vai converter certo
+        return response;
+    }
+
+    @GetMapping("/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    @PreAuthorize("hasAnyRole('CATEGORY_GET_ONE')")
+    @Operation(summary = "Gets one Category", method = "GET")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Element found successfully"),
+            @ApiResponse(responseCode = "401", description = "User not authenticated"),
+            @ApiResponse(responseCode = "404", description = "Not found"),
+            @ApiResponse(responseCode = "500", description = "Internal Server Error"),
+    })
+    public ResponseEntity<CategoryResponseDto> findOne(@PathVariable UUID id) {
+        CategoryEntity entity = service.findById(id);
+        CategoryResponseDto response = new CategoryResponseDto(
+                entity.getId(),
+                entity.getName(),
+                entity.getDescription(),
+                entity.getCode(),
+                entity.getVersion(),
+                entity.getCategoryGroup(),
+                entity.getCreatedBy(),
+                entity.getLastModifiedBy(),
+                entity.getCreatedDate(),
+                entity.getLastModifiedDate(),
+                entity.getDeletedDate(),
+                entity.getDeletedBy()
+        );
+        return new ResponseEntity<CategoryResponseDto>(response, HttpStatus.OK);
     }
 
     @PostMapping
@@ -92,9 +99,15 @@ public class CategoryController {
                 entity.getName(),
                 entity.getDescription(),
                 entity.getCode(),
-                entity.getVersion()
+                entity.getVersion(),
+                entity.getCategoryGroup(),
+                entity.getCreatedBy(),
+                entity.getLastModifiedBy(),
+                entity.getCreatedDate(),
+                entity.getLastModifiedDate(),
+                entity.getDeletedDate(),
+                entity.getDeletedBy()
         );
-        // TODO: fazer um handle para gerar esse retorno
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
@@ -117,7 +130,14 @@ public class CategoryController {
                 entity.getName(),
                 entity.getDescription(),
                 entity.getCode(),
-                entity.getVersion()
+                entity.getVersion(),
+                entity.getCategoryGroup(),
+                entity.getCreatedBy(),
+                entity.getLastModifiedBy(),
+                entity.getCreatedDate(),
+                entity.getLastModifiedDate(),
+                entity.getDeletedDate(),
+                entity.getDeletedBy()
         );
         return new ResponseEntity<>(response, HttpStatus.OK);
     }

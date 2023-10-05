@@ -1,7 +1,10 @@
 package dev.pantanal.b3.krpv.acao_social.config.postgres.factory;
 
 import com.github.javafaker.Faker;
+import dev.pantanal.b3.krpv.acao_social.modulos.category.entity.CategoryEntity;
 import dev.pantanal.b3.krpv.acao_social.modulos.category.entity.CategorySocialActionTypeEntity;
+import dev.pantanal.b3.krpv.acao_social.modulos.category.modules.categoryGroup.CategoryGroupEntity;
+import dev.pantanal.b3.krpv.acao_social.modulos.category.repository.CategoryRepository;
 import dev.pantanal.b3.krpv.acao_social.modulos.category.repository.CategorySocialActionTypePostgresRepository;
 import dev.pantanal.b3.krpv.acao_social.modulos.socialAction.SocialActionEntity;
 import dev.pantanal.b3.krpv.acao_social.modulos.socialAction.dto.SocialActionDto;
@@ -13,6 +16,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.jdbc.core.JdbcTemplate;
 import java.time.LocalDateTime;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Component
 public class SocialActionFactory {
@@ -22,42 +26,31 @@ public class SocialActionFactory {
     @Autowired
     private SocialActionRepository socialActionRepository;
     @Autowired
-    private CategorySocialActionTypeFactory categorySocialActionTypeFactory;
-    @Autowired
     private EntityManager entityManager;
+    @Autowired
+    private CategoryRepository categoryRepository;
     @Autowired
     public SocialActionFactory(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public SocialActionDto makeFake() {
-        return new SocialActionDto(
-            UUID.randomUUID(),
-            faker.name().fullName(),
-            faker.lorem().sentence(),
-//                faker.name().title(),
-            faker.number().randomNumber()
-
-                // string ongId = findOneRandom("ong");
-                // string levelId = findOneRandom("category_project_level");
-                // string typeId = findOneRandom("category_project_type");
-        );
-    }
-
-    public SocialActionEntity makeFakeEntity() {
-        UUID createdBy = UUID.randomUUID();
-        UUID lastModifiedBy = null;
-        LocalDateTime createdDate = LocalDateTime.now();
-        LocalDateTime lastModifiedDate = createdDate.plusHours(3).plusMinutes(30);
+    public SocialActionEntity makeFakeEntity(List<UUID> forCategoryTypeIds,  List<UUID> forCategoryLevelIds) {
         SocialActionEntity socialCreated = new SocialActionEntity();
         socialCreated.setVersion(1L);
         socialCreated.setName(faker.name().fullName());
         socialCreated.setDescription(faker.lorem().sentence());
-        socialCreated.setCreatedBy(createdBy);
-        socialCreated.setCreatedDate(createdDate);
-        socialCreated.setLastModifiedBy(lastModifiedBy);
-        socialCreated.setLastModifiedDate(lastModifiedDate);
-//                ,SessionEntity
+        for (UUID categoryId : forCategoryTypeIds) {
+            CategoryEntity categoryEntity = categoryRepository.findById(categoryId);
+            if (categoryEntity != null) {
+                CategorySocialActionTypeEntity typeCategory = new CategorySocialActionTypeEntity();
+                typeCategory.setCategoryEntity(categoryEntity);
+                typeCategory.setSocialActionEntity(socialCreated);
+                socialCreated.getCategorySocialActionTypeEntities().add(typeCategory);
+            }
+        }
+// TODO: implementar LEVEL
+        //        socialCreated.setCategorySocialActionLevelEntities(forCategoryLevelIds);
+                // SessionEntity
                 // string ongId = findOneRandom("ong");
                 // string levelId = findOneRandom("category_project_level");
                 // string typeId = findOneRandom("category_project_type");
@@ -77,19 +70,34 @@ public class SocialActionFactory {
     }
 
     public SocialActionEntity insertOne(SocialActionEntity toSave) {
-        SocialActionEntity saved = socialActionRepository.save(toSave);
-        int randomNumber = random.nextInt(3);
-        categorySocialActionTypeFactory.insertManyFakeEntities(saved, null, randomNumber);
-        // TODO: carregar relacionamentos de categoria
-        return socialActionRepository.findById(saved.getId());
+        SocialActionEntity socialActionEntity = socialActionRepository.save(toSave);
+        return socialActionEntity;
+//        return socialActionRepository.findById(socialActionEntity.getId());
     }
 
-    public List<SocialActionEntity> insertMany(int amount) {
+    public List<SocialActionEntity> insertMany(int amount, List<UUID> forCategoryTypeIds, List<UUID> forCategoryLevelIds) {
         List<SocialActionEntity> socials = new ArrayList<>();
         for (int i=0; i<amount; i++) {
-            SocialActionEntity socialActionEntity = this.makeFakeEntity();
+            SocialActionEntity socialActionEntity = this.makeFakeEntity(forCategoryTypeIds, forCategoryLevelIds);
             socials.add(this.insertOne(socialActionEntity));
         }
         return socials;
     }
+
+    public List<SocialActionEntity> insertManyFull(
+            int amount,
+            List<CategoryEntity> categoriesType,
+            List<CategoryEntity> categoriesLevel
+    ) {
+        List<UUID> forCategoryTypeIds = categoriesType.stream()
+                .map(category -> category.getId())
+                .collect(Collectors.toList());
+        List<UUID> forCategoryLevelIds = categoriesLevel.stream()
+                .map(category -> category.getId())
+                .collect(Collectors.toList());
+        List<SocialActionEntity> saved = insertMany(amount, forCategoryTypeIds, forCategoryLevelIds);
+        return saved;
+    }
+
+
 }
