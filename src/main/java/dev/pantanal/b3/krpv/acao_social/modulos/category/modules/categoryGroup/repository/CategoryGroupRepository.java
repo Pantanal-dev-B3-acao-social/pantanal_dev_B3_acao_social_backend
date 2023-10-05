@@ -1,16 +1,20 @@
 package dev.pantanal.b3.krpv.acao_social.modulos.category.modules.categoryGroup.repository;
 
 import com.querydsl.core.types.dsl.BooleanExpression;
+import com.querydsl.jpa.impl.JPAQueryFactory;
 import dev.pantanal.b3.krpv.acao_social.modulos.category.modules.categoryGroup.CategoryGroupEntity;
+import dev.pantanal.b3.krpv.acao_social.modulos.category.modules.categoryGroup.QCategoryGroupEntity;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.UUID;
 
 @Component
@@ -29,7 +33,20 @@ public class CategoryGroupRepository {
     }
 
     public Page<CategoryGroupEntity> findAll(Pageable pageable, BooleanExpression predicate) {
-        throw new UnsupportedOperationException("função ainda não foi implementada");
+        JPAQueryFactory queryFactory = new JPAQueryFactory(entityManager);
+        QCategoryGroupEntity qEntity = QCategoryGroupEntity.categoryGroupEntity;
+        List<CategoryGroupEntity> results = queryFactory.selectFrom(qEntity)
+                .where(predicate)
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
+                .fetch();
+        long total = queryFactory.query()
+                .select(qEntity)
+                .from(qEntity)
+                .where(predicate)
+                .fetch()
+                .stream().count();
+        return new PageImpl<>(results,pageable,total);
     }
 
     public CategoryGroupEntity save(CategoryGroupEntity obj) {

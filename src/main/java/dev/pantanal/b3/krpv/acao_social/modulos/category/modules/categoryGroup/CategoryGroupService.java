@@ -30,7 +30,7 @@ public class CategoryGroupService {
         entity.setDescription(dataRequest.description());
         String code = generatorCode.execute(entity.getName());
         entity.setCode(code);
-        entity.setCategoryGroupEntity(dataRequest.categoryGroupEntity());
+        entity.setParentCategoryGroupEntity(dataRequest.parentCategoryGroupEntity());
         entity.setVisibility(dataRequest.visibility());
         CategoryGroupEntity savedObj = categoryGroupRepository.save(entity);
         return savedObj;
@@ -65,8 +65,8 @@ public class CategoryGroupService {
         if (request.description() != null) {
             obj.setDescription(request.description());
         }
-        if (request.categoryGroupEntity() != null) {
-            obj.setCategoryGroupEntity(request.categoryGroupEntity());
+        if (request.parentCategoryGroupEntity() != null) {
+            obj.setParentCategoryGroupEntity(request.parentCategoryGroupEntity());
         }
         if (request.visibility() != null) {
             obj.setVisibility(request.visibility());

@@ -59,7 +59,8 @@ public class CategoryGroupControllerIT {
     @DisplayName("lista paginada de grupo de categoria com sucesso")
     void findAllCategoryGroup() throws Exception {
         // Arrange (Organizar)
-        List<CategoryGroupEntity> saved = categoryGroupFactory.insertMany(3);
+        List<CategoryGroupEntity> parentSaved = categoryGroupFactory.insertMany(1, null);
+        List<CategoryGroupEntity> saved = categoryGroupFactory.insertMany(3, parentSaved.get(0));
         // Act (ação)
         ResultActions perform = mockMvc.perform(
                 MockMvcRequestBuilders.get(ROUTE_CATEGORY_GROUP)
@@ -70,23 +71,29 @@ public class CategoryGroupControllerIT {
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andDo(MockMvcResultHandlers.print())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.content").isArray())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.content", hasSize(3)));
-        int i = 0;
+                .andExpect(MockMvcResultMatchers.jsonPath("$.content", hasSize(4)));
+        int i = 1;
         for (CategoryGroupEntity item : saved) {
             perform
                     .andExpect(MockMvcResultMatchers.jsonPath("$.content[" + i + "].id").value(item.getId().toString()))
                     .andExpect(MockMvcResultMatchers.jsonPath("$.content[" + i + "].name").value(item.getName()))
                     .andExpect(MockMvcResultMatchers.jsonPath("$.content[" + i + "].description").value(item.getDescription()))
                     .andExpect(MockMvcResultMatchers.jsonPath("$.content[" + i + "].code").value(item.getCode()))
-                    .andExpect(MockMvcResultMatchers.jsonPath("$.content[" + i + "].categoryGroupEntity.id").value(item.getCategoryGroupEntity().getId()))
-                    .andExpect(MockMvcResultMatchers.jsonPath("$.content[" + i + "].visibility").value(item.getVisibility()))
-                    .andExpect(MockMvcResultMatchers.jsonPath("$.content[" + i + "].categories").value(item.getCategories()))
+                    .andExpect(MockMvcResultMatchers.jsonPath("$.content[" + i + "].parentCategoryGroupEntity.id").value(item.getParentCategoryGroupEntity().getId().toString()))
+                    .andExpect(MockMvcResultMatchers.jsonPath("$.content[" + i + "].visibility").value(item.getVisibility().toString()))
+// TODO: One nao testa seus Many                   .andExpect(MockMvcResultMatchers.jsonPath("$.content[" + i + "].categories").value(item.getCategories().toString()))
                     .andExpect(MockMvcResultMatchers.jsonPath("$.content[" + i + "].createdBy").isNotEmpty())
                     .andExpect(MockMvcResultMatchers.jsonPath("$.content[" + i + "].createdDate").isNotEmpty())
-                    .andExpect(MockMvcResultMatchers.jsonPath("$.content[" + i + "].createdBy").value(item.getCreatedBy()))
-                    .andExpect(MockMvcResultMatchers.jsonPath("$.content[" + i + "].lastModifiedBy").value(item.getLastModifiedBy()))
+                    .andExpect(MockMvcResultMatchers.jsonPath("$.content[" + i + "].createdBy").value(item.getCreatedBy().toString()))
                     .andExpect(MockMvcResultMatchers.jsonPath("$.content[" + i + "].createdDate").value(item.getCreatedDate().format(formatter)))
-                    .andExpect(MockMvcResultMatchers.jsonPath("$.content[" + i + "].lastModifiedDate").value(item.getLastModifiedDate().format(formatter)))
+                    .andExpect(MockMvcResultMatchers.jsonPath("$.content[" + i + "].lastModifiedBy").value(
+                            item.getLastModifiedBy() == null  ?
+                                    null : item.getLastModifiedBy().toString())
+                    )
+                    .andExpect(MockMvcResultMatchers.jsonPath("$.content[" + i + "].lastModifiedDate").value(
+                            item.getLastModifiedDate() == null ?
+                                    null : item.getLastModifiedDate().format(formatter))
+                    )
                     .andExpect(MockMvcResultMatchers.jsonPath("$.content[" + i + "].deletedDate").isEmpty())
                     .andExpect(MockMvcResultMatchers.jsonPath("$.content[" + i + "].deletedBy").isEmpty());
             i++;
@@ -97,7 +104,7 @@ public class CategoryGroupControllerIT {
     @DisplayName("salva uma nova grupo de categoria com sucesso")
     void saveOneCategoryGroup() throws Exception {
         // Arrange (Organizar)
-        CategoryGroupEntity item = categoryGroupFactory.makeFakeEntity(null, null);
+        CategoryGroupEntity item = categoryGroupFactory.makeFakeEntity(null, null, null);
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.registerModule(new JavaTimeModule()); // registrar o módulo JSR-310
         String bodyJson = objectMapper.writeValueAsString(item);
@@ -129,7 +136,7 @@ public class CategoryGroupControllerIT {
     @DisplayName("Busca grupo de categoria por ID com sucesso")
     void findByIdCategoryGroup() throws Exception {
         // Arrange (Organizar)
-        List<CategoryGroupEntity> saved = categoryGroupFactory.insertMany(3);
+        List<CategoryGroupEntity> saved = categoryGroupFactory.insertMany(3, null);
         CategoryGroupEntity item = saved.get(0);
         // Act (ação)
         ResultActions perform = mockMvc.perform(
@@ -164,7 +171,7 @@ public class CategoryGroupControllerIT {
     @DisplayName("(hard-delete) Exclui uma grupo de categoria com sucesso")
     void deleteCategoryGroup() throws Exception {
         // Arrange (Organizar)
-        CategoryGroupEntity savedItem = categoryGroupFactory.insertOne(categoryGroupFactory.makeFakeEntity(null, null));
+        CategoryGroupEntity savedItem = categoryGroupFactory.insertOne(categoryGroupFactory.makeFakeEntity(null, null, null));
         // Act (ação)
         ResultActions resultActions = mockMvc.perform(
                 MockMvcRequestBuilders.delete(ROUTE_CATEGORY_GROUP + "/{id}", savedItem.getId())
@@ -184,7 +191,7 @@ public class CategoryGroupControllerIT {
     @DisplayName("Atualiza uma grupo de categoria com sucesso")
     void updateCategoryGroup() throws Exception {
         // Arrange (Organizar)
-        CategoryGroupEntity item = categoryGroupFactory.insertOne(categoryGroupFactory.makeFakeEntity(null, null));
+        CategoryGroupEntity item = categoryGroupFactory.insertOne(categoryGroupFactory.makeFakeEntity(null, null, null));
         // Modifica alguns dados da grupo de categoria
         item.setName(item.getName() + "_ATUALIZADO");
         item.setDescription(item.getDescription() + "_ATUALIZADO");

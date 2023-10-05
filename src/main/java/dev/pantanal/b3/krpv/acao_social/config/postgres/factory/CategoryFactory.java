@@ -67,7 +67,7 @@ public class CategoryFactory {
     public List<CategoryEntity> makeFakeByGroup (int amount, String nameGroup, String descriptionGroup) {
         // cria grupo de categoria e categorias para TIPO
         List<CategoryGroupEntity> typesGroupEntities = new ArrayList<>();
-        CategoryGroupEntity typeGroupEntity = categoryGroupFactory.makeFakeEntity(nameGroup, descriptionGroup);
+        CategoryGroupEntity typeGroupEntity = categoryGroupFactory.makeFakeEntity(nameGroup, descriptionGroup, null);
         CategoryGroupEntity typeGroupSaved = categoryGroupFactory.insertOne(typeGroupEntity);
         typesGroupEntities.add(typeGroupSaved);
         List<CategoryEntity> categoriesType = insertMany(amount, typesGroupEntities);

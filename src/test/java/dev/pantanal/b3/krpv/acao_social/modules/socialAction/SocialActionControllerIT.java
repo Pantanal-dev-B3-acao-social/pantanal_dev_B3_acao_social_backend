@@ -82,7 +82,7 @@ public class SocialActionControllerIT {
         this.loginMock.authenticateWithToken(tokenUserLogged);
         List<CategoryGroupEntity> typesGroupEntities = new ArrayList<>();
         // cria grupo de categoria e categorias para TIPO
-        CategoryGroupEntity typeGroupEntity = categoryGroupFactory.makeFakeEntity("social action type", "grupo de categorias para usar no TIPO de ação social");
+        CategoryGroupEntity typeGroupEntity = categoryGroupFactory.makeFakeEntity("social action type", "grupo de categorias para usar no TIPO de ação social", null);
         CategoryGroupEntity typeGroupSaved = categoryGroupFactory.insertOne(typeGroupEntity);
         typesGroupEntities.add(typeGroupSaved);
         this.categoriesType = categoryFactory.insertMany(6, typesGroupEntities);
@@ -91,7 +91,7 @@ public class SocialActionControllerIT {
                 .collect(Collectors.toList());
         // cria grupo de categoria e categorias para LEVEL
         List<CategoryGroupEntity> levelGroupEntities = new ArrayList<>();
-        CategoryGroupEntity levelGroupEntity = categoryGroupFactory.makeFakeEntity("social action level", "grupo de categorias para usar no NÍVEL de ação social");
+        CategoryGroupEntity levelGroupEntity = categoryGroupFactory.makeFakeEntity("social action level", "grupo de categorias para usar no NÍVEL de ação social", null);
         CategoryGroupEntity levelGroupSaved = categoryGroupFactory.insertOne(typeGroupEntity);
         levelGroupEntities.add(levelGroupSaved);
         this.categoriesLevel = categoryFactory.insertMany(6, levelGroupEntities);

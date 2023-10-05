@@ -57,7 +57,7 @@ public class CategoryControllerIT {
     public void setup() throws Exception {
         tokenUserLogged = generateTokenUserForLogged.loginUserMock(new LoginUserDto("funcionario1", "123"));
         loginMock.authenticateWithToken(tokenUserLogged);
-        this.groupEntities = categoryGroupFactory.insertMany(2);
+        this.groupEntities = categoryGroupFactory.insertMany(2, null);
         this.formatter = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
     }
 
