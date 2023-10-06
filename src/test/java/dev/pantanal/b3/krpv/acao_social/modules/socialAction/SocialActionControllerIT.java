@@ -16,6 +16,8 @@ import dev.pantanal.b3.krpv.acao_social.modulos.socialAction.SocialActionEntity;
 import dev.pantanal.b3.krpv.acao_social.modulos.socialAction.repository.SocialActionPostgresRepository;
 import dev.pantanal.b3.krpv.acao_social.modulos.socialAction.repository.SocialActionRepository;
 import dev.pantanal.b3.krpv.acao_social.utils.LoginMock;
+import org.hamcrest.Matcher;
+import org.hamcrest.Matchers;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -178,6 +180,7 @@ public class SocialActionControllerIT {
         String filter = saved.get(0).getName(); //check for Filter
         String sort = "ASC";    //Check for Sorting
         int pageNumber = 0;
+        // TODO: Kaio realizar troca de comparação para extrair do pageable do response o pageSize
         int pageSize = 1;
         // Act (ação)
         ResultActions resultActions = mockMvc.perform(
@@ -215,14 +218,17 @@ public class SocialActionControllerIT {
                     .andExpect(MockMvcResultMatchers.jsonPath("$.content[" + i + "].createdBy").isNotEmpty())
                     .andExpect(MockMvcResultMatchers.jsonPath("$.content[" + i + "].createdDate").isNotEmpty())
                     .andExpect(MockMvcResultMatchers.jsonPath("$.content[" + i + "].createdBy").value(item.getCreatedBy().toString()))
-                    .andExpect(MockMvcResultMatchers.jsonPath("$.content[" + i + "].lastModifiedBy").value(item.getLastModifiedBy().toString()))
+                    .andExpect(MockMvcResultMatchers.jsonPath("$.content[" + i + "].lastModifiedBy").value(item.getLastModifiedBy() != null? item.getLastModifiedBy().toString() : null))
                     .andExpect(MockMvcResultMatchers.jsonPath("$.content[" + i + "].createdDate").value(item.getCreatedDate().format(formatter)))
-                    .andExpect(MockMvcResultMatchers.jsonPath("$.content[" + i + "].lastModifiedDate").value(item.getLastModifiedDate().format(formatter)))
+                    .andExpect(MockMvcResultMatchers.jsonPath("$.content[" + i + "].lastModifiedDate").value(item.getLastModifiedDate() != null ? item.getLastModifiedDate().format(formatter) : null))
                     .andExpect(MockMvcResultMatchers.jsonPath("$.content[" + i + "].deletedDate").isEmpty())
                     .andExpect(MockMvcResultMatchers.jsonPath("$.content[" + i + "].deletedBy").isEmpty());
 
 //            Assert.assertEquals(categoryTypesEntities.get(i).getId(), item.getId());
             i++;
+            if (i == pageSize){
+                break;
+            }
         }
 
     }
