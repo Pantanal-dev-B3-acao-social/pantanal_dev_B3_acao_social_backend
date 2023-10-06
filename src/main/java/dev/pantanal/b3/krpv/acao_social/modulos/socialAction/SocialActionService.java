@@ -40,9 +40,9 @@ public class SocialActionService {
         SocialActionEntity toSave = new SocialActionEntity();
         toSave.setName(dataRequest.name());
         toSave.setDescription(dataRequest.description());
+        saveSocialActionType(dataRequest.categoryTypeIds(), toSave);
+        saveSocialActionLevel(dataRequest.categoryLevelIds(), toSave);
         SocialActionEntity socialActionSaved = socialActionRepository.save(toSave);
-        saveSocialActionType(dataRequest.categoryTypeIds(), socialActionSaved);
-        saveSocialActionLevel(dataRequest.categoryLevelIds(), socialActionSaved);
         return socialActionSaved;
     }
 
@@ -53,7 +53,7 @@ public class SocialActionService {
                 CategorySocialActionTypeEntity typeCategory = new CategorySocialActionTypeEntity();
                 typeCategory.setCategoryEntity(categoryEntity);
                 typeCategory.setSocialActionEntity(socialActionSaved);
-                categorySocialActionTypePostgresRepository.save(typeCategory);
+//                categorySocialActionTypePostgresRepository.save(typeCategory);
                 socialActionSaved.getCategorySocialActionTypeEntities().add(typeCategory);
             }
         }
@@ -66,7 +66,7 @@ public class SocialActionService {
                 CategorySocialActionLevelEntity typeCategory = new CategorySocialActionLevelEntity();
                 typeCategory.setCategoryEntity(categoryEntity);
                 typeCategory.setSocialActionEntity(socialActionSaved);
-                categorySocialActionLevelPostgresRepository.save(typeCategory);
+//                categorySocialActionLevelPostgresRepository.save(typeCategory);
                 socialActionSaved.getCategorySocialActionLevelEntities().add(typeCategory);
             }
         }

@@ -31,27 +31,31 @@ public class SocialActionFactory {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public SocialActionEntity makeFakeEntity(List<UUID> forCategoryTypeIds,  List<UUID> forCategoryLevelIds) {
+    public SocialActionEntity makeFakeEntity(List<UUID> forCategoryTypeIds, List<UUID> forCategoryLevelIds) {
         SocialActionEntity socialCreated = new SocialActionEntity();
         socialCreated.setVersion(1L);
         socialCreated.setName(faker.name().fullName());
         socialCreated.setDescription(faker.lorem().sentence());
-        for (UUID categoryId : forCategoryTypeIds) {
-            CategoryEntity categoryEntity = categoryRepository.findById(categoryId);
-            if (categoryEntity != null) {
-                CategorySocialActionTypeEntity typeCategory = new CategorySocialActionTypeEntity();
-                typeCategory.setCategoryEntity(categoryEntity);
-                typeCategory.setSocialActionEntity(socialCreated);
-                socialCreated.getCategorySocialActionTypeEntities().add(typeCategory);
+        if(forCategoryTypeIds != null) {
+            for (UUID categoryId : forCategoryTypeIds) {
+                CategoryEntity categoryEntity = categoryRepository.findById(categoryId);
+                if (categoryEntity != null) {
+                    CategorySocialActionTypeEntity typeCategory = new CategorySocialActionTypeEntity();
+                    typeCategory.setCategoryEntity(categoryEntity);
+                    typeCategory.setSocialActionEntity(socialCreated);
+                    socialCreated.getCategorySocialActionTypeEntities().add(typeCategory);
+                }
             }
         }
-        for (UUID categoryId : forCategoryLevelIds) {
-            CategoryEntity categoryEntity = categoryRepository.findById(categoryId);
-            if (categoryEntity != null) {
-                CategorySocialActionLevelEntity levelCategory = new CategorySocialActionLevelEntity();
-                levelCategory.setCategoryEntity(categoryEntity);
-                levelCategory.setSocialActionEntity(socialCreated);
-                socialCreated.getCategorySocialActionLevelEntities().add(levelCategory);
+        if(forCategoryLevelIds != null) {
+            for (UUID categoryId : forCategoryLevelIds) {
+                CategoryEntity categoryEntity = categoryRepository.findById(categoryId);
+                if (categoryEntity != null) {
+                    CategorySocialActionLevelEntity levelCategory = new CategorySocialActionLevelEntity();
+                    levelCategory.setCategoryEntity(categoryEntity);
+                    levelCategory.setSocialActionEntity(socialCreated);
+                    socialCreated.getCategorySocialActionLevelEntities().add(levelCategory);
+                }
             }
         }
         // TODO:  ongId = findOneRandom("ong");

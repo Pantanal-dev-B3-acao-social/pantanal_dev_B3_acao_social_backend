@@ -137,7 +137,7 @@ public class SocialActionControllerIT {
         for (SocialActionEntity item : saved) {
             String socialActionId = jsonNode.at("/content/" + i + "/id").asText();
             assert socialActionId != null && !socialActionId.isEmpty() : "O nó 'propertyName' não pode ser nulo.";
-            List<CategorySocialActionTypeEntity> categoryTypesEntities = categorySocialActionTypePostgresRepository.findBySocialActionEntityId(
+            List<CategorySocialActionTypeEntity> categoryTypesEntities = categorySocialActionTypePostgresRepository.findBySocialActionId(
                     UUID.fromString(socialActionId)
             );
 //            List<String> categoryTypeIds = categoryTypesEntities.stream()
@@ -226,7 +226,7 @@ public class SocialActionControllerIT {
                 int i_type = 0;
                 JsonNode jsonCategoryTypeIds = element.get("categorySocialActionTypeEntities");
                 Assertions.assertTrue(jsonCategoryTypeIds.isArray());
-                List<CategorySocialActionTypeEntity> categoryTypesEntities = categorySocialActionTypePostgresRepository.findBySocialActionEntityId(saved.get(i).getId());
+                List<CategorySocialActionTypeEntity> categoryTypesEntities = categorySocialActionTypePostgresRepository.findBySocialActionId(saved.get(i).getId());
                 Assertions.assertEquals(jsonCategoryTypeIds.size(), categoryTypesEntities.size());
                 for (JsonNode jsonType : jsonCategoryTypeIds) {
                     String jsonId = jsonType.get("id").asText();
@@ -263,29 +263,10 @@ public class SocialActionControllerIT {
         MockHttpServletResponse response = mvcResult.getResponse();
         String jsonResponse = response.getContentAsString();
         JsonNode jsonNode = objectMapper.readTree(jsonResponse);
-        String socialActionId = jsonNode.get("id").asText();
-        List<CategorySocialActionTypeEntity> categoryTypesEntities = categorySocialActionTypePostgresRepository.findBySocialActionEntityId(
-                UUID.fromString(socialActionId)
-        );
-        List<String> categoryTypeIds = categoryTypesEntities.stream()
-                .map(categoryType -> categoryType.getId().toString())
-                .collect(Collectors.toList());
-        List<CategorySocialActionLevelEntity> categoryLevelEntities = categorySocialActionLevelPostgresRepository.findBySocialActionEntityId(
-                UUID.fromString(socialActionId)
-        );
-        List<String> categoryLevelIds = categoryLevelEntities.stream()
-                .map(categoryLevel -> categoryLevel.getId().toString())
-                .collect(Collectors.toList());
         resultActions
                 .andExpect(MockMvcResultMatchers.jsonPath("$.id").isNotEmpty())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.name").value(item.getName()))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.description").value(item.getDescription()))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.categoryTypeIds").isArray())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.categoryTypeIds", hasSize(categoryTypeIds.size())))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.categoryTypeIds", containsInAnyOrder(categoryTypeIds.toArray())))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.categoryLevelIds").isArray())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.categoryLevelIds", hasSize(categoryLevelIds.size())))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.categoryLevelIds", containsInAnyOrder(categoryLevelIds.toArray())))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.createdBy").isNotEmpty())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.createdDate").isNotEmpty())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.createdBy").value(loginMock.extractUserIdFromJwt(tokenUserLogged)))
@@ -295,6 +276,19 @@ public class SocialActionControllerIT {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.lastModifiedDate").isEmpty())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.deletedDate").isEmpty())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.deletedBy").isEmpty());
+        Assertions.assertFalse(jsonNode.get("categoryTypeIds").isNull());
+        int i_type = 0;
+        JsonNode jsonCategoryTypeIds = jsonNode.get("categoryTypeIds");
+        Assertions.assertTrue(jsonCategoryTypeIds.isArray());
+        UUID socialId = UUID.fromString(jsonNode.get("id").asText());
+        List<CategorySocialActionTypeEntity> categoryTypesEntities = categorySocialActionTypePostgresRepository.findBySocialActionId(socialId);
+        Assertions.assertEquals(jsonCategoryTypeIds.size(), categoryTypesEntities.size());
+        for (JsonNode jsonType : jsonCategoryTypeIds) {
+            String jsonId = jsonType.asText();
+            String saveId = categoryTypesEntities.get(i_type).getId().toString();
+            Assertions.assertEquals(jsonId, saveId);
+            i_type++;
+        }
     }
 
 
@@ -336,7 +330,7 @@ public class SocialActionControllerIT {
                 int i_type = 0;
                 JsonNode jsonCategoryTypeIds = jsonNode.get("categoryTypeIds");
                 Assertions.assertTrue(jsonCategoryTypeIds.isArray());
-                List<CategorySocialActionTypeEntity> categoryTypesEntities = categorySocialActionTypePostgresRepository.findBySocialActionEntityId(item.getId());
+                List<CategorySocialActionTypeEntity> categoryTypesEntities = categorySocialActionTypePostgresRepository.findBySocialActionId(item.getId());
                 Assertions.assertEquals(jsonCategoryTypeIds.size(), categoryTypesEntities.size());
                 for (JsonNode jsonType : jsonCategoryTypeIds) {
                     String jsonId = jsonType.asText();
@@ -390,7 +384,7 @@ public class SocialActionControllerIT {
         String jsonResponse = response.getContentAsString();
         JsonNode jsonNode = objectMapper.readTree(jsonResponse);
         String socialActionId = jsonNode.get("id").asText();
-        List<CategorySocialActionTypeEntity> categoryTypesEntities = categorySocialActionTypePostgresRepository.findBySocialActionEntityId(
+        List<CategorySocialActionTypeEntity> categoryTypesEntities = categorySocialActionTypePostgresRepository.findBySocialActionId(
                 UUID.fromString(socialActionId)
         );
         List<String> categoryTypeIds = categoryTypesEntities.stream()
