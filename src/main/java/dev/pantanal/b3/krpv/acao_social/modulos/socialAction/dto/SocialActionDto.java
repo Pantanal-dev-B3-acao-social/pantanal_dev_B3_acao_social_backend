@@ -20,6 +20,7 @@ public record SocialActionDto (
         @NotNull
         @NotBlank
         long version,
-        List<CategorySocialActionTypeEntity> categorySocialActionTypeEntities
+        List<CategorySocialActionTypeEntity> categorySocialActionTypeEntities,
+        List<CategorySocialActionTypeEntity> categorySocialActionLevelEntities
 
 ) {}

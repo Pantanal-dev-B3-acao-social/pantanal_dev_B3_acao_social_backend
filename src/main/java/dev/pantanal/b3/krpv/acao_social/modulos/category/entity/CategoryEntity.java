@@ -82,6 +82,10 @@ public class CategoryEntity {
     @ToString.Exclude
     private List<CategorySocialActionTypeEntity> categorySocialActionTypeEntities = new ArrayList<>();
 
+    @OneToMany(mappedBy = "categoryEntity", orphanRemoval = true, cascade = CascadeType.DETACH , fetch = FetchType.LAZY)
+    @ToString.Exclude
+    private List<CategorySocialActionLevelEntity> categorySocialActionLevelEntities = new ArrayList<>();
+
     @NotNull
     @ManyToOne
     @JoinColumn(name = "category_group_id")

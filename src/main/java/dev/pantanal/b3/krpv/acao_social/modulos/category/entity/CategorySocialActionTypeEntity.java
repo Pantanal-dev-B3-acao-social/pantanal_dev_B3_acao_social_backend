@@ -31,7 +31,7 @@ public class CategorySocialActionTypeEntity {
 
     @Valid
     @Version
-    private Long version;
+    private Long version = 1L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

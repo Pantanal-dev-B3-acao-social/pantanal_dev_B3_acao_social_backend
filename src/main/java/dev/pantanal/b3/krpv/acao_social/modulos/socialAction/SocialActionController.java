@@ -65,9 +65,11 @@ public class SocialActionController {
     public ResponseEntity<SocialActionResponseDto> findOne(@PathVariable UUID id) {
         SocialActionEntity entity = service.findById(id);
         List<UUID> categoryTypeIds = entity.getCategorySocialActionTypeEntities().stream()
-                .map(category -> category.getId())
+                .map(type -> type.getId())
                 .collect(Collectors.toList());
-        List<UUID> categoryLevelIds = null;
+        List<UUID> categoryLevelIds = entity.getCategorySocialActionLevelEntities().stream()
+                .map(level -> level.getId())
+                .collect(Collectors.toList());
         SocialActionResponseDto response = new SocialActionResponseDto(
                 entity.getId(),
                 entity.getName(),
@@ -80,7 +82,6 @@ public class SocialActionController {
                 entity.getDeletedBy(),
                 categoryTypeIds,
                 categoryLevelIds
-
         );
         return new ResponseEntity<SocialActionResponseDto>(response, HttpStatus.OK);
     }
@@ -100,9 +101,11 @@ public class SocialActionController {
     public ResponseEntity<SocialActionResponseDto> create(@RequestBody @Valid SocialActionCreateDto request) {
         SocialActionEntity entity = service.create(request);
         List<UUID> categoryTypeIds = entity.getCategorySocialActionTypeEntities().stream()
-                .map(category -> category.getId())
+                .map(type -> type.getId())
                 .collect(Collectors.toList());
-        List<UUID> categoryLevelIds = null;
+        List<UUID> categoryLevelIds = entity.getCategorySocialActionLevelEntities().stream()
+                .map(level -> level.getId())
+                .collect(Collectors.toList());
         SocialActionResponseDto response = new SocialActionResponseDto(
                 entity.getId(),
                 entity.getName(),
@@ -133,9 +136,11 @@ public class SocialActionController {
     public ResponseEntity<SocialActionResponseDto> update(@PathVariable UUID id, @Valid @RequestBody SocialActionUpdateDto request) {
         SocialActionEntity entity = service.update(id, request);
         List<UUID> categoryTypeIds = entity.getCategorySocialActionTypeEntities().stream()
-                .map(category -> category.getId())
+                .map(type -> type.getId())
                 .collect(Collectors.toList());
-        List<UUID> categoryLevelIds = null;
+        List<UUID> categoryLevelIds = entity.getCategorySocialActionLevelEntities().stream()
+                .map(level -> level.getId())
+                .collect(Collectors.toList());
         SocialActionResponseDto response = new SocialActionResponseDto(
                 entity.getId(),
                 entity.getName(),
