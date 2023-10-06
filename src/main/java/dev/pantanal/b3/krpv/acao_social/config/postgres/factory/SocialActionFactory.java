@@ -2,19 +2,16 @@ package dev.pantanal.b3.krpv.acao_social.config.postgres.factory;
 
 import com.github.javafaker.Faker;
 import dev.pantanal.b3.krpv.acao_social.modulos.category.entity.CategoryEntity;
+import dev.pantanal.b3.krpv.acao_social.modulos.category.entity.CategorySocialActionLevelEntity;
 import dev.pantanal.b3.krpv.acao_social.modulos.category.entity.CategorySocialActionTypeEntity;
-import dev.pantanal.b3.krpv.acao_social.modulos.category.modules.categoryGroup.CategoryGroupEntity;
 import dev.pantanal.b3.krpv.acao_social.modulos.category.repository.CategoryRepository;
-import dev.pantanal.b3.krpv.acao_social.modulos.category.repository.CategorySocialActionTypePostgresRepository;
 import dev.pantanal.b3.krpv.acao_social.modulos.socialAction.SocialActionEntity;
-import dev.pantanal.b3.krpv.acao_social.modulos.socialAction.dto.SocialActionDto;
 import dev.pantanal.b3.krpv.acao_social.modulos.socialAction.repository.SocialActionRepository;
 import jakarta.persistence.EntityManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Component;
 import org.springframework.jdbc.core.JdbcTemplate;
-import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -34,26 +31,34 @@ public class SocialActionFactory {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public SocialActionEntity makeFakeEntity(List<UUID> forCategoryTypeIds,  List<UUID> forCategoryLevelIds) {
+    public SocialActionEntity makeFakeEntity(List<UUID> forCategoryTypeIds, List<UUID> forCategoryLevelIds) {
         SocialActionEntity socialCreated = new SocialActionEntity();
         socialCreated.setVersion(1L);
         socialCreated.setName(faker.name().fullName());
         socialCreated.setDescription(faker.lorem().sentence());
-        for (UUID categoryId : forCategoryTypeIds) {
-            CategoryEntity categoryEntity = categoryRepository.findById(categoryId);
-            if (categoryEntity != null) {
-                CategorySocialActionTypeEntity typeCategory = new CategorySocialActionTypeEntity();
-                typeCategory.setCategoryEntity(categoryEntity);
-                typeCategory.setSocialActionEntity(socialCreated);
-                socialCreated.getCategorySocialActionTypeEntities().add(typeCategory);
+        if(forCategoryTypeIds != null) {
+            for (UUID categoryId : forCategoryTypeIds) {
+                CategoryEntity categoryEntity = categoryRepository.findById(categoryId);
+                if (categoryEntity != null) {
+                    CategorySocialActionTypeEntity typeCategory = new CategorySocialActionTypeEntity();
+                    typeCategory.setCategoryEntity(categoryEntity);
+                    typeCategory.setSocialActionEntity(socialCreated);
+                    socialCreated.getCategorySocialActionTypeEntities().add(typeCategory);
+                }
             }
         }
-// TODO: implementar LEVEL
-        //        socialCreated.setCategorySocialActionLevelEntities(forCategoryLevelIds);
-                // SessionEntity
-                // string ongId = findOneRandom("ong");
-                // string levelId = findOneRandom("category_project_level");
-                // string typeId = findOneRandom("category_project_type");
+        if(forCategoryLevelIds != null) {
+            for (UUID categoryId : forCategoryLevelIds) {
+                CategoryEntity categoryEntity = categoryRepository.findById(categoryId);
+                if (categoryEntity != null) {
+                    CategorySocialActionLevelEntity levelCategory = new CategorySocialActionLevelEntity();
+                    levelCategory.setCategoryEntity(categoryEntity);
+                    levelCategory.setSocialActionEntity(socialCreated);
+                    socialCreated.getCategorySocialActionLevelEntities().add(levelCategory);
+                }
+            }
+        }
+        // TODO:  ongId = findOneRandom("ong");
         return socialCreated;
     }
 

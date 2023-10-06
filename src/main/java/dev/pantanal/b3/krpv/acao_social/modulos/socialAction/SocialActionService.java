@@ -2,8 +2,10 @@ package dev.pantanal.b3.krpv.acao_social.modulos.socialAction;
 
 import com.querydsl.core.types.dsl.BooleanExpression;
 import dev.pantanal.b3.krpv.acao_social.modulos.category.entity.CategoryEntity;
+import dev.pantanal.b3.krpv.acao_social.modulos.category.entity.CategorySocialActionLevelEntity;
 import dev.pantanal.b3.krpv.acao_social.modulos.category.entity.CategorySocialActionTypeEntity;
 import dev.pantanal.b3.krpv.acao_social.modulos.category.repository.CategoryRepository;
+import dev.pantanal.b3.krpv.acao_social.modulos.category.repository.CategorySocialActionLevelPostgresRepository;
 import dev.pantanal.b3.krpv.acao_social.modulos.category.repository.CategorySocialActionTypePostgresRepository;
 import dev.pantanal.b3.krpv.acao_social.modulos.socialAction.repository.SocialActionPredicates;
 import org.springframework.stereotype.Service;
@@ -31,24 +33,43 @@ public class SocialActionService {
     private SocialActionPredicates socialActionPredicates;
     @Autowired
     private CategorySocialActionTypePostgresRepository categorySocialActionTypePostgresRepository;
+    @Autowired
+    private CategorySocialActionLevelPostgresRepository categorySocialActionLevelPostgresRepository;
 
     public SocialActionEntity create(SocialActionCreateDto dataRequest) {
         SocialActionEntity toSave = new SocialActionEntity();
         toSave.setName(dataRequest.name());
         toSave.setDescription(dataRequest.description());
+        saveSocialActionType(dataRequest.categoryTypeIds(), toSave);
+        saveSocialActionLevel(dataRequest.categoryLevelIds(), toSave);
         SocialActionEntity socialActionSaved = socialActionRepository.save(toSave);
-        for (UUID categoryId : dataRequest.categoryTypeIds()) {
+        return socialActionSaved;
+    }
+
+    private void saveSocialActionType(List<UUID> categoryTypeIds, SocialActionEntity socialActionSaved) {
+        for (UUID categoryId : categoryTypeIds) {
             CategoryEntity categoryEntity = categoryRepository.findById(categoryId);
             if (categoryEntity != null) {
                 CategorySocialActionTypeEntity typeCategory = new CategorySocialActionTypeEntity();
                 typeCategory.setCategoryEntity(categoryEntity);
                 typeCategory.setSocialActionEntity(socialActionSaved);
-                categorySocialActionTypePostgresRepository.save(typeCategory);
-//                typeCategory.setSocialActionEntity(toSave);
+//                categorySocialActionTypePostgresRepository.save(typeCategory);
                 socialActionSaved.getCategorySocialActionTypeEntities().add(typeCategory);
             }
         }
-        return socialActionSaved;
+    }
+
+    private void saveSocialActionLevel(List<UUID> categoryLevelIds, SocialActionEntity socialActionSaved) {
+        for (UUID categoryId : categoryLevelIds) {
+            CategoryEntity categoryEntity = categoryRepository.findById(categoryId);
+            if (categoryEntity != null) {
+                CategorySocialActionLevelEntity typeCategory = new CategorySocialActionLevelEntity();
+                typeCategory.setCategoryEntity(categoryEntity);
+                typeCategory.setSocialActionEntity(socialActionSaved);
+//                categorySocialActionLevelPostgresRepository.save(typeCategory);
+                socialActionSaved.getCategorySocialActionLevelEntities().add(typeCategory);
+            }
+        }
     }
 
     public void delete(UUID id) {

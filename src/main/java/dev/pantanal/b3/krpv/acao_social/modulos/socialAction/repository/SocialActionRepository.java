@@ -56,20 +56,6 @@ public class SocialActionRepository {
     public Page<SocialActionEntity> findAll(Pageable pageable, BooleanExpression predicate) {
         JPAQueryFactory queryFactory = new JPAQueryFactory(entityManager);
         QSocialActionEntity qEntity = QSocialActionEntity.socialActionEntity;
-        // TODO
-//        List<SocialActionEntity> results = queryFactory.select(
-//                        Projections.bean(
-//                                SocialActionEntity.class,
-//                                qEntity.id,
-//                                qEntity.name,
-//                                qEntity.description
-//                        )
-//        )
-//            .from(qEntity)
-//            .where(predicate)
-//            .offset(pageable.getOffset())
-//            .limit(pageable.getPageSize())
-//            .fetch();
         List<SocialActionEntity> results = queryFactory.selectFrom(qEntity)
                 .where(predicate)
                 .offset(pageable.getOffset())

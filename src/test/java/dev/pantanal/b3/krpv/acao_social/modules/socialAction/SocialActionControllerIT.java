@@ -6,7 +6,9 @@ import dev.pantanal.b3.krpv.acao_social.config.postgres.factory.CategoryFactory;
 import dev.pantanal.b3.krpv.acao_social.config.postgres.factory.CategoryGroupFactory;
 import dev.pantanal.b3.krpv.acao_social.config.postgres.factory.CategorySocialActionTypeFactory;
 import dev.pantanal.b3.krpv.acao_social.modulos.category.entity.CategoryEntity;
+import dev.pantanal.b3.krpv.acao_social.modulos.category.entity.CategorySocialActionLevelEntity;
 import dev.pantanal.b3.krpv.acao_social.modulos.category.entity.CategorySocialActionTypeEntity;
+import dev.pantanal.b3.krpv.acao_social.modulos.category.repository.CategorySocialActionLevelPostgresRepository;
 import dev.pantanal.b3.krpv.acao_social.modulos.category.repository.CategorySocialActionTypePostgresRepository;
 import dev.pantanal.b3.krpv.acao_social.utils.GenerateTokenUserForLogged;
 import dev.pantanal.b3.krpv.acao_social.config.postgres.factory.SocialActionFactory;
@@ -74,6 +76,8 @@ public class SocialActionControllerIT {
     ObjectMapper objectMapper;
     @Autowired
     CategorySocialActionTypePostgresRepository categorySocialActionTypePostgresRepository;
+    @Autowired
+    CategorySocialActionLevelPostgresRepository categorySocialActionLevelPostgresRepository;
     List<UUID> forCategoryTypeIds;
     List<UUID> forCategoryLevelIds;
 
@@ -100,7 +104,6 @@ public class SocialActionControllerIT {
         this.forCategoryLevelIds = this.categoriesLevel.stream()
                 .map(category -> category.getId())
                 .collect(Collectors.toList());
-
         // formatar data hora
         this.formatter = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
         // mapper
@@ -136,23 +139,24 @@ public class SocialActionControllerIT {
         for (SocialActionEntity item : saved) {
             String socialActionId = jsonNode.at("/content/" + i + "/id").asText();
             assert socialActionId != null && !socialActionId.isEmpty() : "O nó 'propertyName' não pode ser nulo.";
-            List<CategorySocialActionTypeEntity> categoryTypesEntities = categorySocialActionTypePostgresRepository.findBySocialActionEntityId(
+            List<CategorySocialActionTypeEntity> categoryTypesEntities = categorySocialActionTypePostgresRepository.findBySocialActionId(
                     UUID.fromString(socialActionId)
             );
 //            List<String> categoryTypeIds = categoryTypesEntities.stream()
 //                    .map(category -> category.getId().toString())
 //                    .collect(Collectors.toList());
+            List<CategorySocialActionLevelEntity> categoryLevelsEntities = categorySocialActionLevelPostgresRepository.findBySocialActionEntityId(
+                    UUID.fromString(socialActionId)
+            );
             resultActions
                     .andExpect(MockMvcResultMatchers.jsonPath("$.content[" + i + "].id").value(item.getId().toString()))
                     .andExpect(MockMvcResultMatchers.jsonPath("$.content[" + i + "].name").value(item.getName()))
                     .andExpect(MockMvcResultMatchers.jsonPath("$.content[" + i + "].description").value(item.getDescription()))
                     .andExpect(MockMvcResultMatchers.jsonPath("$.content[" + i + "].categorySocialActionTypeEntities").isArray())
-// TODO: como testar categorySocialActionTypeEntities ?
+// TODO: como testar categorySocialActionTypeEntities e CategorySocialActionLevelEntity?
 //                    .andExpect(MockMvcResultMatchers.jsonPath("$.content[" + i + "].categorySocialActionTypeEntities", hasSize(categoryTypeIds.size())))
 //                    .andExpect(MockMvcResultMatchers.jsonPath("$.content[" + i + "].categorySocialActionTypeEntities", containsInAnyOrder(categoryTypeIds.toArray())))
 //                    .andExpect(MockMvcResultMatchers.jsonPath("$.content[" + i + "].categorySocialActionTypeEntities").value(categoryTypeIds))
-                    // TODO: criar relacionamento
-//                    .andExpect(MockMvcResultMatchers.jsonPath("$.content[" + i + "].categorySocialActionLevelEntities").value(categoryLevelIds))
                     .andExpect(MockMvcResultMatchers.jsonPath("$.content[" + i + "].createdBy").isNotEmpty())
                     .andExpect(MockMvcResultMatchers.jsonPath("$.content[" + i + "].createdDate").isNotEmpty())
                     .andExpect(MockMvcResultMatchers.jsonPath("$.content[" + i + "].createdBy").value(item.getCreatedBy().toString()))
@@ -201,36 +205,41 @@ public class SocialActionControllerIT {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.content").isArray())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.content", hasSize(1)));
         int i = 0;
-        for (SocialActionEntity item : saved) {
-            List<CategorySocialActionTypeEntity> categoryTypesEntities = categorySocialActionTypePostgresRepository.findBySocialActionEntityId(item.getId());
-            List<String> categoryTypeIds = item.getCategorySocialActionTypeEntities().stream()
-                    .map(categoryLevel -> categoryLevel.getId().toString())
-                    .collect(Collectors.toList());
-            List<UUID> categoryLevelIds = null;
-            resultActions
-                    .andExpect(MockMvcResultMatchers.jsonPath("$.content[" + i + "].id").value(item.getId().toString()))
-                    .andExpect(MockMvcResultMatchers.jsonPath("$.content[" + i + "].name").value(item.getName()))
-                    .andExpect(MockMvcResultMatchers.jsonPath("$.content[" + i + "].description").value(item.getDescription()))
-//                    .andExpect(MockMvcResultMatchers.jsonPath("$.content[" + i + "].categoryTypeIds").isArray())
-//                    .andExpect(MockMvcResultMatchers.jsonPath("$.content[" + i + "].categoryTypeIds", hasSize(categoryTypeIds.size()) ))
-//                    .andExpect(MockMvcResultMatchers.jsonPath("$.content[" + i + "].categoryTypeIds", containsInAnyOrder(categoryTypeIds.toArray())))
-//                    .andExpect(MockMvcResultMatchers.jsonPath("$.content[" + i + "].categoryLevelIds").value(categoryLevelIds))
-                    .andExpect(MockMvcResultMatchers.jsonPath("$.content[" + i + "].createdBy").isNotEmpty())
-                    .andExpect(MockMvcResultMatchers.jsonPath("$.content[" + i + "].createdDate").isNotEmpty())
-                    .andExpect(MockMvcResultMatchers.jsonPath("$.content[" + i + "].createdBy").value(item.getCreatedBy().toString()))
-                    .andExpect(MockMvcResultMatchers.jsonPath("$.content[" + i + "].lastModifiedBy").value(item.getLastModifiedBy() != null? item.getLastModifiedBy().toString() : null))
-                    .andExpect(MockMvcResultMatchers.jsonPath("$.content[" + i + "].createdDate").value(item.getCreatedDate().format(formatter)))
-                    .andExpect(MockMvcResultMatchers.jsonPath("$.content[" + i + "].lastModifiedDate").value(item.getLastModifiedDate() != null ? item.getLastModifiedDate().format(formatter) : null))
-                    .andExpect(MockMvcResultMatchers.jsonPath("$.content[" + i + "].deletedDate").isEmpty())
-                    .andExpect(MockMvcResultMatchers.jsonPath("$.content[" + i + "].deletedBy").isEmpty());
-
-//            Assert.assertEquals(categoryTypesEntities.get(i).getId(), item.getId());
-            i++;
-            if (i == pageSize){
-                break;
+        JsonNode contentArray = jsonNode.get("content");
+        if (contentArray.isArray()) {
+            for (JsonNode element : contentArray) {
+                Assertions.assertEquals(element.get("id").asText(), saved.get(i).getId().toString());
+                Assertions.assertEquals(element.get("name").asText(), saved.get(i).getName());
+                Assertions.assertEquals(element.get("description").asText(), saved.get(i).getDescription());
+                Assertions.assertFalse(element.get("createdBy").asText().isEmpty());
+                Assertions.assertFalse(element.get("createdDate").asText().isEmpty());
+                Assertions.assertEquals(element.get("createdBy").asText(), saved.get(i).getCreatedBy().toString());
+                Assertions.assertEquals(element.get("createdDate").asText(), saved.get(i).getCreatedDate().format(formatter));
+                Assertions.assertTrue(element.get("deletedDate").isNull());
+                Assertions.assertTrue(element.get("deletedBy").isNull());
+                JsonNode jsonLastModifiedBy = element.get("lastModifiedBy");
+                Assertions.assertEquals(jsonLastModifiedBy.isNull() ? null : jsonLastModifiedBy.asText(),
+                        saved.get(i).getLastModifiedBy() == null  ? null : saved.get(i).getLastModifiedBy().toString()
+                );
+                JsonNode jsonLastModifiedDate = element.get("lastModifiedDate");
+                Assertions.assertEquals(jsonLastModifiedDate.isNull() ? null : jsonLastModifiedDate.asText(),
+                        saved.get(i).getLastModifiedDate() == null ? null : saved.get(i).getLastModifiedDate().format(formatter)
+                );
+                Assertions.assertFalse(element.get("categorySocialActionTypeEntities").isEmpty());
+                int i_type = 0;
+                JsonNode jsonCategoryTypeIds = element.get("categorySocialActionTypeEntities");
+                Assertions.assertTrue(jsonCategoryTypeIds.isArray());
+                List<CategorySocialActionTypeEntity> categoryTypesEntities = categorySocialActionTypePostgresRepository.findBySocialActionId(saved.get(i).getId());
+                Assertions.assertEquals(jsonCategoryTypeIds.size(), categoryTypesEntities.size());
+                for (JsonNode jsonType : jsonCategoryTypeIds) {
+                    String jsonId = jsonType.get("id").asText();
+                    String saveId = categoryTypesEntities.get(i_type).getId().toString();
+                    Assertions.assertEquals(jsonId, saveId);
+                    i_type++;
+                }
+                i++;
             }
         }
-
     }
 
     @Test
@@ -238,14 +247,12 @@ public class SocialActionControllerIT {
     void saveOneSocialAction() throws Exception {
         // Arrange (Organizar)
         SocialActionEntity item = socialActionFactory.makeFakeEntity(new ArrayList<UUID>(), new ArrayList<UUID>());
-        List<UUID> forCategoryTypeIds = categoriesType.stream()
-                .map(category -> category.getId())
-                .collect(Collectors.toList());
         Map<String, Object> makeBody = new HashMap<>();
         makeBody.put("name", item.getName());
         makeBody.put("description", item.getDescription());
         makeBody.put("version", item.getVersion());
-        makeBody.put("categoryTypeIds", forCategoryTypeIds);
+        makeBody.put("categoryTypeIds", forCategoryTypeIds.subList(0, forCategoryTypeIds.size() / 2));
+        makeBody.put("categoryLevelIds", forCategoryLevelIds.subList(0, forCategoryLevelIds.size() / 2));
         String jsonRequest = objectMapper.writeValueAsString(makeBody);
         // Act (ação)
         ResultActions resultActions = mockMvc.perform(
@@ -259,22 +266,10 @@ public class SocialActionControllerIT {
         MockHttpServletResponse response = mvcResult.getResponse();
         String jsonResponse = response.getContentAsString();
         JsonNode jsonNode = objectMapper.readTree(jsonResponse);
-        String socialActionId = jsonNode.get("id").asText();
-        List<CategorySocialActionTypeEntity> categoryTypesEntities = categorySocialActionTypePostgresRepository.findBySocialActionEntityId(
-                UUID.fromString(socialActionId)
-        );
-        List<String> categoryTypeIds = categoryTypesEntities.stream()
-                .map(categoryLevel -> categoryLevel.getId().toString())
-                .collect(Collectors.toList());
-        List<UUID> categoryLevelIds = null;
         resultActions
                 .andExpect(MockMvcResultMatchers.jsonPath("$.id").isNotEmpty())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.name").value(item.getName()))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.description").value(item.getDescription()))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.categoryTypeIds").isArray())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.categoryTypeIds", hasSize(categoryTypeIds.size())))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.categoryTypeIds", containsInAnyOrder(categoryTypeIds.toArray())))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.categoryLevelIds").value(categoryLevelIds))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.createdBy").isNotEmpty())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.createdDate").isNotEmpty())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.createdBy").value(loginMock.extractUserIdFromJwt(tokenUserLogged)))
@@ -284,7 +279,19 @@ public class SocialActionControllerIT {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.lastModifiedDate").isEmpty())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.deletedDate").isEmpty())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.deletedBy").isEmpty());
-//        testar groupCategory
+        Assertions.assertFalse(jsonNode.get("categoryTypeIds").isNull());
+        int i_type = 0;
+        JsonNode jsonCategoryTypeIds = jsonNode.get("categoryTypeIds");
+        Assertions.assertTrue(jsonCategoryTypeIds.isArray());
+        UUID socialId = UUID.fromString(jsonNode.get("id").asText());
+        List<CategorySocialActionTypeEntity> categoryTypesEntities = categorySocialActionTypePostgresRepository.findBySocialActionId(socialId);
+        Assertions.assertEquals(jsonCategoryTypeIds.size(), categoryTypesEntities.size());
+        for (JsonNode jsonType : jsonCategoryTypeIds) {
+            String jsonId = jsonType.asText();
+            String saveId = categoryTypesEntities.get(i_type).getId().toString();
+            Assertions.assertEquals(jsonId, saveId);
+            i_type++;
+        }
     }
 
 
@@ -304,37 +311,36 @@ public class SocialActionControllerIT {
         MockHttpServletResponse response = mvcResult.getResponse();
         String jsonResponse = response.getContentAsString();
         JsonNode jsonNode = objectMapper.readTree(jsonResponse);
-        String socialActionId = jsonNode.get("id").asText();
-        List<CategorySocialActionTypeEntity> categoryTypesEntities = categorySocialActionTypePostgresRepository.findBySocialActionEntityId(
-                UUID.fromString(socialActionId)
-        );
-        List<String> categoryTypeIds = categoryTypesEntities.stream()
-                .map(categoryLevel -> categoryLevel.getId().toString())
-                .collect(Collectors.toList());
-        List<UUID> categoryLevelIds = null;
-        resultActions
-                .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.id").value(item.getId().toString()))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.name").value(item.getName()))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.description").value(item.getDescription()))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.categoryTypeIds").isArray())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.categoryTypeIds", hasSize(categoryTypeIds.size())))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.categoryTypeIds", containsInAnyOrder(categoryTypeIds.toArray())))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.categoryLevelIds").value(categoryLevelIds))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.createdBy").isNotEmpty())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.createdDate").isNotEmpty())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.createdBy").value(item.getCreatedBy().toString()))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.createdDate").value(item.getCreatedDate().format(this.formatter)))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.lastModifiedBy").value(
-                        item.getLastModifiedBy() == null  ?
-                                null : item.getLastModifiedBy().toString())
-                )
-                .andExpect(MockMvcResultMatchers.jsonPath("$.lastModifiedDate").value(
-                        item.getLastModifiedDate() == null ?
-                                null : item.getLastModifiedDate().format(formatter))
-                )
-                .andExpect(MockMvcResultMatchers.jsonPath("$.deletedDate").isEmpty())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.deletedBy").isEmpty());
+        resultActions.andExpect(MockMvcResultMatchers.status().isOk());
+        Assertions.assertEquals(jsonNode.get("id").asText(), item.getId().toString());
+                Assertions.assertEquals(jsonNode.get("name").asText(), item.getName());
+                Assertions.assertEquals(jsonNode.get("description").asText(), item.getDescription());
+                Assertions.assertFalse(jsonNode.get("createdBy").asText().isEmpty());
+                Assertions.assertFalse(jsonNode.get("createdDate").asText().isEmpty());
+                Assertions.assertEquals(jsonNode.get("createdBy").asText(), item.getCreatedBy().toString());
+                Assertions.assertEquals(jsonNode.get("createdDate").asText(), item.getCreatedDate().format(formatter));
+                Assertions.assertTrue(jsonNode.get("deletedDate").isNull());
+                Assertions.assertTrue(jsonNode.get("deletedBy").isNull());
+                JsonNode jsonLastModifiedBy = jsonNode.get("lastModifiedBy");
+                Assertions.assertEquals(jsonLastModifiedBy.isNull() ? null : jsonLastModifiedBy.asText(),
+                        item.getLastModifiedBy() == null  ? null : item.getLastModifiedBy().toString()
+                );
+                JsonNode jsonLastModifiedDate = jsonNode.get("lastModifiedDate");
+                Assertions.assertEquals(jsonLastModifiedDate.isNull() ? null : jsonLastModifiedDate.asText(),
+                        item.getLastModifiedDate() == null ? null : item.getLastModifiedDate().format(formatter)
+                );
+                Assertions.assertFalse(jsonNode.get("categoryTypeIds").isNull());
+                int i_type = 0;
+                JsonNode jsonCategoryTypeIds = jsonNode.get("categoryTypeIds");
+                Assertions.assertTrue(jsonCategoryTypeIds.isArray());
+                List<CategorySocialActionTypeEntity> categoryTypesEntities = categorySocialActionTypePostgresRepository.findBySocialActionId(item.getId());
+                Assertions.assertEquals(jsonCategoryTypeIds.size(), categoryTypesEntities.size());
+                for (JsonNode jsonType : jsonCategoryTypeIds) {
+                    String jsonId = jsonType.asText();
+                    String saveId = categoryTypesEntities.get(i_type).getId().toString();
+                    Assertions.assertEquals(jsonId, saveId);
+                    i_type++;
+                }
     }
 
     @Test
@@ -360,15 +366,13 @@ public class SocialActionControllerIT {
     void updateSocialAction() throws Exception {
         // Arrange (Organizar)
         SocialActionEntity item = socialActionFactory.insertOne(socialActionFactory.makeFakeEntity(forCategoryTypeIds, forCategoryLevelIds));
-        int halfSize = forCategoryTypeIds.size() / 2;
-        List<UUID> forUpdateCategoryTypeIds = new ArrayList<>(forCategoryTypeIds.subList(0, halfSize));
         // Modifica alguns dados da ação social
-
         Map<String, Object> makeBody = new HashMap<>();
         makeBody.put("name", item.getName() + "_ATUALIZADO");
         makeBody.put("description", item.getDescription() + "_ATUALIZADO");
         makeBody.put("version", item.getVersion());
-        makeBody.put("categoryTypeIds", forUpdateCategoryTypeIds);
+        makeBody.put("categoryTypeIds", forCategoryTypeIds.subList(0, forCategoryTypeIds.size() / 2));
+        makeBody.put("categoryLevelIds", forCategoryLevelIds.subList(0, forCategoryLevelIds.size() / 2));
         String jsonRequest = objectMapper.writeValueAsString(makeBody);
         // Act (ação)
         ResultActions resultActions = mockMvc.perform(
@@ -383,13 +387,18 @@ public class SocialActionControllerIT {
         String jsonResponse = response.getContentAsString();
         JsonNode jsonNode = objectMapper.readTree(jsonResponse);
         String socialActionId = jsonNode.get("id").asText();
-        List<CategorySocialActionTypeEntity> categoryTypesEntities = categorySocialActionTypePostgresRepository.findBySocialActionEntityId(
+        List<CategorySocialActionTypeEntity> categoryTypesEntities = categorySocialActionTypePostgresRepository.findBySocialActionId(
                 UUID.fromString(socialActionId)
         );
         List<String> categoryTypeIds = categoryTypesEntities.stream()
+                .map(categoryType -> categoryType.getId().toString())
+                .collect(Collectors.toList());
+        List<CategorySocialActionLevelEntity> categoryLevelsEntities = categorySocialActionLevelPostgresRepository.findBySocialActionEntityId(
+                UUID.fromString(socialActionId)
+        );
+        List<String> categoryLevelIds = categoryLevelsEntities.stream()
                 .map(categoryLevel -> categoryLevel.getId().toString())
                 .collect(Collectors.toList());
-        List<UUID> categoryLevelIds = null;
         resultActions
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.id").value(item.getId().toString()))
@@ -398,7 +407,9 @@ public class SocialActionControllerIT {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.categoryTypeIds").isArray())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.categoryTypeIds", hasSize(categoryTypeIds.size())))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.categoryTypeIds", containsInAnyOrder(categoryTypeIds.toArray())))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.categoryLevelIds").value(categoryLevelIds))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.categoryLevelIds").isArray())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.categoryLevelIds", hasSize(categoryLevelIds.size())))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.categoryLevelIds", containsInAnyOrder(categoryLevelIds.toArray())))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.createdBy").isNotEmpty())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.createdDate").isNotEmpty())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.createdBy").value(item.getCreatedBy().toString()))
