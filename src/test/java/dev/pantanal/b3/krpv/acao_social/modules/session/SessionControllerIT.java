@@ -53,8 +53,8 @@ public class SessionControllerIT {
     MockMvc mockMvc;
     @Autowired
     SessionPostgresRepository sessionPostgresRepository;
-    @Autowired
-    ObjectMapper mapper;
+//    @Autowired
+//    ObjectMapper mapper;
     @Autowired
     SessionRepository sessionRepository;
     private String tokenUserLogged;
@@ -88,10 +88,10 @@ public class SessionControllerIT {
         // SOCIAL ACTION
         List<CategoryEntity> categoriesType = categoryFactory.makeFakeByGroup(2, "social action type", "grupo de categorias para usar no TIPO de ação social");
         List<CategoryEntity> categoriesLevel = categoryFactory.makeFakeByGroup(2, "social action level", "grupo de categorias para usar no NÍVEL de ação social");
-        List<SocialActionEntity> socialActionEntities = socialActionFactory.insertManyFull(3, categoriesType, categoriesLevel);this.formatter = DateTimeFormatter.ISO_LOCAL_DATE_TIME; // Formate o LocalDateTime esperado
+        List<SocialActionEntity> socialActionEntities = socialActionFactory.insertManyFull(3, categoriesType, categoriesLevel);
         List<CategoryEntity> categoryEntities = categoryFactory.makeFakeByGroup(2, "session", "grupo de categorias para usar na SESSÃO da ação social");
         // formatar data hora
-        this.formatter = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
+        this.formatter = DateTimeFormatter.ISO_LOCAL_DATE_TIME; // Formate o LocalDateTime esperado
         // mapper
         this.objectMapper = new ObjectMapper();
         this.objectMapper.registerModule(new JavaTimeModule());
