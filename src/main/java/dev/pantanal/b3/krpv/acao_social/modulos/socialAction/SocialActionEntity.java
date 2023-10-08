@@ -1,13 +1,16 @@
 package dev.pantanal.b3.krpv.acao_social.modulos.socialAction;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import dev.pantanal.b3.krpv.acao_social.config.audit.AuditListener;
+import dev.pantanal.b3.krpv.acao_social.modulos.category.entity.CategorySocialActionLevelEntity;
+import dev.pantanal.b3.krpv.acao_social.modulos.category.entity.CategorySocialActionTypeEntity;
+import dev.pantanal.b3.krpv.acao_social.modulos.session.SessionEntity;
 import jakarta.persistence.*;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotBlank;
+//import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
-import org.hibernate.envers.AuditTable;
-import org.hibernate.envers.Audited;
 import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedBy;
@@ -16,14 +19,15 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 
 import java.time.LocalDateTime;
-import java.util.Optional;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 @Table(name="social_action")
 @Entity(name="SocialAction")
-@AuditTable("z_aud_social_action")
 @EntityListeners(AuditListener.class)
-@Audited
+//@AuditTable("z_aud_social_action")
+//@Audited
 @Data
 @NoArgsConstructor
 @Builder
@@ -34,40 +38,61 @@ public class SocialActionEntity {
 
     @Valid
     @Version
-    private Long version;
+    private Long version = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(columnDefinition = "uuid")
     @NotNull
     private UUID id;
     @Column(nullable = false)
-    @NotBlank
+//    @NotBlank
     private String name;
     @Column(nullable = false)
-    @NotBlank
+//    @NotBlank
     private String description;
-    //@Column
-    //@NotBlank
-    //private String organizer;
 
     @CreatedBy
-    private String createdBy; // TODO: UUID
+    @Column(name = "created_by")
+    private UUID createdBy; // TODO: UUID
 
     @LastModifiedBy
-    private String lastModifiedBy; // TODO: UUID
+    @Column(name = "last_modified_by")
+    private UUID lastModifiedBy; // TODO: UUID
 
     @CreatedDate
+    @Column(name = "created_date")
     private LocalDateTime createdDate;
 
     @LastModifiedDate
+    @Column(name = "last_modified_date")
     private LocalDateTime lastModifiedDate;
 
     @Column(name = "deleted_date")
     private LocalDateTime deletedDate;
 
     @Column(name = "deleted_by")
-    private String deletedBy; // TODO: UUID
+    private UUID deletedBy; // TODO: UUID
 
+    /**
+     * mappedBy: o nome do atributo na tabela CategorySocialActionTypeEntity que faz referencia a esta tabela
+     * cascade = CascadeType.PERSIST faz com que se salvar SocialActionEntity passando uma entidade de CategorySocialActionTypeEntity ambas serão salvas juntas
+     * orphanRemoval = true faz com que SocialActionEntity é optional ter preenchido alguma CategorySocialActionTypeEntity
+     */
+//    @Optional
+    @OneToMany(mappedBy = "socialActionEntity", orphanRemoval = true, cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+//    @OneToMany(mappedBy = "socialActionEntity", orphanRemoval = true, cascade = CascadeType.DETACH , fetch = FetchType.LAZY)
+    @ToString.Exclude
+    @JsonIgnoreProperties("socialActionEntity")
+    private List<CategorySocialActionTypeEntity> categorySocialActionTypeEntities = new ArrayList<>();
+
+    @OneToMany(mappedBy = "socialActionEntity", orphanRemoval = true, cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @ToString.Exclude
+    @JsonIgnoreProperties("socialActionEntity")
+    private List<CategorySocialActionLevelEntity> categorySocialActionLevelEntities = new ArrayList<>();
+
+    @OneToMany(mappedBy = "socialAction", fetch = FetchType.LAZY /*, cascade = CascadeType.ALL */ )
+    @ToString.Exclude
+    private List<SessionEntity> sessionsEntities;
 
     @PrePersist
     protected void onCreate() {
@@ -75,7 +100,7 @@ public class SocialActionEntity {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication != null && authentication.isAuthenticated()) {
             String userId = authentication.getName();
-            this.createdBy = userId;
+            this.createdBy = UUID.fromString(userId);
         }
     }
 
@@ -85,7 +110,7 @@ public class SocialActionEntity {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication != null && authentication.isAuthenticated()) {
             String userId = authentication.getName();
-            this.lastModifiedBy = userId;
+            this.lastModifiedBy = UUID.fromString(userId);
         }
     }
 
@@ -95,7 +120,7 @@ public class SocialActionEntity {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication != null && authentication.isAuthenticated()) {
             String userId = authentication.getName();
-            this.deletedBy = userId;
+            this.deletedBy = UUID.fromString(userId);
         }
     }
 

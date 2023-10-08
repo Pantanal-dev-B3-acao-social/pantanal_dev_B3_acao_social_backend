@@ -12,21 +12,20 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.SortDefault;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.web.bind.annotation.*;
 import io.swagger.v3.oas.annotations.Operation;
 import static dev.pantanal.b3.krpv.acao_social.modulos.socialAction.SocialActionController.ROUTE_SOCIAL;
-import static dev.pantanal.b3.krpv.acao_social.utils.Utils.mapEntityPageIntoDtoPage;
-
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping(ROUTE_SOCIAL)
+@PreAuthorize("hasAnyRole('SOCIAL_ACTION')")
 public class SocialActionController {
 
     @Autowired
@@ -48,11 +47,10 @@ public class SocialActionController {
             @SortDefault(sort="name", direction = Sort.Direction.DESC) Sort sort,
             @Valid SocialActionParamsDto request
     ) {
-
         Pageable paging = PageRequest.of(page, size, sort);
-        Page<SocialActionEntity> response = service.findAll(paging, request);
-        //Page<SocialActionResponseDto> response = mapEntityPageIntoDtoPage(entities, SocialActionResponseDto.class);
-        return response; // TODO: verificar se vai converter certo
+        Page<SocialActionEntity> entities = service.findAll(paging, request);
+//        Page<SocialActionResponseDto> response = mapEntityPageIntoDtoPage(entities, SocialActionResponseDto.class);
+        return entities; // TODO: verificar se vai converter certo
     }
 
     @GetMapping("/{id}")
@@ -66,11 +64,24 @@ public class SocialActionController {
     })
     public ResponseEntity<SocialActionResponseDto> findOne(@PathVariable UUID id) {
         SocialActionEntity entity = service.findById(id);
+        List<UUID> categoryTypeIds = entity.getCategorySocialActionTypeEntities().stream()
+                .map(type -> type.getId())
+                .collect(Collectors.toList());
+        List<UUID> categoryLevelIds = entity.getCategorySocialActionLevelEntities().stream()
+                .map(level -> level.getId())
+                .collect(Collectors.toList());
         SocialActionResponseDto response = new SocialActionResponseDto(
                 entity.getId(),
                 entity.getName(),
                 entity.getDescription(),
-                entity.getVersion()
+                entity.getCreatedBy(),
+                entity.getLastModifiedBy(),
+                entity.getCreatedDate(),
+                entity.getLastModifiedDate(),
+                entity.getDeletedDate(),
+                entity.getDeletedBy(),
+                categoryTypeIds,
+                categoryLevelIds
         );
         return new ResponseEntity<SocialActionResponseDto>(response, HttpStatus.OK);
     }
@@ -87,14 +98,27 @@ public class SocialActionController {
             @ApiResponse(responseCode = "422", description = "Invalid request data"),
             @ApiResponse(responseCode = "500", description = "Error when creating social action"),
     })
-    public ResponseEntity<SocialActionCreateDto> create(@RequestBody @Valid SocialActionCreateDto request) {
+    public ResponseEntity<SocialActionResponseDto> create(@RequestBody @Valid SocialActionCreateDto request) {
         SocialActionEntity entity = service.create(request);
-        SocialActionCreateDto response = new SocialActionCreateDto(
+        List<UUID> categoryTypeIds = entity.getCategorySocialActionTypeEntities().stream()
+                .map(type -> type.getId())
+                .collect(Collectors.toList());
+        List<UUID> categoryLevelIds = entity.getCategorySocialActionLevelEntities().stream()
+                .map(level -> level.getId())
+                .collect(Collectors.toList());
+        SocialActionResponseDto response = new SocialActionResponseDto(
+                entity.getId(),
                 entity.getName(),
-                entity.getDescription()
-//                entity.getOrganizer()
+                entity.getDescription(),
+                entity.getCreatedBy(),
+                entity.getLastModifiedBy(),
+                entity.getCreatedDate(),
+                entity.getLastModifiedDate(),
+                entity.getDeletedDate(),
+                entity.getDeletedBy(),
+                categoryTypeIds,
+                categoryLevelIds
         );
-        // TODO: fazer um handle para gerar esse retorno
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
@@ -111,12 +135,24 @@ public class SocialActionController {
     })
     public ResponseEntity<SocialActionResponseDto> update(@PathVariable UUID id, @Valid @RequestBody SocialActionUpdateDto request) {
         SocialActionEntity entity = service.update(id, request);
+        List<UUID> categoryTypeIds = entity.getCategorySocialActionTypeEntities().stream()
+                .map(type -> type.getId())
+                .collect(Collectors.toList());
+        List<UUID> categoryLevelIds = entity.getCategorySocialActionLevelEntities().stream()
+                .map(level -> level.getId())
+                .collect(Collectors.toList());
         SocialActionResponseDto response = new SocialActionResponseDto(
                 entity.getId(),
                 entity.getName(),
                 entity.getDescription(),
-                entity.getVersion()
-//                entity.getOrganizer()
+                entity.getCreatedBy(),
+                entity.getLastModifiedBy(),
+                entity.getCreatedDate(),
+                entity.getLastModifiedDate(),
+                entity.getDeletedDate(),
+                entity.getDeletedBy(),
+                categoryTypeIds,
+                categoryLevelIds
         );
         return new ResponseEntity<>(response, HttpStatus.OK);
     }

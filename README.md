@@ -11,6 +11,25 @@
 - Staff são os voluntarios membros da equipe organizadora de uma ação social
 - o voluntario pode ir em qualquer session para trabalhar
 - a presença do voluntario na sessão deve ser registrada via CPF ou QR code
+- Categoria
+  - nivel da ação social
+  - tipo da ação social
+  - categoria da doação
+  - categoria da sessão
+  - categoria do investimento 
+  - categirua do recurso
+- Midia social
+  - midias sociais da ação social
+  - midias sociais da empresa
+  - midias sociais da ONG
+- Recursos
+  - recursos da sessão
+  - recursos da ação social
+  - recursos da ong
+  - recursos da empresa
+  - recursos doados
+  - recursos comprados com dinheiro de investimento da empresa
+  - recursos comprados com dinheiro de doação de pessoa fisica
 
 # Funcionalidades
 - Ação social
@@ -108,7 +127,7 @@ SPRING_PROFILES_ACTIVE=dev
 - podem existir algumas regras de negocio voltada para dados em outras cadamadas, principalmente validadores
 - como na camada de DTO, Entity e Migration
 - 
-### SSO
+### SSO (Single sign-on) Autenticação única
 - optamos por não implementar os serviços de autenticação e autorização
 - optemos por usar uma ferramenta de SSO, no caso o Keyclock
 - em nossa arquitetura, tercerizamos para o Keyclock gerencia tudo do usuário
@@ -194,5 +213,34 @@ $ sudo docker cp postgres_acao_social:/tmp/backup_keycloak.sql /home/kaio/Docume
   - https://medium.com/@helder.versatti/implementando-correlation-id-em-uma-aplica%C3%A7%C3%A3o-spring-c9c3a92c67e5
   - cada request feita, é criada um registro em formato json no STDOUT, com ID unico para cada request, e quem o usuario ID que fez esta request
   
+# Cargos e permissoes (Roles and Permission)
+- existem algumas tabelas no bd utilizadas para determinar o relacionamento ManyToMany, como por exemplo, doação, voluntario e presente,
+  - por exemplo "voluntario", deve ser uma tabela de junção/pivô para mapear que esta pessoa se voluntariou para participar de determinada ação social. Desta forma "voluntario" nao pode ser um cargo, pois quando uma pessoa se voluntaria é somente e exclusivamente para aquela ação social, e não automaticamente para todas.
+- mas em Cargos e Permissoes do Keyclock diz respeito das capacidades que user logado tem de executar ou não determinada ação, como por exemplo o cargo funcionario_gerente_nivel_1 possui todas as permissões para criar, deletar, buscar e atualizar uma determinada ação social ou dados da empresa.
+Neste cenário, quando o usuário recebe um cargo, ele tem o mesmo cargo em todas as partes do sistema, independente se ele for voluntario em uma ação social e tambem for gerente da empresa
+- é de responsabilidade do Keyclock com redirecionamento de autenticação, recuperação de senha, atualizar cadastro do usuario, delegar cargos e permissões para usuario 
+
+# Melhorias futuras
+- implementar integração do Spring Boot com Redis
+  - armazenar detalhes do usuario no Redis
+
+# Testes
+- estamos usando como base principal os testes de integração, que apesar de mais custosos para implementar
+- agregam uma boa cobertura de testes, desde a funcionalidade em si estar funcionando e sua respectiva regra de negocio
+- até integração com outros serviços
+  - não estamos mockando o banco de dados e nem o SSO
+  - cada caso de teste usa realmente o keyclock para autenticar e autorizar
+  - verificando se o usuario esta autenticado para executar a action do controller, caso seja necessário 
+  - verificando se o usuario tem a permissão para executar a action do controller, caso seja necessário
+  - o banco de dados é realmente o postgres, para que garanta que restrições seja as mesmas do ambiente de produção
+  - desta forma garantimos que os erros de consistencia sejam validados
+  - todo caso de teste esta em uma transaction que faz rollback apos terminar
+  - ao preparar os casos de teste, as vezes é preciso inserir dados fake para poder usados como base dos testes
+    - o problema de que ao inserir dados pelo teste nao tem userLoggedId, e para resolver este problema foi criado uma classe LoginMock que é capaz de mock do spring security o userlogged 
+    - desta forma quando o teste inserir um registro no DB, será o user do token como createdBy UUID
+- possibilidade de melhoria nos teste, os testes foram inicialmente criados para contemplar somente o caso de sucesso com todos os campos sendo passados
+  - criar testes de casos de falha
+  - criar testes de casos de sucesso somente com campos obrigatorio
+
 
 

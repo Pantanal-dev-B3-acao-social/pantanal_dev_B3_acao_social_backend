@@ -4,6 +4,7 @@ import dev.pantanal.b3.krpv.acao_social.modulos.category.dto.request.CategoryCre
 import dev.pantanal.b3.krpv.acao_social.modulos.category.dto.request.CategoryParamsDto;
 import dev.pantanal.b3.krpv.acao_social.modulos.category.dto.request.CategoryUpdateDto;
 import dev.pantanal.b3.krpv.acao_social.modulos.category.dto.response.CategoryResponseDto;
+import dev.pantanal.b3.krpv.acao_social.modulos.category.entity.CategoryEntity;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -47,7 +48,7 @@ public class CategoryController {
     ) {
         Pageable paging = PageRequest.of(page, size, sort);
         Page<CategoryEntity> response = service.findAll(paging, request);
-        return response; // TODO: verificar se vai converter certo
+        return response;
     }
 
     @GetMapping("/{id}")
@@ -67,7 +68,14 @@ public class CategoryController {
                 entity.getName(),
                 entity.getDescription(),
                 entity.getCode(),
-                entity.getVersion()
+                entity.getVersion(),
+                entity.getCategoryGroup(),
+                entity.getCreatedBy(),
+                entity.getLastModifiedBy(),
+                entity.getCreatedDate(),
+                entity.getLastModifiedDate(),
+                entity.getDeletedDate(),
+                entity.getDeletedBy()
         );
         return new ResponseEntity<CategoryResponseDto>(response, HttpStatus.OK);
     }
@@ -91,9 +99,15 @@ public class CategoryController {
                 entity.getName(),
                 entity.getDescription(),
                 entity.getCode(),
-                entity.getVersion()
+                entity.getVersion(),
+                entity.getCategoryGroup(),
+                entity.getCreatedBy(),
+                entity.getLastModifiedBy(),
+                entity.getCreatedDate(),
+                entity.getLastModifiedDate(),
+                entity.getDeletedDate(),
+                entity.getDeletedBy()
         );
-        // TODO: fazer um handle para gerar esse retorno
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
@@ -112,11 +126,18 @@ public class CategoryController {
     public ResponseEntity<CategoryResponseDto> update(@PathVariable UUID id, @Valid @RequestBody CategoryUpdateDto request) {
         CategoryEntity entity = service.update(id, request);
         CategoryResponseDto response = new CategoryResponseDto(
-                entity.getId(),
+                id,
                 entity.getName(),
                 entity.getDescription(),
                 entity.getCode(),
-                entity.getVersion()
+                entity.getVersion(),
+                entity.getCategoryGroup(),
+                entity.getCreatedBy(),
+                entity.getLastModifiedBy(),
+                entity.getCreatedDate(),
+                entity.getLastModifiedDate(),
+                entity.getDeletedDate(),
+                entity.getDeletedBy()
         );
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
@@ -136,6 +157,5 @@ public class CategoryController {
     public void delete(@PathVariable UUID id) {
         service.delete(id);
     }
-
 
 }

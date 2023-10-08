@@ -5,6 +5,7 @@ import dev.pantanal.b3.krpv.acao_social.exception.ObjectNotFoundException;
 import dev.pantanal.b3.krpv.acao_social.modulos.category.dto.request.CategoryCreateDto;
 import dev.pantanal.b3.krpv.acao_social.modulos.category.dto.request.CategoryParamsDto;
 import dev.pantanal.b3.krpv.acao_social.modulos.category.dto.request.CategoryUpdateDto;
+import dev.pantanal.b3.krpv.acao_social.modulos.category.entity.CategoryEntity;
 import dev.pantanal.b3.krpv.acao_social.modulos.category.repository.CategoryPredicates;
 import dev.pantanal.b3.krpv.acao_social.modulos.category.repository.CategoryRepository;
 import dev.pantanal.b3.krpv.acao_social.utils.GeneratorCode;
@@ -28,6 +29,7 @@ public class CategoryService {
         CategoryEntity entity = new CategoryEntity();
         entity.setName(dataRequest.name());
         entity.setDescription(dataRequest.description());
+        entity.setCategoryGroup(dataRequest.categoryGroup());
         String code = generatorCode.execute(entity.getName());
         entity.setCode(code);
         CategoryEntity savedObj = categoryRepository.save(entity);
@@ -56,14 +58,17 @@ public class CategoryService {
 
     public CategoryEntity update(UUID id, CategoryUpdateDto request){
         CategoryEntity obj = categoryRepository.findById(id);
+        if (obj == null) {
+            throw new ObjectNotFoundException("Registro não encontrado: " + id);
+        }
         if (request.name() != null) {
             obj.setName(request.name());
         }
         if (request.description() != null) {
             obj.setDescription(request.description());
         }
-        if (request.code() != null) {
-            obj.setCode(request.code());
+        if (request.categoryGroup() != null) {
+            obj.setCategoryGroup(request.categoryGroup());
         }
         CategoryEntity updatedObj = categoryRepository.update(obj);
         return updatedObj;
