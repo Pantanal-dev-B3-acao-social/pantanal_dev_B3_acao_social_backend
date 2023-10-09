@@ -33,7 +33,7 @@ public class DonationEntity {
 
     @Valid
     @Version
-    private Long version;
+    private Long version = 1L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -41,13 +41,13 @@ public class DonationEntity {
     @NotNull
     UUID id;
 
-    @Column(nullable = false)
+    @Column(nullable = false, name = "donation_date")
     @NotBlank
-    private LocalDateTime donation_date;
+    private LocalDateTime donationDate;
 
-    @Column(nullable = false)
+    @Column(nullable = false, name = "value_money")
     @NotBlank
-    private Double value_money;
+    private Double valueMoney;
 
 
     @Column(nullable = false)
