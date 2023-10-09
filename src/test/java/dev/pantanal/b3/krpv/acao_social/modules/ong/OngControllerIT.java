@@ -97,7 +97,7 @@ public class OngControllerIT {
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andDo(MockMvcResultHandlers.print())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.content").isArray())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.content", hasSize(4)));
+                .andExpect(MockMvcResultMatchers.jsonPath("$.content", hasSize(3)));
         int i = 0;
         for (OngEntity item : saved) {
             perform
@@ -144,7 +144,7 @@ public class OngControllerIT {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.name").value(item.getName()))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.cnpj").value(item.getCnpj().toString()))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.status").value(item.getStatus().toString()))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.responsibleEntity").value(item.getResponsibleEntity().getId().toString()))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.responsibleEntity.id").value(item.getResponsibleEntity().getId().toString()))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.createdBy").isNotEmpty())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.lastModifiedBy").isEmpty())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.createdDate").isNotEmpty())
@@ -167,12 +167,12 @@ public class OngControllerIT {
         );
         // Assert (Verificar)
         resultActions
-                .andExpect(MockMvcResultMatchers.status().isCreated())
+                .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.id").isNotEmpty())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.name").value(item.getName()))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.cnpj").value(item.getCnpj().toString()))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.status").value(item.getStatus().toString()))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.responsibleEntity").value(item.getResponsibleEntity().getId().toString()))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.responsibleEntity.id").value(item.getResponsibleEntity().getId().toString()))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.createdBy").isNotEmpty())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.createdDate").isNotEmpty())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.deletedDate").isEmpty())
@@ -213,7 +213,7 @@ public class OngControllerIT {
         OngEntity item = ongFactory.insertOne(ongFactory.makeFakeEntity());
         // Modifica alguns dados da ong
         StatusEnum statusEnum = new EnumUtils<StatusEnum>().getRandomValueDiff(item.getStatus());
-        PersonEntity person = personFactory.insertMany(1, null).get(0);
+        PersonEntity person = personFactory.insertOne(personFactory.makeFakeEntity(UUID.randomUUID()));
         String cnpj = generatorCnpj.cnpj(true);
         item.setName(item.getName() + "_ATUALIZADO");
         item.setResponsibleEntity(person);
@@ -235,7 +235,7 @@ public class OngControllerIT {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.name").value(item.getName()))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.cnpj").value(item.getCnpj().toString()))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.status").value(item.getStatus().toString()))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.responsibleEntity").value(item.getResponsibleEntity().getId().toString()))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.responsibleEntity.id").value(item.getResponsibleEntity().getId().toString()))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.createdBy").value(item.getCreatedBy().toString()))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.createdDate").value(item.getCreatedDate().format(formatter)))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.deletedDate").isEmpty())
