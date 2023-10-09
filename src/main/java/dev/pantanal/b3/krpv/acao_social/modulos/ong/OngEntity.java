@@ -4,6 +4,7 @@ import dev.pantanal.b3.krpv.acao_social.modulos.ong.enums.StatusEnum;
 import dev.pantanal.b3.krpv.acao_social.modulos.person.PersonEntity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import org.hibernate.validator.constraints.br.CNPJ;
 import org.springframework.data.annotation.CreatedBy;
@@ -62,8 +63,11 @@ public class OngEntity {
     @Column(name = "deleted_by")
     private UUID deletedBy;
 
-    // responsaveis
-    @Column(nullable = false)
+    // TODO: criar ManyToMany responsaveis
+    @NotNull
+    @ManyToOne
+    @JoinColumn(name = "category_group_id")
+    @ToString.Exclude
     private PersonEntity responsibleEntity;
 
     @PrePersist
