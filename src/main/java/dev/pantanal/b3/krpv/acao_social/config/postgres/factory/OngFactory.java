@@ -40,7 +40,7 @@ public class OngFactory {
 
     public OngEntity makeFakeEntity() {
         StatusEnum caseEnum = new EnumUtils<StatusEnum>().getRandomValue(StatusEnum.class);
-        PersonEntity person = personFactory.insertMany(1, null).get(0);
+        PersonEntity person = personFactory.insertOne(personFactory.makeFakeEntity(UUID.randomUUID()));
         String cnpj = generatorCnpj.cnpj(true);
         OngEntity ongEntity = new OngEntity();
         ongEntity.setName(faker.lorem().sentence());

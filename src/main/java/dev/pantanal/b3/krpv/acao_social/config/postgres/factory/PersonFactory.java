@@ -55,9 +55,11 @@ public class PersonFactory {
 
     public List<PersonEntity> insertMany(int amount, List<UUID> usersIds) {
         List<PersonEntity> entities = new ArrayList<>();
-        for (int i=0; i<amount; i++) {
-            PersonEntity entity = this.makeFakeEntity(usersIds.get(i));
-            entities.add(this.insertOne(entity));
+        if(usersIds != null) {
+            for (int i=0; i<amount; i++) {
+                PersonEntity entity = this.makeFakeEntity(usersIds.get(i));
+                entities.add(this.insertOne(entity));
+            }
         }
         return entities;
     }
