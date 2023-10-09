@@ -12,7 +12,7 @@ import dev.pantanal.b3.krpv.acao_social.modulos.socialAction.SocialActionEntity;
 import dev.pantanal.b3.krpv.acao_social.modulos.voluntary.VoluntaryEntity;
 import dev.pantanal.b3.krpv.acao_social.modulos.voluntary.enums.StatusEnum;
 import dev.pantanal.b3.krpv.acao_social.modulos.voluntary.repository.VoluntaryRepository;
-import dev.pantanal.b3.krpv.acao_social.utils.EnumUtil;
+import dev.pantanal.b3.krpv.acao_social.utils.EnumUtils;
 import dev.pantanal.b3.krpv.acao_social.utils.FindRegisterRandom;
 import dev.pantanal.b3.krpv.acao_social.utils.GenerateTokenUserForLogged;
 import dev.pantanal.b3.krpv.acao_social.utils.LoginMock;
@@ -243,7 +243,7 @@ public class VoluntaryControllerIT {
         LocalDateTime approvedDateUpdate = item.getApprovedDate().plusHours(2).plusMinutes(40);
         FindRegisterRandom<PersonEntity> findPersonRandom = new FindRegisterRandom<PersonEntity>(entityManager);
         List<PersonEntity> persons = findPersonRandom.execute("person", 1, PersonEntity.class);
-        StatusEnum statusEnum = new EnumUtil<StatusEnum>().getRandomValueDiff(item.getStatus());
+        StatusEnum statusEnum = new EnumUtils<StatusEnum>().getRandomValueDiff(item.getStatus());
         FindRegisterRandom findRegisterRandom = new FindRegisterRandom<SocialActionEntity>(entityManager);
         List<SocialActionEntity> socialActions = findRegisterRandom.execute("social_action", 1, SocialActionEntity.class);
         item.setObservation(item.getObservation() + "_ATUALIZADO");

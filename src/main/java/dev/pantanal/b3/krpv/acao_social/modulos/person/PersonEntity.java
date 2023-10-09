@@ -2,21 +2,16 @@ package dev.pantanal.b3.krpv.acao_social.modulos.person;
 
 import dev.pantanal.b3.krpv.acao_social.config.audit.AuditListener;
 import dev.pantanal.b3.krpv.acao_social.modulos.person.enums.StatusEnum;
-import dev.pantanal.b3.krpv.acao_social.modulos.socialAction.SocialActionEntity;
 import jakarta.persistence.*;
-import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotBlank;
+//import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
-import org.hibernate.validator.constraints.br.CNPJ;
-import org.hibernate.validator.constraints.br.CPF;
 import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-
 import java.time.LocalDateTime;
 import java.util.UUID;
 
@@ -33,9 +28,9 @@ import java.util.UUID;
 @ToString
 public class PersonEntity {
 
-    @Valid
+//    @Valid
     @Version
-    private Long version;
+    private Long version = 1L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -43,7 +38,7 @@ public class PersonEntity {
     @NotNull
     UUID id;
 
-    @CreatedBy
+//    @CreatedBy
     @Column(name = "user_by", nullable = false, unique = true)
     private UUID userId;
 
@@ -53,11 +48,12 @@ public class PersonEntity {
     @Column(name = "date_birth")
     private LocalDateTime dateBirth;
 
+    @Column
     private StatusEnum status;
 
     @Column(nullable = false, unique = true)
-    @NotBlank
-    @CPF
+//    @NotBlank
+//    @CPF
     String cpf;
 
     @CreatedBy

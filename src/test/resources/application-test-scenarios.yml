@@ -1,7 +1,7 @@
 acao-social:
   db:
     active: dbinit
-#    db-name: postgres
+    #    db-name: postgres
     db-name: postgres_testing
     sprint-init: classpath:db/script/dev/init_db_development.sql
   spring-boot:

@@ -1,6 +1,5 @@
 package dev.pantanal.b3.krpv.acao_social.modulos.socialAction;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import dev.pantanal.b3.krpv.acao_social.config.audit.AuditListener;
 import dev.pantanal.b3.krpv.acao_social.modulos.category.entity.CategorySocialActionLevelEntity;
@@ -44,9 +43,11 @@ public class SocialActionEntity {
     @Column(columnDefinition = "uuid")
     @NotNull
     private UUID id;
+
     @Column(nullable = false)
 //    @NotBlank
     private String name;
+
     @Column(nullable = false)
 //    @NotBlank
     private String description;

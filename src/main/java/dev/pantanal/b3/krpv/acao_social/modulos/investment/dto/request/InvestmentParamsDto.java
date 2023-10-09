@@ -1,4 +1,4 @@
-package dev.pantanal.b3.krpv.acao_social.modulos.Investment.dto.request;
+package dev.pantanal.b3.krpv.acao_social.modulos.investment.dto.request;
 
 import dev.pantanal.b3.krpv.acao_social.modulos.company.CompanyEntity;
 import dev.pantanal.b3.krpv.acao_social.modulos.socialAction.SocialActionEntity;

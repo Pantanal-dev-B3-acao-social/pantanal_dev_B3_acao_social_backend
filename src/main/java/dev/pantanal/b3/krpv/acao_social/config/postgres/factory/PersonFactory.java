@@ -4,14 +4,11 @@ import com.github.javafaker.Faker;
 import dev.pantanal.b3.krpv.acao_social.modulos.person.PersonEntity;
 import dev.pantanal.b3.krpv.acao_social.modulos.person.enums.StatusEnum;
 import dev.pantanal.b3.krpv.acao_social.modulos.person.repository.PersonRepository;
-import dev.pantanal.b3.krpv.acao_social.utils.EnumUtil;
+import dev.pantanal.b3.krpv.acao_social.utils.EnumUtils;
 import dev.pantanal.b3.krpv.acao_social.utils.GeneretorCpf;
-import dev.pantanal.b3.krpv.acao_social.utils.GeraCNPJ;
 import jakarta.persistence.EntityManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -40,7 +37,7 @@ public class PersonFactory {
 
     public PersonEntity makeFakeEntity(UUID userId) {
         LocalDateTime dataBirth = LocalDateTime.now();
-        StatusEnum statusEnum = new EnumUtil<StatusEnum>().getRandomValue(StatusEnum.class);
+        StatusEnum statusEnum = new EnumUtils<StatusEnum>().getRandomValue(StatusEnum.class);
         String cpf = generetorCpf.cpf(true);
         PersonEntity personEntity = new PersonEntity();
         personEntity.setName(faker.lorem().sentence());
@@ -58,9 +55,11 @@ public class PersonFactory {
 
     public List<PersonEntity> insertMany(int amount, List<UUID> usersIds) {
         List<PersonEntity> entities = new ArrayList<>();
-        for (int i=0; i<amount; i++) {
-            PersonEntity entity = this.makeFakeEntity(usersIds.get(i));
-            entities.add(this.insertOne(entity));
+        if(usersIds != null) {
+            for (int i=0; i<amount; i++) {
+                PersonEntity entity = this.makeFakeEntity(usersIds.get(i));
+                entities.add(this.insertOne(entity));
+            }
         }
         return entities;
     }

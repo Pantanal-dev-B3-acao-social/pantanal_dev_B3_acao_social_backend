@@ -5,7 +5,7 @@ import org.springframework.stereotype.Component;
 import java.util.Random;
 
 @Component
-public class EnumUtil<T extends Enum<T>> {
+public class EnumUtils<T extends Enum<T>> {
 
     private final Random random = new Random();
 

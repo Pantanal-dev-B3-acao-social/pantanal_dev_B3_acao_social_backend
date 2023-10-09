@@ -1,7 +1,4 @@
-package dev.pantanal.b3.krpv.acao_social.modulos.Investment.dto.request;
-
-import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotBlank;
+package dev.pantanal.b3.krpv.acao_social.modulos.investment.dto.request;
 
 import java.time.LocalDateTime;
 

@@ -1,4 +1,4 @@
-package dev.pantanal.b3.krpv.acao_social.modulos.Investment.dto;
+package dev.pantanal.b3.krpv.acao_social.modulos.investment.dto;
 
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;

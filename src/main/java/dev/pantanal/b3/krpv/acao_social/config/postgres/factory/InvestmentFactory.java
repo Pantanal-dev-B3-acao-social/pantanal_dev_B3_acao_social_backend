@@ -1,8 +1,8 @@
 package dev.pantanal.b3.krpv.acao_social.config.postgres.factory;
 
 import com.github.javafaker.Faker;
-import dev.pantanal.b3.krpv.acao_social.modulos.Investment.InvestmentEntity;
-import dev.pantanal.b3.krpv.acao_social.modulos.Investment.repository.InvestmentRepository;
+import dev.pantanal.b3.krpv.acao_social.modulos.investment.InvestmentEntity;
+import dev.pantanal.b3.krpv.acao_social.modulos.investment.repository.InvestmentRepository;
 import dev.pantanal.b3.krpv.acao_social.modulos.company.CompanyEntity;
 import dev.pantanal.b3.krpv.acao_social.modulos.socialAction.SocialActionEntity;
 import dev.pantanal.b3.krpv.acao_social.utils.FindRegisterRandom;

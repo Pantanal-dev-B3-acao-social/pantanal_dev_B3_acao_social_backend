@@ -1,9 +1,9 @@
-package dev.pantanal.b3.krpv.acao_social.modulos.Investment.repository;
+package dev.pantanal.b3.krpv.acao_social.modulos.investment.repository;
 
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import dev.pantanal.b3.krpv.acao_social.modulos.Investment.InvestmentEntity;
-import dev.pantanal.b3.krpv.acao_social.modulos.Investment.QInvestmentEntity;
+import dev.pantanal.b3.krpv.acao_social.modulos.investment.InvestmentEntity;
+import dev.pantanal.b3.krpv.acao_social.modulos.investment.QInvestmentEntity;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import lombok.RequiredArgsConstructor;

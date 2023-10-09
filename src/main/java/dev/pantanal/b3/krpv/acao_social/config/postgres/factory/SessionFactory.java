@@ -6,9 +6,9 @@ import dev.pantanal.b3.krpv.acao_social.modulos.session.enums.StatusEnum;
 import dev.pantanal.b3.krpv.acao_social.modulos.session.enums.VisibilityEnum;
 import dev.pantanal.b3.krpv.acao_social.modulos.session.repository.SessionRepository;
 import dev.pantanal.b3.krpv.acao_social.modulos.socialAction.SocialActionEntity;
-import dev.pantanal.b3.krpv.acao_social.utils.EnumUtil;
+import dev.pantanal.b3.krpv.acao_social.utils.EnumUtils;
 import dev.pantanal.b3.krpv.acao_social.utils.FindRegisterRandom;
-import dev.pantanal.b3.krpv.acao_social.utils.GeneratorCode;
+import dev.pantanal.b3.krpv.acao_social.utils.GeneretorCpf;
 import jakarta.persistence.EntityManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -17,7 +17,6 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
-import java.util.UUID;
 
 @Component
 public class SessionFactory {
@@ -27,10 +26,9 @@ public class SessionFactory {
     @Autowired
     private SessionRepository sessionRepository;
     @Autowired
-    private GeneratorCode generatorCode;
-
-    @Autowired
     private EntityManager entityManager;
+    @Autowired
+    GeneretorCpf generetorCpf;
 
     @Autowired
     public SessionFactory(
@@ -46,8 +44,8 @@ public class SessionFactory {
         LocalDateTime dateEnd = dateStart.plusHours(2).plusMinutes(0);
         FindRegisterRandom<SocialActionEntity> findRegisterRandom = new FindRegisterRandom<SocialActionEntity>(entityManager);
         List<SocialActionEntity> socialActions = findRegisterRandom.execute("social_action", 1, SocialActionEntity.class);
-        StatusEnum statusEnum = new EnumUtil<StatusEnum>().getRandomValue(StatusEnum.class);
-        VisibilityEnum visibilityEnum = new EnumUtil<VisibilityEnum>().getRandomValue(VisibilityEnum.class);
+        StatusEnum statusEnum = new EnumUtils<StatusEnum>().getRandomValue(StatusEnum.class);
+        VisibilityEnum visibilityEnum = new EnumUtils<VisibilityEnum>().getRandomValue(VisibilityEnum.class);
         SessionEntity sessionEntity = new SessionEntity();
         sessionEntity.setVersion(1L);
         sessionEntity.setDescription(faker.lorem().sentence());

@@ -1,8 +1,8 @@
-package dev.pantanal.b3.krpv.acao_social.modulos.Investment.repository;
+package dev.pantanal.b3.krpv.acao_social.modulos.investment.repository;
 
 import com.querydsl.core.types.dsl.*;
-import dev.pantanal.b3.krpv.acao_social.modulos.Investment.QInvestmentEntity;
-import dev.pantanal.b3.krpv.acao_social.modulos.Investment.dto.request.InvestmentParamsDto;
+import dev.pantanal.b3.krpv.acao_social.modulos.investment.QInvestmentEntity;
+import dev.pantanal.b3.krpv.acao_social.modulos.investment.dto.request.InvestmentParamsDto;
 import dev.pantanal.b3.krpv.acao_social.modulos.company.QCompanyEntity;
 import dev.pantanal.b3.krpv.acao_social.modulos.socialAction.QSocialActionEntity;
 import org.springframework.stereotype.Component;

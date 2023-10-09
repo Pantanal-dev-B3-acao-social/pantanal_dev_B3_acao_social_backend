@@ -12,10 +12,8 @@ import java.time.LocalDateTime;
 public class PersonPredicates {
 
     public BooleanExpression buildPredicate(PersonParamsDto filters){
-
         QPersonEntity qEntity = QPersonEntity.personEntity;
         BooleanExpression predicate = Expressions.asBoolean(true).isTrue();
-
         if (filters.name() != null) {
             StringPath filterPath = qEntity.name;
             predicate = predicate.and(filterPath.eq(filters.name()));
@@ -32,7 +30,6 @@ public class PersonPredicates {
             StringPath filterPath = qEntity.cpf;
             predicate = predicate.and(filterPath.eq(filters.cpf()));
         }
-// TODO: implementar outros atributos
         return predicate;
     }
 }

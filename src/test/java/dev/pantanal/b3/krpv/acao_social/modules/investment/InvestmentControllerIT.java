@@ -6,10 +6,10 @@ import dev.pantanal.b3.krpv.acao_social.config.postgres.factory.CategoryFactory;
 import dev.pantanal.b3.krpv.acao_social.config.postgres.factory.CompanyFactory;
 import dev.pantanal.b3.krpv.acao_social.config.postgres.factory.InvestmentFactory;
 import dev.pantanal.b3.krpv.acao_social.config.postgres.factory.SocialActionFactory;
-import dev.pantanal.b3.krpv.acao_social.modulos.Investment.InvestmentEntity;
-import dev.pantanal.b3.krpv.acao_social.modulos.Investment.repository.InvestmentRepository;
+import dev.pantanal.b3.krpv.acao_social.modulos.investment.InvestmentEntity;
+import dev.pantanal.b3.krpv.acao_social.modulos.investment.repository.InvestmentRepository;
 import dev.pantanal.b3.krpv.acao_social.modulos.auth.dto.LoginUserDto;
-import dev.pantanal.b3.krpv.acao_social.modulos.Investment.repository.InvestmentPostgresRepository;
+import dev.pantanal.b3.krpv.acao_social.modulos.investment.repository.InvestmentPostgresRepository;
 import dev.pantanal.b3.krpv.acao_social.modulos.category.entity.CategoryEntity;
 import dev.pantanal.b3.krpv.acao_social.modulos.company.CompanyEntity;
 import dev.pantanal.b3.krpv.acao_social.modulos.socialAction.SocialActionEntity;
@@ -34,7 +34,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
-import static dev.pantanal.b3.krpv.acao_social.modulos.Investment.InvestmentController.ROUTE_INVESTMENT;
+import static dev.pantanal.b3.krpv.acao_social.modulos.investment.InvestmentController.ROUTE_INVESTMENT;
 import static org.hamcrest.Matchers.hasSize;
 
 @SpringBootTest
