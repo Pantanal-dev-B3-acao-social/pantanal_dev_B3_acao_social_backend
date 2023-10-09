@@ -27,10 +27,12 @@ public class SessionService {
     public SessionEntity create(SessionCreateDto dataRequest) {
         SessionEntity entity = new SessionEntity();
         entity.setDescription(dataRequest.description());
-        entity.setTime(dataRequest.time());
+        entity.setDateStartTime(dataRequest.dateStartTime());
+        entity.setDateEndTime(dataRequest.dateEndTime());
         entity.setStatus(dataRequest.status());
         entity.setVisibility(dataRequest.visibility());
         entity.setSocialAction(dataRequest.socialAction());
+        // TODO:
 //        entity.setLocal();dataRequest.local());
 //        entity.setResources();dataRequest.resouces());
 //        entity.setPresences(dataRequest.presences());
@@ -62,8 +64,11 @@ public class SessionService {
         if (request.description() != null) {
             obj.setDescription(request.description());
         }
-        if (request.time() != null) {
-            obj.setTime(request.time());
+        if (request.dateStart() != null) {
+            obj.setDateStartTime(request.dateStart());
+        }
+        if (request.dateEnd() != null) {
+            obj.setDateEndTime(request.dateEnd());
         }
         if (request.status() != null) {
             obj.setStatus(request.status());

@@ -1740,6 +1740,7 @@ fee9a005-61ba-4f89-8be1-f66d3aa9d73b	address	89f9614c-27fd-44d6-b07c-c527669d1d5
 0595dccb-d437-44a9-92b7-2458928021ef	web-origins	89f9614c-27fd-44d6-b07c-c527669d1d5c	OpenID Connect scope for add allowed web origins to the access token	openid-connect
 3c40af86-1182-49d5-ba42-50eed305b394	microprofile-jwt	89f9614c-27fd-44d6-b07c-c527669d1d5c	Microprofile - JWT built-in scope	openid-connect
 3db49690-a543-488c-b811-1eb95b78a43d	acr	89f9614c-27fd-44d6-b07c-c527669d1d5c	OpenID Connect scope for add acr (authentication context class reference) to the token	openid-connect
+13afb2c0-2202-4222-a22a-a67e51c87f55	direct_access_grant	89f9614c-27fd-44d6-b07c-c527669d1d5c		openid-connect
 \.
 
 
@@ -1800,6 +1801,10 @@ fee9a005-61ba-4f89-8be1-f66d3aa9d73b	true	include.in.token.scope
 3c40af86-1182-49d5-ba42-50eed305b394	true	include.in.token.scope
 3db49690-a543-488c-b811-1eb95b78a43d	false	display.on.consent.screen
 3db49690-a543-488c-b811-1eb95b78a43d	false	include.in.token.scope
+13afb2c0-2202-4222-a22a-a67e51c87f55		consent.screen.text
+13afb2c0-2202-4222-a22a-a67e51c87f55	true	display.on.consent.screen
+13afb2c0-2202-4222-a22a-a67e51c87f55		gui.order
+13afb2c0-2202-4222-a22a-a67e51c87f55	true	include.in.token.scope
 \.
 
 
@@ -1935,6 +1940,12 @@ ef2b8215-0be5-4964-a5fd-9fbb38d4e1c6	3c40af86-1182-49d5-ba42-50eed305b394	f
 COPY public.client_scope_role_mapping (scope_id, role_id) FROM stdin;
 9675f3c3-801f-4102-8165-5a2b91c820e8	5690ce3d-1ea7-4f4d-8cc1-2777667c0aa3
 37e9482e-66ca-4472-b441-a8241d28f09e	8eb3be08-fd48-4e0b-8a58-7488f1a8f69c
+13afb2c0-2202-4222-a22a-a67e51c87f55	cf22102b-bcac-408d-86a7-60bdfa78292e
+13afb2c0-2202-4222-a22a-a67e51c87f55	eac9e836-edd9-4129-9413-3d1ededda30a
+13afb2c0-2202-4222-a22a-a67e51c87f55	40ee7d27-843d-483e-a6e1-fa0d97600b2c
+13afb2c0-2202-4222-a22a-a67e51c87f55	2cf0bacd-4467-4b2e-885e-dd8b6f0ac0e5
+13afb2c0-2202-4222-a22a-a67e51c87f55	207fc12a-6015-41a2-bb4d-ee6cf13eda22
+13afb2c0-2202-4222-a22a-a67e51c87f55	a91414db-ff93-4d94-8d27-6c98288c1079
 \.
 
 
@@ -2581,6 +2592,111 @@ f6568f63-d1cc-4f51-88d6-abcb7906dc8e	client-id-pantanal	{"grant_type":"password"
 cee3beab-cff9-4468-ad67-5cedfaa9a1ea	client-id-pantanal	{"grant_type":"password"}	client_not_found	172.20.0.1	fc3e583c-0722-4ee1-aeef-70af67cf78ba	\N	1695651753657	LOGIN_ERROR	\N
 9c34b129-aedd-4b4d-ae7f-6c78038fc67e	client-id-pantanal	{"grant_type":"password"}	client_not_found	172.20.0.1	fc3e583c-0722-4ee1-aeef-70af67cf78ba	\N	1695651756153	LOGIN_ERROR	\N
 8c3e1e27-2f63-469a-9efe-90b30dac3858	client-id-pantanal	{"grant_type":"password"}	client_not_found	172.20.0.1	fc3e583c-0722-4ee1-aeef-70af67cf78ba	\N	1695651758871	LOGIN_ERROR	\N
+53139928-bcaa-4546-a0b8-e227bf0faa77	client-id-pantanal	{"grant_type":"password"}	client_not_found	172.21.0.1	fc3e583c-0722-4ee1-aeef-70af67cf78ba	\N	1696874116947	LOGIN_ERROR	\N
+a03c4a0c-fdc6-4d53-a5a5-c4a8b6d0d95d	client-id-pantanal	{"grant_type":"password"}	client_not_found	172.21.0.1	fc3e583c-0722-4ee1-aeef-70af67cf78ba	\N	1696874118983	LOGIN_ERROR	\N
+11cbbdc3-bf9b-4c74-b9fe-8534665e1c35	client-id-pantanal	{"grant_type":"password"}	client_not_found	172.21.0.1	fc3e583c-0722-4ee1-aeef-70af67cf78ba	\N	1696874121445	LOGIN_ERROR	\N
+858427d2-f789-4b68-8a05-4c5c94a09937	client-id-pantanal	{"grant_type":"password"}	client_not_found	172.21.0.1	fc3e583c-0722-4ee1-aeef-70af67cf78ba	\N	1696874123564	LOGIN_ERROR	\N
+61d133ec-b26c-491b-9100-8764b89d083e	client-id-pantanal	{"grant_type":"password"}	client_not_found	172.21.0.1	fc3e583c-0722-4ee1-aeef-70af67cf78ba	\N	1696874126049	LOGIN_ERROR	\N
+e1e6b123-27f6-4f6f-afc3-c0997e764d20	client-id-pantanal	{"grant_type":"password"}	client_not_found	172.21.0.1	fc3e583c-0722-4ee1-aeef-70af67cf78ba	\N	1696874149455	LOGIN_ERROR	\N
+7761e75c-ecf9-4b8b-b227-c9685b5e1916	client-id-pantanal	{"grant_type":"password"}	client_not_found	172.21.0.1	fc3e583c-0722-4ee1-aeef-70af67cf78ba	\N	1696874151389	LOGIN_ERROR	\N
+003f8fb2-1019-4e8b-9e1b-3fc68a34bb00	client-id-pantanal	{"grant_type":"password"}	client_not_found	172.21.0.1	fc3e583c-0722-4ee1-aeef-70af67cf78ba	\N	1696874153839	LOGIN_ERROR	\N
+5a6bb7b6-6d5e-44d8-bab9-bfb88cbd79db	client-id-pantanal	{"grant_type":"password"}	client_not_found	172.21.0.1	fc3e583c-0722-4ee1-aeef-70af67cf78ba	\N	1696874155999	LOGIN_ERROR	\N
+2efdcb35-b42d-4c87-80dc-de1cff252820	client-id-pantanal	{"grant_type":"password"}	client_not_found	172.21.0.1	fc3e583c-0722-4ee1-aeef-70af67cf78ba	\N	1696874158885	LOGIN_ERROR	\N
+0e256e28-47f3-4a4f-8b1b-66ca778bc1b2	client-id-pantanal	{"grant_type":"password"}	client_not_found	172.21.0.1	fc3e583c-0722-4ee1-aeef-70af67cf78ba	\N	1696874194649	LOGIN_ERROR	\N
+f19b33e2-dd6e-4473-81dd-f7d2e3c4bf99	client-id-pantanal	{"grant_type":"password"}	client_not_found	172.21.0.1	fc3e583c-0722-4ee1-aeef-70af67cf78ba	\N	1696874196614	LOGIN_ERROR	\N
+5019b40d-9b38-4728-b969-d9d6270a4b02	client-id-pantanal	{"grant_type":"password"}	client_not_found	172.21.0.1	fc3e583c-0722-4ee1-aeef-70af67cf78ba	\N	1696874199210	LOGIN_ERROR	\N
+039e79a1-f96d-484a-a656-bf02266afff2	client-id-pantanal	{"grant_type":"password"}	client_not_found	172.21.0.1	fc3e583c-0722-4ee1-aeef-70af67cf78ba	\N	1696874201637	LOGIN_ERROR	\N
+9fbf03ff-82e5-43f9-9e5d-45733d2c50c4	client-id-pantanal	{"grant_type":"password"}	client_not_found	172.21.0.1	fc3e583c-0722-4ee1-aeef-70af67cf78ba	\N	1696874204240	LOGIN_ERROR	\N
+00280842-091b-4b3a-85e6-78aff109cf1a	client-id-pantanal	{"grant_type":"password"}	client_not_found	172.21.0.1	fc3e583c-0722-4ee1-aeef-70af67cf78ba	\N	1696874380180	LOGIN_ERROR	\N
+2da48e4f-804b-4c8c-b83a-fb680b5a1e24	client-id-pantanal	{"grant_type":"password"}	client_not_found	172.21.0.1	fc3e583c-0722-4ee1-aeef-70af67cf78ba	\N	1696874382253	LOGIN_ERROR	\N
+2d5bb89a-e07c-420a-b132-f54e0d3a00a6	client-id-pantanal	{"grant_type":"password"}	client_not_found	172.21.0.1	fc3e583c-0722-4ee1-aeef-70af67cf78ba	\N	1696874385135	LOGIN_ERROR	\N
+ec9f7df0-c56e-40eb-9019-5c25375f823f	client-id-pantanal	{"grant_type":"password"}	client_not_found	172.21.0.1	fc3e583c-0722-4ee1-aeef-70af67cf78ba	\N	1696874387616	LOGIN_ERROR	\N
+9b7a22ec-2691-4d01-a7a6-2e5b28c2ea54	client-id-pantanal	{"grant_type":"password"}	client_not_found	172.21.0.1	fc3e583c-0722-4ee1-aeef-70af67cf78ba	\N	1696874390357	LOGIN_ERROR	\N
+03ef793c-fb02-46fe-8461-19227553e881	client-id-pantanal	{"grant_type":"password"}	client_not_found	172.21.0.1	fc3e583c-0722-4ee1-aeef-70af67cf78ba	\N	1696874413946	LOGIN_ERROR	\N
+a62d64c0-4d81-4604-9d8b-cce749ff95da	client-id-pantanal	{"grant_type":"password"}	client_not_found	172.21.0.1	fc3e583c-0722-4ee1-aeef-70af67cf78ba	\N	1696874416747	LOGIN_ERROR	\N
+838d7145-6fa1-4c20-b48a-ff57868c87c0	client-id-pantanal	{"grant_type":"password"}	client_not_found	172.21.0.1	fc3e583c-0722-4ee1-aeef-70af67cf78ba	\N	1696874419905	LOGIN_ERROR	\N
+96fa6441-174c-49c4-8cb4-f4cdccf0c9b6	client-id-pantanal	{"grant_type":"password"}	client_not_found	172.21.0.1	fc3e583c-0722-4ee1-aeef-70af67cf78ba	\N	1696874424500	LOGIN_ERROR	\N
+5b0610a6-1cf8-48ce-b1e0-9c927ff6f5d9	client-id-pantanal	{"grant_type":"password"}	client_not_found	172.21.0.1	fc3e583c-0722-4ee1-aeef-70af67cf78ba	\N	1696874427377	LOGIN_ERROR	\N
+5cdbe166-e4c3-4fca-9cc7-ab82146f42dc	client-id-pantanal	{"grant_type":"password"}	client_not_found	172.21.0.1	fc3e583c-0722-4ee1-aeef-70af67cf78ba	\N	1696874623627	LOGIN_ERROR	\N
+32ed7e7a-232f-4b51-8a12-a4dda7a4fab9	client-id-pantanal	{"grant_type":"password"}	client_not_found	172.21.0.1	fc3e583c-0722-4ee1-aeef-70af67cf78ba	\N	1696874629113	LOGIN_ERROR	\N
+c4d6ce61-3c02-4f5e-86d3-4e72d276d4cf	client-id-pantanal	{"grant_type":"password"}	client_not_found	172.21.0.1	fc3e583c-0722-4ee1-aeef-70af67cf78ba	\N	1696874637993	LOGIN_ERROR	\N
+9ece5fa1-7521-4b7a-ac68-e66cc9162da1	client-id-pantanal	{"grant_type":"password"}	client_not_found	172.21.0.1	fc3e583c-0722-4ee1-aeef-70af67cf78ba	\N	1696874641095	LOGIN_ERROR	\N
+2a5a2c35-8de8-4667-abcc-90e91454854c	client-id-pantanal	{"grant_type":"password"}	client_not_found	172.21.0.1	fc3e583c-0722-4ee1-aeef-70af67cf78ba	\N	1696874643747	LOGIN_ERROR	\N
+2e77866b-0f10-45e7-ade8-32389bce108d	client-id-pantanal	{"grant_type":"password"}	client_not_found	172.21.0.1	fc3e583c-0722-4ee1-aeef-70af67cf78ba	\N	1696874998788	LOGIN_ERROR	\N
+49cdaa29-3462-46ee-b06b-ff0514775a68	client-id-pantanal	{"grant_type":"password"}	client_not_found	172.21.0.1	fc3e583c-0722-4ee1-aeef-70af67cf78ba	\N	1696875001022	LOGIN_ERROR	\N
+e4bfc645-cdb7-4aba-9d85-29b3534a3e3b	client-id-pantanal	{"grant_type":"password"}	client_not_found	172.21.0.1	fc3e583c-0722-4ee1-aeef-70af67cf78ba	\N	1696875003827	LOGIN_ERROR	\N
+f1b4e30c-4357-4346-ac0c-8478db007777	client-id-pantanal	{"grant_type":"password"}	client_not_found	172.21.0.1	fc3e583c-0722-4ee1-aeef-70af67cf78ba	\N	1696875006550	LOGIN_ERROR	\N
+aa2b4dfb-5604-4e66-900f-d799c178c412	client-id-pantanal	{"grant_type":"password"}	client_not_found	172.21.0.1	fc3e583c-0722-4ee1-aeef-70af67cf78ba	\N	1696875009401	LOGIN_ERROR	\N
+336bbe15-1f4a-4b57-974b-24788ffbb3d6	client-id-pantanal	{"grant_type":"password"}	client_not_found	172.21.0.1	fc3e583c-0722-4ee1-aeef-70af67cf78ba	\N	1696882601806	LOGIN_ERROR	\N
+d8924d17-4920-4dfb-a189-e09f5b9f76bc	client-id-pantanal	{"grant_type":"password"}	client_not_found	172.21.0.1	fc3e583c-0722-4ee1-aeef-70af67cf78ba	\N	1696882604694	LOGIN_ERROR	\N
+46929dd8-c762-45bc-9bfd-5fb47f441175	client-id-pantanal	{"grant_type":"password"}	client_not_found	172.21.0.1	fc3e583c-0722-4ee1-aeef-70af67cf78ba	\N	1696882608725	LOGIN_ERROR	\N
+8a9c7c0c-f8a4-4098-b0ed-7544eb7af938	client-id-pantanal	{"grant_type":"password"}	client_not_found	172.21.0.1	fc3e583c-0722-4ee1-aeef-70af67cf78ba	\N	1696882612353	LOGIN_ERROR	\N
+184a41c9-a081-4b89-abe9-0d7b3f0399be	client-id-pantanal	{"grant_type":"password"}	client_not_found	172.21.0.1	fc3e583c-0722-4ee1-aeef-70af67cf78ba	\N	1696882615165	LOGIN_ERROR	\N
+ccddcb36-b597-4a4a-87f8-1910e6d64b8f	client-id-pantanal	{"grant_type":"password"}	client_not_found	172.21.0.1	fc3e583c-0722-4ee1-aeef-70af67cf78ba	\N	1696882834504	LOGIN_ERROR	\N
+5040e6e3-4c40-4b55-a7aa-ccd4a711597f	client-id-pantanal	{"grant_type":"password"}	client_not_found	172.21.0.1	fc3e583c-0722-4ee1-aeef-70af67cf78ba	\N	1696882836467	LOGIN_ERROR	\N
+4c6bd997-ea06-4b72-bf5e-71255905a65e	client-id-pantanal	{"grant_type":"password"}	client_not_found	172.21.0.1	fc3e583c-0722-4ee1-aeef-70af67cf78ba	\N	1696882838923	LOGIN_ERROR	\N
+d0b818ef-cb90-4980-8f32-b4c462e8b8ed	client-id-pantanal	{"grant_type":"password"}	client_not_found	172.21.0.1	fc3e583c-0722-4ee1-aeef-70af67cf78ba	\N	1696882841293	LOGIN_ERROR	\N
+722d8b98-4340-45f4-81b9-5245ca18c4ae	client-id-pantanal	{"grant_type":"password"}	client_not_found	172.21.0.1	fc3e583c-0722-4ee1-aeef-70af67cf78ba	\N	1696882844841	LOGIN_ERROR	\N
+630a311f-2cb9-4af6-984f-4360c0e94a3b	client-id-pantanal	{"grant_type":"password"}	client_not_found	172.21.0.1	fc3e583c-0722-4ee1-aeef-70af67cf78ba	\N	1696882933811	LOGIN_ERROR	\N
+d3ff67ab-aa02-48a7-a6f9-e90139db510f	client-id-pantanal	{"grant_type":"password"}	client_not_found	172.21.0.1	fc3e583c-0722-4ee1-aeef-70af67cf78ba	\N	1696882935645	LOGIN_ERROR	\N
+391c3918-820c-43a9-80c3-cf24246ee0b9	client-id-pantanal	{"grant_type":"password"}	client_not_found	172.21.0.1	fc3e583c-0722-4ee1-aeef-70af67cf78ba	\N	1696882938177	LOGIN_ERROR	\N
+b8c9f04b-dc7a-4f64-9b40-c8aa79f91fd8	client-id-pantanal	{"grant_type":"password"}	client_not_found	172.21.0.1	fc3e583c-0722-4ee1-aeef-70af67cf78ba	\N	1696882940145	LOGIN_ERROR	\N
+23817ae4-c8bb-4f83-90c2-2138acf8d623	client-id-pantanal	{"grant_type":"password"}	client_not_found	172.21.0.1	fc3e583c-0722-4ee1-aeef-70af67cf78ba	\N	1696882942309	LOGIN_ERROR	\N
+607c3ad7-cb5f-45f5-9fcd-e10acd7f829e	client-id-pantanal	{"grant_type":"password"}	client_not_found	172.21.0.1	fc3e583c-0722-4ee1-aeef-70af67cf78ba	\N	1696883222544	LOGIN_ERROR	\N
+4b1b5c9b-d7b0-417b-b499-03882e7207a5	client-id-pantanal	{"grant_type":"password"}	client_not_found	172.21.0.1	fc3e583c-0722-4ee1-aeef-70af67cf78ba	\N	1696883224461	LOGIN_ERROR	\N
+9905928f-f7db-4399-9892-856db2c028c8	client-id-pantanal	{"grant_type":"password"}	client_not_found	172.21.0.1	fc3e583c-0722-4ee1-aeef-70af67cf78ba	\N	1696883227078	LOGIN_ERROR	\N
+81d39884-757b-4090-9013-d11dfdf35012	client-id-pantanal	{"grant_type":"password"}	client_not_found	172.21.0.1	fc3e583c-0722-4ee1-aeef-70af67cf78ba	\N	1696883229753	LOGIN_ERROR	\N
+7424ea14-802f-4031-b402-795965b45931	client-id-pantanal	{"grant_type":"password"}	client_not_found	172.21.0.1	fc3e583c-0722-4ee1-aeef-70af67cf78ba	\N	1696883232793	LOGIN_ERROR	\N
+34014529-1b6b-4b22-b5eb-8d631e1a2b55	client-id-pantanal	{"grant_type":"password"}	client_not_found	172.21.0.1	fc3e583c-0722-4ee1-aeef-70af67cf78ba	\N	1696883481845	LOGIN_ERROR	\N
+6ae9ba54-ff0b-477c-808d-7e2acdb80124	client-id-pantanal	{"grant_type":"password"}	client_not_found	172.21.0.1	fc3e583c-0722-4ee1-aeef-70af67cf78ba	\N	1696883483715	LOGIN_ERROR	\N
+6d5d2e7a-395c-4cf1-b656-39dfb03e2831	client-id-pantanal	{"grant_type":"password"}	client_not_found	172.21.0.1	fc3e583c-0722-4ee1-aeef-70af67cf78ba	\N	1696883486945	LOGIN_ERROR	\N
+12384c69-4396-4709-8872-38b9f9d7ab4f	client-id-pantanal	{"grant_type":"password"}	client_not_found	172.21.0.1	fc3e583c-0722-4ee1-aeef-70af67cf78ba	\N	1696883489725	LOGIN_ERROR	\N
+4dd3c046-2de5-4187-b27d-8b707bed8692	client-id-pantanal	{"grant_type":"password"}	client_not_found	172.21.0.1	fc3e583c-0722-4ee1-aeef-70af67cf78ba	\N	1696883492077	LOGIN_ERROR	\N
+026c1c60-18ef-43f3-9da6-010dafaf38be	client-id-pantanal	{"grant_type":"password"}	client_not_found	172.21.0.1	fc3e583c-0722-4ee1-aeef-70af67cf78ba	\N	1696884123116	LOGIN_ERROR	\N
+7a94255a-d555-4ac1-90f9-194048da2aa3	client-id-pantanal	{"grant_type":"password"}	client_not_found	172.21.0.1	fc3e583c-0722-4ee1-aeef-70af67cf78ba	\N	1696884125568	LOGIN_ERROR	\N
+a80e5aef-7ad2-4f50-a5d0-c97ea623604b	client-id-pantanal	{"grant_type":"password"}	client_not_found	172.21.0.1	fc3e583c-0722-4ee1-aeef-70af67cf78ba	\N	1696884128660	LOGIN_ERROR	\N
+eb031ae1-fce9-4474-a853-0028e8d3af3d	client-id-pantanal	{"grant_type":"password"}	client_not_found	172.21.0.1	fc3e583c-0722-4ee1-aeef-70af67cf78ba	\N	1696884131642	LOGIN_ERROR	\N
+9a780778-a6f8-4cd7-959f-8ab21756baed	client-id-pantanal	{"grant_type":"password"}	client_not_found	172.21.0.1	fc3e583c-0722-4ee1-aeef-70af67cf78ba	\N	1696884134838	LOGIN_ERROR	\N
+f6084bb3-455a-46ff-8c27-97494c6f6f8f	client-id-pantanal	{"grant_type":"password"}	client_not_found	172.21.0.1	fc3e583c-0722-4ee1-aeef-70af67cf78ba	\N	1696887516379	LOGIN_ERROR	\N
+c0f37268-87fa-489f-a646-f55991e4a094	client-id-pantanal	{"grant_type":"password"}	client_not_found	172.21.0.1	fc3e583c-0722-4ee1-aeef-70af67cf78ba	\N	1696887518621	LOGIN_ERROR	\N
+dc9768d7-93b3-4740-bc10-b8586862cdb9	client-id-pantanal	{"grant_type":"password"}	client_not_found	172.21.0.1	fc3e583c-0722-4ee1-aeef-70af67cf78ba	\N	1696887521138	LOGIN_ERROR	\N
+48c6e716-a20c-4231-b34d-1e8e452aab98	client-id-pantanal	{"grant_type":"password"}	client_not_found	172.21.0.1	fc3e583c-0722-4ee1-aeef-70af67cf78ba	\N	1696887524284	LOGIN_ERROR	\N
+a9573e93-345b-4d0b-acf5-6b6e8ef7d729	client-id-pantanal	{"grant_type":"password"}	client_not_found	172.21.0.1	fc3e583c-0722-4ee1-aeef-70af67cf78ba	\N	1696887527735	LOGIN_ERROR	\N
+ca17309f-290d-4373-8c7b-ef7db5dfbf5f	client-id-pantanal	{"grant_type":"password"}	client_not_found	172.21.0.1	fc3e583c-0722-4ee1-aeef-70af67cf78ba	\N	1696887531685	LOGIN_ERROR	\N
+ffa96e72-de43-4bd6-ac9f-e813f7e994a9	client-id-pantanal	{"grant_type":"password"}	client_not_found	172.21.0.1	fc3e583c-0722-4ee1-aeef-70af67cf78ba	\N	1696887533442	LOGIN_ERROR	\N
+efbb8ac5-87d7-4a8c-8448-7249a5b16c1f	client-id-pantanal	{"grant_type":"password"}	client_not_found	172.21.0.1	fc3e583c-0722-4ee1-aeef-70af67cf78ba	\N	1696887535210	LOGIN_ERROR	\N
+cc78db41-e5ab-4a5f-a8b1-07e7f247afce	client-id-pantanal	{"grant_type":"password"}	client_not_found	172.21.0.1	fc3e583c-0722-4ee1-aeef-70af67cf78ba	\N	1696887537050	LOGIN_ERROR	\N
+250ecda3-abde-490d-aeae-f4fd4de0cb03	client-id-pantanal	{"grant_type":"password"}	client_not_found	172.21.0.1	fc3e583c-0722-4ee1-aeef-70af67cf78ba	\N	1696887539602	LOGIN_ERROR	\N
+2e9aba9c-dc21-4255-adcd-78bc76105705	client-id-pantanal	{"grant_type":"password"}	client_not_found	172.21.0.1	fc3e583c-0722-4ee1-aeef-70af67cf78ba	\N	1696887597493	LOGIN_ERROR	\N
+8cf3939d-e476-4eac-afb5-321a72e1484c	client-id-pantanal	{"grant_type":"password"}	client_not_found	172.21.0.1	fc3e583c-0722-4ee1-aeef-70af67cf78ba	\N	1696887599321	LOGIN_ERROR	\N
+cac6363f-da18-455c-99de-e42f005534e3	client-id-pantanal	{"grant_type":"password"}	client_not_found	172.21.0.1	fc3e583c-0722-4ee1-aeef-70af67cf78ba	\N	1696887601688	LOGIN_ERROR	\N
+6df39b90-a454-4e6d-89e3-9cb9bff8dd49	client-id-pantanal	{"grant_type":"password"}	client_not_found	172.21.0.1	fc3e583c-0722-4ee1-aeef-70af67cf78ba	\N	1696887603766	LOGIN_ERROR	\N
+86fa702c-2e08-4092-8846-b7142ad51486	client-id-pantanal	{"grant_type":"password"}	client_not_found	172.21.0.1	fc3e583c-0722-4ee1-aeef-70af67cf78ba	\N	1696887606043	LOGIN_ERROR	\N
+41738edc-d0e6-43e5-9c8c-93d03883ed4f	client-id-pantanal	{"grant_type":"password"}	client_not_found	172.21.0.1	fc3e583c-0722-4ee1-aeef-70af67cf78ba	\N	1696887641743	LOGIN_ERROR	\N
+0b281d99-1f13-4118-92ee-c74ff49166c7	client-id-pantanal	{"grant_type":"password"}	client_not_found	172.21.0.1	fc3e583c-0722-4ee1-aeef-70af67cf78ba	\N	1696887643583	LOGIN_ERROR	\N
+2d20413f-81f4-494f-b382-a0e624bf5b31	client-id-pantanal	{"grant_type":"password"}	client_not_found	172.21.0.1	fc3e583c-0722-4ee1-aeef-70af67cf78ba	\N	1696887645812	LOGIN_ERROR	\N
+e4eeb671-31f0-4c38-838f-697b3e1f7470	client-id-pantanal	{"grant_type":"password"}	client_not_found	172.21.0.1	fc3e583c-0722-4ee1-aeef-70af67cf78ba	\N	1696887647942	LOGIN_ERROR	\N
+3669d0af-1cb5-4f1b-8fc3-13def976bdc3	client-id-pantanal	{"grant_type":"password"}	client_not_found	172.21.0.1	fc3e583c-0722-4ee1-aeef-70af67cf78ba	\N	1696887650146	LOGIN_ERROR	\N
+fd052202-735c-42b7-a9de-84a095d00228	client-id-pantanal	{"grant_type":"password"}	client_not_found	172.21.0.1	fc3e583c-0722-4ee1-aeef-70af67cf78ba	\N	1696887698682	LOGIN_ERROR	\N
+22330fe9-f77e-4826-9d0f-1038dd65a1ae	client-id-pantanal	{"grant_type":"password"}	client_not_found	172.21.0.1	fc3e583c-0722-4ee1-aeef-70af67cf78ba	\N	1696887700496	LOGIN_ERROR	\N
+3bf969f1-ce40-4e52-8cd7-674e88136e48	client-id-pantanal	{"grant_type":"password"}	client_not_found	172.21.0.1	fc3e583c-0722-4ee1-aeef-70af67cf78ba	\N	1696887702759	LOGIN_ERROR	\N
+02eff029-ba3c-40d4-ae52-6192ebf2f767	client-id-pantanal	{"grant_type":"password"}	client_not_found	172.21.0.1	fc3e583c-0722-4ee1-aeef-70af67cf78ba	\N	1696887704850	LOGIN_ERROR	\N
+60f5bc2e-1e42-411f-aed8-9ecded370186	client-id-pantanal	{"grant_type":"password"}	client_not_found	172.21.0.1	fc3e583c-0722-4ee1-aeef-70af67cf78ba	\N	1696887707117	LOGIN_ERROR	\N
+fcdd4701-bb7b-42e9-8dcb-f7308ee5cd1e	client-id-pantanal	{"grant_type":"password"}	client_not_found	172.21.0.1	fc3e583c-0722-4ee1-aeef-70af67cf78ba	\N	1696887720166	LOGIN_ERROR	\N
+3fcd438d-360a-44c8-a13d-c3120395cccc	client-id-pantanal	{"grant_type":"password"}	client_not_found	172.21.0.1	fc3e583c-0722-4ee1-aeef-70af67cf78ba	\N	1696887723527	LOGIN_ERROR	\N
+98f200e2-2af0-4119-89db-600c5f591137	client-id-pantanal	{"grant_type":"password"}	client_not_found	172.21.0.1	fc3e583c-0722-4ee1-aeef-70af67cf78ba	\N	1696887727748	LOGIN_ERROR	\N
+7937703e-1148-4555-bdd3-e4cfdfbfd152	client-id-pantanal	{"grant_type":"password"}	client_not_found	172.21.0.1	fc3e583c-0722-4ee1-aeef-70af67cf78ba	\N	1696887730257	LOGIN_ERROR	\N
+6e65d8d3-91aa-46cf-822d-53e6843e1fc2	client-id-pantanal	{"grant_type":"password"}	client_not_found	172.21.0.1	fc3e583c-0722-4ee1-aeef-70af67cf78ba	\N	1696887732476	LOGIN_ERROR	\N
+10528d24-54a3-42e2-a346-962ad8e9bcdf	client-id-pantanal	{"grant_type":"password"}	client_not_found	172.21.0.1	fc3e583c-0722-4ee1-aeef-70af67cf78ba	\N	1696887756201	LOGIN_ERROR	\N
+107ed03a-1287-4fa5-9f8b-33500559da75	client-id-pantanal	{"grant_type":"password"}	client_not_found	172.21.0.1	fc3e583c-0722-4ee1-aeef-70af67cf78ba	\N	1696887757980	LOGIN_ERROR	\N
+1f395a4e-b9d9-44af-a914-6aa5a854defc	client-id-pantanal	{"grant_type":"password"}	client_not_found	172.21.0.1	fc3e583c-0722-4ee1-aeef-70af67cf78ba	\N	1696887760158	LOGIN_ERROR	\N
+6d7f62af-8f82-4e42-a9b3-d743a06948a4	client-id-pantanal	{"grant_type":"password"}	client_not_found	172.21.0.1	fc3e583c-0722-4ee1-aeef-70af67cf78ba	\N	1696887762536	LOGIN_ERROR	\N
+189f3e95-719a-47c8-a5b1-7c9e7e485f03	client-id-pantanal	{"grant_type":"password"}	client_not_found	172.21.0.1	fc3e583c-0722-4ee1-aeef-70af67cf78ba	\N	1696887764584	LOGIN_ERROR	\N
+0a36d8a6-6516-492f-82fb-98925a5df9c0	client-id-pantanal	{"grant_type":"password"}	client_not_found	172.21.0.1	fc3e583c-0722-4ee1-aeef-70af67cf78ba	\N	1696887940585	LOGIN_ERROR	\N
+6584d45b-bc77-4632-b56f-5b5ff9057438	client-id-pantanal	{"grant_type":"password"}	client_not_found	172.21.0.1	fc3e583c-0722-4ee1-aeef-70af67cf78ba	\N	1696887942369	LOGIN_ERROR	\N
+042746b5-e892-4a2d-99d4-ece4c58fe325	client-id-pantanal	{"grant_type":"password"}	client_not_found	172.21.0.1	fc3e583c-0722-4ee1-aeef-70af67cf78ba	\N	1696887944763	LOGIN_ERROR	\N
+c059905b-add9-4bdd-b110-5a83dcdf2717	client-id-pantanal	{"grant_type":"password"}	client_not_found	172.21.0.1	fc3e583c-0722-4ee1-aeef-70af67cf78ba	\N	1696887946822	LOGIN_ERROR	\N
+aab9ed20-e151-4eac-841f-809adf594737	client-id-pantanal	{"grant_type":"password"}	client_not_found	172.21.0.1	fc3e583c-0722-4ee1-aeef-70af67cf78ba	\N	1696887949041	LOGIN_ERROR	\N
 \.
 
 
@@ -2706,6 +2822,31 @@ b13c9ab4-140d-4195-906d-d599a431a6f8	c1191242-d7bf-48f8-90ab-071fcac11b2e
 c94a3122-79b2-42a2-8190-a8070f79ea51	c1191242-d7bf-48f8-90ab-071fcac11b2e
 e1f65982-48b3-48a7-94de-bc487a1d39e0	c1191242-d7bf-48f8-90ab-071fcac11b2e
 9c98d677-c8f8-418e-8929-3093bba6d755	c1191242-d7bf-48f8-90ab-071fcac11b2e
+b5f94539-2b56-4642-ba2e-fed22ea3b57a	c1191242-d7bf-48f8-90ab-071fcac11b2e
+6b8a1e4c-c9ca-4bfc-9fa6-589b10cede96	c1191242-d7bf-48f8-90ab-071fcac11b2e
+961b022b-6859-4839-8de8-525f22fdb78c	c1191242-d7bf-48f8-90ab-071fcac11b2e
+cbcf7659-3cfe-4b8d-9e10-a851cd9f4904	c1191242-d7bf-48f8-90ab-071fcac11b2e
+bca48b01-7456-4265-9bc1-084895c7e029	c1191242-d7bf-48f8-90ab-071fcac11b2e
+94875fd8-d952-47b5-81cf-6f2544dae244	c1191242-d7bf-48f8-90ab-071fcac11b2e
+bd087c58-1a88-40a0-9178-4bf84d6f835b	c1191242-d7bf-48f8-90ab-071fcac11b2e
+2c3fc162-98eb-4c89-92f5-e9af3801241d	c1191242-d7bf-48f8-90ab-071fcac11b2e
+274a27d3-b38b-47be-bc16-5b175094b6b2	c1191242-d7bf-48f8-90ab-071fcac11b2e
+7c95f6da-1097-4a95-a0af-750dc6450e0d	c1191242-d7bf-48f8-90ab-071fcac11b2e
+16b2adb6-23a7-4565-882a-95149b8817ec	c1191242-d7bf-48f8-90ab-071fcac11b2e
+24775756-0819-4ce5-aff1-59e47f5712fe	c1191242-d7bf-48f8-90ab-071fcac11b2e
+40ee7d27-843d-483e-a6e1-fa0d97600b2c	c1191242-d7bf-48f8-90ab-071fcac11b2e
+a91414db-ff93-4d94-8d27-6c98288c1079	c1191242-d7bf-48f8-90ab-071fcac11b2e
+cf22102b-bcac-408d-86a7-60bdfa78292e	c1191242-d7bf-48f8-90ab-071fcac11b2e
+2cf0bacd-4467-4b2e-885e-dd8b6f0ac0e5	c1191242-d7bf-48f8-90ab-071fcac11b2e
+eac9e836-edd9-4129-9413-3d1ededda30a	c1191242-d7bf-48f8-90ab-071fcac11b2e
+207fc12a-6015-41a2-bb4d-ee6cf13eda22	c1191242-d7bf-48f8-90ab-071fcac11b2e
+67af0a87-12b0-4ddc-90c1-9ed2fcf8e5c9	c1191242-d7bf-48f8-90ab-071fcac11b2e
+5d2618f4-80ba-4f49-950c-29c43daadff9	c1191242-d7bf-48f8-90ab-071fcac11b2e
+cad43dce-5049-4901-b71b-44a95c277d88	c1191242-d7bf-48f8-90ab-071fcac11b2e
+7bb8e46f-cdcc-4452-8b16-9cfc3635487f	c1191242-d7bf-48f8-90ab-071fcac11b2e
+a912969e-d4ff-4676-ad2f-942217f2f85a	c1191242-d7bf-48f8-90ab-071fcac11b2e
+37f458ff-e466-4209-95b2-d831af6f996f	c1191242-d7bf-48f8-90ab-071fcac11b2e
+836205f2-2323-46e9-ab27-121cb3593371	23e5b21f-6767-4d90-a95f-8722ac688f15
 \.
 
 
@@ -2874,6 +3015,30 @@ b35d2703-0269-4f9a-a67a-08a5261a2708	89f9614c-27fd-44d6-b07c-c527669d1d5c	f		COM
 27ccf15b-8ce0-4e29-8659-c41e740fd49a	89f9614c-27fd-44d6-b07c-c527669d1d5c	f		COMPANY_DELETE	89f9614c-27fd-44d6-b07c-c527669d1d5c	\N	\N
 a3f9f04e-d350-46de-a465-2b3f8f777b23	89f9614c-27fd-44d6-b07c-c527669d1d5c	f		COMPANY_UPDATE	89f9614c-27fd-44d6-b07c-c527669d1d5c	\N	\N
 e9240927-80f7-4475-a3f5-11d3973d7b73	89f9614c-27fd-44d6-b07c-c527669d1d5c	f		COMPANY_CREATE	89f9614c-27fd-44d6-b07c-c527669d1d5c	\N	\N
+b5f94539-2b56-4642-ba2e-fed22ea3b57a	89f9614c-27fd-44d6-b07c-c527669d1d5c	f		CATEGORY_GROUP	89f9614c-27fd-44d6-b07c-c527669d1d5c	\N	\N
+6b8a1e4c-c9ca-4bfc-9fa6-589b10cede96	89f9614c-27fd-44d6-b07c-c527669d1d5c	f		CATEGORY_GROUP_CREATE	89f9614c-27fd-44d6-b07c-c527669d1d5c	\N	\N
+bca48b01-7456-4265-9bc1-084895c7e029	89f9614c-27fd-44d6-b07c-c527669d1d5c	f		CATEGORY_GROUP_UPDATE	89f9614c-27fd-44d6-b07c-c527669d1d5c	\N	\N
+961b022b-6859-4839-8de8-525f22fdb78c	89f9614c-27fd-44d6-b07c-c527669d1d5c	f		CATEGORY_GROUP_DELETE	89f9614c-27fd-44d6-b07c-c527669d1d5c	\N	\N
+cbcf7659-3cfe-4b8d-9e10-a851cd9f4904	89f9614c-27fd-44d6-b07c-c527669d1d5c	f		CATEGORY_GROUP_GET_ALL	89f9614c-27fd-44d6-b07c-c527669d1d5c	\N	\N
+94875fd8-d952-47b5-81cf-6f2544dae244	89f9614c-27fd-44d6-b07c-c527669d1d5c	f		PCD	89f9614c-27fd-44d6-b07c-c527669d1d5c	\N	\N
+bd087c58-1a88-40a0-9178-4bf84d6f835b	89f9614c-27fd-44d6-b07c-c527669d1d5c	f		PCD_CREATE	89f9614c-27fd-44d6-b07c-c527669d1d5c	\N	\N
+16b2adb6-23a7-4565-882a-95149b8817ec	89f9614c-27fd-44d6-b07c-c527669d1d5c	f		PCD_UPDATE	89f9614c-27fd-44d6-b07c-c527669d1d5c	\N	\N
+2c3fc162-98eb-4c89-92f5-e9af3801241d	89f9614c-27fd-44d6-b07c-c527669d1d5c	f		PCD_DELETE	89f9614c-27fd-44d6-b07c-c527669d1d5c	\N	\N
+274a27d3-b38b-47be-bc16-5b175094b6b2	89f9614c-27fd-44d6-b07c-c527669d1d5c	f		PCD_GET_ALL	89f9614c-27fd-44d6-b07c-c527669d1d5c	\N	\N
+7c95f6da-1097-4a95-a0af-750dc6450e0d	89f9614c-27fd-44d6-b07c-c527669d1d5c	f		PCD_GET_ONE	89f9614c-27fd-44d6-b07c-c527669d1d5c	\N	\N
+24775756-0819-4ce5-aff1-59e47f5712fe	89f9614c-27fd-44d6-b07c-c527669d1d5c	f		CATEGORY_GROUP_GET_ONE	89f9614c-27fd-44d6-b07c-c527669d1d5c	\N	\N
+40ee7d27-843d-483e-a6e1-fa0d97600b2c	89f9614c-27fd-44d6-b07c-c527669d1d5c	f		PERSON	89f9614c-27fd-44d6-b07c-c527669d1d5c	\N	\N
+a91414db-ff93-4d94-8d27-6c98288c1079	89f9614c-27fd-44d6-b07c-c527669d1d5c	f		PERSON_CREATE	89f9614c-27fd-44d6-b07c-c527669d1d5c	\N	\N
+207fc12a-6015-41a2-bb4d-ee6cf13eda22	89f9614c-27fd-44d6-b07c-c527669d1d5c	f		PERSON_UPDATE	89f9614c-27fd-44d6-b07c-c527669d1d5c	\N	\N
+eac9e836-edd9-4129-9413-3d1ededda30a	89f9614c-27fd-44d6-b07c-c527669d1d5c	f		PERSON_GET_ONE	89f9614c-27fd-44d6-b07c-c527669d1d5c	\N	\N
+2cf0bacd-4467-4b2e-885e-dd8b6f0ac0e5	89f9614c-27fd-44d6-b07c-c527669d1d5c	f		PERSON_GET_ALL	89f9614c-27fd-44d6-b07c-c527669d1d5c	\N	\N
+cf22102b-bcac-408d-86a7-60bdfa78292e	89f9614c-27fd-44d6-b07c-c527669d1d5c	f		PERSON_DELETE	89f9614c-27fd-44d6-b07c-c527669d1d5c	\N	\N
+67af0a87-12b0-4ddc-90c1-9ed2fcf8e5c9	89f9614c-27fd-44d6-b07c-c527669d1d5c	f		VOLUNTARY	89f9614c-27fd-44d6-b07c-c527669d1d5c	\N	\N
+5d2618f4-80ba-4f49-950c-29c43daadff9	89f9614c-27fd-44d6-b07c-c527669d1d5c	f		VOLUNTARY_CREATE	89f9614c-27fd-44d6-b07c-c527669d1d5c	\N	\N
+37f458ff-e466-4209-95b2-d831af6f996f	89f9614c-27fd-44d6-b07c-c527669d1d5c	f		VOLUNTARY_UPDATE	89f9614c-27fd-44d6-b07c-c527669d1d5c	\N	\N
+a912969e-d4ff-4676-ad2f-942217f2f85a	89f9614c-27fd-44d6-b07c-c527669d1d5c	f		VOLUNTARY_GET_ONE	89f9614c-27fd-44d6-b07c-c527669d1d5c	\N	\N
+7bb8e46f-cdcc-4452-8b16-9cfc3635487f	89f9614c-27fd-44d6-b07c-c527669d1d5c	f		VOLUNTARY_GET_ALL	89f9614c-27fd-44d6-b07c-c527669d1d5c	\N	\N
+cad43dce-5049-4901-b71b-44a95c277d88	89f9614c-27fd-44d6-b07c-c527669d1d5c	f		VOLUNTARY_DELETE	89f9614c-27fd-44d6-b07c-c527669d1d5c	\N	\N
 \.
 
 

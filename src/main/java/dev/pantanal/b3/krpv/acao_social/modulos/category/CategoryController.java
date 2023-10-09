@@ -48,7 +48,7 @@ public class CategoryController {
     ) {
         Pageable paging = PageRequest.of(page, size, sort);
         Page<CategoryEntity> response = service.findAll(paging, request);
-        return response; // TODO: verificar se vai converter certo
+        return response;
     }
 
     @GetMapping("/{id}")
@@ -68,7 +68,14 @@ public class CategoryController {
                 entity.getName(),
                 entity.getDescription(),
                 entity.getCode(),
-                entity.getVersion()
+                entity.getVersion(),
+                entity.getCategoryGroup(),
+                entity.getCreatedBy(),
+                entity.getLastModifiedBy(),
+                entity.getCreatedDate(),
+                entity.getLastModifiedDate(),
+                entity.getDeletedDate(),
+                entity.getDeletedBy()
         );
         return new ResponseEntity<CategoryResponseDto>(response, HttpStatus.OK);
     }
@@ -92,9 +99,15 @@ public class CategoryController {
                 entity.getName(),
                 entity.getDescription(),
                 entity.getCode(),
-                entity.getVersion()
+                entity.getVersion(),
+                entity.getCategoryGroup(),
+                entity.getCreatedBy(),
+                entity.getLastModifiedBy(),
+                entity.getCreatedDate(),
+                entity.getLastModifiedDate(),
+                entity.getDeletedDate(),
+                entity.getDeletedBy()
         );
-        // TODO: fazer um handle para gerar esse retorno
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
@@ -117,7 +130,14 @@ public class CategoryController {
                 entity.getName(),
                 entity.getDescription(),
                 entity.getCode(),
-                entity.getVersion()
+                entity.getVersion(),
+                entity.getCategoryGroup(),
+                entity.getCreatedBy(),
+                entity.getLastModifiedBy(),
+                entity.getCreatedDate(),
+                entity.getLastModifiedDate(),
+                entity.getDeletedDate(),
+                entity.getDeletedBy()
         );
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
@@ -137,6 +157,5 @@ public class CategoryController {
     public void delete(@PathVariable UUID id) {
         service.delete(id);
     }
-
 
 }

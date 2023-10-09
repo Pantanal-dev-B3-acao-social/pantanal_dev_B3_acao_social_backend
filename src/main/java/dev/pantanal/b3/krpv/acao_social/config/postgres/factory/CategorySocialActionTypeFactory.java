@@ -28,29 +28,14 @@ public class CategorySocialActionTypeFactory {
             SocialActionEntity socialActionEntity,
             CategoryEntity categoryEntity
     ) {
-        UUID createBy = UUID.randomUUID();
-        UUID deleteBy = null;
-        UUID lastModifiedBy = null;
-        LocalDateTime createdDate = LocalDateTime.now();
-        LocalDateTime lastModifiedDate = createdDate.plusHours(3).plusMinutes(30);
         FindRegisterRandom<CategoryEntity> findRegisterRandomCategory = new FindRegisterRandom<CategoryEntity>(entityManager);
         List<CategoryEntity> categories = findRegisterRandomCategory.execute("category", 1, CategoryEntity.class);
-//        Optional<CategoryEntity> firstCategory = categories.isEmpty() ? null : Optional.of(categories.get(0));
         FindRegisterRandom<SocialActionEntity> findRegisterRandomSocial = new FindRegisterRandom<SocialActionEntity>(entityManager);
         List<SocialActionEntity> socialActions = findRegisterRandomSocial.execute("social_action", 1, SocialActionEntity.class);
-//        Optional<SocialActionEntity> firstSocial = socialActions.isEmpty() ? null : Optional.of(socialActions.get(0));
-        CategorySocialActionTypeEntity created = new CategorySocialActionTypeEntity(
-                1L,
-                null,
-                categoryEntity == null ? categories.get(0) : categoryEntity, // categories.get(0), // firstCategory.orElseThrow(() -> new IllegalStateException("Categoria ausente")),
-                socialActionEntity == null ? socialActions.get(0) : socialActionEntity, // firstSocial.orElseThrow(() -> new IllegalStateException("Social Action ausente")),
-                createBy,
-                lastModifiedBy,
-                createdDate,
-                lastModifiedDate,
-                null,
-                deleteBy
-        );
+        CategorySocialActionTypeEntity created = new CategorySocialActionTypeEntity();
+        created.setCategoryEntity(categoryEntity == null ? categories.get(0) : categoryEntity);
+        created.setSocialActionEntity(socialActionEntity == null ? socialActions.get(0) : socialActionEntity);
+        created.setVersion(1L);
         return created;
     }
 

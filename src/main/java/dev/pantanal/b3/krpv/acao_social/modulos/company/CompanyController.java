@@ -1,9 +1,7 @@
 package dev.pantanal.b3.krpv.acao_social.modulos.company;
 
-import dev.pantanal.b3.krpv.acao_social.modulos.company.CompanyEntity;
-import dev.pantanal.b3.krpv.acao_social.modulos.category.dto.request.CategoryParamsDto;
-import dev.pantanal.b3.krpv.acao_social.modulos.company.dto.request.CompanyCreateDto;
 import dev.pantanal.b3.krpv.acao_social.modulos.company.dto.request.CompanyParamsDto;
+import dev.pantanal.b3.krpv.acao_social.modulos.company.dto.request.CompanyCreateDto;
 import dev.pantanal.b3.krpv.acao_social.modulos.company.dto.request.CompanyUpdateDto;
 import dev.pantanal.b3.krpv.acao_social.modulos.company.dto.response.CompanyResponseDto;
 import io.swagger.v3.oas.annotations.Operation;
@@ -18,7 +16,6 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.web.SortDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
@@ -70,7 +67,13 @@ public class CompanyController {
                 entity.getName(),
                 entity.getDescription(),
                 entity.getCnpj(),
-                entity.getVersion()
+                entity.getVersion(),
+                entity.getCreatedBy(),
+                entity.getLastModifiedBy(),
+                entity.getCreatedDate(),
+                entity.getLastModifiedDate(),
+                entity.getDeletedDate(),
+                entity.getDeletedBy()
         );
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
@@ -94,7 +97,13 @@ public class CompanyController {
                 entity.getName(),
                 entity.getDescription(),
                 entity.getCnpj(),
-                entity.getVersion()
+                entity.getVersion(),
+                entity.getCreatedBy(),
+                entity.getLastModifiedBy(),
+                entity.getCreatedDate(),
+                entity.getLastModifiedDate(),
+                entity.getDeletedDate(),
+                entity.getDeletedBy()
         );
         // TODO: fazer um handle para gerar esse retorno
         return new ResponseEntity<>(response, HttpStatus.CREATED);
@@ -119,7 +128,13 @@ public class CompanyController {
                 entity.getName(),
                 entity.getDescription(),
                 entity.getCnpj(),
-                entity.getVersion()
+                entity.getVersion(),
+                entity.getCreatedBy(),
+                entity.getLastModifiedBy(),
+                entity.getCreatedDate(),
+                entity.getLastModifiedDate(),
+                entity.getDeletedDate(),
+                entity.getDeletedBy()
         );
         return new ResponseEntity<>(response, HttpStatus.OK);
     }

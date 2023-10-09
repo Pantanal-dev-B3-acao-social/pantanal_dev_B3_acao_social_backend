@@ -8,7 +8,8 @@ import java.time.LocalDateTime;
 public record SessionUpdateDto (
         String description,
         SocialActionEntity socialAction,
-        LocalDateTime time,
+        LocalDateTime dateStart,
+        LocalDateTime dateEnd,
         StatusEnum status,
         VisibilityEnum visibility
 ) {}

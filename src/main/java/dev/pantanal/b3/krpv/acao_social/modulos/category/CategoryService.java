@@ -29,6 +29,7 @@ public class CategoryService {
         CategoryEntity entity = new CategoryEntity();
         entity.setName(dataRequest.name());
         entity.setDescription(dataRequest.description());
+        entity.setCategoryGroup(dataRequest.categoryGroup());
         String code = generatorCode.execute(entity.getName());
         entity.setCode(code);
         CategoryEntity savedObj = categoryRepository.save(entity);
@@ -66,8 +67,8 @@ public class CategoryService {
         if (request.description() != null) {
             obj.setDescription(request.description());
         }
-        if (request.code() != null) {
-            obj.setCode(request.code());
+        if (request.categoryGroup() != null) {
+            obj.setCategoryGroup(request.categoryGroup());
         }
         CategoryEntity updatedObj = categoryRepository.update(obj);
         return updatedObj;

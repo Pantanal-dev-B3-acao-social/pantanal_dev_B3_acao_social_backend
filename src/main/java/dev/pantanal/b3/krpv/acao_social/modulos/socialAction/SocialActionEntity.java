@@ -1,7 +1,10 @@
 package dev.pantanal.b3.krpv.acao_social.modulos.socialAction;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import dev.pantanal.b3.krpv.acao_social.config.audit.AuditListener;
+import dev.pantanal.b3.krpv.acao_social.modulos.category.entity.CategorySocialActionLevelEntity;
 import dev.pantanal.b3.krpv.acao_social.modulos.category.entity.CategorySocialActionTypeEntity;
+import dev.pantanal.b3.krpv.acao_social.modulos.session.SessionEntity;
 import jakarta.persistence.*;
 import jakarta.validation.Valid;
 //import jakarta.validation.constraints.NotBlank;
@@ -34,15 +37,17 @@ public class SocialActionEntity {
 
     @Valid
     @Version
-    private Long version;
+    private Long version = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(columnDefinition = "uuid")
     @NotNull
     private UUID id;
+
     @Column(nullable = false)
 //    @NotBlank
     private String name;
+
     @Column(nullable = false)
 //    @NotBlank
     private String description;
@@ -75,11 +80,20 @@ public class SocialActionEntity {
      * orphanRemoval = true faz com que SocialActionEntity é optional ter preenchido alguma CategorySocialActionTypeEntity
      */
 //    @Optional
-    @OneToMany(mappedBy = "socialActionEntity", orphanRemoval = true)
+    @OneToMany(mappedBy = "socialActionEntity", orphanRemoval = true, cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+//    @OneToMany(mappedBy = "socialActionEntity", orphanRemoval = true, cascade = CascadeType.DETACH , fetch = FetchType.LAZY)
+    @ToString.Exclude
+    @JsonIgnoreProperties("socialActionEntity")
     private List<CategorySocialActionTypeEntity> categorySocialActionTypeEntities = new ArrayList<>();
 
-//    @OneToMany(mappedBy = "socialAction", cascade = CascadeType.ALL)
-//    private List<SessionEntity> sessions;
+    @OneToMany(mappedBy = "socialActionEntity", orphanRemoval = true, cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @ToString.Exclude
+    @JsonIgnoreProperties("socialActionEntity")
+    private List<CategorySocialActionLevelEntity> categorySocialActionLevelEntities = new ArrayList<>();
+
+    @OneToMany(mappedBy = "socialAction", fetch = FetchType.LAZY /*, cascade = CascadeType.ALL */ )
+    @ToString.Exclude
+    private List<SessionEntity> sessionsEntities;
 
     @PrePersist
     protected void onCreate() {
