@@ -1,7 +1,7 @@
 acao-social:
   db:
     active: dbinit
-#    db-name: postgres
+    #    db-name: postgres
     db-name: postgres_testing
   spring-boot:
     environment: testing
@@ -17,8 +17,8 @@ server:
   host: http://localhost/
 
 spring:
-#  profiles:
-#    active: development, dbinit
+  #  profiles:
+  #    active: development, dbinit
   flyway:
     enabled: true
     baseline-on-migrate: true
@@ -34,7 +34,7 @@ spring:
     driver-class-name: org.postgresql.Driver
     url: jdbc:postgresql://localhost:5432/${acao-social.db.db-name}
     schema: schema.sql
-#    initialization-mode: always
+  #    initialization-mode: always
   jpa:
     show-sql: true
     generate-ddl: true
