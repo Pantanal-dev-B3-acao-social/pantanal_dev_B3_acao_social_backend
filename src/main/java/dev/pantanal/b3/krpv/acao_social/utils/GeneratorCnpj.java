@@ -3,7 +3,7 @@ package dev.pantanal.b3.krpv.acao_social.utils;
 import org.springframework.stereotype.Component;
 
 @Component
-public class GeraCNPJ {
+public class GeneratorCnpj {
     private int randomiza(int n) {
         int ranNum = (int) (Math.random() * n);
         return ranNum;

@@ -9,14 +9,13 @@ import dev.pantanal.b3.krpv.acao_social.config.postgres.factory.SocialActionFact
 import dev.pantanal.b3.krpv.acao_social.modulos.category.entity.CategoryEntity;
 import dev.pantanal.b3.krpv.acao_social.utils.GenerateTokenUserForLogged;
 import dev.pantanal.b3.krpv.acao_social.modulos.auth.dto.LoginUserDto;
-import dev.pantanal.b3.krpv.acao_social.modulos.category.modules.categoryGroup.CategoryGroupEntity;
 import dev.pantanal.b3.krpv.acao_social.modulos.session.SessionEntity;
 import dev.pantanal.b3.krpv.acao_social.modulos.session.enums.StatusEnum;
 import dev.pantanal.b3.krpv.acao_social.modulos.session.enums.VisibilityEnum;
 import dev.pantanal.b3.krpv.acao_social.modulos.session.repository.SessionPostgresRepository;
 import dev.pantanal.b3.krpv.acao_social.modulos.session.repository.SessionRepository;
 import dev.pantanal.b3.krpv.acao_social.modulos.socialAction.SocialActionEntity;
-import dev.pantanal.b3.krpv.acao_social.utils.EnumUtil;
+import dev.pantanal.b3.krpv.acao_social.utils.EnumUtils;
 import dev.pantanal.b3.krpv.acao_social.utils.FindRegisterRandom;
 import dev.pantanal.b3.krpv.acao_social.utils.LoginMock;
 import jakarta.persistence.EntityManager;
@@ -35,12 +34,9 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
-import java.util.stream.Collectors;
-
 import static dev.pantanal.b3.krpv.acao_social.modulos.session.SessionController.ROUTE_SESSION;
 import static org.hamcrest.Matchers.hasSize;
 
@@ -251,9 +247,9 @@ public class SessionControllerIT {
         LocalDateTime dateEnd = dateStart.plusHours(2).plusMinutes(0);
         item.setDateStartTime(dateStart);
         item.setDateEndTime(dateEnd);
-        StatusEnum statusEnum = new EnumUtil<StatusEnum>().getRandomValueDiff(item.getStatus());
+        StatusEnum statusEnum = new EnumUtils<StatusEnum>().getRandomValueDiff(item.getStatus());
         item.setStatus(statusEnum);
-        VisibilityEnum visibilityEnum = new EnumUtil<VisibilityEnum>().getRandomValueDiff(item.getVisibility());
+        VisibilityEnum visibilityEnum = new EnumUtils<VisibilityEnum>().getRandomValueDiff(item.getVisibility());
         item.setVisibility(visibilityEnum);
         FindRegisterRandom findRegisterRandom = new FindRegisterRandom<SocialActionEntity>(entityManager);
         List<SocialActionEntity> socialActions = findRegisterRandom.execute("social_action", 1, SocialActionEntity.class);

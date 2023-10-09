@@ -6,7 +6,7 @@ import dev.pantanal.b3.krpv.acao_social.modulos.socialAction.SocialActionEntity;
 import dev.pantanal.b3.krpv.acao_social.modulos.voluntary.VoluntaryEntity;
 import dev.pantanal.b3.krpv.acao_social.modulos.voluntary.enums.StatusEnum;
 import dev.pantanal.b3.krpv.acao_social.modulos.voluntary.repository.VoluntaryRepository;
-import dev.pantanal.b3.krpv.acao_social.utils.EnumUtil;
+import dev.pantanal.b3.krpv.acao_social.utils.EnumUtils;
 import dev.pantanal.b3.krpv.acao_social.utils.FindRegisterRandom;
 import dev.pantanal.b3.krpv.acao_social.utils.GeneretorCpf;
 import jakarta.persistence.EntityManager;
@@ -17,7 +17,6 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
-import java.util.UUID;
 
 @Component
 public class VoluntaryFactory {
@@ -44,7 +43,7 @@ public class VoluntaryFactory {
         FindRegisterRandom<PersonEntity> findPersonRandom = new FindRegisterRandom<PersonEntity>(entityManager);
         List<PersonEntity> persons = findPersonRandom.execute("person", 2, PersonEntity.class);
         LocalDateTime approvedDate = LocalDateTime.now();
-        StatusEnum statusEnum = new EnumUtil<StatusEnum>().getRandomValue(StatusEnum.class);
+        StatusEnum statusEnum = new EnumUtils<StatusEnum>().getRandomValue(StatusEnum.class);
         int score = random.nextInt(11); // Gere um número aleatório no intervalo de 0 a 10
         VoluntaryEntity voluntaryEntity = new VoluntaryEntity();
         voluntaryEntity.setObservation(faker.lorem().sentence());

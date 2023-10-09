@@ -1,9 +1,9 @@
-package dev.pantanal.b3.krpv.acao_social.modulos.Investment;
+package dev.pantanal.b3.krpv.acao_social.modulos.investment;
 
-import dev.pantanal.b3.krpv.acao_social.modulos.Investment.dto.request.InvestmentCreateDto;
-import dev.pantanal.b3.krpv.acao_social.modulos.Investment.dto.request.InvestmentParamsDto;
-import dev.pantanal.b3.krpv.acao_social.modulos.Investment.dto.request.InvestmentUpdateDto;
-import dev.pantanal.b3.krpv.acao_social.modulos.Investment.dto.response.InvestmentResponseDto;
+import dev.pantanal.b3.krpv.acao_social.modulos.investment.dto.request.InvestmentCreateDto;
+import dev.pantanal.b3.krpv.acao_social.modulos.investment.dto.request.InvestmentParamsDto;
+import dev.pantanal.b3.krpv.acao_social.modulos.investment.dto.request.InvestmentUpdateDto;
+import dev.pantanal.b3.krpv.acao_social.modulos.investment.dto.response.InvestmentResponseDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -16,11 +16,10 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.web.SortDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import java.util.UUID;
 
-import static dev.pantanal.b3.krpv.acao_social.modulos.Investment.InvestmentController.ROUTE_INVESTMENT;
+import static dev.pantanal.b3.krpv.acao_social.modulos.investment.InvestmentController.ROUTE_INVESTMENT;
 
 @RestController
 @RequestMapping(ROUTE_INVESTMENT)

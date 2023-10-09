@@ -3,7 +3,7 @@ package dev.pantanal.b3.krpv.acao_social.config.postgres.factory;
 import com.github.javafaker.Faker;
 import dev.pantanal.b3.krpv.acao_social.modulos.company.CompanyEntity;
 import dev.pantanal.b3.krpv.acao_social.modulos.company.repository.CompanyRepository;
-import dev.pantanal.b3.krpv.acao_social.utils.GeraCNPJ;
+import dev.pantanal.b3.krpv.acao_social.utils.GeneratorCnpj;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
@@ -21,7 +21,7 @@ public class CompanyFactory {
     @Autowired
     private CompanyRepository repository;
     @Autowired
-    GeraCNPJ geradorDeCNPJ;
+    GeneratorCnpj generatorCnpj;
 
     @Autowired
     public CompanyFactory(JdbcTemplate jdbcTemplate) {
@@ -35,7 +35,7 @@ public class CompanyFactory {
         LocalDateTime createdDate = LocalDateTime.now();
         LocalDateTime lastModifiedDate = createdDate.plusHours(3).plusMinutes(30);
         String name = faker.name().fullName();
-        String cnpj = geradorDeCNPJ.cnpj(true);
+        String cnpj = generatorCnpj.cnpj(true);
         return new CompanyEntity(
                 1L,
                 UUID.randomUUID(),
