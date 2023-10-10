@@ -5,6 +5,7 @@ import dev.pantanal.b3.krpv.acao_social.modulos.auth.dto.LoginUserDto;
 import dev.pantanal.b3.krpv.acao_social.modulos.category.entity.CategoryEntity;
 import dev.pantanal.b3.krpv.acao_social.modulos.category.modules.categoryGroup.CategoryGroupEntity;
 import dev.pantanal.b3.krpv.acao_social.modulos.person.PersonEntity;
+import dev.pantanal.b3.krpv.acao_social.modulos.session.SessionEntity;
 import dev.pantanal.b3.krpv.acao_social.modulos.socialAction.SocialActionEntity;
 import dev.pantanal.b3.krpv.acao_social.utils.GenerateTokenUserForLogged;
 import dev.pantanal.b3.krpv.acao_social.utils.LoginMock;
@@ -32,6 +33,7 @@ public class SeedDataService {
     private final DonationFactory donationFactory;
     private final PersonFactory personFactory;
     private final CompanyFactory companyFactory;
+    private final PresenceFactory presenceFactory;
     @Autowired
     GenerateTokenUserForLogged generateTokenUserForLogged;
     @Autowired
@@ -48,7 +50,8 @@ public class SeedDataService {
             InvestmentFactory investmentFactory,
             DonationFactory donationFactory,
             PersonFactory personFactory,
-            CompanyFactory companyFactory
+            CompanyFactory companyFactory,
+            PresenceFactory presenceFactory
     ) {
         this.socialActionFactory = socialActionFactory;
         this.sessionFactory = sessionFactory;
@@ -59,6 +62,7 @@ public class SeedDataService {
         this.donationFactory = donationFactory;
         this.personFactory = personFactory;
         this.companyFactory = companyFactory;
+        this.presenceFactory = presenceFactory;
     }
 
     public void executeAllSeed() {
@@ -85,9 +89,10 @@ public class SeedDataService {
         this.companyFactory.insertMany(4);
         this.ongFactory.insertMany(10);
         List<SocialActionEntity> socialActionEntities = this.socialActionFactory.insertMany(20, forCategoryTypeIds, null);
-        this.sessionFactory.insertMany(100);
+        List<SessionEntity> sessions = this.sessionFactory.insertMany(100);
         this.investmentFactory.insertMany(250);
         this.donationFactory.insertMany(450, socialActionEntities, personEntities, personEntities);
+        this.presenceFactory.insertMany(100, personEntities, sessions, personEntities);
     }
 
 }
