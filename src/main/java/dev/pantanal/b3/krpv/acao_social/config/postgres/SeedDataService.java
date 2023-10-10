@@ -63,12 +63,12 @@ public class SeedDataService {
         List<UUID> forCategoryTypeIds = categoriesType.stream()
                 .map(category -> category.getId())
                 .collect(Collectors.toList());
-        List<UUID> usersRandom = IntStream.range(0, 4)
+        List<UUID> usersRandom = IntStream.range(0, 3000)
                 .mapToObj(i -> UUID.randomUUID())
                 .collect(Collectors.toList());
         // SEED
         this.categoryFactory.insertMany(100, groupEntities);
-        List<PersonEntity> personEntities = this.personFactory.insertMany(3000, usersRandom);
+        List<PersonEntity> personEntities = this.personFactory.insertMany(usersRandom.size(), usersRandom);
 //        this.companyFactory.insertMany(4);
         this.ongFactory.insertMany(10);
         List<SocialActionEntity> socialActionEntities = this.socialActionFactory.insertMany(20, forCategoryTypeIds, null);

@@ -30,7 +30,7 @@ public class PersonFactory {
 
     @Autowired
     public PersonFactory(
-            JdbcTemplate jdbcTemplate
+        JdbcTemplate jdbcTemplate
     ) {
         this.jdbcTemplate = jdbcTemplate;
     }
