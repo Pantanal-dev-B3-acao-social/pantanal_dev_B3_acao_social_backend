@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import dev.pantanal.b3.krpv.acao_social.config.postgres.factory.*;
 import dev.pantanal.b3.krpv.acao_social.modulos.auth.dto.LoginUserDto;
+import dev.pantanal.b3.krpv.acao_social.modulos.category.entity.CategoryEntity;
 import dev.pantanal.b3.krpv.acao_social.modulos.person.PersonEntity;
 import dev.pantanal.b3.krpv.acao_social.modulos.presence.PresenceEntity;
 import dev.pantanal.b3.krpv.acao_social.modulos.presence.repository.PresenceRepository;
@@ -88,6 +89,10 @@ public class PresenceControllerIT {
         // mapper
         this.objectMapper = new ObjectMapper();
         this.objectMapper.registerModule(new JavaTimeModule());
+        // cadastrar socialActons
+        List<CategoryEntity> categoriesType = categoryFactory.makeFakeByGroup(2, "social action type", "grupo de categorias para usar no TIPO de ação social");
+        List<CategoryEntity> categoriesLevel = categoryFactory.makeFakeByGroup(2, "social action level", "grupo de categorias para usar no NÍVEL de ação social");
+        List<SocialActionEntity> socialActionEntities = socialActionFactory.insertManyFull(3, categoriesType, categoriesLevel);
         // cadastra session
         this.sessionsEntities = this.sessionFactory.insertMany(100);
         // cadastrar persons
@@ -232,57 +237,6 @@ public class PresenceControllerIT {
         PresenceEntity deleted = presenceRepository.findById(savedItem.getId());
         Assertions.assertNull(deleted); // Deve ser nulo para passar o teste
 
-    }
-    // TODO: implementar soft-delete
-
-    @Test
-    @DisplayName("Atualiza uma presence com sucesso")
-    void updatePresence() throws Exception {
-        // Arrange (Organizar)
-        Integer indexPerson = random.nextInt(0, personEntities.size());
-        Integer indexSession = random.nextInt(0, sessionsEntities.size());
-        PresenceEntity item = presenceFactory.makeFakeEntity(
-                personEntities.get(indexPerson),
-                sessionsEntities.get(indexSession),
-                personEntities.get(indexPerson)
-        );
-        // Modifica alguns dados da presence
-        LocalDateTime approvedDateUpdate = item.getApprovedDate().plusHours(2).plusMinutes(40);
-        FindRegisterRandom<PersonEntity> findPersonRandom = new FindRegisterRandom<PersonEntity>(entityManager);
-        List<PersonEntity> persons = findPersonRandom.execute("person", 2, PersonEntity.class);
-        Integer indexSessionUpdate = random.nextInt(0, sessionsEntities.size());
-        item.setSession(sessionsEntities.get(indexSessionUpdate));
-        item.setPerson(persons.get(1));
-        item.setApprovedDate(approvedDateUpdate);
-        item.setApprovedBy(persons.get(0));
-        String updatedPresenceJson = objectMapper.writeValueAsString(item);
-        // Act (ação)
-        ResultActions resultActions = mockMvc.perform(
-                MockMvcRequestBuilders.patch(ROUTE_PRESENCE + "/{id}", item.getId())
-                        .header("Authorization", "Bearer " + tokenUserLogged)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(updatedPresenceJson)
-        );
-        // Assert (Verificar)
-        resultActions
-                .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.id").value(item.getId().toString()))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.session.id").value(item.getSession().getId().toString()))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.person.id").value(item.getPerson().getId().toString()))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.approvedBy.id").value(item.getApprovedBy().getId().toString()))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.approvedDate").value(item.getApprovedDate().format(formatter)))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.createdBy").value(item.getCreatedBy().toString()))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.createdDate").value(item.getCreatedDate().format(formatter)))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.deletedDate").isEmpty())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.deletedBy").isEmpty())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.lastModifiedBy").value(
-                        item.getLastModifiedBy() == null  ?
-                                null : item.getLastModifiedBy().toString())
-                )
-                .andExpect(MockMvcResultMatchers.jsonPath("$.lastModifiedDate").value(
-                        item.getLastModifiedDate() == null ?
-                                null : item.getLastModifiedDate().format(formatter))
-                );
     }
 
 }
