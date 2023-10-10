@@ -34,6 +34,7 @@ public class SocialActionController {
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
+    @PreAuthorize("hasAnyRole('SOCIAL_ACTION_GET_ALL')")
     @Operation(summary = "Gets Social Actions", method = "GET")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Element(s) found successfully"),
@@ -55,6 +56,7 @@ public class SocialActionController {
 
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
+    @PreAuthorize("hasAnyRole('SOCIAL_ACTION_GET_ONE')")
     @Operation(summary = "Gets one Social Action", method = "GET")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Element found successfully"),

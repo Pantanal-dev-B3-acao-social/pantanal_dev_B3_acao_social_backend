@@ -47,27 +47,31 @@ public class SocialActionService {
     }
 
     private void saveSocialActionType(List<UUID> categoryTypeIds, SocialActionEntity socialActionSaved) {
-        for (UUID categoryId : categoryTypeIds) {
-            CategoryEntity categoryEntity = categoryRepository.findById(categoryId);
-            if (categoryEntity != null) {
-                CategorySocialActionTypeEntity typeCategory = new CategorySocialActionTypeEntity();
-                typeCategory.setCategoryEntity(categoryEntity);
-                typeCategory.setSocialActionEntity(socialActionSaved);
-//                categorySocialActionTypePostgresRepository.save(typeCategory);
-                socialActionSaved.getCategorySocialActionTypeEntities().add(typeCategory);
+        if(categoryTypeIds != null) {
+            for (UUID categoryId : categoryTypeIds) {
+                CategoryEntity categoryEntity = categoryRepository.findById(categoryId);
+                if (categoryEntity != null) {
+                    CategorySocialActionTypeEntity typeCategory = new CategorySocialActionTypeEntity();
+                    typeCategory.setCategoryEntity(categoryEntity);
+                    typeCategory.setSocialActionEntity(socialActionSaved);
+    //                categorySocialActionTypePostgresRepository.save(typeCategory);
+                    socialActionSaved.getCategorySocialActionTypeEntities().add(typeCategory);
+                }
             }
         }
     }
 
     private void saveSocialActionLevel(List<UUID> categoryLevelIds, SocialActionEntity socialActionSaved) {
-        for (UUID categoryId : categoryLevelIds) {
-            CategoryEntity categoryEntity = categoryRepository.findById(categoryId);
-            if (categoryEntity != null) {
-                CategorySocialActionLevelEntity typeCategory = new CategorySocialActionLevelEntity();
-                typeCategory.setCategoryEntity(categoryEntity);
-                typeCategory.setSocialActionEntity(socialActionSaved);
+        if(categoryLevelIds != null) {
+            for (UUID categoryId : categoryLevelIds) {
+                CategoryEntity categoryEntity = categoryRepository.findById(categoryId);
+                if (categoryEntity != null) {
+                    CategorySocialActionLevelEntity typeCategory = new CategorySocialActionLevelEntity();
+                    typeCategory.setCategoryEntity(categoryEntity);
+                    typeCategory.setSocialActionEntity(socialActionSaved);
 //                categorySocialActionLevelPostgresRepository.save(typeCategory);
-                socialActionSaved.getCategorySocialActionLevelEntities().add(typeCategory);
+                    socialActionSaved.getCategorySocialActionLevelEntities().add(typeCategory);
+                }
             }
         }
     }

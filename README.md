@@ -82,7 +82,9 @@ $ docker-compose up
 $ ./mvnw spring-boot:run
 
 ## Processo de execução em ambiente de desenvolvimento
+$ docker-compose down -v
 $ docker-compose up
+$ ./mvnw clean install
 $ SPRING_PROFILES_ACTIVE=dev ./mvnw spring-boot:run
 - variavel de ambiente para executar em ambiente de teste: "SPRING_PROFILES_ACTIVE=dev"
 
