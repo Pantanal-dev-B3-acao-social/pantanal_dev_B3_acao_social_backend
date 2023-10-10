@@ -2,7 +2,6 @@ package dev.pantanal.b3.krpv.acao_social.modulos.category.modules.categoryGroup;
 
 import dev.pantanal.b3.krpv.acao_social.config.audit.AuditListener;
 import dev.pantanal.b3.krpv.acao_social.modulos.category.entity.CategoryEntity;
-import dev.pantanal.b3.krpv.acao_social.modulos.category.entity.CategorySocialActionTypeEntity;
 import dev.pantanal.b3.krpv.acao_social.modulos.category.modules.categoryGroup.enums.VisibilityCategoryGroupEnum;
 import jakarta.persistence.*;
 import jakarta.validation.Valid;
@@ -59,6 +58,8 @@ public class CategoryGroupEntity {
     @JoinColumn(name = "category_group_id")
     private CategoryGroupEntity parentCategoryGroupEntity;
 
+    @Enumerated(EnumType.STRING)
+    @Column(name = "visibility")
     private VisibilityCategoryGroupEnum visibility;
 
     @CreatedBy

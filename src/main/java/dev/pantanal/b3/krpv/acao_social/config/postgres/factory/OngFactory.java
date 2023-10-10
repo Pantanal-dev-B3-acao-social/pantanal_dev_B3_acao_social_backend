@@ -5,7 +5,9 @@ import dev.pantanal.b3.krpv.acao_social.modulos.ong.OngEntity;
 import dev.pantanal.b3.krpv.acao_social.modulos.ong.enums.StatusEnum;
 import dev.pantanal.b3.krpv.acao_social.modulos.ong.repository.OngRepository;
 import dev.pantanal.b3.krpv.acao_social.modulos.person.PersonEntity;
+import dev.pantanal.b3.krpv.acao_social.modulos.socialAction.SocialActionEntity;
 import dev.pantanal.b3.krpv.acao_social.utils.EnumUtils;
+import dev.pantanal.b3.krpv.acao_social.utils.FindRegisterRandom;
 import dev.pantanal.b3.krpv.acao_social.utils.GeneratorCnpj;
 import jakarta.persistence.EntityManager;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,12 +42,13 @@ public class OngFactory {
 
     public OngEntity makeFakeEntity() {
         StatusEnum caseEnum = new EnumUtils<StatusEnum>().getRandomValue(StatusEnum.class);
-        PersonEntity person = personFactory.insertOne(personFactory.makeFakeEntity(UUID.randomUUID()));
+        FindRegisterRandom<PersonEntity> findRegisterRandom = new FindRegisterRandom<PersonEntity>(entityManager);
+        List<PersonEntity> person = findRegisterRandom.execute("person", 1, PersonEntity.class);
         String cnpj = generatorCnpj.cnpj(true);
         OngEntity ongEntity = new OngEntity();
         ongEntity.setName(faker.lorem().sentence());
         ongEntity.setCnpj(cnpj);
-        ongEntity.setResponsibleEntity(person);
+        ongEntity.setResponsibleEntity(person.get(0));
         ongEntity.setStatus(caseEnum);
         return ongEntity;
     }

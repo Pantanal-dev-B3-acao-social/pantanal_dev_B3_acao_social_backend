@@ -48,7 +48,8 @@ public class PersonEntity {
     @Column(name = "date_birth")
     private LocalDateTime dateBirth;
 
-    @Column
+    @Enumerated(EnumType.STRING)
+    @Column(length = 255)
     private StatusEnum status;
 
     @Column(nullable = false, unique = true)

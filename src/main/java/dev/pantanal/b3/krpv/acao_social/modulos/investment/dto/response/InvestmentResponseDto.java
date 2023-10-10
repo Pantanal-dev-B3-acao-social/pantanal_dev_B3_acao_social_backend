@@ -2,9 +2,12 @@ package dev.pantanal.b3.krpv.acao_social.modulos.investment.dto.response;
 
 
 import dev.pantanal.b3.krpv.acao_social.modulos.company.CompanyEntity;
+import dev.pantanal.b3.krpv.acao_social.modulos.person.PersonEntity;
 import dev.pantanal.b3.krpv.acao_social.modulos.socialAction.SocialActionEntity;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
+
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
@@ -15,7 +18,7 @@ public record InvestmentResponseDto(
         UUID id,
 
         @NotBlank(message = "field value_money can not be empty")
-        Double value_money,
+        BigDecimal valueMoney,
 
         @NotBlank(message = "field date can not be empty")
         LocalDateTime date,
@@ -23,8 +26,10 @@ public record InvestmentResponseDto(
         @NotBlank(message = "field motivation can not be empty")
         String motivation,
 
-        @NotBlank(message = "field approvedAt can not be empty")
-        LocalDateTime approvedAt,
+        @NotBlank(message = "field approvedBy can not be empty")
+        PersonEntity approvedBy,
+        @NotBlank(message = "field approvedDate can not be empty")
+        LocalDateTime approvedDate,
 
         SocialActionEntity socialAction,
 

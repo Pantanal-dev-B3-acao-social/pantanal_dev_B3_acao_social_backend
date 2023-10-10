@@ -78,15 +78,19 @@ public class DonationEntity {
     private LocalDateTime approvedDate;
 
     @CreatedBy
+    @Column(name = "created_by")
     private UUID createdBy;
 
     @LastModifiedBy
+    @Column(name = "last_modified_by")
     private UUID lastModifiedBy;
 
     @CreatedDate
+    @Column(name = "created_date")
     private LocalDateTime createdDate;
 
     @LastModifiedDate
+    @Column(name = "last_modified_date")
     private LocalDateTime lastModifiedDate;
 
     @Column(name = "deleted_date")

@@ -59,7 +59,8 @@ public class VoluntaryEntity {
     @Column(name = "approved_date")
     private LocalDateTime approvedDate;
 
-    // TODO: @Column
+    @Enumerated(EnumType.STRING)
+    @Column(length = 255)
     private StatusEnum status;
 
     @Column(name = "feedback_score_voluntary")

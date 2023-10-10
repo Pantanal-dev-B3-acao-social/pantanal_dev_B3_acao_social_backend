@@ -43,6 +43,8 @@ public class OngEntity {
     @CNPJ
     String cnpj;
 
+    @Enumerated(EnumType.STRING)
+    @Column(length = 255)
     StatusEnum status;
 
     @CreatedBy

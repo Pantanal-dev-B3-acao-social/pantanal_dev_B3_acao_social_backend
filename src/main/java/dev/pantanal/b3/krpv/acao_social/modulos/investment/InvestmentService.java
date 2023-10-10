@@ -24,10 +24,11 @@ public class InvestmentService {
 
     public InvestmentEntity create(InvestmentCreateDto request) {
         InvestmentEntity newInvestiment = new InvestmentEntity();
-        newInvestiment.setValue_money(request.value_money());
+        newInvestiment.setValueMoney(request.valueMoney());
         newInvestiment.setDate(request.date());
         newInvestiment.setMotivation(request.motivation());
-        newInvestiment.setApprovedAt(request.approvedAt());
+        newInvestiment.setApprovedBy(request.approvedBy());
+        newInvestiment.setApprovedDate(request.approvedDate());
         newInvestiment.setSocialAction(request.socialAction());
         newInvestiment.setCompany(request.company());
         InvestmentEntity savedInvestment = repository.save(newInvestiment);
@@ -49,20 +50,29 @@ public class InvestmentService {
     }
     public InvestmentEntity update(UUID id, InvestmentUpdateDto request) {
         InvestmentEntity obj = repository.findById(id);
-        if (obj == null){
+        if (obj == null) {
             throw new ObjectNotFoundException("Resgistro não encontrado: " + id);
         }
-        if (request.value_money() != null){
-            obj.setValue_money(request.value_money());
+        if (request.valueMoney() != null) {
+            obj.setValueMoney(request.valueMoney());
         }
-        if (request.date() != null){
+        if (request.date() != null) {
             obj.setDate(request.date());
         }
-        if (request.motivation() !=  null){
+        if (request.motivation() !=  null) {
             obj.setMotivation(request.motivation());
         }
-        if (request.approvedAt() != null){
-            obj.setApprovedAt(request.approvedAt());
+        if (request.approvedBy() != null) {
+            obj.setApprovedBy(request.approvedBy());
+        }
+        if (request.approvedDate() != null) {
+            obj.setApprovedDate(request.approvedDate());
+        }
+        if (request.socialAction() != null) {
+            obj.setSocialAction(request.socialAction());
+        }
+        if (request.company() != null) {
+            obj.setCompany(request.company());
         }
         return repository.update(obj);
     }
