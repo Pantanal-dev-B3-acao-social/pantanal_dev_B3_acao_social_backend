@@ -11,8 +11,8 @@ CREATE TABLE ong (
     last_modified_date TIMESTAMP,
     deleted_date TIMESTAMP,
     deleted_by UUID,
-    responsible_entity_id UUID NOT NULL,
-    FOREIGN KEY (responsible_entity_id) REFERENCES person (id)
+    responsibility_id UUID NOT NULL,
+    FOREIGN KEY (responsibility_id) REFERENCES person (id)
 );
 
 -- Create index on cnpj for uniqueness constraint

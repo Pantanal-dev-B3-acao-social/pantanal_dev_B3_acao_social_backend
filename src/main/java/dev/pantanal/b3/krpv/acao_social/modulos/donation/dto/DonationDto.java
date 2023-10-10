@@ -1,26 +1,27 @@
-package dev.pantanal.b3.krpv.acao_social.modulos.voluntary.dto;
+package dev.pantanal.b3.krpv.acao_social.modulos.donation.dto;
 
 import dev.pantanal.b3.krpv.acao_social.modulos.person.PersonEntity;
 import dev.pantanal.b3.krpv.acao_social.modulos.socialAction.SocialActionEntity;
-import dev.pantanal.b3.krpv.acao_social.modulos.voluntary.enums.StatusEnum;
+import jakarta.validation.constraints.NotBlank;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
-public record VoluntaryDto (
-        UUID id,
-        String observation,
-        SocialActionEntity socialAction,
-        PersonEntity person,
-        StatusEnum status,
+public record DonationDto(
+
+        SocialActionEntity socialActionEntity,
+        PersonEntity donatedByEntity,
+        LocalDateTime donationDate,
+        BigDecimal valueMoney,
+        String motivation,
         PersonEntity approvedBy,
         LocalDateTime approvedDate,
-        Integer feedbackScoreVoluntary,
-        String feedbackVoluntary,
         UUID createdBy,
         UUID lastModifiedBy,
         LocalDateTime createdDate,
         LocalDateTime lastModifiedDate,
         LocalDateTime deletedDate,
         UUID deletedBy
-) {}
+
+){}

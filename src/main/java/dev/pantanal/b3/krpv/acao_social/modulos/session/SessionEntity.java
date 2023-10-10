@@ -6,18 +6,14 @@ import dev.pantanal.b3.krpv.acao_social.modulos.session.enums.VisibilityEnum;
 import dev.pantanal.b3.krpv.acao_social.modulos.socialAction.SocialActionEntity;
 import jakarta.persistence.*;
 import jakarta.validation.Valid;
-//import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
-import org.hibernate.envers.AuditTable;
-import org.hibernate.envers.Audited;
 import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-
 import java.time.LocalDateTime;
 import java.util.UUID;
 
@@ -53,8 +49,12 @@ public class SessionEntity {
     @Column(name = "date_end_time")
     private LocalDateTime dateEndTime;
 
+    @Enumerated(EnumType.STRING)
+    @Column(name = "status")
     private StatusEnum status;
 
+    @Enumerated(EnumType.STRING)
+    @Column(name = "visibility")
     private VisibilityEnum visibility;
 
     @CreatedBy

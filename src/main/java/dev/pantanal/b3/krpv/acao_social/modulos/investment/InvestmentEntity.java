@@ -1,6 +1,7 @@
 package dev.pantanal.b3.krpv.acao_social.modulos.investment;
 
 import dev.pantanal.b3.krpv.acao_social.modulos.company.CompanyEntity;
+import dev.pantanal.b3.krpv.acao_social.modulos.person.PersonEntity;
 import dev.pantanal.b3.krpv.acao_social.modulos.socialAction.SocialActionEntity;
 import jakarta.persistence.*;
 import jakarta.validation.Valid;
@@ -14,6 +15,7 @@ import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.UUID;
 //Implementar foreign key pra social action
@@ -32,7 +34,7 @@ public class InvestmentEntity {
 
     @Valid
     @Version
-    private Long version;
+    private Long version = 1L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -42,7 +44,7 @@ public class InvestmentEntity {
 
     @Column(nullable = false)
     //@NotBlank
-    private Double value_money;
+    private BigDecimal valueMoney;
 
     @Column(nullable = false)
     //@NotBlank
@@ -57,10 +59,12 @@ public class InvestmentEntity {
 //    @JoinColumn("manager_id")
 //    private Person person;
 
-    @Column(nullable = false)
-    //@NotBlank
-    //@PastOrPresent
-    private LocalDateTime approvedAt;
+    @ManyToOne
+    @JoinColumn(name = "approved_by", nullable = true)
+    private PersonEntity approvedBy;
+
+    @Column(name = "approved_date")
+    private LocalDateTime approvedDate;
 
     @CreatedBy
     private UUID createdBy;

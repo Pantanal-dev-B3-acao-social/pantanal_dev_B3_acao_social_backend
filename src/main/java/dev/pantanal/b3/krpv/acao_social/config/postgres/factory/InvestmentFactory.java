@@ -4,12 +4,15 @@ import com.github.javafaker.Faker;
 import dev.pantanal.b3.krpv.acao_social.modulos.investment.InvestmentEntity;
 import dev.pantanal.b3.krpv.acao_social.modulos.investment.repository.InvestmentRepository;
 import dev.pantanal.b3.krpv.acao_social.modulos.company.CompanyEntity;
+import dev.pantanal.b3.krpv.acao_social.modulos.person.PersonEntity;
 import dev.pantanal.b3.krpv.acao_social.modulos.socialAction.SocialActionEntity;
 import dev.pantanal.b3.krpv.acao_social.utils.FindRegisterRandom;
 import jakarta.persistence.EntityManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
+
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -35,35 +38,24 @@ public class InvestmentFactory {
     }
 
     public InvestmentEntity makeFakeEntity() {
-        UUID createBy = UUID.randomUUID();
-        UUID deleteBy = null;
-        UUID lastModifiedBy = null;
-        LocalDateTime createdDate = LocalDateTime.now();
-        LocalDateTime lastModifiedDate = createdDate.plusHours(3).plusMinutes(30);
-        Double value_money = faker.number().randomDouble(2, 10000, 100);
-        LocalDateTime date = LocalDateTime.now();
+        LocalDateTime date = LocalDateTime.now().plusHours(-9);
         String motivation = faker.lorem().sentence();
         LocalDateTime approvedAt = LocalDateTime.now();
         FindRegisterRandom findRegisterRandomSocial = new FindRegisterRandom<SocialActionEntity>(entityManager);
         List<SocialActionEntity> socialActions = findRegisterRandomSocial.execute("social_action", 1, SocialActionEntity.class);
         FindRegisterRandom findRandomCompany = new FindRegisterRandom<CompanyEntity>(entityManager);
-        List<CompanyEntity> company = findRandomCompany.execute("company", 1, CompanyEntity.class);
-        return new InvestmentEntity(
-                1L,
-                UUID.randomUUID(),
-                value_money,
-                date,
-                motivation,
-                approvedAt,
-                createBy,
-                lastModifiedBy,
-                createdDate,
-                lastModifiedDate,
-                null,
-                deleteBy,
-                socialActions.get(0),
-                company.get(0)
-        );
+        List<CompanyEntity> companies = findRandomCompany.execute("company", 1, CompanyEntity.class);
+        FindRegisterRandom findRandomPerson = new FindRegisterRandom<PersonEntity>(entityManager);
+        List<PersonEntity> persons = findRandomPerson.execute("person", 1, PersonEntity.class);
+        InvestmentEntity entity = new InvestmentEntity();
+        entity.setValueMoney(new BigDecimal(faker.number().numberBetween(1, 1000000)));
+        entity.setDate(date);
+        entity.setCompany(companies.get(0));
+        entity.setMotivation(motivation);
+        entity.setSocialAction(socialActions.get(0));
+        entity.setApprovedBy(persons.get(0));
+        entity.setApprovedDate(approvedAt);
+        return entity;
     }
 
     public InvestmentEntity insertOne(InvestmentEntity toSave) {

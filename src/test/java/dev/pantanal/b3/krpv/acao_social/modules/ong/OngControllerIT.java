@@ -84,7 +84,7 @@ public class OngControllerIT {
 
     @Test
     @DisplayName("lista paginada de ong com sucesso")
-    void findAllSession() throws Exception {
+    void findAllOng() throws Exception {
         // Arrange (Organizar)
         List<OngEntity> saved = ongFactory.insertMany(3);
         // Act (ação)
@@ -126,7 +126,7 @@ public class OngControllerIT {
 
     @Test
     @DisplayName("salva uma nova ong com sucesso")
-    void saveOneSession() throws Exception {
+    void saveOneOng() throws Exception {
         // Arrange (Organizar)
         OngEntity item = ongFactory.makeFakeEntity();
         String jsonRequest = objectMapper.writeValueAsString(item);
@@ -156,7 +156,7 @@ public class OngControllerIT {
 
     @Test
     @DisplayName("Busca ong por ID com sucesso")
-    void findByIdSession() throws Exception {
+    void findByIdOng() throws Exception {
         // Arrange (Organizar)
         List<OngEntity> saved = ongFactory.insertMany(3);
         OngEntity item = saved.get(0);
@@ -189,7 +189,7 @@ public class OngControllerIT {
 
     @Test
     @DisplayName("(hard-delete) Exclui uma ong com sucesso")
-    void deleteSession() throws Exception {
+    void deleteOng() throws Exception {
         // Arrange (Organizar)
         OngEntity savedItem = ongFactory.insertOne(ongFactory.makeFakeEntity());
         // Act (ação)
@@ -208,7 +208,7 @@ public class OngControllerIT {
 
     @Test
     @DisplayName("Atualiza uma ong com sucesso")
-    void updateSession() throws Exception {
+    void updateOng() throws Exception {
         // Arrange (Organizar)
         OngEntity item = ongFactory.insertOne(ongFactory.makeFakeEntity());
         // Modifica alguns dados da ong

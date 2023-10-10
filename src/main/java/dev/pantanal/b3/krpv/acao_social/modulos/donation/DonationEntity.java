@@ -1,13 +1,17 @@
-package dev.pantanal.b3.krpv.acao_social.modulos.voluntary;
+package dev.pantanal.b3.krpv.acao_social.modulos.donation;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import dev.pantanal.b3.krpv.acao_social.config.audit.AuditListener;
+import dev.pantanal.b3.krpv.acao_social.modulos.category.entity.CategorySocialActionTypeEntity;
 import dev.pantanal.b3.krpv.acao_social.modulos.person.PersonEntity;
 import dev.pantanal.b3.krpv.acao_social.modulos.socialAction.SocialActionEntity;
-import dev.pantanal.b3.krpv.acao_social.modulos.voluntary.enums.StatusEnum;
 import jakarta.persistence.*;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
+import org.hibernate.envers.AuditTable;
+import org.hibernate.envers.Audited;
 import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedBy;
@@ -15,13 +19,16 @@ import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
-@Table(name="voluntary")
-@Entity(name="Voluntary")
-@EntityListeners(AuditListener.class)
-//@AuditTable("z_aud_voluntary")
+@Table(name="donation")
+@Entity(name="Donation")
+//@AuditTable("z_aud_donation")
+//@EntityListeners(AuditListener.class)
 //@Audited
 @Data
 @NoArgsConstructor
@@ -29,7 +36,7 @@ import java.util.UUID;
 @AllArgsConstructor
 @EqualsAndHashCode
 @ToString
-public class VoluntaryEntity {
+public class DonationEntity {
 
     @Valid
     @Version
@@ -41,45 +48,46 @@ public class VoluntaryEntity {
     @NotNull
     UUID id;
 
-    @Column(nullable = true)
-    private String observation;
+    @ManyToOne
+    @JoinColumn(name = "social_action_id")
+    @ToString.Exclude
+    private SocialActionEntity socialActionEntity;
 
     @ManyToOne
-    @JoinColumn(name = "social_action_id", nullable = false)
-    private SocialActionEntity socialAction;
+    @JoinColumn(name = "donated_by")
+    @ToString.Exclude
+    private PersonEntity donatedByEntity;
+
+    @Column(nullable = false, name = "donation_date")
+    private LocalDateTime donationDate;
+
+    @Column(nullable = false, name = "value_money")
+//    @NotBlank
+    private BigDecimal valueMoney;
+
+    @Column(nullable = false)
+//    @NotBlank
+    String motivation;
 
     @ManyToOne
-    @JoinColumn(name = "person_id", nullable = false)
-    private PersonEntity person;
-
-    @ManyToOne
-    @JoinColumn(name = "approved_by", nullable = true)
+    @JoinColumn(name = "approved_by")
+    @ToString.Exclude
     private PersonEntity approvedBy;
 
     @Column(name = "approved_date")
     private LocalDateTime approvedDate;
 
-    @Enumerated(EnumType.STRING)
-    @Column(length = 255)
-    private StatusEnum status;
-
-    @Column(name = "feedback_score_voluntary")
-    private Integer feedbackScoreVoluntary;
-
-    @Column(name = "feedback_voluntary")
-    private String feedbackVoluntary;
-
     @CreatedBy
-    @Column(name = "created_by", nullable = false)
+    @Column(name = "created_by")
     private UUID createdBy;
-
-    @CreatedDate
-    @Column(name = "created_date", nullable = false)
-    private LocalDateTime createdDate;
 
     @LastModifiedBy
     @Column(name = "last_modified_by")
     private UUID lastModifiedBy;
+
+    @CreatedDate
+    @Column(name = "created_date")
+    private LocalDateTime createdDate;
 
     @LastModifiedDate
     @Column(name = "last_modified_date")
@@ -90,7 +98,6 @@ public class VoluntaryEntity {
 
     @Column(name = "deleted_by")
     private UUID deletedBy;
-
 
     @PrePersist
     protected void onCreate() {
@@ -121,5 +128,11 @@ public class VoluntaryEntity {
             this.deletedBy = UUID.fromString(userId);
         }
     }
+
+    // TODO: implementar categorias da doação
+    //    @OneToMany(mappedBy = "socialActionEntity", orphanRemoval = true, cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    //    @ToString.Exclude
+    //    @JsonIgnoreProperties("category_donation_id")
+    //    private List<CategoryDonationTypeEntity> categoryDonationTypeEntities = new ArrayList<>();
 
 }

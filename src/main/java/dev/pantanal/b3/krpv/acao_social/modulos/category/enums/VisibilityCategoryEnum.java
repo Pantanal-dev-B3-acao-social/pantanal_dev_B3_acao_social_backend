@@ -14,4 +14,5 @@ public enum VisibilityCategoryEnum {
     public String getLabel() {
         return label;
     }
+
 }

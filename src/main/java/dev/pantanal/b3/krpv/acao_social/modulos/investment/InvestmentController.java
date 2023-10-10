@@ -42,10 +42,11 @@ public class InvestmentController {
         InvestmentEntity entity = service.findById(id);
         InvestmentResponseDto response = new InvestmentResponseDto(
                 entity.getId(),
-                entity.getValue_money(),
+                entity.getValueMoney(),
                 entity.getDate(),
                 entity.getMotivation(),
-                entity.getApprovedAt(),
+                entity.getApprovedBy(),
+                entity.getApprovedDate(),
                 entity.getSocialAction(),
                 entity.getCompany(),
                 entity.getCreatedBy(),
@@ -94,10 +95,11 @@ public class InvestmentController {
         InvestmentEntity entity = service.create(request);
         InvestmentResponseDto response = new InvestmentResponseDto(
                 entity.getId(),
-                entity.getValue_money(),
+                entity.getValueMoney(),
                 entity.getDate(),
                 entity.getMotivation(),
-                entity.getApprovedAt(),
+                entity.getApprovedBy(),
+                entity.getApprovedDate(),
                 entity.getSocialAction(),
                 entity.getCompany(),
                 entity.getCreatedBy(),
@@ -127,11 +129,12 @@ public class InvestmentController {
     public ResponseEntity<InvestmentResponseDto> update(@PathVariable UUID id, @Valid @RequestBody InvestmentUpdateDto request) {
         InvestmentEntity entity = service.update(id, request);
         InvestmentResponseDto response = new InvestmentResponseDto(
-                id,
-                entity.getValue_money(),
+                entity.getId(),
+                entity.getValueMoney(),
                 entity.getDate(),
                 entity.getMotivation(),
-                entity.getApprovedAt(),
+                entity.getApprovedBy(),
+                entity.getApprovedDate(),
                 entity.getSocialAction(),
                 entity.getCompany(),
                 entity.getCreatedBy(),

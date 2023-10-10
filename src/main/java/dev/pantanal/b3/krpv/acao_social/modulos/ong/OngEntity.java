@@ -43,6 +43,8 @@ public class OngEntity {
     @CNPJ
     String cnpj;
 
+    @Enumerated(EnumType.STRING)
+    @Column(length = 255)
     StatusEnum status;
 
     @CreatedBy
@@ -66,7 +68,7 @@ public class OngEntity {
     // TODO: criar ManyToMany responsaveis
     @NotNull
     @ManyToOne
-    @JoinColumn(name = "category_group_id")
+    @JoinColumn(name = "responsibility_id")
     @ToString.Exclude
     private PersonEntity responsibleEntity;
 
