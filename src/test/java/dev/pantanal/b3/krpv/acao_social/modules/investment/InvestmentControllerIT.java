@@ -2,16 +2,14 @@ package dev.pantanal.b3.krpv.acao_social.modules.investment;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import dev.pantanal.b3.krpv.acao_social.config.postgres.factory.CategoryFactory;
-import dev.pantanal.b3.krpv.acao_social.config.postgres.factory.CompanyFactory;
-import dev.pantanal.b3.krpv.acao_social.config.postgres.factory.InvestmentFactory;
-import dev.pantanal.b3.krpv.acao_social.config.postgres.factory.SocialActionFactory;
+import dev.pantanal.b3.krpv.acao_social.config.postgres.factory.*;
 import dev.pantanal.b3.krpv.acao_social.modulos.investment.InvestmentEntity;
 import dev.pantanal.b3.krpv.acao_social.modulos.investment.repository.InvestmentRepository;
 import dev.pantanal.b3.krpv.acao_social.modulos.auth.dto.LoginUserDto;
 import dev.pantanal.b3.krpv.acao_social.modulos.investment.repository.InvestmentPostgresRepository;
 import dev.pantanal.b3.krpv.acao_social.modulos.category.entity.CategoryEntity;
 import dev.pantanal.b3.krpv.acao_social.modulos.company.CompanyEntity;
+import dev.pantanal.b3.krpv.acao_social.modulos.person.PersonEntity;
 import dev.pantanal.b3.krpv.acao_social.modulos.socialAction.SocialActionEntity;
 import dev.pantanal.b3.krpv.acao_social.utils.GenerateTokenUserForLogged;
 import dev.pantanal.b3.krpv.acao_social.utils.LoginMock;
@@ -29,8 +27,10 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.transaction.annotation.Transactional;
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -78,6 +78,9 @@ public class InvestmentControllerIT {
     @Autowired
     private CategoryFactory categoryFactory;
     List<CompanyEntity> companyEntities;
+    @Autowired
+    PersonFactory personFactory;
+    List<PersonEntity> personEntities;
 
     @BeforeEach
     public void setup() throws Exception {
@@ -96,6 +99,13 @@ public class InvestmentControllerIT {
         // mapper
         this.objectMapper = new ObjectMapper();
         this.objectMapper.registerModule(new JavaTimeModule());
+        // cadastrar persons
+        List<UUID> usersIds = new ArrayList<>();
+        int amount = 4;
+        for(int i = 0; i < amount; i++) {
+            usersIds.add(UUID.randomUUID());
+        }
+        this.personEntities = personFactory.insertMany(usersIds.size(), usersIds);
     }
 
     @AfterEach
@@ -124,10 +134,11 @@ public class InvestmentControllerIT {
         for (InvestmentEntity item : saved) {
             perform
                     .andExpect(MockMvcResultMatchers.jsonPath("$.content[" + i + "].id").value(item.getId().toString()))
-                    .andExpect(MockMvcResultMatchers.jsonPath("$.content[" + i + "].value_money").value(item.getValue_money()))
+                    .andExpect(MockMvcResultMatchers.jsonPath("$.content[" + i + "].valueMoney").value(item.getValueMoney()))
                     .andExpect(MockMvcResultMatchers.jsonPath("$.content[" + i + "].date").value(item.getDate().format(formatter)))
                     .andExpect(MockMvcResultMatchers.jsonPath("$.content[" + i + "].motivation").value(item.getMotivation()))
-                    .andExpect(MockMvcResultMatchers.jsonPath("$.content[" + i + "].approvedAt").value(item.getApprovedAt().format(formatter)))
+                    .andExpect(MockMvcResultMatchers.jsonPath("$.content[" + i + "].approvedBy").value(item.getApprovedBy().getId().toString()))
+                    .andExpect(MockMvcResultMatchers.jsonPath("$.content[" + i + "].approvedDate").value(item.getApprovedDate().format(formatter)))
                     // TODO:                   .andExpect(MockMvcResultMatchers.jsonPath(userLoggedId.toString()).value(item.getCreatedBy()))
                     .andExpect(MockMvcResultMatchers.jsonPath("$.content[" + i + "].createdBy").value(item.getCreatedBy().toString()))
                     .andExpect(MockMvcResultMatchers.jsonPath("$.content[" + i + "].lastModifiedBy").value(item.getLastModifiedBy()))
@@ -158,9 +169,10 @@ public class InvestmentControllerIT {
         // Assert (Verificar)
         resultActions
                 .andExpect(MockMvcResultMatchers.status().isCreated())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.value_money").value(item.getValue_money()))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.valueMoney").value(item.getValueMoney()))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.date").value(item.getDate().format(formatter)))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.approvedAt").value(item.getApprovedAt().format(formatter)))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.approvedBy.id").value(item.getApprovedBy().getId().toString()))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.approvedDate").value(item.getApprovedDate().format(formatter)))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.motivation").value(item.getMotivation()))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.socialAction.id").value(item.getSocialAction().getId().toString()))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.company.id").value(item.getCompany().getId().toString()));
@@ -187,9 +199,10 @@ public class InvestmentControllerIT {
         resultActions
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.id").value(item.getId().toString()))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.value_money").value(item.getValue_money()))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.date").value(item.getDate().format(formatter))) // Compare como string formatada
-                .andExpect(MockMvcResultMatchers.jsonPath("$.approvedAt").value(item.getApprovedAt().format(formatter)))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.valueMoney").value(item.getValueMoney()))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.date").value(item.getDate().format(formatter)))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.approvedBy.id").value(item.getApprovedBy().getId().toString()))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.approvedDate").value(item.getApprovedDate().format(formatter)))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.motivation").value(item.getMotivation()))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.socialAction.id").value(item.getSocialAction().getId().toString()))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.company.id").value(item.getCompany().getId().toString()))
@@ -228,11 +241,11 @@ public class InvestmentControllerIT {
         InvestmentEntity item = investmentFactory.insertOne(investmentFactory.makeFakeEntity());
         // Modifica alguns dados da session
 // TODO:        item.setCreatedBy(userLoggedId);
-        item.setValue_money(item.getValue_money() + 100);
+        item.setValueMoney(item.getValueMoney().add(item.getValueMoney().add(new BigDecimal("5.74"))));
         LocalDateTime dateUpdated = item.getDate().plusHours(2).plusMinutes(40);
-        LocalDateTime approvedAtUpdated = item.getApprovedAt().plusHours(2).plusMinutes(40);
+        LocalDateTime approvedAtUpdated = item.getApprovedDate().plusHours(2).plusMinutes(40);
         item.setDate(dateUpdated);
-        item.setApprovedAt(approvedAtUpdated);
+        item.setApprovedDate(approvedAtUpdated);
         item.setMotivation(item.getMotivation() + "_Atualizado");
 // TODO: quais dados falta modificar para testar?
         String updatedSessionJson = objectMapper.writeValueAsString(item); // TODO: Suspeito erro
@@ -254,8 +267,8 @@ public class InvestmentControllerIT {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.id").value(item.getId().toString()))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.motivation").value(item.getMotivation()))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.date").value(item.getDate().format(formatter)))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.approvedAt").value(item.getApprovedAt().format(formatter)))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.value_money").value(item.getValue_money().toString()))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.approvedBy.id").value(item.getApprovedBy().getId().toString()))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.approvedDate").value(item.getApprovedDate().format(formatter)))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.company.id").value(item.getCompany().getId().toString()))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.socialAction.id").value(item.getSocialAction().getId().toString()))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.createdBy").value(item.getCreatedBy().toString()))

@@ -52,7 +52,7 @@ public class InvestmentEntity {
     private LocalDateTime date;
 
     @Column(nullable = false)
-    @NotBlank
+//    @NotBlank
     private String motivation;
 
 //    @ManyToOne

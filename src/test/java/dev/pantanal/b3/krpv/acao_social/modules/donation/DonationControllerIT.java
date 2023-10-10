@@ -233,13 +233,13 @@ public class DonationControllerIT {
         SocialActionEntity socialActionEntity = socialActionEntities.get(0);
         DonationEntity donationEntity = donationFactory.makeFakeEntity(socialActionEntity, donor, approved);
         DonationEntity item = donationFactory.insertOne(donationEntity);
-        BigDecimal updateValue = new BigDecimal("5.3");
+//        BigDecimal updateValue = new BigDecimal();
         // Modifica alguns dados da donation
         item.setApprovedDate(item.getApprovedDate().plusHours(-2));
         item.setDonatedByEntity(personEntities.get(2));
         item.setSocialActionEntity(socialActionEntities.get(1));
         item.setDonationDate(item.getDonationDate().plusHours(-3));
-        item.setValueMoney(item.getValueMoney().add(updateValue));
+        item.setValueMoney(item.getValueMoney().add(item.getValueMoney().add(new BigDecimal("5.74"))));
         item.setMotivation(item.getMotivation() + "_ATUALIZADO");
 
         item.setApprovedBy(personEntities.get(3));

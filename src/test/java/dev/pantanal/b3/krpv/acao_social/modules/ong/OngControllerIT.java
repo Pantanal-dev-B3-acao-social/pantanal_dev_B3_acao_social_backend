@@ -59,6 +59,7 @@ public class OngControllerIT {
     GeneratorCnpj generatorCnpj;
     @Autowired
     PersonFactory personFactory;
+    List<PersonEntity> personEntities;
 
     @BeforeEach
     public void setup() throws Exception {
@@ -72,11 +73,14 @@ public class OngControllerIT {
         // user keyclock
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         userIdLoggedFuncionarioCompany = UUID.fromString(authentication.getName());
+        // cadastrar persons
         List<UUID> usersIds = new ArrayList<>();
         int amount = 4;
         for(int i = 0; i < amount; i++) {
             usersIds.add(UUID.randomUUID());
         }
+        this.personEntities = personFactory.insertMany(usersIds.size(), usersIds);
+
     }
 
     @AfterEach
