@@ -54,6 +54,8 @@ public class CategoryEntity {
     @NotBlank
     String code;
 
+    @Enumerated(EnumType.STRING)
+    @Column(name = "visibility")
     private VisibilityCategoryEnum visibility;
 
     @CreatedBy

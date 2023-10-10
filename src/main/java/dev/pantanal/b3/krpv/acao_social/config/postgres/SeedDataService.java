@@ -1,11 +1,10 @@
 package dev.pantanal.b3.krpv.acao_social.config.postgres;
 
-import dev.pantanal.b3.krpv.acao_social.config.postgres.factory.CategoryFactory;
-import dev.pantanal.b3.krpv.acao_social.config.postgres.factory.CategoryGroupFactory;
-import dev.pantanal.b3.krpv.acao_social.config.postgres.factory.SessionFactory;
-import dev.pantanal.b3.krpv.acao_social.config.postgres.factory.SocialActionFactory;
+import dev.pantanal.b3.krpv.acao_social.config.postgres.factory.*;
 import dev.pantanal.b3.krpv.acao_social.modulos.category.entity.CategoryEntity;
 import dev.pantanal.b3.krpv.acao_social.modulos.category.modules.categoryGroup.CategoryGroupEntity;
+import dev.pantanal.b3.krpv.acao_social.modulos.person.PersonEntity;
+import dev.pantanal.b3.krpv.acao_social.modulos.socialAction.SocialActionEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.DependsOn;
 import org.springframework.core.annotation.Order;
@@ -16,6 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 @Service
 public class SeedDataService {
@@ -24,6 +24,10 @@ public class SeedDataService {
     private final SessionFactory sessionFactory;
     private final CategoryFactory categoryFactory;
     private final CategoryGroupFactory categoryGroupFactory;
+    private final OngFactory ongFactory;
+    private final InvestmentFactory investmentFactory;
+    private final DonationFactory donationFactory;
+    private final PersonFactory personFactory;
 
     @Autowired
     public SeedDataService(
@@ -31,12 +35,20 @@ public class SeedDataService {
             SocialActionFactory socialActionFactory,
             SessionFactory sessionFactory,
             CategoryFactory categoryFactory,
-            CategoryGroupFactory categoryGroupFactory
+            CategoryGroupFactory categoryGroupFactory,
+            OngFactory ongFactory,
+            InvestmentFactory investmentFactory,
+            DonationFactory donationFactory,
+            PersonFactory personFactory
     ) {
         this.socialActionFactory = socialActionFactory;
         this.sessionFactory = sessionFactory;
         this.categoryFactory = categoryFactory;
         this.categoryGroupFactory = categoryGroupFactory;
+        this.ongFactory = ongFactory;
+        this.investmentFactory = investmentFactory;
+        this.donationFactory = donationFactory;
+        this.personFactory = personFactory;
     }
 
     public void executeAllSeed() {
@@ -51,12 +63,18 @@ public class SeedDataService {
         List<UUID> forCategoryTypeIds = categoriesType.stream()
                 .map(category -> category.getId())
                 .collect(Collectors.toList());
+        List<UUID> usersRandom = IntStream.range(0, 4)
+                .mapToObj(i -> UUID.randomUUID())
+                .collect(Collectors.toList());
         // SEED
         this.categoryFactory.insertMany(100, groupEntities);
+        List<PersonEntity> personEntities = this.personFactory.insertMany(3000, usersRandom);
 //        this.companyFactory.insertMany(4);
-//        this.ongFactory.insertMany(10);
-        this.socialActionFactory.insertMany(20, forCategoryTypeIds, null);
+        this.ongFactory.insertMany(10);
+        List<SocialActionEntity> socialActionEntities = this.socialActionFactory.insertMany(20, forCategoryTypeIds, null);
         this.sessionFactory.insertMany(100);
+        this.investmentFactory.insertMany(250);
+        this.donationFactory.insertMany(450, socialActionEntities, personEntities, personEntities);
     }
 
 }

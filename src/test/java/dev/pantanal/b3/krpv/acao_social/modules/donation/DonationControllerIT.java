@@ -93,10 +93,7 @@ public class DonationControllerIT {
     @DisplayName("lista paginada de donation com sucesso")
     void findAllDonation() throws Exception {
         // Arrange (Organizar)
-        PersonEntity approved = personEntities.get(0);
-        PersonEntity donor = personEntities.get(1);
-        SocialActionEntity socialActionEntity = socialActionEntities.get(0);
-        List<DonationEntity> saved = donationFactory.insertMany(3, socialActionEntity, donor, approved);
+        List<DonationEntity> saved = donationFactory.insertMany(3, socialActionEntities, personEntities, personEntities);
         // Act (ação)
         ResultActions perform = mockMvc.perform(
                 MockMvcRequestBuilders.get(ROUTE_DONATION)
@@ -176,10 +173,7 @@ public class DonationControllerIT {
     @DisplayName("Busca donation por ID com sucesso")
     void findByIdDonation() throws Exception {
         // Arrange (Organizar)
-        PersonEntity approved = personEntities.get(0);
-        PersonEntity donor = personEntities.get(1);
-        SocialActionEntity socialActionEntity = socialActionEntities.get(0);
-        List<DonationEntity> saved = donationFactory.insertMany(3, socialActionEntity, donor, approved);
+        List<DonationEntity> saved = donationFactory.insertMany(3, socialActionEntities, personEntities, personEntities);
         DonationEntity item = saved.get(0);
         // Act (ação)
         ResultActions resultActions = mockMvc.perform(
