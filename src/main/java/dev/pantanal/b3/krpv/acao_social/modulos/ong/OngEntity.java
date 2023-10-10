@@ -66,7 +66,7 @@ public class OngEntity {
     // TODO: criar ManyToMany responsaveis
     @NotNull
     @ManyToOne
-    @JoinColumn(name = "category_group_id")
+    @JoinColumn(name = "responsibility_id")
     @ToString.Exclude
     private PersonEntity responsibleEntity;
 

@@ -72,9 +72,20 @@ public class DonationController {
     public ResponseEntity<DonationResponseDto> findOne(@PathVariable UUID id) {
         DonationEntity entity = service.findById(id);
         DonationResponseDto response = new DonationResponseDto(
-                entity.getDonation_date(),
-                entity.getValue_money(),
-                entity.getMotivation()
+                entity.getId(),
+                entity.getSocialActionEntity(),
+                entity.getDonatedByEntity(),
+                entity.getDonationDate(),
+                entity.getValueMoney(),
+                entity.getMotivation(),
+                entity.getApprovedBy(),
+                entity.getApprovedDate(),
+                entity.getCreatedBy(),
+                entity.getCreatedDate(),
+                entity.getLastModifiedBy(),
+                entity.getLastModifiedDate(),
+                entity.getDeletedBy(),
+                entity.getDeletedDate()
         );
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
@@ -93,9 +104,20 @@ public class DonationController {
     public ResponseEntity<DonationResponseDto> create(@RequestBody @Valid DonationCreateDto request) {
         DonationEntity entity = service.create(request);
         DonationResponseDto response = new DonationResponseDto(
-                entity.getDonation_date(),
-                entity.getValue_money(),
-                entity.getMotivation()
+                entity.getId(),
+                entity.getSocialActionEntity(),
+                entity.getDonatedByEntity(),
+                entity.getDonationDate(),
+                entity.getValueMoney(),
+                entity.getMotivation(),
+                entity.getApprovedBy(),
+                entity.getApprovedDate(),
+                entity.getCreatedBy(),
+                entity.getCreatedDate(),
+                entity.getLastModifiedBy(),
+                entity.getLastModifiedDate(),
+                entity.getDeletedBy(),
+                entity.getDeletedDate()
         );
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
@@ -114,9 +136,20 @@ public class DonationController {
     public ResponseEntity<DonationResponseDto> update(@PathVariable UUID id, @Valid @RequestBody DonationUpdateDto request) {
         DonationEntity entity = service.update(id, request);
         DonationResponseDto response = new DonationResponseDto(
-                entity.getDonation_date(),
-                entity.getValue_money(),
-                entity.getMotivation()
+                entity.getId(),
+                entity.getSocialActionEntity(),
+                entity.getDonatedByEntity(),
+                entity.getDonationDate(),
+                entity.getValueMoney(),
+                entity.getMotivation(),
+                entity.getApprovedBy(),
+                entity.getApprovedDate(),
+                entity.getCreatedBy(),
+                entity.getCreatedDate(),
+                entity.getLastModifiedBy(),
+                entity.getLastModifiedDate(),
+                entity.getDeletedBy(),
+                entity.getDeletedDate()
         );
         return new ResponseEntity<>(response, HttpStatus.OK);
     }

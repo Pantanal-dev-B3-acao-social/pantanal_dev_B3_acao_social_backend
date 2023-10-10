@@ -20,17 +20,23 @@ import org.springframework.stereotype.Service;
 
 import java.util.UUID;
 
+@Service
 public class DonationService {
 
     @Autowired
     private DonationRepository repository;
     @Autowired
     private DonationPredicates donationPredicates;
+
     public DonationEntity create(DonationCreateDto request) {
         DonationEntity newDonation = new DonationEntity();
-        newDonation.setDonation_date(request.donation_date());
-        newDonation.setValue_money(request.value_money());
+        newDonation.setSocialActionEntity(request.socialActionEntity());
+        newDonation.setDonatedByEntity(request.donatedByEntity());
+        newDonation.setDonationDate(request.donationDate());
+        newDonation.setValueMoney(request.valueMoney());
         newDonation.setMotivation(request.motivation());
+        newDonation.setApprovedBy(request.approvedBy());
+        newDonation.setApprovedDate(request.approvedDate());
         DonationEntity savedDonation = repository.save(newDonation);
         return savedDonation;
     }
@@ -38,7 +44,6 @@ public class DonationService {
     public Page<DonationEntity> findAll(Pageable paging, DonationParamsDto filters) {
         BooleanExpression predicate = donationPredicates.buildPredicate(filters);
         Page<DonationEntity> objects = repository.findAll(paging, predicate);
-        // lançar exceções
         return objects;
     }
 
@@ -52,14 +57,26 @@ public class DonationService {
 
     public DonationEntity update(UUID id, DonationUpdateDto request) {
         DonationEntity obj = repository.findById(id);
-        if (request.donation_date() != null) {
-            obj.setDonation_date(request.donation_date());
+        if (request.socialActionEntity() != null) {
+            obj.setSocialActionEntity(request.socialActionEntity());
         }
-        if (request.value_money() != null) {
-            obj.setValue_money(request.value_money());
+        if (request.donatedByEntity() != null) {
+            obj.setDonatedByEntity(request.donatedByEntity());
+        }
+        if (request.donationDate() != null) {
+            obj.setDonationDate(request.donationDate());
+        }
+        if (request.valueMoney() != null) {
+            obj.setValueMoney(request.valueMoney());
         }
         if (request.motivation() != null) {
             obj.setMotivation(request.motivation());
+        }
+        if (request.approvedBy() != null) {
+            obj.setApprovedBy(request.approvedBy());
+        }
+        if (request.approvedDate() != null) {
+            obj.setApprovedDate(request.approvedDate());
         }
         DonationEntity updatedObj = repository.update(obj);
         return updatedObj;

@@ -32,6 +32,7 @@ public class CategoryPredicates {
             QCategoryGroupEntity filterPath = qEntity.categoryGroup;
             predicate = predicate.and(filterPath.eq(filters.categoryGroup()));
         }
+
         return predicate;
     }
 

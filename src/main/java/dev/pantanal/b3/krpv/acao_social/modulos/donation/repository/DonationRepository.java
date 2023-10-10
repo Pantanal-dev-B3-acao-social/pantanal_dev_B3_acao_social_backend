@@ -3,7 +3,7 @@ package dev.pantanal.b3.krpv.acao_social.modulos.donation.repository;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import dev.pantanal.b3.krpv.acao_social.modulos.donation.DonationEntity;
-import dev.pantanal.b3.krpv.acao_social.modulos.donation.repository.DonationPostgresRepository;
+import dev.pantanal.b3.krpv.acao_social.modulos.donation.QDonationEntity;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import lombok.RequiredArgsConstructor;
@@ -13,7 +13,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
-
 import java.util.List;
 import java.util.UUID;
 
@@ -35,7 +34,6 @@ public class DonationRepository {
     public Page<DonationEntity> findAll(Pageable pageable, BooleanExpression predicate) {
         JPAQueryFactory queryFactory = new JPAQueryFactory(entityManager);
         QDonationEntity qDonationEntity = QDonationEntity.donationEntity;
-
         List<DonationEntity> results = queryFactory.selectFrom(qDonationEntity)
                 .where(predicate)
                 .offset(pageable.getOffset())

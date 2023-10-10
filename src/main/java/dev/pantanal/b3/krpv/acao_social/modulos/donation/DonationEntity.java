@@ -1,6 +1,10 @@
 package dev.pantanal.b3.krpv.acao_social.modulos.donation;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import dev.pantanal.b3.krpv.acao_social.config.audit.AuditListener;
+import dev.pantanal.b3.krpv.acao_social.modulos.category.entity.CategorySocialActionTypeEntity;
+import dev.pantanal.b3.krpv.acao_social.modulos.person.PersonEntity;
+import dev.pantanal.b3.krpv.acao_social.modulos.socialAction.SocialActionEntity;
 import jakarta.persistence.*;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
@@ -14,21 +18,24 @@ import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 @Table(name="donation")
 @Entity(name="Donation")
-@AuditTable("z_aud_donation")
-@EntityListeners(AuditListener.class)
-@Audited
+//@AuditTable("z_aud_donation")
+//@EntityListeners(AuditListener.class)
+//@Audited
 @Data
 @NoArgsConstructor
 @Builder
 @AllArgsConstructor
 @EqualsAndHashCode
 @ToString
-
 public class DonationEntity {
 
     @Valid
@@ -41,18 +48,34 @@ public class DonationEntity {
     @NotNull
     UUID id;
 
+    @ManyToOne
+    @JoinColumn(name = "social_action_id")
+    @ToString.Exclude
+    private SocialActionEntity socialActionEntity;
+
+    @ManyToOne
+    @JoinColumn(name = "donated_by")
+    @ToString.Exclude
+    private PersonEntity donatedByEntity;
+
     @Column(nullable = false, name = "donation_date")
-    @NotBlank
     private LocalDateTime donationDate;
 
     @Column(nullable = false, name = "value_money")
-    @NotBlank
-    private Double valueMoney;
-
+//    @NotBlank
+    private BigDecimal valueMoney;
 
     @Column(nullable = false)
-    @NotBlank
+//    @NotBlank
     String motivation;
+
+    @ManyToOne
+    @JoinColumn(name = "approved_by")
+    @ToString.Exclude
+    private PersonEntity approvedBy;
+
+    @Column(name = "approved_date")
+    private LocalDateTime approvedDate;
 
     @CreatedBy
     private UUID createdBy;
@@ -101,4 +124,11 @@ public class DonationEntity {
             this.deletedBy = UUID.fromString(userId);
         }
     }
+
+    // TODO: implementar categorias da doação
+    //    @OneToMany(mappedBy = "socialActionEntity", orphanRemoval = true, cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    //    @ToString.Exclude
+    //    @JsonIgnoreProperties("category_donation_id")
+    //    private List<CategoryDonationTypeEntity> categoryDonationTypeEntities = new ArrayList<>();
+
 }
