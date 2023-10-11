@@ -1,5 +1,6 @@
 package dev.pantanal.b3.krpv.acao_social.modulos.socialAction;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import dev.pantanal.b3.krpv.acao_social.config.audit.AuditListener;
 import dev.pantanal.b3.krpv.acao_social.modulos.category.entity.CategorySocialActionLevelEntity;
@@ -80,13 +81,14 @@ public class SocialActionEntity {
      * orphanRemoval = true faz com que SocialActionEntity é optional ter preenchido alguma CategorySocialActionTypeEntity
      */
 //    @Optional
-    @OneToMany(mappedBy = "socialActionEntity", orphanRemoval = true, cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "socialActionEntity", orphanRemoval = true, cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 //    @OneToMany(mappedBy = "socialActionEntity", orphanRemoval = true, cascade = CascadeType.DETACH , fetch = FetchType.LAZY)
     @ToString.Exclude
+    @JsonIgnore
     @JsonIgnoreProperties("socialActionEntity")
     private List<CategorySocialActionTypeEntity> categorySocialActionTypeEntities = new ArrayList<>();
 
-    @OneToMany(mappedBy = "socialActionEntity", orphanRemoval = true, cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "socialActionEntity", orphanRemoval = true, cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @ToString.Exclude
     @JsonIgnoreProperties("socialActionEntity")
     private List<CategorySocialActionLevelEntity> categorySocialActionLevelEntities = new ArrayList<>();

@@ -89,7 +89,7 @@ public class CategoryEntity {
     private List<CategorySocialActionLevelEntity> categorySocialActionLevelEntities = new ArrayList<>();
 
     @NotNull
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "category_group_id")
     @ToString.Exclude
     private CategoryGroupEntity categoryGroup;

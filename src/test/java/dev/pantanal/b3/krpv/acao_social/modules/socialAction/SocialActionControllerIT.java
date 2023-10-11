@@ -70,7 +70,7 @@ public class SocialActionControllerIT {
     @Autowired
     LoginMock loginMock;
     private DateTimeFormatter formatter;
-//    List<CategorySocialActionTypeEntity> categorySocialActionTypeEntities;
+//    List<CategorySocialActionTypeEntity> categoryTypeIds;
     List<CategoryEntity> categoriesType;
     List<CategoryEntity> categoriesLevel;
     ObjectMapper objectMapper;
@@ -152,11 +152,11 @@ public class SocialActionControllerIT {
                     .andExpect(MockMvcResultMatchers.jsonPath("$.content[" + i + "].id").value(item.getId().toString()))
                     .andExpect(MockMvcResultMatchers.jsonPath("$.content[" + i + "].name").value(item.getName()))
                     .andExpect(MockMvcResultMatchers.jsonPath("$.content[" + i + "].description").value(item.getDescription()))
-                    .andExpect(MockMvcResultMatchers.jsonPath("$.content[" + i + "].categorySocialActionTypeEntities").isArray())
-// TODO: como testar categorySocialActionTypeEntities e CategorySocialActionLevelEntity?
-//                    .andExpect(MockMvcResultMatchers.jsonPath("$.content[" + i + "].categorySocialActionTypeEntities", hasSize(categoryTypeIds.size())))
-//                    .andExpect(MockMvcResultMatchers.jsonPath("$.content[" + i + "].categorySocialActionTypeEntities", containsInAnyOrder(categoryTypeIds.toArray())))
-//                    .andExpect(MockMvcResultMatchers.jsonPath("$.content[" + i + "].categorySocialActionTypeEntities").value(categoryTypeIds))
+                    .andExpect(MockMvcResultMatchers.jsonPath("$.content[" + i + "].categoryTypeIds").isArray())
+// TODO: como testar categoryTypeIds e CategorySocialActionLevelEntity?
+//                    .andExpect(MockMvcResultMatchers.jsonPath("$.content[" + i + "].categoryTypeIds", hasSize(categoryTypeIds.size())))
+//                    .andExpect(MockMvcResultMatchers.jsonPath("$.content[" + i + "].categoryTypeIds", containsInAnyOrder(categoryTypeIds.toArray())))
+//                    .andExpect(MockMvcResultMatchers.jsonPath("$.content[" + i + "].categoryTypeIds").value(categoryTypeIds))
                     .andExpect(MockMvcResultMatchers.jsonPath("$.content[" + i + "].createdBy").isNotEmpty())
                     .andExpect(MockMvcResultMatchers.jsonPath("$.content[" + i + "].createdDate").isNotEmpty())
                     .andExpect(MockMvcResultMatchers.jsonPath("$.content[" + i + "].createdBy").value(item.getCreatedBy().toString()))
@@ -225,9 +225,9 @@ public class SocialActionControllerIT {
                 Assertions.assertEquals(jsonLastModifiedDate.isNull() ? null : jsonLastModifiedDate.asText(),
                         saved.get(i).getLastModifiedDate() == null ? null : saved.get(i).getLastModifiedDate().format(formatter)
                 );
-                Assertions.assertFalse(element.get("categorySocialActionTypeEntities").isEmpty());
+                Assertions.assertFalse(element.get("categoryTypeIds").isEmpty());
                 int i_type = 0;
-                JsonNode jsonCategoryTypeIds = element.get("categorySocialActionTypeEntities");
+                JsonNode jsonCategoryTypeIds = element.get("categoryTypeIds");
                 Assertions.assertTrue(jsonCategoryTypeIds.isArray());
                 List<CategorySocialActionTypeEntity> categoryTypesEntities = categorySocialActionTypePostgresRepository.findBySocialActionId(saved.get(i).getId());
                 Assertions.assertEquals(jsonCategoryTypeIds.size(), categoryTypesEntities.size());

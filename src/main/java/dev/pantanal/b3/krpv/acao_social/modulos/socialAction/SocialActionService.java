@@ -83,7 +83,6 @@ public class SocialActionService {
     public Page<SocialActionEntity> findAll(Pageable pageable, SocialActionParamsDto filters) {
         BooleanExpression predicate = socialActionPredicates.buildPredicate(filters);
         Page<SocialActionEntity> objects = socialActionRepository.findAll(pageable, predicate);
-        // lançar exceções
         return objects;
     }
 

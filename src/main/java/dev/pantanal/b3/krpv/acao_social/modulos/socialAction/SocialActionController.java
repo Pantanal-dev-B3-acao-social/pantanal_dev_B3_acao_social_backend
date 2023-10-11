@@ -8,8 +8,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.*;
 import org.springframework.data.web.SortDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,8 +16,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import io.swagger.v3.oas.annotations.Operation;
 import static dev.pantanal.b3.krpv.acao_social.modulos.socialAction.SocialActionController.ROUTE_SOCIAL;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
+
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -32,6 +30,30 @@ public class SocialActionController {
     private SocialActionService service;
     public static final String ROUTE_SOCIAL = "/v1/social";
 
+    public SocialActionResponseDto mapEntityToDto(SocialActionEntity entity) {
+        List<UUID> categoryTypeIds = entity.getCategorySocialActionTypeEntities().stream()
+                .map(type -> type.getId())
+                .collect(Collectors.toList());
+        List<UUID> categoryLevelIds = entity.getCategorySocialActionLevelEntities().stream()
+                .map(level -> level.getId())
+                .collect(Collectors.toList());
+        SocialActionResponseDto dto = new SocialActionResponseDto(
+                entity.getId(),
+                entity.getName(),
+                entity.getDescription(),
+                entity.getCreatedBy(),
+                entity.getLastModifiedBy(),
+                entity.getCreatedDate(),
+                entity.getLastModifiedDate(),
+                entity.getDeletedDate(),
+                entity.getDeletedBy(),
+                categoryTypeIds,
+                categoryLevelIds
+        );
+        return dto;
+    }
+
+
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
     @PreAuthorize("hasAnyRole('SOCIAL_ACTION_GET_ALL')")
@@ -42,7 +64,7 @@ public class SocialActionController {
             @ApiResponse(responseCode = "404", description = "Not found"),
             @ApiResponse(responseCode = "500", description = "Internal Server Error"),
     })
-    public Page<SocialActionEntity> findAll(
+    public Page<SocialActionResponseDto> findAll(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
             @SortDefault(sort="name", direction = Sort.Direction.DESC) Sort sort,
@@ -50,8 +72,8 @@ public class SocialActionController {
     ) {
         Pageable paging = PageRequest.of(page, size, sort);
         Page<SocialActionEntity> entities = service.findAll(paging, request);
-//        Page<SocialActionResponseDto> response = mapEntityPageIntoDtoPage(entities, SocialActionResponseDto.class);
-        return entities; // TODO: verificar se vai converter certo
+        List<SocialActionResponseDto> dtos = entities.map(this::mapEntityToDto).getContent();
+        return new PageImpl<>(dtos, paging, entities.getTotalElements());
     }
 
     @GetMapping("/{id}")
@@ -66,25 +88,7 @@ public class SocialActionController {
     })
     public ResponseEntity<SocialActionResponseDto> findOne(@PathVariable UUID id) {
         SocialActionEntity entity = service.findById(id);
-        List<UUID> categoryTypeIds = entity.getCategorySocialActionTypeEntities().stream()
-                .map(type -> type.getId())
-                .collect(Collectors.toList());
-        List<UUID> categoryLevelIds = entity.getCategorySocialActionLevelEntities().stream()
-                .map(level -> level.getId())
-                .collect(Collectors.toList());
-        SocialActionResponseDto response = new SocialActionResponseDto(
-                entity.getId(),
-                entity.getName(),
-                entity.getDescription(),
-                entity.getCreatedBy(),
-                entity.getLastModifiedBy(),
-                entity.getCreatedDate(),
-                entity.getLastModifiedDate(),
-                entity.getDeletedDate(),
-                entity.getDeletedBy(),
-                categoryTypeIds,
-                categoryLevelIds
-        );
+        SocialActionResponseDto response = mapEntityToDto(entity);
         return new ResponseEntity<SocialActionResponseDto>(response, HttpStatus.OK);
     }
 
@@ -102,25 +106,7 @@ public class SocialActionController {
     })
     public ResponseEntity<SocialActionResponseDto> create(@RequestBody @Valid SocialActionCreateDto request) {
         SocialActionEntity entity = service.create(request);
-        List<UUID> categoryTypeIds = entity.getCategorySocialActionTypeEntities().stream()
-                .map(type -> type.getId())
-                .collect(Collectors.toList());
-        List<UUID> categoryLevelIds = entity.getCategorySocialActionLevelEntities().stream()
-                .map(level -> level.getId())
-                .collect(Collectors.toList());
-        SocialActionResponseDto response = new SocialActionResponseDto(
-                entity.getId(),
-                entity.getName(),
-                entity.getDescription(),
-                entity.getCreatedBy(),
-                entity.getLastModifiedBy(),
-                entity.getCreatedDate(),
-                entity.getLastModifiedDate(),
-                entity.getDeletedDate(),
-                entity.getDeletedBy(),
-                categoryTypeIds,
-                categoryLevelIds
-        );
+        SocialActionResponseDto response = mapEntityToDto(entity);
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
@@ -143,19 +129,7 @@ public class SocialActionController {
         List<UUID> categoryLevelIds = entity.getCategorySocialActionLevelEntities().stream()
                 .map(level -> level.getId())
                 .collect(Collectors.toList());
-        SocialActionResponseDto response = new SocialActionResponseDto(
-                entity.getId(),
-                entity.getName(),
-                entity.getDescription(),
-                entity.getCreatedBy(),
-                entity.getLastModifiedBy(),
-                entity.getCreatedDate(),
-                entity.getLastModifiedDate(),
-                entity.getDeletedDate(),
-                entity.getDeletedBy(),
-                categoryTypeIds,
-                categoryLevelIds
-        );
+        SocialActionResponseDto response = mapEntityToDto(entity);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
