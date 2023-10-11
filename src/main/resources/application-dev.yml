@@ -13,6 +13,8 @@ acao-social:
     host: http://localhost/
   keyclock:
     baseUrl: http://localhost:9090
+  frontend:
+      baseUrl: http://localhost:3000/
 
 server:
   port: '3001'
