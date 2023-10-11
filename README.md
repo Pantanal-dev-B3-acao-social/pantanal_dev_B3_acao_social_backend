@@ -244,5 +244,10 @@ Neste cenário, quando o usuário recebe um cargo, ele tem o mesmo cargo em toda
   - criar testes de casos de falha
   - criar testes de casos de sucesso somente com campos obrigatorio
 
+# Auxilio I.A.
+- uso de I.A. para aumentar a curva de aprendizagem
+- chat gpt
+- Bito (chat gpt integrado com intellij)
+- Copilot
 
 
