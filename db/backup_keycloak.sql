@@ -2238,7 +2238,6 @@ cc85fef9-25b9-4515-98ce-0be4a5df89ac	529e1198-678b-428b-864c-e4dc79c6b20a
 COPY public.credential (id, salt, type, user_id, created_date, user_label, secret_data, credential_data, priority) FROM stdin;
 4690dfc3-0579-44c3-92a9-2503eaf2375e	\N	password	408dc63c-a5d8-495c-9f54-0ac8cfd6dcff	1695174962369	\N	{"value":"tXBCgRG1RnR3lWpUqIOgvx4WeDFLW6sR4NY39M2suJg=","salt":"6iMpBMeoCLRmSYHMQim2pA==","additionalParameters":{}}	{"hashIterations":27500,"algorithm":"pbkdf2-sha256","additionalParameters":{}}	10
 98dbbd30-ae9c-4281-be41-dd314e5a428d	\N	password	065872c1-177f-41be-9ac0-3221146ad40b	1695175118899	My password	{"value":"qYjl9ebPBcLxR5VaQeY4E7LX8Y8ckA7Adi4BDmuE4Bg=","salt":"ls/4KedLIl95PaH9rg1KZg==","additionalParameters":{}}	{"hashIterations":27500,"algorithm":"pbkdf2-sha256","additionalParameters":{}}	10
-53e1109e-7e9f-4d6a-9c9a-2f4edc77fe97	\N	password	d184c189-a3ab-4c91-8336-fb0fb1e1993a	1697045421076	\N	{"value":"nzo3WgmN5/+uwEmZKukYQUND4rTTKaA6fuycG/NOeD8=","salt":"me0Q926dWUVe8ZNRH+Lxyg==","additionalParameters":{}}	{"hashIterations":27500,"algorithm":"pbkdf2-sha256","additionalParameters":{}}	10
 \.
 
 
@@ -3029,6 +3028,15 @@ c8705e47-2256-4de1-b09d-363ac00c60f2	client-id-pantanal	{"grant_type":"password"
 abaf1625-9fcf-4aeb-b8ff-9f4cc952826e	client-id-pantanal	{"grant_type":"password"}	client_not_found	172.26.0.1	fc3e583c-0722-4ee1-aeef-70af67cf78ba	\N	1697045097182	LOGIN_ERROR	\N
 8b5dfc41-eb9e-47ce-a4f5-06d6acfbcd66	\N	{"grant_type":"password"}	client_not_found	172.26.0.1	89f9614c-27fd-44d6-b07c-c527669d1d5c	\N	1697045150583	LOGIN_ERROR	\N
 7de447f8-24e9-476d-9a28-659bf5ddacc1	master-realm	{"grant_type":"password"}	invalid_client_credentials	172.26.0.1	fc3e583c-0722-4ee1-aeef-70af67cf78ba	\N	1697045185783	LOGIN_ERROR	\N
+d16296aa-db71-4a91-9135-9f226ba4ea4e	client-id-backend-1	{"grant_type":"password"}	invalid_client_credentials	172.20.0.1	89f9614c-27fd-44d6-b07c-c527669d1d5c	\N	1697122669970	LOGIN_ERROR	\N
+c25d04c4-a639-4ce9-aa85-daf45a75c8b0	client-id-backend-1	{"grant_type":"password"}	invalid_client_credentials	172.20.0.1	89f9614c-27fd-44d6-b07c-c527669d1d5c	\N	1697124734636	LOGIN_ERROR	\N
+8fa7973a-4046-4226-8870-b2e67e9886a4	client-id-backend-1	{"grant_type":"password"}	invalid_client_credentials	172.20.0.1	89f9614c-27fd-44d6-b07c-c527669d1d5c	\N	1697124748412	LOGIN_ERROR	\N
+806a3c41-88a4-4b19-8a63-0db0aa40fd3c	client-id-backend-1	{"auth_method":"openid-connect","grant_type":"password","client_auth_method":"client-secret"}	user_not_found	172.20.0.1	89f9614c-27fd-44d6-b07c-c527669d1d5c	\N	1697131087922	LOGIN_ERROR	\N
+326f8634-4072-4b47-b9b3-1a3df5108339	client-id-backend-1	{"auth_method":"openid-connect","grant_type":"password","client_auth_method":"client-secret"}	user_not_found	172.20.0.1	89f9614c-27fd-44d6-b07c-c527669d1d5c	\N	1697131190798	LOGIN_ERROR	\N
+2d36c3df-e8bf-4696-bbbe-ec11a265cd8c	client-id-backend-1	{"auth_method":"openid-connect","grant_type":"password","client_auth_method":"client-secret"}	user_not_found	172.20.0.1	89f9614c-27fd-44d6-b07c-c527669d1d5c	\N	1697131638230	LOGIN_ERROR	\N
+ed5bc82b-2d32-4c74-b46a-901973425e2c	client-id-backend-1	{"auth_method":"openid-connect","grant_type":"password","client_auth_method":"client-secret"}	user_not_found	172.20.0.1	89f9614c-27fd-44d6-b07c-c527669d1d5c	\N	1697131915178	LOGIN_ERROR	\N
+face3609-d634-4815-8f51-ccc9a7f3a0b9	client-id-backend-1	{"auth_method":"openid-connect","grant_type":"password","client_auth_method":"client-secret"}	user_not_found	172.20.0.1	89f9614c-27fd-44d6-b07c-c527669d1d5c	\N	1697132463845	LOGIN_ERROR	\N
+25b1b517-0e4c-461b-88b3-c2a3ece17c77	client-id-backend-1	{"auth_method":"openid-connect","grant_type":"password","client_auth_method":"client-secret"}	user_not_found	172.20.0.1	89f9614c-27fd-44d6-b07c-c527669d1d5c	\N	1697132706665	LOGIN_ERROR	\N
 \.
 
 
@@ -3187,6 +3195,12 @@ fefff346-c359-49a9-ad9c-9931fa0a4b1d	c1191242-d7bf-48f8-90ab-071fcac11b2e
 99f8ba1e-deb9-403d-ade9-f5e57758e902	c1191242-d7bf-48f8-90ab-071fcac11b2e
 c6da671f-0e18-486c-a8ec-44294fbf9dcc	23e5b21f-6767-4d90-a95f-8722ac688f15
 c6da671f-0e18-486c-a8ec-44294fbf9dcc	c1191242-d7bf-48f8-90ab-071fcac11b2e
+0b248ed3-b039-43a2-bdfd-49be911c432e	c1191242-d7bf-48f8-90ab-071fcac11b2e
+7e9c6da2-9d2d-41de-a7c3-19c9f2621dd2	c1191242-d7bf-48f8-90ab-071fcac11b2e
+a2065107-cfd4-4145-bc8c-72391e37c734	c1191242-d7bf-48f8-90ab-071fcac11b2e
+93c2a339-3875-4e97-936b-68eb71397437	c1191242-d7bf-48f8-90ab-071fcac11b2e
+725bec48-e96b-4d66-91ee-45d8f0816395	c1191242-d7bf-48f8-90ab-071fcac11b2e
+13522cb2-a80d-48f9-8ee2-459346127aa1	c1191242-d7bf-48f8-90ab-071fcac11b2e
 \.
 
 
@@ -3389,6 +3403,12 @@ f06fdbe1-2d21-43df-95e9-f270d3b6231f	89f9614c-27fd-44d6-b07c-c527669d1d5c	f		PRE
 adcf166d-609b-4546-953b-4ea9dde9ce9f	ef2b8215-0be5-4964-a5fd-9fbb38d4e1c6	t		view-users	89f9614c-27fd-44d6-b07c-c527669d1d5c	ef2b8215-0be5-4964-a5fd-9fbb38d4e1c6	\N
 abb95a77-c581-484e-99c7-7e19439f46bc	ef2b8215-0be5-4964-a5fd-9fbb38d4e1c6	t		realm-management	89f9614c-27fd-44d6-b07c-c527669d1d5c	ef2b8215-0be5-4964-a5fd-9fbb38d4e1c6	\N
 c6da671f-0e18-486c-a8ec-44294fbf9dcc	89f9614c-27fd-44d6-b07c-c527669d1d5c	f		default-roles-master	89f9614c-27fd-44d6-b07c-c527669d1d5c	\N	\N
+0b248ed3-b039-43a2-bdfd-49be911c432e	89f9614c-27fd-44d6-b07c-c527669d1d5c	f		USER	89f9614c-27fd-44d6-b07c-c527669d1d5c	\N	\N
+7e9c6da2-9d2d-41de-a7c3-19c9f2621dd2	89f9614c-27fd-44d6-b07c-c527669d1d5c	f		USER_CREATE	89f9614c-27fd-44d6-b07c-c527669d1d5c	\N	\N
+13522cb2-a80d-48f9-8ee2-459346127aa1	89f9614c-27fd-44d6-b07c-c527669d1d5c	f		USER_UPDATE	89f9614c-27fd-44d6-b07c-c527669d1d5c	\N	\N
+a2065107-cfd4-4145-bc8c-72391e37c734	89f9614c-27fd-44d6-b07c-c527669d1d5c	f		USER_DELETE	89f9614c-27fd-44d6-b07c-c527669d1d5c	\N	\N
+93c2a339-3875-4e97-936b-68eb71397437	89f9614c-27fd-44d6-b07c-c527669d1d5c	f		USER_GET_ALL	89f9614c-27fd-44d6-b07c-c527669d1d5c	\N	\N
+725bec48-e96b-4d66-91ee-45d8f0816395	89f9614c-27fd-44d6-b07c-c527669d1d5c	f		USER_GET_ONE	89f9614c-27fd-44d6-b07c-c527669d1d5c	\N	\N
 \.
 
 
@@ -4138,7 +4158,6 @@ COPY public.user_entity (id, email, email_constraint, email_verified, enabled, f
 408dc63c-a5d8-495c-9f54-0ac8cfd6dcff	\N	6930d86e-91b5-4acd-a989-f96279472bda	f	t	\N	\N	\N	fc3e583c-0722-4ee1-aeef-70af67cf78ba	admin	1695174962099	\N	0
 fcdae981-e258-4cd4-b0b8-e437cae8fdd9	\N	86d22052-6601-456f-919f-6f82a67568e3	f	t	\N	\N	\N	89f9614c-27fd-44d6-b07c-c527669d1d5c	service-account-client-id-backend-1	1695175050728	ef2b8215-0be5-4964-a5fd-9fbb38d4e1c6	0
 065872c1-177f-41be-9ac0-3221146ad40b	\N	fb36bea7-a42d-4cea-93b9-8ac4f1696a5b	f	t	\N			89f9614c-27fd-44d6-b07c-c527669d1d5c	funcionario1	1695175108523	\N	0
-d184c189-a3ab-4c91-8336-fb0fb1e1993a	novousuario@example.com	novousuario@example.com	f	t	\N	Novo	Usuario	89f9614c-27fd-44d6-b07c-c527669d1d5c	novousuario	1697045420969	\N	0
 \.
 
 
@@ -4259,7 +4278,6 @@ c6da671f-0e18-486c-a8ec-44294fbf9dcc	065872c1-177f-41be-9ac0-3221146ad40b
 cc85fef9-25b9-4515-98ce-0be4a5df89ac	065872c1-177f-41be-9ac0-3221146ad40b
 8eb3be08-fd48-4e0b-8a58-7488f1a8f69c	065872c1-177f-41be-9ac0-3221146ad40b
 9c98d677-c8f8-418e-8929-3093bba6d755	065872c1-177f-41be-9ac0-3221146ad40b
-cc85fef9-25b9-4515-98ce-0be4a5df89ac	d184c189-a3ab-4c91-8336-fb0fb1e1993a
 \.
 
 

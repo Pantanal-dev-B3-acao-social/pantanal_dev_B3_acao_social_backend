@@ -5,20 +5,21 @@ import dev.pantanal.b3.krpv.acao_social.modulos.category.dto.request.CategoryPar
 import dev.pantanal.b3.krpv.acao_social.modulos.category.dto.request.CategoryUpdateDto;
 import dev.pantanal.b3.krpv.acao_social.modulos.category.dto.response.CategoryResponseDto;
 import dev.pantanal.b3.krpv.acao_social.modulos.category.entity.CategoryEntity;
+import dev.pantanal.b3.krpv.acao_social.modulos.category.modules.categoryGroup.CategoryGroupEntity;
+import dev.pantanal.b3.krpv.acao_social.modulos.category.modules.categoryGroup.dto.response.CategoryGroupResponseDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.*;
 import org.springframework.data.web.SortDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 import java.util.UUID;
 import static dev.pantanal.b3.krpv.acao_social.modulos.category.CategoryController.ROUTE_CATEGORY;
 
@@ -30,6 +31,23 @@ public class CategoryController {
     private CategoryService service;
     public static final String ROUTE_CATEGORY = "/v1/category";
 
+    public CategoryResponseDto mapEntityToDto(CategoryEntity entity) {
+        CategoryResponseDto dto = new CategoryResponseDto(
+                entity.getId(),
+                entity.getName(),
+                entity.getDescription(),
+                entity.getCode(),
+                entity.getCategoryGroup().getId(),
+                entity.getCreatedBy(),
+                entity.getLastModifiedBy(),
+                entity.getCreatedDate(),
+                entity.getLastModifiedDate(),
+                entity.getDeletedDate(),
+                entity.getDeletedBy()
+        );
+        return dto;
+    }
+
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
     @PreAuthorize("hasAnyRole('CATEGORY_GET_ALL')")
@@ -40,15 +58,16 @@ public class CategoryController {
             @ApiResponse(responseCode = "404", description = "Not found"),
             @ApiResponse(responseCode = "500", description = "Internal Server Error"),
     })
-    public Page<CategoryEntity> findAll(
+    public Page<CategoryResponseDto> findAll(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
             @SortDefault(sort="name", direction = Sort.Direction.DESC) Sort sort,
             @Valid CategoryParamsDto request
     ) {
         Pageable paging = PageRequest.of(page, size, sort);
-        Page<CategoryEntity> response = service.findAll(paging, request);
-        return response;
+        Page<CategoryEntity> entities = service.findAll(paging, request);
+        List<CategoryResponseDto> dtos = entities.map(this::mapEntityToDto).getContent();
+        return new PageImpl<>(dtos, paging, entities.getTotalElements());
     }
 
     @GetMapping("/{id}")
@@ -63,20 +82,7 @@ public class CategoryController {
     })
     public ResponseEntity<CategoryResponseDto> findOne(@PathVariable UUID id) {
         CategoryEntity entity = service.findById(id);
-        CategoryResponseDto response = new CategoryResponseDto(
-                entity.getId(),
-                entity.getName(),
-                entity.getDescription(),
-                entity.getCode(),
-                entity.getVersion(),
-                entity.getCategoryGroup(),
-                entity.getCreatedBy(),
-                entity.getLastModifiedBy(),
-                entity.getCreatedDate(),
-                entity.getLastModifiedDate(),
-                entity.getDeletedDate(),
-                entity.getDeletedBy()
-        );
+        CategoryResponseDto response = mapEntityToDto(entity);
         return new ResponseEntity<CategoryResponseDto>(response, HttpStatus.OK);
     }
 
@@ -94,20 +100,7 @@ public class CategoryController {
     })
     public ResponseEntity<CategoryResponseDto> create(@RequestBody @Valid CategoryCreateDto request) {
         CategoryEntity entity = service.create(request);
-        CategoryResponseDto response = new CategoryResponseDto(
-                entity.getId(),
-                entity.getName(),
-                entity.getDescription(),
-                entity.getCode(),
-                entity.getVersion(),
-                entity.getCategoryGroup(),
-                entity.getCreatedBy(),
-                entity.getLastModifiedBy(),
-                entity.getCreatedDate(),
-                entity.getLastModifiedDate(),
-                entity.getDeletedDate(),
-                entity.getDeletedBy()
-        );
+        CategoryResponseDto response = mapEntityToDto(entity);
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
@@ -125,20 +118,7 @@ public class CategoryController {
     })
     public ResponseEntity<CategoryResponseDto> update(@PathVariable UUID id, @Valid @RequestBody CategoryUpdateDto request) {
         CategoryEntity entity = service.update(id, request);
-        CategoryResponseDto response = new CategoryResponseDto(
-                id,
-                entity.getName(),
-                entity.getDescription(),
-                entity.getCode(),
-                entity.getVersion(),
-                entity.getCategoryGroup(),
-                entity.getCreatedBy(),
-                entity.getLastModifiedBy(),
-                entity.getCreatedDate(),
-                entity.getLastModifiedDate(),
-                entity.getDeletedDate(),
-                entity.getDeletedBy()
-        );
+        CategoryResponseDto response = mapEntityToDto(entity);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 

@@ -23,25 +23,6 @@ public class KeyclockAuthService {
     @Value("${spring.security.oauth2.resourceserver.jwt.issuer-uri}")
     private String issuerUri;
 
-    /**
-     * Esse token é usado para autenticar e autorizar solicitações a recursos protegidos por um servidor OAuth 2.0 ou OpenID Connect.
-     * Quando este backend spring boot precisar fazer request diretamente para o keyclock deve usar o token gerando por esta request
-     */
-    public ResponseEntity<String> clientToken() {
-        HttpHeaders headers = new HttpHeaders();
-        RestTemplate rt = new RestTemplate();
-        headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
-        MultiValueMap<String, String> formData = new LinkedMultiValueMap<>();
-        formData.add("grant_type", "password");
-        formData.add("client_secret", clientSecret);
-        formData.add("client_id", clientId);
-        HttpEntity<MultiValueMap<String, String>> httpEntity = new HttpEntity<>(formData, headers);
-        String tokenEndpoint = issuerUri + "/protocol/openid-connect/token";
-        var result = rt.postForEntity(tokenEndpoint, httpEntity, String.class);
-        return result;
-        // TODO: salvar token no redis
-    }
-
     public ResponseEntity<String> loginUser(LoginUserDto userDto) {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
@@ -58,20 +39,4 @@ public class KeyclockAuthService {
         return result;
     }
 
-//    public ResponseEntity<String> logoutUser(String userId) {
-//        HttpHeaders headers = new HttpHeaders();
-//        RestTemplate rt = new RestTemplate();
-//        headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
-//        MultiValueMap<String, String> formData = new LinkedMultiValueMap<>();
-////        formData.add("grant_type", "password");
-////        formData.add("client_secret", clientSecret);
-////        formData.add("client_id", clientId);
-////        formData.add("username", userDto.username());
-////        formData.add("password", userDto.password());
-//        HttpEntity<MultiValueMap<String, String>> httpEntity = new HttpEntity<>(formData, headers);
-//        String tokenEndpoint = issuerUri + "/admin/realms/{realm}/users/"+userId+"/logout";
-//        // TODO: passar TOKEN
-//        var result = rt.postForEntity(tokenEndpoint, httpEntity, String.class);
-//        return result;
-//    }
 }
