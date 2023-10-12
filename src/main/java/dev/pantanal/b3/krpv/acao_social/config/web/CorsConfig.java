@@ -17,7 +17,9 @@ public class CorsConfig {
     public CorsFilter corsFilter() {
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         CorsConfiguration config = new CorsConfiguration();
-        config.addAllowedOrigin(urlFrontend); // Domínio do seu frontend
+        config.addAllowedOrigin("*"); // TODO:
+        config.addAllowedMethod("OPTIONS"); // Permitir solicitações OPTIONS
+//        config.addAllowedOrigin(urlFrontend); // Domínio do seu frontend
         config.addAllowedHeader("*");
         config.addAllowedMethod("*");
         source.registerCorsConfiguration("/**", config);

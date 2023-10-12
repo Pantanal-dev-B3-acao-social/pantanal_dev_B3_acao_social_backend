@@ -3,6 +3,7 @@ package dev.pantanal.b3.krpv.acao_social.config.security;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Bean;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -34,12 +35,16 @@ public class DefaultSecurityConfig {
         http.csrf(csrf -> csrf.disable());
         http.authorizeHttpRequests(
                 authorizeConfig -> {
+                    authorizeConfig.requestMatchers(HttpMethod.OPTIONS, "/**").permitAll();
                     authorizeConfig.requestMatchers(ROUTE_AUTH+"/login").permitAll();
                     authorizeConfig.requestMatchers( ROUTE_ONG+"/home").permitAll();
                     authorizeConfig.requestMatchers( "/swagger-ui", "/swagger-ui/**", "/swagger-ui/index.html#").permitAll();
                     authorizeConfig.anyRequest().authenticated();
                 }
         );
+
+//        http.cors().and().authorizeRequests().requestMatchers(HttpMethod.OPTIONS, "/**").permitAll();
+
         http.oauth2ResourceServer(
             oauth2 -> oauth2
                 .jwt(jwt -> jwt.jwtAuthenticationConverter(new JWTConverter()))
