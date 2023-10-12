@@ -1,11 +1,9 @@
 package dev.pantanal.b3.krpv.acao_social.modulos.user;
 
+import dev.pantanal.b3.krpv.acao_social.modulos.user.dto.UserCreateDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.RequestEntity;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -53,6 +51,21 @@ public class UserService {
         RequestEntity<Object> request = new RequestEntity<>(
                 headers, HttpMethod.GET, URI.create(urlEndpoint));
         ResponseEntity<String> response = restTemplate.exchange(request, String.class);
+        return response;
+    }
+
+    public ResponseEntity<String> create(UserCreateDto dto) {
+        String urlEndpoint = keyclockBaseUrl + "/admin/realms/" + realmId + "/users/";
+        HttpHeaders headers = new HttpHeaders();
+        headers.setBearerAuth(keycloakClient.getClientToken());
+        HttpEntity<UserCreateDto> requestEntity = new HttpEntity<>(dto, headers);
+        RestTemplate restTemplate = new RestTemplate();
+        ResponseEntity<String> response = restTemplate.exchange(
+                urlEndpoint,
+                HttpMethod.POST,
+                requestEntity,
+                String.class
+        );
         return response;
     }
 
