@@ -1,6 +1,7 @@
 package dev.pantanal.b3.krpv.acao_social.modulos.user;
 
 import dev.pantanal.b3.krpv.acao_social.modulos.user.dto.UserCreateDto;
+import dev.pantanal.b3.krpv.acao_social.modulos.user.dto.UserUpdateDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
@@ -63,6 +64,21 @@ public class UserService {
         ResponseEntity<String> response = restTemplate.exchange(
                 urlEndpoint,
                 HttpMethod.POST,
+                requestEntity,
+                String.class
+        );
+        return response;
+    }
+
+    public ResponseEntity<String> update(UserUpdateDto dto) {
+        String urlEndpoint = keyclockBaseUrl + "/admin/realms/" + realmId + "/users/";
+        HttpHeaders headers = new HttpHeaders();
+        headers.setBearerAuth(keycloakClient.getClientToken());
+        HttpEntity<UserUpdateDto> requestEntity = new HttpEntity<>(dto, headers);
+        RestTemplate restTemplate = new RestTemplate();
+        ResponseEntity<String> response = restTemplate.exchange(
+                urlEndpoint,
+                HttpMethod.PUT,
                 requestEntity,
                 String.class
         );

@@ -1,6 +1,7 @@
 package dev.pantanal.b3.krpv.acao_social.modulos.user;
 
 import dev.pantanal.b3.krpv.acao_social.modulos.user.dto.UserCreateDto;
+import dev.pantanal.b3.krpv.acao_social.modulos.user.dto.UserUpdateDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -61,6 +62,22 @@ public class UserController {
     public ResponseEntity<String> create(@RequestBody @Valid UserCreateDto request) {
         ResponseEntity<String> entity = service.create(request);
         return entity;
+    }
+
+    @PatchMapping("/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    @Operation(summary = "Updates an Social Action", method = "PATCH")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Successfully Updated"),
+            @ApiResponse(responseCode = "400", description = "Invalid parameters"),
+            @ApiResponse(responseCode = "401", description = "User is not authenticated"),
+            @ApiResponse(responseCode = "404", description = "Social Action no found"),
+            @ApiResponse(responseCode = "422", description = "Invalid request data"),
+            @ApiResponse(responseCode = "500", description = "Error when creating social action"),
+    })
+    public ResponseEntity<String> update(@PathVariable UUID id, @Valid @RequestBody UserUpdateDto dto) {
+        ResponseEntity<String> response = service.update(dto);
+        return response;
     }
 
 
