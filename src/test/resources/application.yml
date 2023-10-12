@@ -10,6 +10,8 @@ acao-social:
     host: http://localhost/
   keyclock:
     baseUrl: http://localhost:9090
+    adminUsername: funcionario1
+    adminAassword: 123
   frontend:
     baseUrl: http://localhost:3000/
 #db-name: postgres

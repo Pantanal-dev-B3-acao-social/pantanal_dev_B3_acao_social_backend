@@ -79,7 +79,7 @@ public class CategoryGroupControllerIT {
                     .andExpect(MockMvcResultMatchers.jsonPath("$.content[" + i + "].name").value(item.getName()))
                     .andExpect(MockMvcResultMatchers.jsonPath("$.content[" + i + "].description").value(item.getDescription()))
                     .andExpect(MockMvcResultMatchers.jsonPath("$.content[" + i + "].code").value(item.getCode()))
-                    .andExpect(MockMvcResultMatchers.jsonPath("$.content[" + i + "].parentCategoryGroupEntity.id").value(item.getParentCategoryGroupEntity().getId().toString()))
+                    .andExpect(MockMvcResultMatchers.jsonPath("$.content[" + i + "].parentCategoryGroupId").value(item.getParentCategoryGroupEntity().getId().toString()))
                     .andExpect(MockMvcResultMatchers.jsonPath("$.content[" + i + "].visibility").value(item.getVisibility().toString()))
 // TODO: One nao testa seus Many                   .andExpect(MockMvcResultMatchers.jsonPath("$.content[" + i + "].categories").value(item.getCategories().toString()))
                     .andExpect(MockMvcResultMatchers.jsonPath("$.content[" + i + "].createdBy").isNotEmpty())

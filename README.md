@@ -129,7 +129,7 @@ SPRING_PROFILES_ACTIVE=dev
 - podem existir algumas regras de negocio voltada para dados em outras cadamadas, principalmente validadores
 - como na camada de DTO, Entity e Migration
 - 
-### SSO (Single sign-on) Autenticação única
+### SSO (Single sign-on) Autenticação única / Identity and Access Management (IAM) gerenciamento de identidade e acesso
 - optamos por não implementar os serviços de autenticação e autorização
 - optemos por usar uma ferramenta de SSO, no caso o Keyclock
 - em nossa arquitetura, tercerizamos para o Keyclock gerencia tudo do usuário

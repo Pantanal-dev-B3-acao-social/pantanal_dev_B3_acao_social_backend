@@ -1,13 +1,15 @@
 package dev.pantanal.b3.krpv.acao_social.modulos.user;
 
+import org.keycloak.representations.idm.UserRepresentation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.web.bind.annotation.*;
-
+import org.keycloak.admin.client.resource.UserResource;
+import javax.ws.rs.QueryParam;
+import java.util.List;
 import java.util.UUID;
-
 import static dev.pantanal.b3.krpv.acao_social.modulos.user.UserController.ROUTE_USER;
 
 @RequestMapping(ROUTE_USER)
@@ -16,19 +18,42 @@ public class UserController {
     @Autowired
     private UserService service;
 
-
     public static final String ROUTE_USER = "/v1/user";
 
-    @GetMapping("/{userId}")
+    @GetMapping("/{userId}/profile")
     @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity<String> userProfile(JwtAuthenticationToken userLogged, @PathVariable UUID userId) {
-        var result = service.userProfile(userId, userLogged );
+    public ResponseEntity<String> profile(JwtAuthenticationToken userLogged, @PathVariable UUID userId) {
+        ResponseEntity<String> result = this.service.userProfile(userId, userLogged);
         return result;
     }
 
-//    @GetMapping("/{id}")
-//    public ResponseEntity<String> updateUser(@PathVariable UUID userId) {
-//        var result = service.updateUser(userId);
-//        return result;
-//    }
+    @GetMapping("/{userId}")
+    @ResponseStatus(HttpStatus.OK)
+    public UserResource findById(@PathVariable UUID userId) {
+        UserResource result = this.service.findById(userId.toString());
+        return result;
+    }
+
+    @GetMapping()
+    @ResponseStatus(HttpStatus.OK)
+    public List<UserRepresentation> findAll(
+        @QueryParam("username") String username,
+        @QueryParam("firstName") String firstName,
+        @QueryParam("lastName") String lastName,
+        @QueryParam("email") String email,
+        @QueryParam("first") Integer first,
+        @QueryParam("max") Integer max
+    ) {
+        List<UserRepresentation> result = this.service.findAll(username, firstName, lastName, email, first, max);
+        return result;
+    }
+
+    @GetMapping("/atributtes")
+    @ResponseStatus(HttpStatus.OK)
+    public List<UserRepresentation> searchByAttributes(@QueryParam("q") String attr) {
+        List<UserRepresentation> users = this.service.findByAttributes(attr);
+        return users;
+    }
+
 }
+
