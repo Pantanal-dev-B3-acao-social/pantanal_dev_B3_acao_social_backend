@@ -1,5 +1,6 @@
 package dev.pantanal.b3.krpv.acao_social.modulos.category.modules.categoryGroup;
 
+import dev.pantanal.b3.krpv.acao_social.modulos.category.entity.CategoryEntity;
 import dev.pantanal.b3.krpv.acao_social.modulos.category.modules.categoryGroup.dto.request.CategoryGroupCreateDto;
 import dev.pantanal.b3.krpv.acao_social.modulos.category.modules.categoryGroup.dto.request.CategoryGroupParamsDto;
 import dev.pantanal.b3.krpv.acao_social.modulos.category.modules.categoryGroup.dto.request.CategoryGroupUpdateDto;
@@ -9,16 +10,15 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.*;
 import org.springframework.data.web.SortDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 import static dev.pantanal.b3.krpv.acao_social.modulos.category.modules.categoryGroup.CategoryGroupController.ROUTE_CATEGORY_GROUP;
 
 @RestController
@@ -28,6 +28,24 @@ public class CategoryGroupController {
     @Autowired
     private CategoryGroupService service;
     public static final String ROUTE_CATEGORY_GROUP = "/v1/category-group";
+
+    public CategoryGroupResponseDto mapEntityToDto(CategoryGroupEntity entity) {
+        CategoryGroupResponseDto dto = new CategoryGroupResponseDto(
+                entity.getId(),
+                entity.getName(),
+                entity.getDescription(),
+                entity.getCode(),
+                entity.getParentCategoryGroupEntity() == null ? null : entity.getParentCategoryGroupEntity().getId(),
+                entity.getVisibility(),
+                entity.getCreatedBy(),
+                entity.getCreatedDate(),
+                entity.getLastModifiedBy(),
+                entity.getLastModifiedDate(),
+                entity.getDeletedBy(),
+                entity.getDeletedDate()
+        );
+        return dto;
+    }
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
@@ -39,15 +57,16 @@ public class CategoryGroupController {
             @ApiResponse(responseCode = "404", description = "Not found"),
             @ApiResponse(responseCode = "500", description = "Internal Server Error"),
     })
-    public Page<CategoryGroupEntity> findAll(
+    public Page<CategoryGroupResponseDto> findAll (
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
             @SortDefault(sort="name", direction = Sort.Direction.DESC) Sort sort,
             @Valid CategoryGroupParamsDto request
     ) {
         Pageable paging = PageRequest.of(page, size, sort);
-        Page<CategoryGroupEntity> response = service.findAll(paging, request);
-        return response; // TODO: verificar se vai converter certo
+        Page<CategoryGroupEntity> entities = service.findAll(paging, request);
+        List<CategoryGroupResponseDto> dtos = entities.map(this::mapEntityToDto).getContent();
+        return new PageImpl<>(dtos, paging, entities.getTotalElements());
     }
 
     @GetMapping("/{id}")
@@ -62,21 +81,7 @@ public class CategoryGroupController {
     })
     public ResponseEntity<CategoryGroupResponseDto> findOne(@PathVariable UUID id) {
         CategoryGroupEntity entity = service.findById(id);
-        CategoryGroupResponseDto response = new CategoryGroupResponseDto(
-                entity.getId(),
-                entity.getName(),
-                entity.getDescription(),
-                entity.getCode(),
-                entity.getVersion(),
-                entity.getParentCategoryGroupEntity(),
-                entity.getVisibility(),
-                entity.getCreatedBy(),
-                entity.getLastModifiedBy(),
-                entity.getCreatedDate(),
-                entity.getLastModifiedDate(),
-                entity.getDeletedDate(),
-                entity.getDeletedBy()
-        );
+        CategoryGroupResponseDto response = mapEntityToDto(entity);
         return new ResponseEntity<CategoryGroupResponseDto>(response, HttpStatus.OK);
     }
 
@@ -94,21 +99,7 @@ public class CategoryGroupController {
     })
     public ResponseEntity<CategoryGroupResponseDto> create(@RequestBody @Valid CategoryGroupCreateDto request) {
         CategoryGroupEntity entity = service.create(request);
-        CategoryGroupResponseDto response = new CategoryGroupResponseDto(
-                entity.getId(),
-                entity.getName(),
-                entity.getDescription(),
-                entity.getCode(),
-                entity.getVersion(),
-                entity.getParentCategoryGroupEntity(),
-                entity.getVisibility(),
-                entity.getCreatedBy(),
-                entity.getLastModifiedBy(),
-                entity.getCreatedDate(),
-                entity.getLastModifiedDate(),
-                entity.getDeletedDate(),
-                entity.getDeletedBy()
-        );
+        CategoryGroupResponseDto response = mapEntityToDto(entity);
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
@@ -126,21 +117,7 @@ public class CategoryGroupController {
     })
     public ResponseEntity<CategoryGroupResponseDto> update(@PathVariable UUID id, @Valid @RequestBody CategoryGroupUpdateDto request) {
         CategoryGroupEntity entity = service.update(id, request);
-        CategoryGroupResponseDto response = new CategoryGroupResponseDto(
-                entity.getId(),
-                entity.getName(),
-                entity.getDescription(),
-                entity.getCode(),
-                entity.getVersion(),
-                entity.getParentCategoryGroupEntity(),
-                entity.getVisibility(),
-                entity.getCreatedBy(),
-                entity.getLastModifiedBy(),
-                entity.getCreatedDate(),
-                entity.getLastModifiedDate(),
-                entity.getDeletedDate(),
-                entity.getDeletedBy()
-        );
+        CategoryGroupResponseDto response = mapEntityToDto(entity);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 

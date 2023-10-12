@@ -15,16 +15,15 @@ public record CategoryGroupResponseDto(
         String description,
         @NotBlank(message= "Campo 'code' não pode estar vazio")
         String code,
-        Long version,
-        CategoryGroupEntity parentCategoryGroupEntity,
+        UUID parentCategoryGroupId,
         @NotBlank(message= "Campo 'visibility' não pode estar vazio")
         VisibilityCategoryGroupEnum visibility,
         @NotBlank(message= "Campo 'createdBy' não pode estar vazio")
         UUID createdBy,
-        UUID lastModifiedBy,
         @NotBlank(message= "Campo 'createdDate' não pode estar vazio")
         LocalDateTime createdDate,
+        UUID lastModifiedBy,
         LocalDateTime lastModifiedDate,
-        LocalDateTime deletedDate,
-        UUID deletedBy
+        UUID deletedBy,
+        LocalDateTime deletedDate
 ) { }
