@@ -14,7 +14,7 @@ acao-social:
   keyclock:
     baseUrl: http://localhost:9090
     adminUsername: funcionario1
-    adminAassword: 123
+    adminPassword: 123
   frontend:
       baseUrl: http://localhost:3000/
 

@@ -70,8 +70,8 @@ public class UserService {
         return response;
     }
 
-    public ResponseEntity<String> update(UserUpdateDto dto) {
-        String urlEndpoint = keyclockBaseUrl + "/admin/realms/" + realmId + "/users/";
+    public ResponseEntity<String> update(UUID id, UserUpdateDto dto) {
+        String urlEndpoint = keyclockBaseUrl + "/admin/realms/" + realmId + "/users/" + id;
         HttpHeaders headers = new HttpHeaders();
         headers.setBearerAuth(keycloakClient.getClientToken());
         HttpEntity<UserUpdateDto> requestEntity = new HttpEntity<>(dto, headers);
@@ -79,6 +79,21 @@ public class UserService {
         ResponseEntity<String> response = restTemplate.exchange(
                 urlEndpoint,
                 HttpMethod.PUT,
+                requestEntity,
+                String.class
+        );
+        return response;
+    }
+
+    public ResponseEntity<String> delete(UUID id) {
+        String urlEndpoint = keyclockBaseUrl + "/admin/realms/" + realmId + "/users/" + id;
+        HttpHeaders headers = new HttpHeaders();
+        headers.setBearerAuth(keycloakClient.getClientToken());
+        HttpEntity<String> requestEntity = new HttpEntity<>(headers);
+        RestTemplate restTemplate = new RestTemplate();
+        ResponseEntity<String> response = restTemplate.exchange(
+                urlEndpoint,
+                HttpMethod.DELETE,
                 requestEntity,
                 String.class
         );

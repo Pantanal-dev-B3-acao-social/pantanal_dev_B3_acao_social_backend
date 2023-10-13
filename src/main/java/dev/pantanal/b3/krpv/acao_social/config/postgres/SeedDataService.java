@@ -10,6 +10,7 @@ import dev.pantanal.b3.krpv.acao_social.modulos.socialAction.SocialActionEntity;
 import dev.pantanal.b3.krpv.acao_social.utils.GenerateTokenUserForLogged;
 import dev.pantanal.b3.krpv.acao_social.utils.LoginMock;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.DependsOn;
 import org.springframework.core.annotation.Order;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -34,6 +35,13 @@ public class SeedDataService {
     private final PersonFactory personFactory;
     private final CompanyFactory companyFactory;
     private final PresenceFactory presenceFactory;
+
+    @Value("${acao-social.keyclock.adminUsername}")
+    private String adminUsername;
+
+    @Value("${acao-social.keyclock.adminPassword}")
+    private String adminPassword;
+
     @Autowired
     GenerateTokenUserForLogged generateTokenUserForLogged;
     @Autowired
@@ -66,7 +74,7 @@ public class SeedDataService {
     }
 
     public void executeAllSeed() {
-        String tokenUserLogged = generateTokenUserForLogged.loginUserMock(new LoginUserDto("funcionario1", "123"));
+        String tokenUserLogged = generateTokenUserForLogged.loginUserMock(new LoginUserDto(adminUsername, adminPassword));
         loginMock.authenticateWithToken(tokenUserLogged);
 
         // Arrange (Organizar) category
