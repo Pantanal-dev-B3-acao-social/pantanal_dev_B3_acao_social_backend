@@ -76,7 +76,7 @@ public class UserController {
             @ApiResponse(responseCode = "500", description = "Error when creating social action"),
     })
     public ResponseEntity<String> update(@PathVariable UUID id, @Valid @RequestBody UserUpdateDto dto) {
-        ResponseEntity<String> response = service.update(dto);
+        ResponseEntity<String> response = service.update(id, dto);
         return response;
     }
 

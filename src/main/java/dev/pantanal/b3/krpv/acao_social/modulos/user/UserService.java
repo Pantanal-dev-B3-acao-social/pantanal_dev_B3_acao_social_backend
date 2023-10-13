@@ -70,8 +70,8 @@ public class UserService {
         return response;
     }
 
-    public ResponseEntity<String> update(UserUpdateDto dto) {
-        String urlEndpoint = keyclockBaseUrl + "/admin/realms/" + realmId + "/users/";
+    public ResponseEntity<String> update(UUID id, UserUpdateDto dto) {
+        String urlEndpoint = keyclockBaseUrl + "/admin/realms/" + realmId + "/users/" + id;
         HttpHeaders headers = new HttpHeaders();
         headers.setBearerAuth(keycloakClient.getClientToken());
         HttpEntity<UserUpdateDto> requestEntity = new HttpEntity<>(dto, headers);
