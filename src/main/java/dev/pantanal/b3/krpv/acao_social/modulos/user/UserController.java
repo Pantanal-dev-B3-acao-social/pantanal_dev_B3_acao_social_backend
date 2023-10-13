@@ -57,7 +57,7 @@ public class UserController {
             @ApiResponse(responseCode = "401", description = "User not authenticated"),
             @ApiResponse(responseCode = "404", description = "User not found"),
             @ApiResponse(responseCode = "422", description = "Invalid request data"),
-            @ApiResponse(responseCode = "500", description = "Error when creating social action"),
+            @ApiResponse(responseCode = "500", description = "Error when creating User"),
     })
     public ResponseEntity<String> create(@RequestBody @Valid UserCreateDto request) {
         ResponseEntity<String> entity = service.create(request);
@@ -73,13 +73,26 @@ public class UserController {
             @ApiResponse(responseCode = "401", description = "User is not authenticated"),
             @ApiResponse(responseCode = "404", description = "Social Action no found"),
             @ApiResponse(responseCode = "422", description = "Invalid request data"),
-            @ApiResponse(responseCode = "500", description = "Error when creating social action"),
+            @ApiResponse(responseCode = "500", description = "Error when creating User"),
     })
     public ResponseEntity<String> update(@PathVariable UUID id, @Valid @RequestBody UserUpdateDto dto) {
         ResponseEntity<String> response = service.update(id, dto);
         return response;
     }
 
+    @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @Operation(summary = "Deletes an user", method = "DELETE")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "204", description = "Successfully deleted"),
+            @ApiResponse(responseCode = "400", description = "Invalid Id"),
+            @ApiResponse(responseCode = "401", description = "User not authenticated"),
+            @ApiResponse(responseCode = "404", description = "User not found"),
+            @ApiResponse(responseCode = "500", description = "Error when excluding User"),
+    })
+    public void delete(@PathVariable UUID id) {
+        service.delete(id);
+    }
 
 }
 

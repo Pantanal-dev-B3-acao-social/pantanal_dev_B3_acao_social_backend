@@ -85,4 +85,19 @@ public class UserService {
         return response;
     }
 
+    public ResponseEntity<String> delete(UUID id) {
+        String urlEndpoint = keyclockBaseUrl + "/admin/realms/" + realmId + "/users/" + id;
+        HttpHeaders headers = new HttpHeaders();
+        headers.setBearerAuth(keycloakClient.getClientToken());
+        HttpEntity<String> requestEntity = new HttpEntity<>(headers);
+        RestTemplate restTemplate = new RestTemplate();
+        ResponseEntity<String> response = restTemplate.exchange(
+                urlEndpoint,
+                HttpMethod.DELETE,
+                requestEntity,
+                String.class
+        );
+        return response;
+    }
+
 }
