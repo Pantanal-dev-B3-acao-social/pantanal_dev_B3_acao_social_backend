@@ -9,6 +9,10 @@ acao-social:
   server:
     port: '3001'
     host: http://localhost/
+  keyclock:
+    baseUrl: http://localhost:9090
+    adminUsername: funcionario1
+    adminPassword: 123
 #db-name: postgres
 #spring-boot-environment: testing2
 server:
