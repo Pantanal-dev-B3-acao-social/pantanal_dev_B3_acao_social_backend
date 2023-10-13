@@ -1,14 +1,22 @@
 package dev.pantanal.b3.krpv.acao_social.modulos.user;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import dev.pantanal.b3.krpv.acao_social.modulos.socialAction.dto.response.SocialActionResponseDto;
 import dev.pantanal.b3.krpv.acao_social.modulos.user.dto.UserCreateDto;
 import dev.pantanal.b3.krpv.acao_social.modulos.user.dto.UserUpdateDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.http.*;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+
+import java.io.IOException;
 import java.net.URI;
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -22,6 +30,9 @@ public class UserService {
 
     @Autowired
     KeycloakClient keycloakClient;
+
+    @Autowired
+    ObjectMapper objectMapper;
 
     public ResponseEntity<String> findAll(
             /*
@@ -43,19 +54,26 @@ public class UserService {
         return response;
     }
 
-    public ResponseEntity<String> userProfile (UUID userId, JwtAuthenticationToken userLogged ) {
+    public KeycloakUser findById (UUID userId, String tokenUserLogged) {
         String urlEndpoint = keyclockBaseUrl + "/admin/realms/" + realmId + "/users/" + userId.toString();
-        String accessToken = userLogged.getToken().getTokenValue();
         HttpHeaders headers = new HttpHeaders();
-        headers.setBearerAuth(accessToken);
+        headers.setBearerAuth(tokenUserLogged);
         RestTemplate restTemplate = new RestTemplate();
         RequestEntity<Object> request = new RequestEntity<>(
-                headers, HttpMethod.GET, URI.create(urlEndpoint));
+                headers, HttpMethod.GET, URI.create(urlEndpoint)
+        );
         ResponseEntity<String> response = restTemplate.exchange(request, String.class);
-        return response;
+        String body = response.getBody();
+        try {
+            KeycloakUser keycloakUser = objectMapper.readValue(body, KeycloakUser.class);
+            return keycloakUser;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
-    public ResponseEntity<String> create(UserCreateDto dto) {
+    public UUID create(UserCreateDto dto) {
         String urlEndpoint = keyclockBaseUrl + "/admin/realms/" + realmId + "/users/";
         HttpHeaders headers = new HttpHeaders();
         headers.setBearerAuth(keycloakClient.getClientToken());
@@ -67,7 +85,11 @@ public class UserService {
                 requestEntity,
                 String.class
         );
-        return response;
+        if(response.getStatusCode() == HttpStatus.CREATED) {
+            UUID userId = getUserIdByResponse(response);
+            return userId;
+        }
+        return null;
     }
 
     public ResponseEntity<String> update(UUID id, UserUpdateDto dto) {
@@ -98,6 +120,54 @@ public class UserService {
                 String.class
         );
         return response;
+    }
+
+    /* extrair o ID do usuário da resposta */
+    private UUID getUserIdByResponse(ResponseEntity<String> response) {
+        try {
+            if (response.getStatusCode() == HttpStatus.CREATED) {
+//                String locationHeader = response.headers().firstValue("Location").orElse("");
+//                String[] parts = locationHeader.split("/");
+//                String userId = parts[parts.length - 1];
+                //
+                HttpHeaders responseHeaders = response.getHeaders();
+                List<String> locationHeader = responseHeaders.get("Location");
+                if (locationHeader != null && !locationHeader.isEmpty()) {
+                    String locationUrl = locationHeader.get(0);
+                    String[] parts = locationUrl.split("/");
+                    String userId = parts[parts.length - 1];
+                    return UUID.fromString(userId);
+                } else {
+                    System.err.println("O cabeçalho 'Location' não foi encontrado na resposta.");
+                }
+            } else {
+                System.err.println("A solicitação para criar o usuário FALHOU.");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public KeycloakUser profile (UUID userId, JwtAuthenticationToken userLogged) {
+        String urlEndpoint = keyclockBaseUrl + "/admin/realms/" + realmId + "/users/" + userId.toString();
+        String accessToken = userLogged.getToken().getTokenValue();
+        HttpHeaders headers = new HttpHeaders();
+        headers.setBearerAuth(accessToken);
+        RestTemplate restTemplate = new RestTemplate();
+        RequestEntity<Object> request = new RequestEntity<>(
+                headers, HttpMethod.GET, URI.create(urlEndpoint)
+        );
+        ResponseEntity<String> response = restTemplate.exchange(request, String.class);
+        String body = response.getBody();
+        try {
+            KeycloakUser keycloakUser = objectMapper.readValue(body, KeycloakUser.class);
+            return keycloakUser;
+        } catch (IOException e) {
+            // Trate exceções de parsing JSON aqui
+            e.printStackTrace();
+            return null;
+        }
     }
 
 }

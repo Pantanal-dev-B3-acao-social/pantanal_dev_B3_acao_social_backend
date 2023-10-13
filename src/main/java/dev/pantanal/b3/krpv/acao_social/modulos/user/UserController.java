@@ -1,5 +1,6 @@
 package dev.pantanal.b3.krpv.acao_social.modulos.user;
 
+import dev.pantanal.b3.krpv.acao_social.modulos.category.modules.categoryGroup.dto.response.CategoryGroupResponseDto;
 import dev.pantanal.b3.krpv.acao_social.modulos.user.dto.UserCreateDto;
 import dev.pantanal.b3.krpv.acao_social.modulos.user.dto.UserUpdateDto;
 import io.swagger.v3.oas.annotations.Operation;
@@ -27,9 +28,9 @@ public class UserController {
     @GetMapping("/{userId}/profile")
     @PreAuthorize("hasAnyRole('USER_GET_ONE')")
     @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity<String> profile(JwtAuthenticationToken userLogged, @PathVariable UUID userId) {
-        ResponseEntity<String> result = this.service.userProfile(userId, userLogged);
-        return result;
+    public ResponseEntity<KeycloakUser> findById(JwtAuthenticationToken userLogged, @PathVariable UUID userId) {
+        KeycloakUser keycloakUser = this.service.findById(userId, userLogged.getToken().toString());
+        return new ResponseEntity<>(keycloakUser, HttpStatus.OK);
     }
 
     @GetMapping()
@@ -59,9 +60,9 @@ public class UserController {
             @ApiResponse(responseCode = "422", description = "Invalid request data"),
             @ApiResponse(responseCode = "500", description = "Error when creating User"),
     })
-    public ResponseEntity<String> create(@RequestBody @Valid UserCreateDto request) {
-        ResponseEntity<String> entity = service.create(request);
-        return entity;
+    public ResponseEntity<UUID> create(@RequestBody @Valid UserCreateDto request) {
+        UUID userId = service.create(request);
+        return new ResponseEntity<>(userId, HttpStatus.OK);
     }
 
     @PatchMapping("/{id}")

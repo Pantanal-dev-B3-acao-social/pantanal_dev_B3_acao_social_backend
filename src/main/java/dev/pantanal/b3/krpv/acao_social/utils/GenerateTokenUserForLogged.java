@@ -23,12 +23,11 @@ public class GenerateTokenUserForLogged {
                 JsonObject jsonObject = jsonReader.readObject();
                 accessToken = jsonObject.getString("access_token");
             } catch (Exception e) {
-                // TODO: Trate exceções aqui
-                e.printStackTrace();
+                throw new RuntimeException("Erro ao analisar a resposta JSON", e);
+
             }
         } else {
-            // TODO: lançar exceção
-            System.err.println("A solicitação não foi bem-sucedida. Código de status: " + response.getStatusCodeValue());
+            throw new RuntimeException("Falha na solicitação. Código de status: " + response.getStatusCodeValue());
         }
         return accessToken;
     }

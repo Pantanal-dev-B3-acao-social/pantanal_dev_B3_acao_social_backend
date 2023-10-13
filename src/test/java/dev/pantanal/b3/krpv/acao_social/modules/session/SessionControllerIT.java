@@ -49,8 +49,6 @@ public class SessionControllerIT {
     MockMvc mockMvc;
     @Autowired
     SessionPostgresRepository sessionPostgresRepository;
-//    @Autowired
-//    ObjectMapper mapper;
     @Autowired
     SessionRepository sessionRepository;
     private String tokenUserLogged;

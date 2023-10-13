@@ -55,8 +55,6 @@ public class SocialActionControllerIT {
     @Autowired
     private CategorySocialActionTypeFactory categorySocialActionTypeFactory;
     @Autowired
-    ObjectMapper mapper;
-    @Autowired
     SocialActionRepository socialActionRepository;
     private String tokenUserLogged;
     @Autowired
@@ -70,7 +68,6 @@ public class SocialActionControllerIT {
     @Autowired
     LoginMock loginMock;
     private DateTimeFormatter formatter;
-//    List<CategorySocialActionTypeEntity> categoryTypeIds;
     List<CategoryEntity> categoriesType;
     List<CategoryEntity> categoriesLevel;
     ObjectMapper objectMapper;
