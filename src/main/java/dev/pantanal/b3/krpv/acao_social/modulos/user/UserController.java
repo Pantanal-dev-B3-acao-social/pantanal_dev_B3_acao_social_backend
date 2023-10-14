@@ -72,7 +72,7 @@ public class UserController {
     @PreAuthorize("hasAnyRole('USER_GET_ONE')")
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<KeycloakUser> findById(JwtAuthenticationToken userLogged, @PathVariable UUID userId) {
-        KeycloakUser keycloakUser = this.service.findById(userId, userLogged.getToken().toString());
+        KeycloakUser keycloakUser = this.service.findById(userId, userLogged.getToken().getTokenValue());
         return new ResponseEntity<>(keycloakUser, HttpStatus.OK);
     }
 
