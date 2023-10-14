@@ -1,18 +1,25 @@
 package dev.pantanal.b3.krpv.acao_social.modulos.user;
 
-import dev.pantanal.b3.krpv.acao_social.modulos.category.modules.categoryGroup.dto.response.CategoryGroupResponseDto;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import dev.pantanal.b3.krpv.acao_social.modulos.user.dto.UserCreateDto;
+import dev.pantanal.b3.krpv.acao_social.modulos.user.dto.UserResponseDto;
 import dev.pantanal.b3.krpv.acao_social.modulos.user.dto.UserUpdateDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.*;
+import org.springframework.data.web.SortDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.web.bind.annotation.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 import static dev.pantanal.b3.krpv.acao_social.modulos.user.UserController.ROUTE_USER;
 
@@ -22,8 +29,44 @@ import static dev.pantanal.b3.krpv.acao_social.modulos.user.UserController.ROUTE
 public class UserController {
     @Autowired
     private UserService service;
+    @Autowired
+    ObjectMapper objectMapper;
 
     public static final String ROUTE_USER = "/v1/user";
+
+    public List<UserResponseDto> mapEntityToDto(ResponseEntity<String> response) {
+        List<UserResponseDto> dtos = new ArrayList<>();
+        String responseBody = response.getBody();
+        try {
+            JsonNode jsonNode = objectMapper.readTree(responseBody);
+            if (jsonNode.isArray()) {
+                for (JsonNode element : jsonNode) {
+                    UserResponseDto dto = new UserResponseDto(
+                        element.get("id").asText(),
+                        element.get("username").asText(),
+                        element.get("enabled").asBoolean(),
+                        element.get("totp").asBoolean(),
+                        element.get("email") == null ? null : element.get("email").asText(),
+                        element.get("firstName").asText(),
+                        element.get("lastName").asText(),
+                        objectMapper.convertValue(element.get("credentials"), Map.class),
+                        element.get("emailVerified").asBoolean(),
+                        objectMapper.convertValue(element.get("attributes"), Map.class),
+                        element.get("self") == null ? null : element.get("self").asText(),
+                        element.get("origin") == null ? null : element.get("origin").asText(),
+                        element.get("createdTimestamp").asLong(),
+                        element.get("federationLink") == null ? null : element.get("federationLink").asText(),
+                        element.get("serviceAccountClientId")== null ? null : element.get("serviceAccountClientId").asText(),
+                        objectMapper.convertValue(element.get("disableableCredentialTypes"), List.class)
+                    );
+                    dtos.add(dto);
+                }
+            }
+            return dtos;
+        } catch (Exception e) {
+            throw new RuntimeException(" Erro ao criar UserResponseDto.java ", e);
+        }
+    }
 
     @GetMapping("/{userId}/profile")
     @PreAuthorize("hasAnyRole('USER_GET_ONE')")
@@ -36,7 +79,10 @@ public class UserController {
     @GetMapping()
     @PreAuthorize("hasAnyRole('USER_GET_ALL')")
     @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity<String> findAll(
+    public Page<UserResponseDto> findAll (
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @SortDefault(sort="name", direction = Sort.Direction.DESC) Sort sort
 //        @QueryParam("username") String username,
 //        @QueryParam("firstName") String firstName,
 //        @QueryParam("lastName") String lastName,
@@ -44,8 +90,10 @@ public class UserController {
 //        @QueryParam("first") Integer first,
 //        @QueryParam("max") Integer max
     ) {
-        ResponseEntity<String> result = this.service.findAll(/* username, firstName, lastName, email, first, max*/);
-        return result;
+        Pageable paging = PageRequest.of(page, size, sort);
+        ResponseEntity<String> result = this.service.findAll(page, size /* username, firstName, lastName, email, first, max*/);
+        List<UserResponseDto> dtos = mapEntityToDto(result);
+        return new PageImpl<>(dtos, paging, dtos.size());
     }
 
     @PostMapping

@@ -35,6 +35,8 @@ public class UserService {
     ObjectMapper objectMapper;
 
     public ResponseEntity<String> findAll(
+        Integer page,
+        Integer size
             /*
         String username,
         String firstName,
@@ -44,7 +46,7 @@ public class UserService {
         Integer max
              */
     ) {
-        String urlEndpoint = keyclockBaseUrl + "/admin/realms/" + realmId + "/users/";
+        String urlEndpoint = keyclockBaseUrl + "/admin/realms/" + realmId + "/users?first="+page+"&max="+size;
         HttpHeaders headers = new HttpHeaders();
         headers.setBearerAuth(keycloakClient.getClientToken());
         RestTemplate restTemplate = new RestTemplate();
@@ -68,8 +70,7 @@ public class UserService {
             KeycloakUser keycloakUser = objectMapper.readValue(body, KeycloakUser.class);
             return keycloakUser;
         } catch (IOException e) {
-            e.printStackTrace();
-            return null;
+            throw new RuntimeException("Erro ao user findById.", e);
         }
     }
 
@@ -138,15 +139,14 @@ public class UserService {
                     String userId = parts[parts.length - 1];
                     return UUID.fromString(userId);
                 } else {
-                    System.err.println("O cabeçalho 'Location' não foi encontrado na resposta.");
+                    throw new RuntimeException("O cabeçalho 'Location' não foi encontrado na resposta.");
                 }
             } else {
-                System.err.println("A solicitação para criar o usuário FALHOU.");
+                throw new RuntimeException("A solicitação para criar o usuário FALHOU.");
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            throw new RuntimeException("Erro ao buscar usuário.", e);
         }
-        return null;
     }
 
     public KeycloakUser profile (UUID userId, JwtAuthenticationToken userLogged) {
@@ -164,9 +164,7 @@ public class UserService {
             KeycloakUser keycloakUser = objectMapper.readValue(body, KeycloakUser.class);
             return keycloakUser;
         } catch (IOException e) {
-            // Trate exceções de parsing JSON aqui
-            e.printStackTrace();
-            return null;
+            throw new RuntimeException("Erro ao profile usuário.", e);
         }
     }
 
