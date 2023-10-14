@@ -113,12 +113,12 @@ public class UserController {
             @ApiResponse(responseCode = "422", description = "Invalid request data"),
             @ApiResponse(responseCode = "500", description = "Error when creating User"),
     })
-    public ResponseEntity<UUID> create(
+    public ResponseEntity<String> create(
             JwtAuthenticationToken userLogged,
             @RequestBody @Valid UserCreateDto request
     ) {
         UUID userId = service.create(request, userLogged.getToken().getTokenValue());
-        return new ResponseEntity<>(userId, HttpStatus.OK);
+        return new ResponseEntity<>(userId.toString(), HttpStatus.OK);
     }
 
     @PatchMapping("/{id}")

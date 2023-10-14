@@ -35,15 +35,16 @@ public class UserFactory {
         this.objectMapper = objectMapper;
         this.userService = userService;
     }
-    public KeycloakUser createOne() {
+
+    public UserCreateDto makeUserDto() {
         List<CredentialDto> credentials = new ArrayList<>();
         Boolean enabled = true;
         credentials.add(
-            new CredentialDto(
-                "password",
-                "123456",
-                false
-            )
+                new CredentialDto(
+                        "password",
+                        "123456",
+                        false
+                )
         );
         UserCreateDto dto = new UserCreateDto(
                 faker.name().username(),
@@ -53,6 +54,10 @@ public class UserFactory {
                 faker.name().lastName(),
                 Collections.emptyList()
         );
+        return dto;
+    }
+    public KeycloakUser createOne() {
+        UserCreateDto dto = makeUserDto();
         UUID userId = userService.create(dto, this.tokenUserLogged);
         KeycloakUser keycloakUser = userService.findById(userId, tokenUserLogged);
         return keycloakUser;
