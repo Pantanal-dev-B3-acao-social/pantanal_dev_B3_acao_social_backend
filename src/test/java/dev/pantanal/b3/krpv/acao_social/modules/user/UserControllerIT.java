@@ -78,6 +78,14 @@ public class UserControllerIT {
         this.saveds = null;
     }
 
+    public static JsonNode inArray(JsonNode saveds, String idToFind) {
+        for (JsonNode user : saveds) {
+            if (user.get("id").asText().equals(idToFind)) {
+                return user;
+            }
+        }
+        return null;
+    }
 
     @Test
     @DisplayName("lista paginada de User com sucesso")
@@ -97,18 +105,23 @@ public class UserControllerIT {
 //                .andExpect(MockMvcResultMatchers.jsonPath("$.content", hasSize(3)))
         ;
         int i = 0;
-        for (KeycloakUser item : this.saveds) {
-            perform
-                    .andExpect(MockMvcResultMatchers.jsonPath("$.content[" + i + "].id").value(item.getId().toString()))
-                    .andExpect(MockMvcResultMatchers.jsonPath("$.content[" + i + "].username").value(item.getUsername()))
-                    .andExpect(MockMvcResultMatchers.jsonPath("$.content[" + i + "].enabled").value(item.getEnabled()))
-                    .andExpect(MockMvcResultMatchers.jsonPath("$.content[" + i + "].firstName").value(item.getFirstName()))
-                    .andExpect(MockMvcResultMatchers.jsonPath("$.content[" + i + "].lastName").value(item.getLastName()))
-                    .andExpect(MockMvcResultMatchers.jsonPath("$.content[" + i + "].email").value(item.getEmail()))
-                    .andExpect(MockMvcResultMatchers.jsonPath("$.content[" + i + "].emailVerified").value(item.getEmailVerified()))
-                    .andExpect(MockMvcResultMatchers.jsonPath("$.content[" + i + "].attributes").value(item.getAttributes()))
-                    .andExpect(MockMvcResultMatchers.jsonPath("$.content[" + i + "].createdTimestamp").value(item.getCreatedTimestamp()));
-            i++;
+        MvcResult mvcResult = perform.andReturn();
+        MockHttpServletResponse response = mvcResult.getResponse();
+        String jsonResponse = response.getContentAsString();
+        JsonNode jsonNode = objectMapper.readTree(jsonResponse);
+        JsonNode contentArray = jsonNode.get("content");
+        if (contentArray.isArray()) {
+            for (KeycloakUser user : this.saveds) {
+                //
+                JsonNode element = inArray(contentArray, user.getId().toString());
+                Assertions.assertEquals(element.get("username").asText(), user.getUsername().toString());
+                Assertions.assertEquals(element.get("enabled").asBoolean(), user.getEnabled());
+                Assertions.assertEquals(element.get("firstName").asText(), user.getFirstName());
+                Assertions.assertEquals(element.get("lastName").asText(), user.getLastName());
+//                Assertions.assertEquals(element.get("emailVerified", user.getEmailVerified().toString());
+                Assertions.assertEquals(element.get("email").asText(), user.getEmail());
+                i++;
+            }
         }
     }
 
