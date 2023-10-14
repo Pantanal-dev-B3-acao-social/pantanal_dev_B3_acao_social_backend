@@ -75,10 +75,10 @@ public class UserService {
         }
     }
 
-    public UUID create(UserCreateDto dto) {
+    public UUID create(UserCreateDto dto, String tokenUserLogged) {
         String urlEndpoint = keyclockBaseUrl + "/admin/realms/" + realmId + "/users/";
         HttpHeaders headers = new HttpHeaders();
-        headers.setBearerAuth(keycloakClient.getClientToken());
+        headers.setBearerAuth(tokenUserLogged);
         HttpEntity<UserCreateDto> requestEntity = new HttpEntity<>(dto, headers);
         RestTemplate restTemplate = new RestTemplate();
         ResponseEntity<String> response = restTemplate.exchange(
@@ -88,16 +88,16 @@ public class UserService {
                 String.class
         );
         if(response.getStatusCode() == HttpStatus.CREATED) {
-            UUID userId = getUserIdByResponse(response);
+            UUID userId = getUserIdByResponse(response, tokenUserLogged);
             return userId;
         }
         return null;
     }
 
-    public ResponseEntity<String> update(UUID id, UserUpdateDto dto) {
+    public ResponseEntity<String> update(UUID id, UserUpdateDto dto, String tokenUserLogged) {
         String urlEndpoint = keyclockBaseUrl + "/admin/realms/" + realmId + "/users/" + id;
         HttpHeaders headers = new HttpHeaders();
-        headers.setBearerAuth(keycloakClient.getClientToken());
+        headers.setBearerAuth(tokenUserLogged);
         HttpEntity<UserUpdateDto> requestEntity = new HttpEntity<>(dto, headers);
         RestTemplate restTemplate = new RestTemplate();
         ResponseEntity<String> response = restTemplate.exchange(
@@ -109,10 +109,10 @@ public class UserService {
         return response;
     }
 
-    public ResponseEntity<String> delete(UUID id) {
+    public ResponseEntity<String> delete(UUID id, String tokenUserLogged) {
         String urlEndpoint = keyclockBaseUrl + "/admin/realms/" + realmId + "/users/" + id;
         HttpHeaders headers = new HttpHeaders();
-        headers.setBearerAuth(keycloakClient.getClientToken());
+        headers.setBearerAuth(tokenUserLogged);
         HttpEntity<String> requestEntity = new HttpEntity<>(headers);
         RestTemplate restTemplate = new RestTemplate();
         ResponseEntity<String> response = restTemplate.exchange(
@@ -125,7 +125,7 @@ public class UserService {
     }
 
     /* extrair o ID do usuário da resposta */
-    private UUID getUserIdByResponse(ResponseEntity<String> response) {
+    private UUID getUserIdByResponse(ResponseEntity<String> response, String tokenUserLogged) {
         try {
             if (response.getStatusCode() == HttpStatus.CREATED) {
 //                String locationHeader = response.headers().firstValue("Location").orElse("");
@@ -150,23 +150,5 @@ public class UserService {
         }
     }
 
-    public KeycloakUser profile (UUID userId, JwtAuthenticationToken userLogged) {
-        String urlEndpoint = keyclockBaseUrl + "/admin/realms/" + realmId + "/users/" + userId.toString();
-        String accessToken = userLogged.getToken().getTokenValue();
-        HttpHeaders headers = new HttpHeaders();
-        headers.setBearerAuth(accessToken);
-        RestTemplate restTemplate = new RestTemplate();
-        RequestEntity<Object> request = new RequestEntity<>(
-                headers, HttpMethod.GET, URI.create(urlEndpoint)
-        );
-        ResponseEntity<String> response = restTemplate.exchange(request, String.class);
-        String body = response.getBody();
-        try {
-            KeycloakUser keycloakUser = objectMapper.readValue(body, KeycloakUser.class);
-            return keycloakUser;
-        } catch (IOException e) {
-            throw new RuntimeException("Erro ao profile usuário.", e);
-        }
-    }
 
 }

@@ -113,8 +113,11 @@ public class UserController {
             @ApiResponse(responseCode = "422", description = "Invalid request data"),
             @ApiResponse(responseCode = "500", description = "Error when creating User"),
     })
-    public ResponseEntity<UUID> create(@RequestBody @Valid UserCreateDto request) {
-        UUID userId = service.create(request);
+    public ResponseEntity<UUID> create(
+            JwtAuthenticationToken userLogged,
+            @RequestBody @Valid UserCreateDto request
+    ) {
+        UUID userId = service.create(request, userLogged.getToken().getTokenValue());
         return new ResponseEntity<>(userId, HttpStatus.OK);
     }
 
@@ -129,8 +132,12 @@ public class UserController {
             @ApiResponse(responseCode = "422", description = "Invalid request data"),
             @ApiResponse(responseCode = "500", description = "Error when creating User"),
     })
-    public ResponseEntity<String> update(@PathVariable UUID id, @Valid @RequestBody UserUpdateDto dto) {
-        ResponseEntity<String> response = service.update(id, dto);
+    public ResponseEntity<String> update(
+        JwtAuthenticationToken userLogged,
+        @PathVariable UUID id,
+        @Valid @RequestBody UserUpdateDto dto
+    ) {
+        ResponseEntity<String> response = service.update(id, dto, userLogged.getToken().getTokenValue());
         return response;
     }
 
@@ -144,8 +151,11 @@ public class UserController {
             @ApiResponse(responseCode = "404", description = "User not found"),
             @ApiResponse(responseCode = "500", description = "Error when excluding User"),
     })
-    public void delete(@PathVariable UUID id) {
-        service.delete(id);
+    public void delete(
+        JwtAuthenticationToken userLogged,
+        @PathVariable UUID id
+    ) {
+        service.delete(id, userLogged.getToken().getTokenValue());
     }
 
 }

@@ -53,7 +53,7 @@ public class UserFactory {
                 faker.name().lastName(),
                 Collections.emptyList()
         );
-        UUID userId = userService.create(dto);
+        UUID userId = userService.create(dto, this.tokenUserLogged);
         KeycloakUser keycloakUser = userService.findById(userId, tokenUserLogged);
         return keycloakUser;
     }
