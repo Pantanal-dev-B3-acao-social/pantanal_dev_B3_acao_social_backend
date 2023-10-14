@@ -68,7 +68,7 @@ public class UserController {
         }
     }
 
-    @GetMapping("/{userId}/profile")
+    @GetMapping("/{userId}")
     @PreAuthorize("hasAnyRole('USER_GET_ONE')")
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<KeycloakUser> findById(JwtAuthenticationToken userLogged, @PathVariable UUID userId) {

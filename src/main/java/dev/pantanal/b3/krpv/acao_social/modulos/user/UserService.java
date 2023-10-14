@@ -56,7 +56,7 @@ public class UserService {
         return response;
     }
 
-    public KeycloakUser findById (UUID userId, String tokenUserLogged) {
+    public KeycloakUser findById(UUID userId, String tokenUserLogged) {
         String urlEndpoint = keyclockBaseUrl + "/admin/realms/" + realmId + "/users/" + userId.toString();
         HttpHeaders headers = new HttpHeaders();
         headers.setBearerAuth(tokenUserLogged);
