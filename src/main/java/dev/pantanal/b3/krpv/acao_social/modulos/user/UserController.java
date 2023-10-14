@@ -80,6 +80,7 @@ public class UserController {
     @PreAuthorize("hasAnyRole('USER_GET_ALL')")
     @ResponseStatus(HttpStatus.OK)
     public Page<UserResponseDto> findAll (
+            JwtAuthenticationToken userLogged,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
             @SortDefault(sort="name", direction = Sort.Direction.DESC) Sort sort
@@ -91,7 +92,11 @@ public class UserController {
 //        @QueryParam("max") Integer max
     ) {
         Pageable paging = PageRequest.of(page, size, sort);
-        ResponseEntity<String> result = this.service.findAll(page, size /* username, firstName, lastName, email, first, max*/);
+        ResponseEntity<String> result = this.service.findAll(
+                page,
+                size,
+                userLogged.getToken().getTokenValue()
+                /* username, firstName, lastName, email, first, max*/);
         List<UserResponseDto> dtos = mapEntityToDto(result);
         return new PageImpl<>(dtos, paging, dtos.size());
     }

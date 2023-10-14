@@ -36,7 +36,8 @@ public class UserService {
 
     public ResponseEntity<String> findAll(
         Integer page,
-        Integer size
+        Integer size,
+        String tokenUserLogged
             /*
         String username,
         String firstName,
@@ -48,7 +49,7 @@ public class UserService {
     ) {
         String urlEndpoint = keyclockBaseUrl + "/admin/realms/" + realmId + "/users?first="+page+"&max="+size;
         HttpHeaders headers = new HttpHeaders();
-        headers.setBearerAuth(keycloakClient.getClientToken());
+        headers.setBearerAuth(tokenUserLogged);
         RestTemplate restTemplate = new RestTemplate();
         RequestEntity<Object> request = new RequestEntity<>(
                 headers, HttpMethod.GET, URI.create(urlEndpoint));
