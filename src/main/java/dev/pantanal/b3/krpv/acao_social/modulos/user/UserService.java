@@ -12,6 +12,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
 import java.io.IOException;
@@ -65,7 +66,16 @@ public class UserService {
         RequestEntity<Object> request = new RequestEntity<>(
                 headers, HttpMethod.GET, URI.create(urlEndpoint)
         );
-        ResponseEntity<String> response = restTemplate.exchange(request, String.class);
+        ResponseEntity<String> response; // = restTemplate.exchange(request, String.class);
+        try {
+            response = restTemplate.exchange(request, String.class);
+        } catch (HttpClientErrorException ex) {
+            if (ex.getStatusCode() == HttpStatus.NOT_FOUND) {
+                throw new RuntimeException("Usuário não encontrado", ex);
+            } else {
+                throw ex; // Rejeitar outras exceções HTTP não tratadas
+            }
+        }
         String body = response.getBody();
         try {
             KeycloakUser keycloakUser = objectMapper.readValue(body, KeycloakUser.class);

@@ -25,6 +25,8 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.client.HttpClientErrorException;
+
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Random;
@@ -191,11 +193,11 @@ public class UserControllerIT {
         );
         // Assert (Verificar)
         resultActions
-                .andExpect(MockMvcResultMatchers.status().isNoContent())
-                .andDo(MockMvcResultHandlers.print());
-        KeycloakUser deleted = userService.findById(UUID.fromString(savedItem.getId()), tokenUserLogged.toString());
-        Assertions.assertNull(deleted); // Deve ser nulo para passar o teste
-
+                .andExpect(MockMvcResultMatchers.status().isNoContent());
+        Assertions.assertThrows(RuntimeException.class, () -> {
+            userService.findById(UUID.fromString(savedItem.getId()), tokenUserLogged.toString());
+        });
+        this.saveds = null;
     }
 
     @Test
