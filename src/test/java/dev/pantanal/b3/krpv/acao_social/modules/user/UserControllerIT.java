@@ -80,10 +80,10 @@ public class UserControllerIT {
         this.saveds = null;
     }
 
-    public static JsonNode inArray(JsonNode saveds, String idToFind) {
-        for (JsonNode user : saveds) {
-            if (user.get("id").asText().equals(idToFind)) {
-                return user;
+    public static JsonNode inArray(JsonNode contentArray, String idToFind) {
+        for (JsonNode userNode : contentArray) {
+            if (userNode.get("id").asText().equals(idToFind)) {
+                return userNode;
             }
         }
         return null;
@@ -106,7 +106,6 @@ public class UserControllerIT {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.content").isArray())
 //                .andExpect(MockMvcResultMatchers.jsonPath("$.content", hasSize(3)))
         ;
-        int i = 0;
         MvcResult mvcResult = perform.andReturn();
         MockHttpServletResponse response = mvcResult.getResponse();
         String jsonResponse = response.getContentAsString();
@@ -114,7 +113,6 @@ public class UserControllerIT {
         JsonNode contentArray = jsonNode.get("content");
         if (contentArray.isArray()) {
             for (KeycloakUser user : this.saveds) {
-                //
                 JsonNode element = inArray(contentArray, user.getId().toString());
                 Assertions.assertEquals(element.get("username").asText(), user.getUsername().toString());
                 Assertions.assertEquals(element.get("enabled").asBoolean(), user.getEnabled());
@@ -122,7 +120,6 @@ public class UserControllerIT {
                 Assertions.assertEquals(element.get("lastName").asText(), user.getLastName());
 //                Assertions.assertEquals(element.get("emailVerified", user.getEmailVerified().toString());
                 Assertions.assertEquals(element.get("email").asText(), user.getEmail());
-                i++;
             }
         }
     }
