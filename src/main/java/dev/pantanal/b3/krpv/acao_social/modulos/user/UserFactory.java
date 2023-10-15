@@ -65,7 +65,7 @@ public class UserFactory {
 
     public List<KeycloakUser> createMany(Integer amount) {
         List<KeycloakUser> keycloakUsers = new ArrayList<>();
-        for (int i=0; i <= amount; i++) {
+        for (int i=0; i < amount; i++) {
             KeycloakUser user = this.createOne();
             keycloakUsers.add(user);
         }

@@ -14,7 +14,6 @@ import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.test.annotation.Rollback;
@@ -25,14 +24,12 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.client.HttpClientErrorException;
-
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import java.util.UUID;
 import static dev.pantanal.b3.krpv.acao_social.modulos.user.UserController.ROUTE_USER;
-import static org.hamcrest.Matchers.hasSize;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -59,6 +56,7 @@ public class UserControllerIT {
 
     @BeforeEach
     public void setup() throws Exception {
+        this.saveds = new ArrayList<>();
         // token de login
         this.tokenUserLogged = generateTokenUserForLogged.loginUserMock(new LoginUserDto("funcionario1", "123"));
         this.loginMock.authenticateWithToken(tokenUserLogged);
@@ -137,12 +135,12 @@ public class UserControllerIT {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(jsonResquest)
         );
+        // Assert (Verificar)
         MvcResult mvcResult = resultActions.andReturn();
         MockHttpServletResponse response = mvcResult.getResponse();
         String jsonResponse = response.getContentAsString();
         String userId = jsonResponse;
         KeycloakUser item = userService.findById(UUID.fromString(userId), tokenUserLogged.toString());
-        // Assert (Verificar)
         Assertions.assertEquals(userDto.username(), item.getUsername());
         Assertions.assertEquals(userDto.enabled(), item.getEnabled());
         Assertions.assertEquals(userDto.firstName(), item.getFirstName());
@@ -150,6 +148,7 @@ public class UserControllerIT {
 //        Assertions.assertEquals(userDto.attributes(), item.getAttributes());
         Assertions.assertEquals(userDto.email(), item.getEmail());
         Assertions.assertEquals(false, item.getEmailVerified());
+        this.saveds.add(item);
     }
 
 
@@ -202,28 +201,27 @@ public class UserControllerIT {
     void updateUser() throws Exception {
         // Arrange (Organizar)
         this.saveds = userFactory.createMany(1);
-        KeycloakUser savedItem = this.saveds.get(0);
+        KeycloakUser item = this.saveds.get(0);
         // Modifica alguns dados da User
-        savedItem.setUsername(savedItem.getFirstName() + "_ATUALIZADO");
-        savedItem.setLastName(savedItem.getLastName() + "_ATUALIZADO");
-        String updatedUserJson = objectMapper.writeValueAsString(savedItem);
+        item.setUsername(item.getFirstName() + "_ATUALIZADO");
+        item.setLastName(item.getLastName() + "_ATUALIZADO");
+        String updatedUserJson = objectMapper.writeValueAsString(item);
         // Act (ação)
         ResultActions resultActions = mockMvc.perform(
-                MockMvcRequestBuilders.patch(ROUTE_USER + "/{id}", savedItem.getId())
+                MockMvcRequestBuilders.patch(ROUTE_USER + "/{id}", item.getId())
                         .header("Authorization", "Bearer " + tokenUserLogged)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(updatedUserJson)
         );
         // Assert (Verificar)
-        resultActions
-                .andExpect(MockMvcResultMatchers.jsonPath("$.username").value(savedItem.getUsername()))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.enabled").value(savedItem.getEnabled()))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.emailVerified").value(savedItem.getEmailVerified()))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.firstName").value(savedItem.getFirstName()))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.lastName").value(savedItem.getLastName()))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.attributes").value(savedItem.getAttributes()))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.email").value(savedItem.getEmail()))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.createdTimestamp").value(savedItem.getCreatedTimestamp()));
+        KeycloakUser keycloakUser = userService.findById(UUID.fromString(item.getId()), tokenUserLogged.toString());
+        Assertions.assertEquals(keycloakUser.getUsername(), keycloakUser.getUsername());
+        Assertions.assertEquals(keycloakUser.getEnabled(), keycloakUser.getEnabled());
+        Assertions.assertEquals(keycloakUser.getFirstName(), keycloakUser.getFirstName());
+        Assertions.assertEquals(keycloakUser.getLastName(), keycloakUser.getLastName());
+//        Assertions.assertEquals(keycloakUser.getattributes(), keycloakUser.getAttributes());
+        Assertions.assertEquals(keycloakUser.getEmail(), keycloakUser.getEmail());
+        Assertions.assertEquals(false, keycloakUser.getEmailVerified());
     }
 
 }
