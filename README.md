@@ -135,6 +135,7 @@ SPRING_PROFILES_ACTIVE=dev
 - em nossa arquitetura, tercerizamos para o Keyclock gerencia tudo do usuário
 - e o backend spring boot somente recebe o ID do user suas autorizações a partir do token da request
 - que ja esta integrado com o spring security e validando a autenticação e autorização antes de executar as ações do controller
+- os endpoint da api do keyclock são acionados pelo keyclock passando o token do user logged, para que o keyclock tenha log de auditoria de quem realizou as operações 
 
 ### responsabilidade de cada camada de acordo com a arquitetura proposta
 - controller

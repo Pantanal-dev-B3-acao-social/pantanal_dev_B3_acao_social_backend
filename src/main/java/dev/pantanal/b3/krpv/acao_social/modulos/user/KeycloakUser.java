@@ -32,4 +32,5 @@ public class KeycloakUser {
     private String federationLink;
     private String serviceAccountClientId;
     private List<String> disableableCredentialTypes;
-}
+    private Map<String, String> credentials;
+ }

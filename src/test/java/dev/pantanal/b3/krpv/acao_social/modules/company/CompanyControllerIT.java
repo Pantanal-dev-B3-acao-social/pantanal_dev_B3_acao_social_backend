@@ -64,7 +64,7 @@ public class CompanyControllerIT {
     }
 
     @Test
-    @DisplayName("lista paginada de ações sociais com sucesso")
+    @DisplayName("lista paginada de company com sucesso")
     void findAllCompanies() throws Exception {
         // Arrange (Organizar)
         List<CompanyEntity> saved = companyfactory.insertMany(3);
@@ -91,7 +91,7 @@ public class CompanyControllerIT {
     }
 
     @Test
-    @DisplayName("lista paginada,filtrada e ordenada de ações sociais com sucesso")
+    @DisplayName("lista paginada,filtrada e ordenada de company com sucesso")
     void findAllCompaniesFilteredPaged() throws Exception {
         // Arrange (Organizar)
         List<CompanyEntity> saved = companyfactory.insertMany(3);
@@ -125,7 +125,7 @@ public class CompanyControllerIT {
     }
 
     @Test
-    @DisplayName("salva uma nova ação social com sucesso")
+    @DisplayName("salva uma nova company com sucesso")
     void saveOneCompany() throws Exception {
         // Arrange (Organizar)
         CompanyEntity item = companyfactory.makeFakeEntity();
@@ -151,7 +151,7 @@ public class CompanyControllerIT {
 
 
     @Test
-    @DisplayName("Busca ação social por ID com sucesso")
+    @DisplayName("Busca company por ID com sucesso")
     void findByIdCompany() throws Exception {
         // Arrange (Organizar)
         List<CompanyEntity> saved = companyfactory.insertMany(3);
@@ -172,7 +172,7 @@ public class CompanyControllerIT {
     }
 
     @Test
-    @DisplayName("Exclui uma ação social com sucesso")
+    @DisplayName("Exclui uma company com sucesso")
     void deleteCompany() throws Exception {
         // Arrange (Organizar)
         CompanyEntity savedItem = companyfactory.insertOne(companyfactory.makeFakeEntity());
@@ -191,11 +191,11 @@ public class CompanyControllerIT {
     }
 
     @Test
-    @DisplayName("Atualiza uma ação social com sucesso")
+    @DisplayName("Atualiza uma company com sucesso")
     void updateCompany() throws Exception {
         // Arrange (Organizar)
         CompanyEntity savedItem = companyfactory.insertOne(companyfactory.makeFakeEntity());
-        // Modifica alguns dados da ação social
+        // Modifica alguns dados da company
         savedItem.setName(savedItem.getName() + "_ATUALIZADO");
         savedItem.setDescription(savedItem.getDescription() + "_ATUALIZADO");
         ObjectMapper objectMapper = new ObjectMapper();
