@@ -9,16 +9,14 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.*;
 import org.springframework.data.web.SortDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.UUID;
 
 import static dev.pantanal.b3.krpv.acao_social.modulos.session.SessionController.ROUTE_SESSION;
@@ -32,6 +30,25 @@ public class SessionController {
 
     public static final String ROUTE_SESSION = "/v1/session";
 
+        public SessionResponseDto mapEntityToDto(SessionEntity entity) {
+        SessionResponseDto dto = new SessionResponseDto(
+                entity.getId(),
+                entity.getDescription(),
+                entity.getSocialAction().getId(),
+                entity.getDateStartTime(),
+                entity.getDateEndTime(),
+                entity.getStatus(),
+                entity.getVisibility(),
+                entity.getCreatedBy(),
+                entity.getCreatedDate(),
+                entity.getLastModifiedBy(),
+                entity.getLastModifiedDate(),
+                entity.getDeletedBy(),
+                entity.getDeletedDate()
+        );
+        return dto;
+    }
+
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
     @PreAuthorize("hasAnyRole('SESSION_GET_ALL')")
@@ -42,15 +59,17 @@ public class SessionController {
             @ApiResponse(responseCode = "404", description = "Not found"),
             @ApiResponse(responseCode = "500", description = "Internal Server Error"),
     })
-    public Page<SessionEntity> findAll(
+    public Page<SessionResponseDto> findAll(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
             @SortDefault(sort="name", direction = Sort.Direction.DESC) Sort sort,
             @Valid SessionParamsDto request
     ) {
         Pageable paging = PageRequest.of(page, size, sort);
-        Page<SessionEntity> response = service.findAll(paging, request);
-        return response;
+        Page<SessionEntity> entities = service.findAll(paging, request);
+        List<SessionResponseDto> dtos = entities.map(this::mapEntityToDto).getContent();
+        return new PageImpl<>(dtos, paging, entities.getTotalElements());
+
     }
 
     @GetMapping("/{id}")
@@ -65,21 +84,7 @@ public class SessionController {
     })
     public ResponseEntity<SessionResponseDto> findOne(@PathVariable UUID id) {
         SessionEntity entity = service.findById(id);
-        SessionResponseDto response = new SessionResponseDto(
-                entity.getId(),
-                entity.getDescription(),
-                entity.getSocialAction(),
-                entity.getDateStartTime(),
-                entity.getDateEndTime(),
-                entity.getStatus(),
-                entity.getVisibility(),
-                entity.getCreatedBy(),
-                entity.getLastModifiedBy(),
-                entity.getCreatedDate(),
-                entity.getLastModifiedDate(),
-                entity.getDeletedDate(),
-                entity.getDeletedBy()
-        );
+        SessionResponseDto response= mapEntityToDto(entity);
         return new ResponseEntity<SessionResponseDto>(response, HttpStatus.OK);
     }
 
@@ -97,21 +102,7 @@ public class SessionController {
     })
     public ResponseEntity<SessionResponseDto> create(@RequestBody @Valid SessionCreateDto request) {
         SessionEntity entity = service.create(request);
-        SessionResponseDto response = new SessionResponseDto(
-                entity.getId(),
-                entity.getDescription(),
-                entity.getSocialAction(),
-                entity.getDateStartTime(),
-                entity.getDateEndTime(),
-                entity.getStatus(),
-                entity.getVisibility(),
-                entity.getCreatedBy(),
-                entity.getLastModifiedBy(),
-                entity.getCreatedDate(),
-                entity.getLastModifiedDate(),
-                entity.getDeletedDate(),
-                entity.getDeletedBy()
-        );
+        SessionResponseDto response= mapEntityToDto(entity);
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
@@ -129,24 +120,9 @@ public class SessionController {
     })
     public ResponseEntity<SessionResponseDto> update(@PathVariable UUID id, @Valid @RequestBody SessionUpdateDto request) {
         SessionEntity entity = service.update(id, request);
-        SessionResponseDto response = new SessionResponseDto(
-                id,
-                entity.getDescription(),
-                entity.getSocialAction(),
-                entity.getDateStartTime(),
-                entity.getDateEndTime(),
-                entity.getStatus(),
-                entity.getVisibility(),
-                entity.getCreatedBy(),
-                entity.getLastModifiedBy(),
-                entity.getCreatedDate(),
-                entity.getLastModifiedDate(),
-                entity.getDeletedDate(),
-                entity.getDeletedBy()
-        );
+        SessionResponseDto response= mapEntityToDto(entity);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
-
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
@@ -162,7 +138,5 @@ public class SessionController {
     public void delete(@PathVariable UUID id) {
         service.delete(id);
     }
-
-
 
 }

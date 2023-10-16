@@ -15,7 +15,7 @@ public record SessionResponseDto (
         UUID id,
         String description,
         @NotNull(message= "Campo 'socialAction' não pode estar vazio")
-        SocialActionEntity socialAction,
+        UUID socialActionId,
         LocalDateTime dateStartTime,
         LocalDateTime dateEndTime,
         @NotNull(message= "Campo 'status' não pode estar vazio")
@@ -24,10 +24,10 @@ public record SessionResponseDto (
         VisibilityEnum visibility,
         @NotBlank(message= "Campo 'createdBy' não pode estar vazio")
         UUID createdBy,
-        UUID lastModifiedBy,
         @NotBlank(message= "Campo 'createdDate' não pode estar vazio")
         LocalDateTime createdDate,
+        UUID lastModifiedBy,
         LocalDateTime lastModifiedDate,
-        LocalDateTime deletedDate,
-        UUID deletedBy
+        UUID deletedBy,
+        LocalDateTime deletedDate
 ) {}
