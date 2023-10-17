@@ -27,13 +27,13 @@ public record InvestmentResponseDto(
         String motivation,
 
         @NotBlank(message = "field approvedBy can not be empty")
-        PersonEntity approvedBy,
+        UUID approvedBy,
         @NotBlank(message = "field approvedDate can not be empty")
         LocalDateTime approvedDate,
 
-        SocialActionEntity socialAction,
+        UUID socialActionId,
 
-        CompanyEntity company,
+        UUID companyId,
 
         @NotBlank(message= "Campo 'createdBy' não pode estar vazio")
         UUID createdBy,
