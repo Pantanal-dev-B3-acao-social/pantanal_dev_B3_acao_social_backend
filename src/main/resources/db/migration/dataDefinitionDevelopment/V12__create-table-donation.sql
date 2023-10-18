@@ -15,7 +15,13 @@ CREATE TABLE donation (
     last_modified_date TIMESTAMP,
     deleted_date TIMESTAMP,
     deleted_by UUID,
-    FOREIGN KEY (social_action_id) REFERENCES social_action(id),
-    FOREIGN KEY (donated_by) REFERENCES person(id),
+    FOREIGN KEY (social_action_id) REFERENCES social_action(id)
+            ON DELETE SET NULL
+            ON UPDATE SET NULL,
+    FOREIGN KEY (donated_by) REFERENCES person(id)
+            ON DELETE SET NULL
+            ON UPDATE SET NULL,
     FOREIGN KEY (approved_by) REFERENCES person(id)
+            ON DELETE SET NULL
+            ON UPDATE SET NULL
 );
