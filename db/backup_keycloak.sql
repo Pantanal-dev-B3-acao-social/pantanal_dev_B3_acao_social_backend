@@ -2033,6 +2033,7 @@ cd084044-db95-4f6d-9b18-f05fbec7eea1	Allowed Protocol Mapper Types	89f9614c-27fd
 dd02d553-459e-4004-a08c-0355435313c7	Allowed Client Scopes	89f9614c-27fd-44d6-b07c-c527669d1d5c	allowed-client-templates	org.keycloak.services.clientregistration.policy.ClientRegistrationPolicy	89f9614c-27fd-44d6-b07c-c527669d1d5c	anonymous
 73da24b2-1a41-4acd-8179-982de95ca206	Allowed Protocol Mapper Types	89f9614c-27fd-44d6-b07c-c527669d1d5c	allowed-protocol-mappers	org.keycloak.services.clientregistration.policy.ClientRegistrationPolicy	89f9614c-27fd-44d6-b07c-c527669d1d5c	authenticated
 7e690e78-1cfe-4261-912f-ba03ee983bbd	Allowed Client Scopes	89f9614c-27fd-44d6-b07c-c527669d1d5c	allowed-client-templates	org.keycloak.services.clientregistration.policy.ClientRegistrationPolicy	89f9614c-27fd-44d6-b07c-c527669d1d5c	authenticated
+f29c678a-208c-40a5-8d72-3508d8aebd28	\N	89f9614c-27fd-44d6-b07c-c527669d1d5c	declarative-user-profile	org.keycloak.userprofile.UserProfileProvider	89f9614c-27fd-44d6-b07c-c527669d1d5c	\N
 \.
 
 
@@ -3837,7 +3838,7 @@ dc2ded80-844e-4507-be7c-d874ff925271	String	jsonType.label
 
 COPY public.realm (id, access_code_lifespan, user_action_lifespan, access_token_lifespan, account_theme, admin_theme, email_theme, enabled, events_enabled, events_expiration, login_theme, name, not_before, password_policy, registration_allowed, remember_me, reset_password_allowed, social, ssl_required, sso_idle_timeout, sso_max_lifespan, update_profile_on_soc_login, verify_email, master_admin_client, login_lifespan, internationalization_enabled, default_locale, reg_email_as_username, admin_events_enabled, admin_events_details_enabled, edit_username_allowed, otp_policy_counter, otp_policy_window, otp_policy_period, otp_policy_digits, otp_policy_alg, otp_policy_type, browser_flow, registration_flow, direct_grant_flow, reset_credentials_flow, client_auth_flow, offline_session_idle_timeout, revoke_refresh_token, access_token_life_implicit, login_with_email_allowed, duplicate_emails_allowed, docker_auth_flow, refresh_token_max_reuse, allow_user_managed_access, sso_max_lifespan_remember_me, sso_idle_timeout_remember_me, default_role) FROM stdin;
 fc3e583c-0722-4ee1-aeef-70af67cf78ba	60	300	60	\N	\N	\N	t	f	0	\N	master	0	\N	f	f	f	f	EXTERNAL	1800	36000	f	f	2f4a167a-e929-4f60-bb94-eb7a45fdfc31	1800	f	\N	f	f	f	f	0	1	30	6	HmacSHA1	totp	34851a15-ddd8-47e2-8b49-6a04d4d64d89	81cefadf-789e-4571-8c51-a3fba9e5857c	3f198a37-b5ed-4b11-8847-d1937a4fc56e	b51ea154-95e5-4ec4-9547-a74a9f5d36f9	eb100bd9-a3b0-411a-b806-897af36a7bbc	2592000	f	900	t	f	1206965f-dcbd-4871-a2a3-b26b59971301	0	f	0	0	8d754a55-ec91-4fbb-90a4-1061f7104e34
-89f9614c-27fd-44d6-b07c-c527669d1d5c	60	300	300	\N	\N	\N	t	f	0	\N	realm-pantanal-dev	0	\N	f	f	f	f	EXTERNAL	1800	36000	f	f	7783f9e8-72cb-461c-a5bd-3a84d75f98dc	1800	f	\N	f	f	f	f	0	1	30	6	HmacSHA1	totp	9d711a7a-1fc5-4553-88ad-a11a4c1115b3	c214dd32-f292-4024-9131-b3facd9d8ff4	b2d9d912-220c-4732-a739-1e3411146d8a	6bd03fd8-d03a-4cfd-98e3-3518d37dbb85	c06887ca-f370-40f0-9204-6b4cff53f219	2592000	f	900	t	f	19c62447-200b-46ea-ac1f-08f03adb4fdb	0	f	0	0	cc85fef9-25b9-4515-98ce-0be4a5df89ac
+89f9614c-27fd-44d6-b07c-c527669d1d5c	60	300	1800	\N	\N	\N	t	f	0	\N	realm-pantanal-dev	0	\N	f	f	f	f	EXTERNAL	1800	36000	f	f	7783f9e8-72cb-461c-a5bd-3a84d75f98dc	1800	f	\N	f	f	f	f	0	1	30	6	HmacSHA1	totp	9d711a7a-1fc5-4553-88ad-a11a4c1115b3	c214dd32-f292-4024-9131-b3facd9d8ff4	b2d9d912-220c-4732-a739-1e3411146d8a	6bd03fd8-d03a-4cfd-98e3-3518d37dbb85	c06887ca-f370-40f0-9204-6b4cff53f219	2592000	f	28800	t	f	19c62447-200b-46ea-ac1f-08f03adb4fdb	0	f	0	0	cc85fef9-25b9-4515-98ce-0be4a5df89ac
 \.
 
 
@@ -3867,13 +3868,11 @@ displayNameHtml	fc3e583c-0722-4ee1-aeef-70af67cf78ba	<div class="kc-logo-text"><
 defaultSignatureAlgorithm	fc3e583c-0722-4ee1-aeef-70af67cf78ba	RS256
 offlineSessionMaxLifespanEnabled	fc3e583c-0722-4ee1-aeef-70af67cf78ba	false
 offlineSessionMaxLifespan	fc3e583c-0722-4ee1-aeef-70af67cf78ba	5184000
-_browser_header.contentSecurityPolicyReportOnly	89f9614c-27fd-44d6-b07c-c527669d1d5c	
-_browser_header.xContentTypeOptions	89f9614c-27fd-44d6-b07c-c527669d1d5c	nosniff
-_browser_header.xRobotsTag	89f9614c-27fd-44d6-b07c-c527669d1d5c	none
-_browser_header.xFrameOptions	89f9614c-27fd-44d6-b07c-c527669d1d5c	SAMEORIGIN
-_browser_header.contentSecurityPolicy	89f9614c-27fd-44d6-b07c-c527669d1d5c	frame-src 'self'; frame-ancestors 'self'; object-src 'none';
-_browser_header.xXSSProtection	89f9614c-27fd-44d6-b07c-c527669d1d5c	1; mode=block
-_browser_header.strictTransportSecurity	89f9614c-27fd-44d6-b07c-c527669d1d5c	max-age=31536000; includeSubDomains
+shortVerificationUri	89f9614c-27fd-44d6-b07c-c527669d1d5c	
+actionTokenGeneratedByUserLifespan-verify-email	89f9614c-27fd-44d6-b07c-c527669d1d5c	
+actionTokenGeneratedByUserLifespan-idp-verify-account-via-email	89f9614c-27fd-44d6-b07c-c527669d1d5c	
+actionTokenGeneratedByUserLifespan-reset-credentials	89f9614c-27fd-44d6-b07c-c527669d1d5c	
+actionTokenGeneratedByUserLifespan-execute-actions	89f9614c-27fd-44d6-b07c-c527669d1d5c	
 bruteForceProtected	89f9614c-27fd-44d6-b07c-c527669d1d5c	false
 permanentLockout	89f9614c-27fd-44d6-b07c-c527669d1d5c	false
 maxFailureWaitSeconds	89f9614c-27fd-44d6-b07c-c527669d1d5c	900
@@ -3882,14 +3881,18 @@ waitIncrementSeconds	89f9614c-27fd-44d6-b07c-c527669d1d5c	60
 quickLoginCheckMilliSeconds	89f9614c-27fd-44d6-b07c-c527669d1d5c	1000
 maxDeltaTimeSeconds	89f9614c-27fd-44d6-b07c-c527669d1d5c	43200
 failureFactor	89f9614c-27fd-44d6-b07c-c527669d1d5c	30
-realmReusableOtpCode	89f9614c-27fd-44d6-b07c-c527669d1d5c	false
-defaultSignatureAlgorithm	89f9614c-27fd-44d6-b07c-c527669d1d5c	RS256
-offlineSessionMaxLifespanEnabled	89f9614c-27fd-44d6-b07c-c527669d1d5c	false
-offlineSessionMaxLifespan	89f9614c-27fd-44d6-b07c-c527669d1d5c	5184000
 actionTokenGeneratedByAdminLifespan	89f9614c-27fd-44d6-b07c-c527669d1d5c	43200
-actionTokenGeneratedByUserLifespan	89f9614c-27fd-44d6-b07c-c527669d1d5c	300
+actionTokenGeneratedByUserLifespan	89f9614c-27fd-44d6-b07c-c527669d1d5c	480
+defaultSignatureAlgorithm	89f9614c-27fd-44d6-b07c-c527669d1d5c	RS256
 oauth2DeviceCodeLifespan	89f9614c-27fd-44d6-b07c-c527669d1d5c	600
 oauth2DevicePollingInterval	89f9614c-27fd-44d6-b07c-c527669d1d5c	5
+offlineSessionMaxLifespanEnabled	89f9614c-27fd-44d6-b07c-c527669d1d5c	false
+offlineSessionMaxLifespan	89f9614c-27fd-44d6-b07c-c527669d1d5c	5184000
+clientSessionIdleTimeout	89f9614c-27fd-44d6-b07c-c527669d1d5c	0
+clientSessionMaxLifespan	89f9614c-27fd-44d6-b07c-c527669d1d5c	0
+clientOfflineSessionIdleTimeout	89f9614c-27fd-44d6-b07c-c527669d1d5c	0
+clientOfflineSessionMaxLifespan	89f9614c-27fd-44d6-b07c-c527669d1d5c	0
+realmReusableOtpCode	89f9614c-27fd-44d6-b07c-c527669d1d5c	false
 webAuthnPolicyRpEntityName	89f9614c-27fd-44d6-b07c-c527669d1d5c	keycloak
 webAuthnPolicySignatureAlgorithms	89f9614c-27fd-44d6-b07c-c527669d1d5c	ES256
 webAuthnPolicyRpId	89f9614c-27fd-44d6-b07c-c527669d1d5c	
@@ -3908,11 +3911,20 @@ webAuthnPolicyRequireResidentKeyPasswordless	89f9614c-27fd-44d6-b07c-c527669d1d5
 webAuthnPolicyUserVerificationRequirementPasswordless	89f9614c-27fd-44d6-b07c-c527669d1d5c	not specified
 webAuthnPolicyCreateTimeoutPasswordless	89f9614c-27fd-44d6-b07c-c527669d1d5c	0
 webAuthnPolicyAvoidSameAuthenticatorRegisterPasswordless	89f9614c-27fd-44d6-b07c-c527669d1d5c	false
+client-policies.profiles	89f9614c-27fd-44d6-b07c-c527669d1d5c	{"profiles":[]}
+client-policies.policies	89f9614c-27fd-44d6-b07c-c527669d1d5c	{"policies":[]}
+cibaAuthRequestedUserHint	89f9614c-27fd-44d6-b07c-c527669d1d5c	login_hint
 cibaBackchannelTokenDeliveryMode	89f9614c-27fd-44d6-b07c-c527669d1d5c	poll
 cibaExpiresIn	89f9614c-27fd-44d6-b07c-c527669d1d5c	120
 cibaInterval	89f9614c-27fd-44d6-b07c-c527669d1d5c	5
-cibaAuthRequestedUserHint	89f9614c-27fd-44d6-b07c-c527669d1d5c	login_hint
 parRequestUriLifespan	89f9614c-27fd-44d6-b07c-c527669d1d5c	60
+_browser_header.contentSecurityPolicyReportOnly	89f9614c-27fd-44d6-b07c-c527669d1d5c	
+_browser_header.xContentTypeOptions	89f9614c-27fd-44d6-b07c-c527669d1d5c	nosniff
+_browser_header.xRobotsTag	89f9614c-27fd-44d6-b07c-c527669d1d5c	none
+_browser_header.xFrameOptions	89f9614c-27fd-44d6-b07c-c527669d1d5c	SAMEORIGIN
+_browser_header.contentSecurityPolicy	89f9614c-27fd-44d6-b07c-c527669d1d5c	frame-src 'self'; frame-ancestors 'self'; object-src 'none';
+_browser_header.xXSSProtection	89f9614c-27fd-44d6-b07c-c527669d1d5c	1; mode=block
+_browser_header.strictTransportSecurity	89f9614c-27fd-44d6-b07c-c527669d1d5c	max-age=31536000; includeSubDomains
 \.
 
 
