@@ -35,6 +35,21 @@ services:
       - network-social-postgres
       - network-social-keycloak
 
+
+  spring_boot_acao_social:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    depends_on:
+      - postgres_acao_social
+#    environment:
+#      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/postgres
+#      SPRING_DATASOURCE_USERNAME: dev_user
+#      SPRING_DATASOURCE_PASSWORD: dev_password
+
+
 networks:
   network-social-keycloak:
     driver: bridge
