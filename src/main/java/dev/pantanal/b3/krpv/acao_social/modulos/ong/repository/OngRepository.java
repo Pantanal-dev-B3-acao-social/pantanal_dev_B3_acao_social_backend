@@ -60,8 +60,7 @@ public class OngRepository {
     }
 
     public void delete(UUID id) {
-        OngEntity objEntity = findById(id);
-        ongPostgresRepository.delete(objEntity);
+        ongPostgresRepository.deleteById(id);
     }
 
 }

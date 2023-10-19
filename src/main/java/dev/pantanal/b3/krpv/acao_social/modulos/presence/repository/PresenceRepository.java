@@ -62,7 +62,6 @@ public class PresenceRepository {
     }
 
     public void delete(UUID id) {
-        PresenceEntity objEntity = findById(id);
-        presencePostgresRepository.delete(objEntity);
+        presencePostgresRepository.deleteById(id);
     }
 }
