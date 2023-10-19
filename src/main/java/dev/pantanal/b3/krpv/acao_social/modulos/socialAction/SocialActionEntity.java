@@ -11,12 +11,16 @@ import jakarta.validation.Valid;
 //import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
+
+
+import org.hibernate.annotations.SQLDelete;
 import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.hibernate.annotations.Where;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -34,6 +38,8 @@ import java.util.UUID;
 @AllArgsConstructor
 @EqualsAndHashCode
 @ToString
+@SQLDelete(sql = "UPDATE social_action SET deleted_date = CURRENT_DATE WHERE id=? and version=?")
+//@Where(clause = "deleted_date IS NOT NULL")
 public class SocialActionEntity {
 
     @Valid
@@ -116,15 +122,5 @@ public class SocialActionEntity {
             this.lastModifiedBy = UUID.fromString(userId);
         }
     }
-
-    @PreRemove
-    protected void onRemove() {
-        this.deletedDate = LocalDateTime.now();
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication != null && authentication.isAuthenticated()) {
-            String userId = authentication.getName();
-            this.deletedBy = UUID.fromString(userId);
-        }
-    }
-
 }
+
