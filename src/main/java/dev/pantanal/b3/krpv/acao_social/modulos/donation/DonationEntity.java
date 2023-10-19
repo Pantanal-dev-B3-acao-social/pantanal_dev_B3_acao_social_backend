@@ -10,6 +10,7 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
+import org.hibernate.annotations.SQLDelete;
 import org.hibernate.envers.AuditTable;
 import org.hibernate.envers.Audited;
 import org.springframework.data.annotation.CreatedBy;
@@ -36,6 +37,8 @@ import java.util.UUID;
 @AllArgsConstructor
 @EqualsAndHashCode
 @ToString
+@SQLDelete(sql = "UPDATE donation SET deleted_date = CURRENT_DATE WHERE id=? and version=?")
+
 public class DonationEntity {
 
     @Valid

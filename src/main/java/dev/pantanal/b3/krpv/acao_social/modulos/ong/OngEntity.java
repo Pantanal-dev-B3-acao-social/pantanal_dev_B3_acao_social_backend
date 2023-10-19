@@ -25,7 +25,7 @@ import java.util.UUID;
 @AllArgsConstructor
 @EqualsAndHashCode
 @ToString
-@SQLDelete(sql = "UPDATE ong SET deleted_date = CURRENT_DATE where id=? version=?")
+@SQLDelete(sql = "UPDATE ong SET deleted_date = CURRENT_DATE WHERE id=? and version=?")
 public class OngEntity {
 
     @Version
