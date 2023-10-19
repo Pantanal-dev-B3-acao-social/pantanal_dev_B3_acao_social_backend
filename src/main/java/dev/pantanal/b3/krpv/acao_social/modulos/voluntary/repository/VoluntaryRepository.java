@@ -62,7 +62,6 @@ public class VoluntaryRepository {
     }
 
     public void delete(UUID id) {
-        VoluntaryEntity objEntity = findById(id);
-        voluntaryPostgresRepository.delete(objEntity);
+        voluntaryPostgresRepository.deleteById(id);
     }
 }
