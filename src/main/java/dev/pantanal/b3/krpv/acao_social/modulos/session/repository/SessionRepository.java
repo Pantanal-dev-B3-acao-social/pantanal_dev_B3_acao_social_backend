@@ -61,7 +61,6 @@ public class SessionRepository {
     }
 
     public void delete(UUID id) {
-        SessionEntity objEntity = findById(id);
-        sessionPostgresRepository.delete(objEntity);
+        sessionPostgresRepository.deleteById(id);
     }
 }
