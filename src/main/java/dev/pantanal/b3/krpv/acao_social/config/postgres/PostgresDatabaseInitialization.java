@@ -18,11 +18,6 @@ public class PostgresDatabaseInitialization {
     private String environment;
     private final JdbcTemplate jdbcTemplate;
     private final SeedDataService seedDataService;
-//    @Autowired
-//    private EntityManager entityManager;
-//    @PersistenceContext
-//    private EntityManager entityManager;
-
 
     public PostgresDatabaseInitialization(JdbcTemplate jdbcTemplate, SeedDataService seedDataService) {
         this.jdbcTemplate = jdbcTemplate;

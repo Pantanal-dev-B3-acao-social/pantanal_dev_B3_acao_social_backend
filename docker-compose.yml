@@ -38,13 +38,11 @@ services:
 
   spring_boot_acao_social:
     container_name: spring_boot_acao_social
-    environment:
-      - app_version= 0.0.1
     build:
       context: .
       dockerfile: Dockerfile
     ports:
-      - "8080:8080"
+      - "3001:3001"
     depends_on:
       - keycloak
       - postgres_acao_social
