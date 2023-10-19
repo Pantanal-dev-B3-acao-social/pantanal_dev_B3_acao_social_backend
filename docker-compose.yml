@@ -1,5 +1,6 @@
 version: "3"
 services:
+
   postgres_acao_social:
     container_name: postgres_acao_social
     image: postgres:13
@@ -12,7 +13,7 @@ services:
     volumes:
       - ./db/backup_keycloak.sql:/docker-entrypoint-initdb.d/backup_keycloak.sql
     networks:
-      network-social-postgres:
+      network-social:
         ipv4_address: 172.16.19.2
 
   keycloak:
@@ -32,29 +33,27 @@ services:
     depends_on:
       - postgres_acao_social
     networks:
-      - network-social-postgres
-      - network-social-keycloak
-
+      network-social:
+        ipv4_address: 172.16.19.3
 
   spring_boot_acao_social:
+    container_name: spring_boot_acao_social
+    environment:
+      - app_version= 0.0.1
     build:
       context: .
       dockerfile: Dockerfile
     ports:
       - "8080:8080"
     depends_on:
+      - keycloak
       - postgres_acao_social
-#    environment:
-#      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/postgres
-#      SPRING_DATASOURCE_USERNAME: dev_user
-#      SPRING_DATASOURCE_PASSWORD: dev_password
-
+    networks:
+      network-social:
+        ipv4_address: 172.16.19.4
 
 networks:
-  network-social-keycloak:
-    driver: bridge
-#    external: true
-  network-social-postgres:
+  network-social:
     driver: bridge
     ipam:
       driver: default
