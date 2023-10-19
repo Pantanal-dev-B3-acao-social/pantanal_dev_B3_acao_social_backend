@@ -6,6 +6,7 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
+import org.hibernate.annotations.SQLDelete;
 import org.hibernate.validator.constraints.br.CNPJ;
 import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
@@ -24,6 +25,7 @@ import java.util.UUID;
 @AllArgsConstructor
 @EqualsAndHashCode
 @ToString
+@SQLDelete(sql = "UPDATE ong SET deleted_date = CURRENT_DATE where id=? version=?")
 public class OngEntity {
 
     @Version
@@ -89,16 +91,6 @@ public class OngEntity {
         if (authentication != null && authentication.isAuthenticated()) {
             String userId = authentication.getName();
             this.lastModifiedBy = UUID.fromString(userId);
-        }
-    }
-
-    @PreRemove
-    protected void onRemove() {
-        this.deletedDate = LocalDateTime.now();
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication != null && authentication.isAuthenticated()) {
-            String userId = authentication.getName();
-            this.deletedBy = UUID.fromString(userId);
         }
     }
 
