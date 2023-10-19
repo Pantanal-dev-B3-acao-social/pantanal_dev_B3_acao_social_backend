@@ -6,6 +6,7 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
+import org.hibernate.annotations.SQLDelete;
 import org.hibernate.envers.AuditTable;
 import org.hibernate.envers.Audited;
 import org.hibernate.validator.constraints.br.CNPJ;
@@ -29,6 +30,7 @@ import java.util.UUID;
 @AllArgsConstructor
 @EqualsAndHashCode
 @ToString
+@SQLDelete(sql = "UPDATE company SET deleted_date = CURRENT_DATE WHERE id=? and version=?")
 public class CompanyEntity {
 
     @Valid
@@ -97,14 +99,14 @@ public class CompanyEntity {
         }
     }
 
-    @PreRemove
-    protected void onRemove() {
-        this.deletedDate = LocalDateTime.now();
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication != null && authentication.isAuthenticated()) {
-            String userId = authentication.getName();
-            this.deletedBy = UUID.fromString(userId);
-        }
-    }
+//    @PreRemove
+//    protected void onRemove() {
+//        this.deletedDate = LocalDateTime.now();
+//        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+//        if (authentication != null && authentication.isAuthenticated()) {
+//            String userId = authentication.getName();
+//            this.deletedBy = UUID.fromString(userId);
+//        }
+//    }
 
 }

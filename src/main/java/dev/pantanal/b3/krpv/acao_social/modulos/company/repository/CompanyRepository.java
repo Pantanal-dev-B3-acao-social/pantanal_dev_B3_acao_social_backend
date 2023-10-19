@@ -65,8 +65,7 @@ public class CompanyRepository {
     }
 
     public void delete(UUID id) {
-        CompanyEntity companyEntity = companyPostgresRepository.findById(id).orElse(null);
-        companyPostgresRepository.delete(companyEntity); //review null test case for object not found for deletion
+        companyPostgresRepository.deleteById(id);
     }
 
 
