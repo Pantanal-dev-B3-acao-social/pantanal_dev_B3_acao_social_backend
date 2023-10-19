@@ -16,6 +16,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import io.swagger.v3.oas.annotations.Operation;
 import static dev.pantanal.b3.krpv.acao_social.modulos.socialAction.SocialActionController.ROUTE_SOCIAL;
+import static dev.pantanal.b3.krpv.acao_social.modulos.socialAction.SocialActionController.SOFT_DELETE_QUERY;
 
 import java.util.List;
 import java.util.UUID;
@@ -28,6 +29,7 @@ public class SocialActionController {
 
     @Autowired
     private SocialActionService service;
+    public static final String SOFT_DELETE_QUERY = "";
     public static final String ROUTE_SOCIAL = "/v1/social";
 
     public SocialActionResponseDto mapEntityToDto(SocialActionEntity entity) {

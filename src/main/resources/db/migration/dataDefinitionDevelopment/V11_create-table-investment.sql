@@ -15,9 +15,9 @@ create table investment(
     company_id UUID NOT NULL,
 
     Foreign key (social_action_id) REFERENCES social_action(id)
-            ON DELETE SET NULL
-            ON UPDATE SET NULL,
+            ON DELETE NO ACTION
+            ON UPDATE NO ACTION,
     Foreign key (company_id) REFERENCES company(id)
-            ON DELETE SET NULL
-            ON UPDATE SET NULL
+            ON DELETE NO ACTION
+            ON UPDATE NO ACTION
 )

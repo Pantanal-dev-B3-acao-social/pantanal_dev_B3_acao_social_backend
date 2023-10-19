@@ -15,6 +15,6 @@ CREATE TABLE session (
 
     FOREIGN KEY (social_action_id)
     REFERENCES social_action(id)
-            ON DELETE SET NULL
-            ON DELETE SET NULL
+            ON DELETE NO ACTION
+            ON UPDATE NO ACTION
 );

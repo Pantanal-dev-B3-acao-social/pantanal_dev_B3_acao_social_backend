@@ -1,8 +1,8 @@
 -- Cria a tabela social_action
 CREATE TABLE social_action (
     id UUID PRIMARY KEY NOT NULL,
-    name VARCHAR(255) NOT NULL,
-    description VARCHAR(255) NOT NULL,
+    name VARCHAR(255) ,
+    description VARCHAR(255) ,
     created_by UUID,
     last_modified_by UUID,
     created_date TIMESTAMP,

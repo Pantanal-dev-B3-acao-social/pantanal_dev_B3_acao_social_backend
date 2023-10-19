@@ -14,8 +14,8 @@ CREATE TABLE ong (
     responsibility_id UUID NOT NULL,
     FOREIGN KEY (responsibility_id)
     REFERENCES person (id)
-            ON DELETE SET NULL
-            ON UPDATE SET NULL
+            ON DELETE NO ACTION
+            ON UPDATE NO ACTION
 );
 
 -- Create index on cnpj for uniqueness constraint
