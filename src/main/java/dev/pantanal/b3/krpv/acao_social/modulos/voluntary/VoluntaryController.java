@@ -34,13 +34,11 @@ public class VoluntaryController {
     public static final String ROUTE_VOLUNTARY = "/v1/voluntary";
 
     public VoluntaryResponseDto mapEntityToDto(VoluntaryEntity entity) {
-        UUID socialActionID = entity.getSocialAction().getId();
-        UUID personID = entity.getPerson().getId();
         VoluntaryResponseDto dto = new VoluntaryResponseDto(
                 entity.getId(),
                 entity.getObservation(),
-                socialActionID,
-                personID,
+                entity.getSocialAction(),
+                entity.getPerson(),
                 entity.getStatus(),
                 entity.getApprovedBy(),
                 entity.getApprovedDate(),
