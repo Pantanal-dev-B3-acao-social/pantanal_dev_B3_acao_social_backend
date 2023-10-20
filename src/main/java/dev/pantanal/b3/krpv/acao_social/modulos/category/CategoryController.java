@@ -37,7 +37,7 @@ public class CategoryController {
                 entity.getName(),
                 entity.getDescription(),
                 entity.getCode(),
-                entity.getCategoryGroup().getId(),
+                entity.getCategoryGroup(),
                 entity.getCreatedBy(),
                 entity.getLastModifiedBy(),
                 entity.getCreatedDate(),
