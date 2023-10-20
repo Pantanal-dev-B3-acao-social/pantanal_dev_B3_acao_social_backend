@@ -1,5 +1,9 @@
 package dev.pantanal.b3.krpv.acao_social.modulos.voluntary;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import dev.pantanal.b3.krpv.acao_social.config.audit.AuditListener;
 import dev.pantanal.b3.krpv.acao_social.modulos.person.PersonEntity;
 import dev.pantanal.b3.krpv.acao_social.modulos.socialAction.SocialActionEntity;
@@ -47,11 +51,13 @@ public class VoluntaryEntity {
     private String observation;
 
     @ManyToOne
-    @JoinColumn(name = "social_action_id", nullable = false)
+    @JoinColumn(name= "social_action_id", nullable = false)
+    @JsonManagedReference
     private SocialActionEntity socialAction;
 
     @ManyToOne
-    @JoinColumn(name = "person_id", nullable = false)
+    @JoinColumn(name= "person_id", nullable = false)
+    @JsonManagedReference
     private PersonEntity person;
 
     @ManyToOne

@@ -1,5 +1,7 @@
 package dev.pantanal.b3.krpv.acao_social.modulos.voluntary;
 
+import dev.pantanal.b3.krpv.acao_social.modulos.socialAction.SocialActionEntity;
+import dev.pantanal.b3.krpv.acao_social.modulos.voluntary.dto.response.VoluntaryResponseDto;
 import dev.pantanal.b3.krpv.acao_social.modulos.voluntary.dto.request.VoluntaryCreateDto;
 import dev.pantanal.b3.krpv.acao_social.modulos.voluntary.dto.request.VoluntaryParamsDto;
 import dev.pantanal.b3.krpv.acao_social.modulos.voluntary.dto.request.VoluntaryUpdateDto;
@@ -9,26 +11,50 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.*;
 import org.springframework.data.web.SortDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
+
 import static dev.pantanal.b3.krpv.acao_social.modulos.voluntary.VoluntaryController.ROUTE_VOLUNTARY;
 
 @RestController
 @RequestMapping(ROUTE_VOLUNTARY)
+@PreAuthorize("hasAnyRole('VOLUNTARY')")
 public class VoluntaryController {
      @Autowired
     private VoluntaryService service;
 
     public static final String ROUTE_VOLUNTARY = "/v1/voluntary";
 
+    public VoluntaryResponseDto mapEntityToDto(VoluntaryEntity entity) {
+        UUID socialActionID = entity.getSocialAction().getId();
+        UUID personID = entity.getPerson().getId();
+        VoluntaryResponseDto dto = new VoluntaryResponseDto(
+                entity.getId(),
+                entity.getObservation(),
+                socialActionID,
+                personID,
+                entity.getStatus(),
+                entity.getApprovedBy(),
+                entity.getApprovedDate(),
+                entity.getFeedbackScoreVoluntary(),
+                entity.getFeedbackVoluntary(),
+                entity.getCreatedBy(),
+                entity.getLastModifiedBy(),
+                entity.getCreatedDate(),
+                entity.getLastModifiedDate(),
+                entity.getDeletedDate(),
+                entity.getDeletedBy()
+        );
+        return dto;
+    }
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
     @PreAuthorize("hasAnyRole('VOLUNTARY_GET_ALL')")
@@ -39,15 +65,16 @@ public class VoluntaryController {
             @ApiResponse(responseCode = "404", description = "Not found"),
             @ApiResponse(responseCode = "500", description = "Internal Server Error"),
     })
-    public Page<VoluntaryEntity> findAll(
+    public Page<VoluntaryResponseDto> findAll(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
-            @SortDefault(sort="name", direction = Sort.Direction.DESC) Sort sort,
+            @SortDefault(sort="feedbackScoreVoluntary", direction = Sort.Direction.DESC) Sort sort,
             @Valid VoluntaryParamsDto request
     ) {
         Pageable paging = PageRequest.of(page, size, sort);
-        Page<VoluntaryEntity> response = service.findAll(paging, request);
-        return response;
+        Page<VoluntaryEntity> entities = service.findAll(paging, request);
+        List<VoluntaryResponseDto> responseDto = entities.map(this::mapEntityToDto).getContent();
+        return new PageImpl<>(responseDto, paging, entities.getTotalElements());
     }
 
     @GetMapping("/{id}")
@@ -62,23 +89,7 @@ public class VoluntaryController {
     })
     public ResponseEntity<VoluntaryResponseDto> findOne(@PathVariable UUID id) {
         VoluntaryEntity entity = service.findById(id);
-        VoluntaryResponseDto response = new VoluntaryResponseDto(
-                entity.getId(),
-                entity.getObservation(),
-                entity.getSocialAction(),
-                entity.getPerson(),
-                entity.getStatus(),
-                entity.getApprovedBy(),
-                entity.getApprovedDate(),
-                entity.getFeedbackScoreVoluntary(),
-                entity.getFeedbackVoluntary(),
-                entity.getCreatedBy(),
-                entity.getLastModifiedBy(),
-                entity.getCreatedDate(),
-                entity.getLastModifiedDate(),
-                entity.getDeletedDate(),
-                entity.getDeletedBy()
-        );
+        VoluntaryResponseDto response = mapEntityToDto(entity);
         return new ResponseEntity<VoluntaryResponseDto>(response, HttpStatus.OK);
     }
 
@@ -96,23 +107,7 @@ public class VoluntaryController {
     })
     public ResponseEntity<VoluntaryResponseDto> create(@RequestBody @Valid VoluntaryCreateDto request) {
         VoluntaryEntity entity = service.create(request);
-        VoluntaryResponseDto response = new VoluntaryResponseDto(
-                entity.getId(),
-                entity.getObservation(),
-                entity.getSocialAction(),
-                entity.getPerson(),
-                entity.getStatus(),
-                entity.getApprovedBy(),
-                entity.getApprovedDate(),
-                entity.getFeedbackScoreVoluntary(),
-                entity.getFeedbackVoluntary(),
-                entity.getCreatedBy(),
-                entity.getLastModifiedBy(),
-                entity.getCreatedDate(),
-                entity.getLastModifiedDate(),
-                entity.getDeletedDate(),
-                entity.getDeletedBy()
-        );
+        VoluntaryResponseDto response = mapEntityToDto(entity);
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
@@ -130,23 +125,7 @@ public class VoluntaryController {
     })
     public ResponseEntity<VoluntaryResponseDto> update(@PathVariable UUID id, @Valid @RequestBody VoluntaryUpdateDto request) {
         VoluntaryEntity entity = service.update(id, request);
-        VoluntaryResponseDto response = new VoluntaryResponseDto(
-                id,
-                entity.getObservation(),
-                entity.getSocialAction(),
-                entity.getPerson(),
-                entity.getStatus(),
-                entity.getApprovedBy(),
-                entity.getApprovedDate(),
-                entity.getFeedbackScoreVoluntary(),
-                entity.getFeedbackVoluntary(),
-                entity.getCreatedBy(),
-                entity.getLastModifiedBy(),
-                entity.getCreatedDate(),
-                entity.getLastModifiedDate(),
-                entity.getDeletedDate(),
-                entity.getDeletedBy()
-        );
+        VoluntaryResponseDto response = mapEntityToDto(entity);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 

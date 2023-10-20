@@ -1,11 +1,14 @@
 package dev.pantanal.b3.krpv.acao_social.modulos.socialAction;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import dev.pantanal.b3.krpv.acao_social.config.audit.AuditListener;
 import dev.pantanal.b3.krpv.acao_social.modulos.category.entity.CategorySocialActionLevelEntity;
 import dev.pantanal.b3.krpv.acao_social.modulos.category.entity.CategorySocialActionTypeEntity;
 import dev.pantanal.b3.krpv.acao_social.modulos.session.SessionEntity;
+import dev.pantanal.b3.krpv.acao_social.modulos.voluntary.VoluntaryEntity;
 import jakarta.persistence.*;
 import jakarta.validation.Valid;
 //import jakarta.validation.constraints.NotBlank;
@@ -101,7 +104,14 @@ public class SocialActionEntity {
 
     @OneToMany(mappedBy = "socialAction", fetch = FetchType.LAZY /*, cascade = CascadeType.ALL */ )
     @ToString.Exclude
+    @JsonIgnore
+    @JsonIgnoreProperties("socialActionEntity")
     private List<SessionEntity> sessionsEntities;
+
+    @OneToMany(mappedBy = "socialAction", fetch = FetchType.LAZY)
+    @ToString.Exclude
+    @JsonBackReference
+    private List<VoluntaryEntity> voluntaryEntities;
 
     @PrePersist
     protected void onCreate() {

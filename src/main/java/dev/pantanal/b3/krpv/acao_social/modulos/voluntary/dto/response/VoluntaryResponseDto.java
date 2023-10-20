@@ -10,8 +10,8 @@ import java.util.UUID;
 public record VoluntaryResponseDto(
         UUID id,
         String observation,
-        SocialActionEntity socialAction,
-        PersonEntity person,
+        UUID socialActionId,
+        UUID personId,
         StatusEnum status,
         PersonEntity approvedBy,
         LocalDateTime approvedDate,
