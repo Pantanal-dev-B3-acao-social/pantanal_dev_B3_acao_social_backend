@@ -1,5 +1,7 @@
 package dev.pantanal.b3.krpv.acao_social.modulos.category.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import dev.pantanal.b3.krpv.acao_social.config.audit.AuditListener;
 import dev.pantanal.b3.krpv.acao_social.modulos.category.enums.VisibilityCategoryEnum;
 import dev.pantanal.b3.krpv.acao_social.modulos.category.modules.categoryGroup.CategoryGroupEntity;
@@ -84,16 +86,19 @@ public class CategoryEntity {
 
     @OneToMany(mappedBy = "categoryEntity", orphanRemoval = true, cascade = CascadeType.DETACH , fetch = FetchType.LAZY)
     @ToString.Exclude
-    private List<CategorySocialActionTypeEntity> categorySocialActionTypeEntities = new ArrayList<>();
+    @JsonManagedReference
+    private List<CategorySocialActionTypeEntity> categorySocialActionTypeEntities;
 
     @OneToMany(mappedBy = "categoryEntity", orphanRemoval = true, cascade = CascadeType.DETACH , fetch = FetchType.LAZY)
     @ToString.Exclude
-    private List<CategorySocialActionLevelEntity> categorySocialActionLevelEntities = new ArrayList<>();
+    @JsonManagedReference
+    private List<CategorySocialActionLevelEntity> categorySocialActionLevelEntities;
 
     @NotNull
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "category_group_id")
     @ToString.Exclude
+    @JsonBackReference
     private CategoryGroupEntity categoryGroup;
 
     @PrePersist

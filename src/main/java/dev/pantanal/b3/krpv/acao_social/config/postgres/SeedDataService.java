@@ -100,7 +100,7 @@ public class SeedDataService {
         List<PersonEntity> personEntities = this.personFactory.insertMany(usersRandom.size(), usersRandom);
         this.companyFactory.insertMany(4);
         this.ongFactory.insertMany(10);
-        List<SocialActionEntity> socialActionEntities = this.socialActionFactory.insertMany(20, forCategoryTypeIds, null);
+        List<SocialActionEntity> socialActionEntities = this.socialActionFactory.insertMany(20);
         List<SessionEntity> sessions = this.sessionFactory.insertMany(100);
         this.investmentFactory.insertMany(250);
         this.donationFactory.insertMany(450, socialActionEntities, personEntities, personEntities);

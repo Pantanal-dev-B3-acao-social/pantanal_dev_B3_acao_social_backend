@@ -1,5 +1,6 @@
 package dev.pantanal.b3.krpv.acao_social.modulos.category.modules.categoryGroup;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import dev.pantanal.b3.krpv.acao_social.config.audit.AuditListener;
 import dev.pantanal.b3.krpv.acao_social.modulos.category.entity.CategoryEntity;
 import dev.pantanal.b3.krpv.acao_social.modulos.category.modules.categoryGroup.enums.VisibilityCategoryGroupEnum;
@@ -58,6 +59,7 @@ public class CategoryGroupEntity {
 
     @ManyToOne
     @JoinColumn(name = "category_group_id")
+    @JsonManagedReference
     private CategoryGroupEntity parentCategoryGroupEntity;
 
     @Enumerated(EnumType.STRING)

@@ -52,7 +52,7 @@ public class VoluntaryEntity {
 
     @ManyToOne
     @JoinColumn(name= "social_action_id", nullable = false)
-    @JsonManagedReference
+    @JsonBackReference
     private SocialActionEntity socialAction;
 
     @ManyToOne

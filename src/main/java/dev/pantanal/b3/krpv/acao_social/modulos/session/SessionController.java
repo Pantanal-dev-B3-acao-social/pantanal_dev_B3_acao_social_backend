@@ -34,7 +34,7 @@ public class SessionController {
         SessionResponseDto dto = new SessionResponseDto(
                 entity.getId(),
                 entity.getDescription(),
-                entity.getSocialAction().getId(),
+                entity.getSocialAction(),
                 entity.getDateStartTime(),
                 entity.getDateEndTime(),
                 entity.getStatus(),
