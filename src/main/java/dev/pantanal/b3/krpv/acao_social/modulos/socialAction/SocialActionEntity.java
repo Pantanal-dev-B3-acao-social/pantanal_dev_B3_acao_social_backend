@@ -7,6 +7,7 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 import dev.pantanal.b3.krpv.acao_social.config.audit.AuditListener;
 import dev.pantanal.b3.krpv.acao_social.modulos.category.entity.CategorySocialActionLevelEntity;
 import dev.pantanal.b3.krpv.acao_social.modulos.category.entity.CategorySocialActionTypeEntity;
+import dev.pantanal.b3.krpv.acao_social.modulos.investment.InvestmentEntity;
 import dev.pantanal.b3.krpv.acao_social.modulos.session.SessionEntity;
 import dev.pantanal.b3.krpv.acao_social.modulos.voluntary.VoluntaryEntity;
 import jakarta.persistence.*;
@@ -113,6 +114,11 @@ public class SocialActionEntity {
     @ToString.Exclude
     @JsonManagedReference
     private List<VoluntaryEntity> voluntaryEntities;
+
+    @OneToMany(mappedBy = "socialAction", fetch = FetchType.LAZY)
+    @ToString.Exclude
+    @JsonBackReference
+    private List<InvestmentEntity> investment;
 
     @PrePersist
     protected void onCreate() {

@@ -36,19 +36,18 @@ public class CompanyFactory {
         LocalDateTime lastModifiedDate = createdDate.plusHours(3).plusMinutes(30);
         String name = faker.name().fullName();
         String cnpj = generatorCnpj.cnpj(true);
-        return new CompanyEntity(
-                1L,
-                UUID.randomUUID(),
-                name,
-                faker.lorem().sentence(),
-                cnpj,
-                createBy,
-                lastModifiedBy,
-                createdDate,
-                lastModifiedDate,
-                null,
-                deleteBy
-        );
+        String description = faker.lorem().sentence();
+        CompanyEntity companyEntity =  new CompanyEntity();
+        companyEntity.setName(name);
+        companyEntity.setCnpj(cnpj);
+        companyEntity.setDescription(description);
+        companyEntity.setCreatedBy(createBy);
+        companyEntity.setDeletedBy(deleteBy);
+        companyEntity.setLastModifiedBy(lastModifiedBy);
+        companyEntity.setCreatedDate(createdDate);
+        companyEntity.setLastModifiedDate(lastModifiedDate);
+
+        return companyEntity;
     }
 
     public CompanyEntity insertOne(CompanyEntity toSave) {
