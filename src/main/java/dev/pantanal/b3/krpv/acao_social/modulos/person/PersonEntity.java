@@ -1,7 +1,10 @@
 package dev.pantanal.b3.krpv.acao_social.modulos.person;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import dev.pantanal.b3.krpv.acao_social.config.audit.AuditListener;
 import dev.pantanal.b3.krpv.acao_social.modulos.person.enums.StatusEnum;
+import dev.pantanal.b3.krpv.acao_social.modulos.voluntary.VoluntaryEntity;
 import jakarta.persistence.*;
 //import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
@@ -14,6 +17,7 @@ import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.UUID;
 
 @Table(name="person")
@@ -80,6 +84,11 @@ public class PersonEntity {
 
     @Column(name = "deleted_by")
     private UUID deletedBy;
+
+    @OneToMany(mappedBy = "person", fetch = FetchType.LAZY)
+    @ToString.Exclude
+    @JsonBackReference
+    private List<VoluntaryEntity> voluntaryEntities;
 
     @PrePersist
     protected void onCreate() {

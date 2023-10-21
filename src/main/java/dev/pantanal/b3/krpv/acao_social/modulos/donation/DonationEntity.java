@@ -29,7 +29,7 @@ import java.util.UUID;
 @Table(name="donation")
 @Entity(name="Donation")
 //@AuditTable("z_aud_donation")
-//@EntityListeners(AuditListener.class)
+@EntityListeners(AuditListener.class)
 //@Audited
 @Data
 @NoArgsConstructor
@@ -38,7 +38,6 @@ import java.util.UUID;
 @EqualsAndHashCode
 @ToString
 @SQLDelete(sql = "UPDATE donation SET deleted_date = CURRENT_DATE WHERE id=? and version=?")
-
 public class DonationEntity {
 
     @Valid
@@ -122,15 +121,15 @@ public class DonationEntity {
         }
     }
 
-    @PreRemove
-    protected void onRemove() {
-        this.deletedDate = LocalDateTime.now();
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication != null && authentication.isAuthenticated()) {
-            String userId = authentication.getName();
-            this.deletedBy = UUID.fromString(userId);
-        }
-    }
+//    @PreRemove
+//    protected void onRemove() {
+//        this.deletedDate = LocalDateTime.now();
+//        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+//        if (authentication != null && authentication.isAuthenticated()) {
+//            String userId = authentication.getName();
+//            this.deletedBy = UUID.fromString(userId);
+//        }
+//    }
 
     // TODO: implementar categorias da doação
     //    @OneToMany(mappedBy = "socialActionEntity", orphanRemoval = true, cascade = CascadeType.ALL, fetch = FetchType.EAGER)

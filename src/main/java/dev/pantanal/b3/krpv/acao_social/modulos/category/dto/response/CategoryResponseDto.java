@@ -15,7 +15,7 @@ public record CategoryResponseDto(
         @NotBlank(message= "Campo 'code' não pode estar vazio")
         String code,
         @NotNull
-        UUID categoryGroupId,
+        CategoryGroupEntity categoryGroup,
         @NotBlank(message= "Campo 'createdBy' não pode estar vazio")
         UUID createdBy,
         UUID lastModifiedBy,

@@ -63,12 +63,15 @@ public class VoluntaryFactory {
     }
 
     public List<VoluntaryEntity> insertMany(int amount) {
-        List<VoluntaryEntity> entities = new ArrayList<>();
-        for (int i=0; i<amount; i++) {
-            VoluntaryEntity entity = this.makeFakeEntity();
-            entities.add(this.insertOne(entity));
+        {
+            List<VoluntaryEntity> entities = new ArrayList<>();
+            for (int i = 0; i < amount; i++) {
+                VoluntaryEntity entity = this.makeFakeEntity();
+                entities.add(this.insertOne(entity));
+            }
+
+            return entities;
         }
-        return entities;
+
     }
-    
 }

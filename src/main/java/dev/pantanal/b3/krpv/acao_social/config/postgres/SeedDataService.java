@@ -36,6 +36,8 @@ public class SeedDataService {
     private final CompanyFactory companyFactory;
     private final PresenceFactory presenceFactory;
 
+    private final VoluntaryFactory voluntaryFactory;
+
     @Value("${acao-social.keyclock.adminUsername}")
     private String adminUsername;
 
@@ -59,7 +61,8 @@ public class SeedDataService {
             DonationFactory donationFactory,
             PersonFactory personFactory,
             CompanyFactory companyFactory,
-            PresenceFactory presenceFactory
+            PresenceFactory presenceFactory,
+            VoluntaryFactory voluntaryFactory
     ) {
         this.socialActionFactory = socialActionFactory;
         this.sessionFactory = sessionFactory;
@@ -71,6 +74,7 @@ public class SeedDataService {
         this.personFactory = personFactory;
         this.companyFactory = companyFactory;
         this.presenceFactory = presenceFactory;
+        this.voluntaryFactory = voluntaryFactory;
     }
 
     public void executeAllSeed() {
@@ -96,11 +100,12 @@ public class SeedDataService {
         List<PersonEntity> personEntities = this.personFactory.insertMany(usersRandom.size(), usersRandom);
         this.companyFactory.insertMany(4);
         this.ongFactory.insertMany(10);
-        List<SocialActionEntity> socialActionEntities = this.socialActionFactory.insertMany(20, forCategoryTypeIds, null);
-        List<SessionEntity> sessions = this.sessionFactory.insertMany(100);
+        List<SocialActionEntity> socialActionEntities = this.socialActionFactory.insertMany(20);
         this.investmentFactory.insertMany(250);
+        List<SessionEntity> sessions = this.sessionFactory.insertMany(100);
         this.donationFactory.insertMany(450, socialActionEntities, personEntities, personEntities);
         this.presenceFactory.insertMany(100, personEntities, sessions, personEntities);
+        this.voluntaryFactory.insertMany(100);
     }
 
 }

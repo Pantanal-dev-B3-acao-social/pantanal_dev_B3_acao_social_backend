@@ -1,5 +1,7 @@
 package dev.pantanal.b3.krpv.acao_social.modulos.session;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import dev.pantanal.b3.krpv.acao_social.config.audit.AuditListener;
 import dev.pantanal.b3.krpv.acao_social.modulos.session.enums.StatusEnum;
 import dev.pantanal.b3.krpv.acao_social.modulos.session.enums.VisibilityEnum;
@@ -83,6 +85,7 @@ public class SessionEntity {
 
     @ManyToOne
     @JoinColumn(name = "social_action_id", nullable = false)
+    @JsonBackReference
     private SocialActionEntity socialAction;
 
 // oneToMany

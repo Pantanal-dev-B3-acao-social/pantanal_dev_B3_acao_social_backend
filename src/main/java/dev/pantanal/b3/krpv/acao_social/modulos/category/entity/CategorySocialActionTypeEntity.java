@@ -1,5 +1,6 @@
 package dev.pantanal.b3.krpv.acao_social.modulos.category.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import dev.pantanal.b3.krpv.acao_social.config.audit.AuditListener;
@@ -44,12 +45,12 @@ public class CategorySocialActionTypeEntity {
 
     @ManyToOne(/* fetch = FetchType.EAGER */)
     @JoinColumn(name = "category_id")
+    @JsonBackReference
     private CategoryEntity categoryEntity;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JsonIgnore
-    @JsonIgnoreProperties
+    @ManyToOne()
     @JoinColumn(name = "social_action_id")
+    @JsonBackReference
     private SocialActionEntity socialActionEntity;
 
     @CreatedBy

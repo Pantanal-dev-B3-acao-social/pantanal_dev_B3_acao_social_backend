@@ -33,24 +33,26 @@ public class SocialActionController {
     public static final String ROUTE_SOCIAL = "/v1/social";
 
     public SocialActionResponseDto mapEntityToDto(SocialActionEntity entity) {
-        List<UUID> categoryTypeIds = entity.getCategorySocialActionTypeEntities().stream()
-                .map(type -> type.getId())
-                .collect(Collectors.toList());
-        List<UUID> categoryLevelIds = entity.getCategorySocialActionLevelEntities().stream()
-                .map(level -> level.getId())
-                .collect(Collectors.toList());
+//        List<UUID> categoryTypeIds = entity.getCategorySocialActionTypeEntities().stream()
+//                .map(type -> type.getId())
+//                .collect(Collectors.toList());
+//        List<UUID> categoryLevelIds = entity.getCategorySocialActionLevelEntities().stream()
+//                .map(level -> level.getId())
+//                .collect(Collectors.toList());
         SocialActionResponseDto dto = new SocialActionResponseDto(
                 entity.getId(),
                 entity.getName(),
                 entity.getDescription(),
+                entity.getSessionsEntities(),
+                entity.getVoluntaryEntities(),
+                entity.getCategorySocialActionTypeEntities(),
+                entity.getCategorySocialActionLevelEntities(),
                 entity.getCreatedBy(),
                 entity.getLastModifiedBy(),
                 entity.getCreatedDate(),
                 entity.getLastModifiedDate(),
                 entity.getDeletedDate(),
-                entity.getDeletedBy(),
-                categoryTypeIds,
-                categoryLevelIds
+                entity.getDeletedBy()
         );
         return dto;
     }
