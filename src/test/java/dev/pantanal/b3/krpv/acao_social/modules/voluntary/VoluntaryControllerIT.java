@@ -93,7 +93,7 @@ public class VoluntaryControllerIT {
         // cadastrar socialActons
         List<CategoryEntity> categoriesType = categoryFactory.makeFakeByGroup(2, "social action type", "grupo de categorias para usar no TIPO de ação social");
         List<CategoryEntity> categoriesLevel = categoryFactory.makeFakeByGroup(2, "social action level", "grupo de categorias para usar no NÍVEL de ação social");
-        List<SocialActionEntity> socialActionEntities = socialActionFactory.insertManyFull(3, categoriesType, categoriesLevel);
+        List<SocialActionEntity> socialActionEntities = socialActionFactory.insertMany(3);
     }
 
     @Test

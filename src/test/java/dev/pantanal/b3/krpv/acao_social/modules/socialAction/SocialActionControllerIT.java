@@ -116,7 +116,7 @@ public class SocialActionControllerIT {
     @DisplayName("lista paginada de ações sociais com sucesso")
         void findAllSocialAction() throws Exception {
         // Arrange (Organizar)
-        List<SocialActionEntity> saved = socialActionFactory.insertMany(3, forCategoryTypeIds, forCategoryLevelIds);
+        List<SocialActionEntity> saved = socialActionFactory.insertMany(3);
         // Act (ação)
         ResultActions resultActions = mockMvc.perform(
                 MockMvcRequestBuilders.get(ROUTE_SOCIAL)
@@ -176,7 +176,7 @@ public class SocialActionControllerIT {
     @DisplayName("lista paginada, filtrada e ordenada de ações sociais com sucesso")
     void findAllSocialActionWithFilters() throws Exception {
         // Arrange (Organizar)
-        List<SocialActionEntity> saved = socialActionFactory.insertMany(3, forCategoryTypeIds, forCategoryLevelIds);
+        List<SocialActionEntity> saved = socialActionFactory.insertMany(3);
         // Prepare filters, sorting, and paging parameters
         String filter = saved.get(0).getName(); //check for Filter
         String sort = "ASC";    //Check for Sorting
@@ -243,7 +243,7 @@ public class SocialActionControllerIT {
     @DisplayName("salva uma nova ação social com sucesso")
     void saveOneSocialAction() throws Exception {
         // Arrange (Organizar)
-        SocialActionEntity item = socialActionFactory.makeFakeEntity(new ArrayList<UUID>(), new ArrayList<UUID>());
+        SocialActionEntity item = socialActionFactory.makeFakeEntity();
         Map<String, Object> makeBody = new HashMap<>();
         makeBody.put("name", item.getName());
         makeBody.put("description", item.getDescription());
@@ -296,7 +296,7 @@ public class SocialActionControllerIT {
     @DisplayName("Busca ação social por ID com sucesso")
     void findByIdSocialAction() throws Exception {
         // Arrange (Organizar)
-        List<SocialActionEntity> saved = socialActionFactory.insertMany(3, forCategoryTypeIds, forCategoryLevelIds);
+        List<SocialActionEntity> saved = socialActionFactory.insertMany(3);
         SocialActionEntity item = saved.get(0);
         // Act (ação)
         ResultActions resultActions = mockMvc.perform(
@@ -344,7 +344,7 @@ public class SocialActionControllerIT {
     @DisplayName("Exclui uma ação social com sucesso")
     void deleteSocialAction() throws Exception {
         // Arrange (Organizar)
-        SocialActionEntity item = socialActionFactory.insertOne(socialActionFactory.makeFakeEntity(forCategoryTypeIds, forCategoryLevelIds));
+        SocialActionEntity item = socialActionFactory.insertOne(socialActionFactory.makeFakeEntity());
         // Act (ação)
         ResultActions resultActions = mockMvc.perform(
                 MockMvcRequestBuilders.delete(ROUTE_SOCIAL + "/{id}", item.getId())
@@ -362,7 +362,7 @@ public class SocialActionControllerIT {
     @DisplayName("Atualiza uma ação social com sucesso")
     void updateSocialAction() throws Exception {
         // Arrange (Organizar)
-        SocialActionEntity item = socialActionFactory.insertOne(socialActionFactory.makeFakeEntity(forCategoryTypeIds, forCategoryLevelIds));
+        SocialActionEntity item = socialActionFactory.insertOne(socialActionFactory.makeFakeEntity());
         // Modifica alguns dados da ação social
         Map<String, Object> makeBody = new HashMap<>();
         makeBody.put("name", item.getName() + "_ATUALIZADO");
