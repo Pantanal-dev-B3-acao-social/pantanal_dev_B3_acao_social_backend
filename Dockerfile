@@ -14,7 +14,6 @@ ADD /target/acao_social-0.0.1-SNAPSHOT.jar /app/acao_social-0.0.1-SNAPSHOT.jar
 
 # Copie o script de espera (wait-for-it.sh)
 COPY wait-for-it.sh /app/wait-for-it.sh
-#RUN chmod +x /app/wait-for-it.sh keycloak:9090
 RUN chmod +x /app/wait-for-it.sh
 
 FROM maven:3.9.4-eclipse-temurin-17
@@ -31,8 +30,4 @@ RUN chmod +x /app/wait-for-it.sh
 WORKDIR /app
 EXPOSE $app_port
 
-#ENTRYPOINT ["java","-jar","acao_social-0.0.1-SNAPSHOT.jar"]
-#ENTRYPOINT ["./wait-for-it.sh", "keycloak:9090", "--", "java", "-jar", "acao_social-0.0.1-SNAPSHOT.jar"]
-#CMD ["./wait-for-it.sh", "172.16.19.3:9090", "--", "java", "-jar", "acao_social-0.0.1-SNAPSHOT.jar"]
-#CMD ["./wait-for-it.sh", "172.16.19.3:9090/auth/realms/realm-pantanal-dev", "-t", "120", "--", "java", "-jar", "acao_social-0.0.1-SNAPSHOT.jar"]
 CMD ["./wait-for-it.sh", "172.16.19.3:9090/auth/realms/realm-pantanal-dev", "--", "java", "-jar", "acao_social-0.0.1-SNAPSHOT.jar"]
