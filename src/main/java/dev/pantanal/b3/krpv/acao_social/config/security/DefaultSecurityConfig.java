@@ -24,8 +24,9 @@ public class DefaultSecurityConfig {
     @Value("${spring.security.oauth2.client.registration.realm-pantanal-dev.client-secret}")
     private String clientSecret;
 
-    @Value("${server.host}")
-    private String authServerHost;
+// TODO: apagar
+//    @Value("${server.host}")
+//    private String authServerHost;
 
     @Value("${server.port}")
     private String authServerPort;

@@ -54,7 +54,6 @@ spring:
             client-secret: uXfLOkhKTekWg674dKs41GmU0a1vhHzG
             scope: openid,offline_access,profile
             authorization-grant-type: authorization_code
-        #            redirect-uri: http://localhost:
         provider:
           realm-pantanal-dev:
             issuer-uri: ${spring.security.oauth2.resourceserver.jwt.issuer-uri}
