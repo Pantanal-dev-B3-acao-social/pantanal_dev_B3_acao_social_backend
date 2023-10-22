@@ -1,28 +1,24 @@
 acao-social:
   db:
     active: dbinit
-    #    db-name: postgres
     db-name: postgres_testing
   spring-boot:
     environment: testing
   server:
     port: '3001'
-    host: http://localhost/
+    host: http://localhostTESTE/
   keyclock:
-    baseUrl: http://localhost:9090
+    baseUrl: http://localhostTESTE:9090
     adminUsername: funcionario1
     adminPassword: 123
   frontend:
-    baseUrl: http://localhost:3000/
-#db-name: postgres
-#spring-boot-environment: testing
+    baseUrl: http://localhostTESTE:3000/
+
 server:
   port: '3001'
-  host: http://localhost/
+  host: http://localhostTESTE/
 
 spring:
-  #  profiles:
-  #    active: development, dbinit
   flyway:
     enabled: true
     baseline-on-migrate: true
@@ -36,7 +32,7 @@ spring:
     username: dev_user
     password: dev_password
     driver-class-name: org.postgresql.Driver
-    url: jdbc:postgresql://localhost:5432/${acao-social.db.db-name}
+    url: jdbc:postgresql://localhostTESTE:5432/${acao-social.db.db-name}
     schema: schema.sql
   #    initialization-mode: always
   jpa:
@@ -48,7 +44,7 @@ spring:
     oauth2:
       resourceserver:
         jwt:
-          issuer-uri: http://localhost:9090/realms/realm-pantanal-dev
+          issuer-uri: http://localhostTESTE:9090/realms/realm-pantanal-dev
           jwk-set-uri: ${spring.security.oauth2.resourceserver.jwt.issuer-uri}/protocol/openid-connect/certs
       client:
         registration:
@@ -59,7 +55,7 @@ spring:
             client-secret: uXfLOkhKTekWg674dKs41GmU0a1vhHzG
             scope: openid,offline_access,profile
             authorization-grant-type: authorization_code
-        #            redirect-uri: http://localhost:
+        #            redirect-uri: http://localhostTESTE:
         provider:
           realm-pantanal-dev:
             issuer-uri: ${spring.security.oauth2.resourceserver.jwt.issuer-uri}

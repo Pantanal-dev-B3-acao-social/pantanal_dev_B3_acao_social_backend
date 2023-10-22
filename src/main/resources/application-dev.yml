@@ -8,9 +8,9 @@ acao-social:
     sprint-init: classpath:db/script/dev/init_db_development.sql
   spring-boot:
     environment: development
-  server:
-    port: '3001'
-    host: http://localhost/
+#  server:
+#    port: '3001'
+#    host: http://localhost/
   keyclock:
     baseUrl: http://localhost:9090
     adminUsername: funcionario1
@@ -28,7 +28,7 @@ spring:
   flyway:
     enabled: true
     baseline-on-migrate: true
-    locations: classpath:db/migration/dataDefinitionDevelopment
+    locations: classpath:db/migration
 #    locations: classpath:db/migration/dataDefinitionProduction
   datasource:
     url: jdbc:postgresql://localhost:5432/${acao-social.db.db-name}
