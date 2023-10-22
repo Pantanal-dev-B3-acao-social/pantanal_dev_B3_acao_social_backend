@@ -22,7 +22,7 @@ services:
     environment:
       - KC_DB_URL=jdbc:postgresql://postgres_acao_social/keycloack_postgres_db
       - KEYCLOAK_ADMIN=admin
-      - KEYCLOAK_ADMIN_PASSWORD=admin123
+      - KEYCLOAK_ADMIN_PASSWORD=admin
       - KC_DB=postgres
       - KC_DB_USERNAME=dev_user
       - KC_DB_PASSWORD=dev_password
