@@ -9,7 +9,7 @@ import java.util.UUID;
 public record VoluntaryUpdateDto (
         String observation,
         StatusEnum status,
-        PersonEntity approvedBy,
+        UUID approvedBy,
         LocalDateTime approvedDate,
         Integer feedbackScoreVoluntary,
         String feedbackVoluntary

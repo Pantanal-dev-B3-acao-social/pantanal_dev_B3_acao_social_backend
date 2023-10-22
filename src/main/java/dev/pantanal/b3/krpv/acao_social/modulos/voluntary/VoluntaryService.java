@@ -72,7 +72,8 @@ public class VoluntaryService {
             obj.setObservation(request.observation());
         }
         if (request.approvedBy() != null) {
-            obj.setApprovedBy(request.approvedBy());
+            PersonEntity approvedBy = personRepository.findById(request.approvedBy());
+            obj.setApprovedBy(approvedBy);
         }
         if (request.approvedDate() != null) {
             obj.setApprovedDate(request.approvedDate());
