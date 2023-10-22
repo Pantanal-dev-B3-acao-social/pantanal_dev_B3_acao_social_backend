@@ -2,27 +2,23 @@ acao-social:
   db:
     active: dbinit
     db-name: postgres_testing
+    postgresUrl: localhost
   spring-boot:
     environment: testing
-  server:
-    port: '3001'
-    host: http://localhostTESTE/
+    springbootUrl: localhost
   keyclock:
-    baseUrl: http://localhostTESTE:9090
+    keyclockUrl: localhost
+    baseUrl: http://${acao-social.keyclock.keyclockUrl}:9090
     adminUsername: funcionario1
     adminPassword: 123
   frontend:
-    baseUrl: http://localhostTESTE:3000/
+    baseUrl: http://localhost:3000/
 
 server:
   port: '3001'
-  host: http://localhostTESTE/
+  host: http://${acao-social.spring-boot.springbootUrl}}/
 
 spring:
-  flyway:
-    enabled: true
-    baseline-on-migrate: true
-    locations: classpath:db/migration/dataDefinitionDevelopment
   datasource:
     hikari:
       maxLifetime: '1800000'
@@ -32,19 +28,26 @@ spring:
     username: dev_user
     password: dev_password
     driver-class-name: org.postgresql.Driver
-    url: jdbc:postgresql://localhostTESTE:5432/${acao-social.db.db-name}
+    url: jdbc:postgresql://${acao-social.db.postgresUrl}:5432/${acao-social.db.db-name}
     schema: schema.sql
-  #    initialization-mode: always
+  flyway:
+    enabled: true
+    baseline-on-migrate: true
+    locations: classpath:db/migrations
+    schemas: public
+    url: jdbc:postgresql://${acao-social.db.postgresUrl}:5432/${acao-social.db.db-name}
+    user: dev_user
+    password: dev_password
   jpa:
-    show-sql: true
-    generate-ddl: true
     hibernate:
       ddl-auto: create-drop
+    show-sql: true
+    generate-ddl: true
   security:
     oauth2:
       resourceserver:
         jwt:
-          issuer-uri: http://localhostTESTE:9090/realms/realm-pantanal-dev
+          issuer-uri: ${acao-social.keyclock.baseUrl}/realms/realm-pantanal-dev
           jwk-set-uri: ${spring.security.oauth2.resourceserver.jwt.issuer-uri}/protocol/openid-connect/certs
       client:
         registration:
@@ -55,7 +58,6 @@ spring:
             client-secret: uXfLOkhKTekWg674dKs41GmU0a1vhHzG
             scope: openid,offline_access,profile
             authorization-grant-type: authorization_code
-        #            redirect-uri: http://localhostTESTE:
         provider:
           realm-pantanal-dev:
             issuer-uri: ${spring.security.oauth2.resourceserver.jwt.issuer-uri}
