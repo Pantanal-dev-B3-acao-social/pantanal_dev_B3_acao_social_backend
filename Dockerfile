@@ -29,4 +29,4 @@ RUN chmod +x /app/wait-for-it.sh
 WORKDIR /app
 EXPOSE $app_port
 
-CMD ["./wait-for-it.sh", "172.16.19.3:9090/auth/realms/realm-pantanal-dev", "--", "java", "-jar", "acao_social-0.0.1-SNAPSHOT.jar"]
+CMD ["./wait-for-it.sh", "172.16.19.3:8080", "-t", "25", "--", "java", "-jar", "acao_social-0.0.1-SNAPSHOT.jar"]
