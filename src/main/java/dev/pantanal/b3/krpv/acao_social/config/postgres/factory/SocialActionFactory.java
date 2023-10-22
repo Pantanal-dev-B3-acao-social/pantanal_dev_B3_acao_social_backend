@@ -31,33 +31,11 @@ public class SocialActionFactory {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public SocialActionEntity makeFakeEntity(List<UUID> forCategoryTypeIds, List<UUID> forCategoryLevelIds) {
+    public SocialActionEntity makeFakeEntity() {
         SocialActionEntity socialCreated = new SocialActionEntity();
         socialCreated.setVersion(1L);
         socialCreated.setName(faker.name().fullName());
         socialCreated.setDescription(faker.lorem().sentence());
-        if(forCategoryTypeIds != null) {
-            for (UUID categoryId : forCategoryTypeIds) {
-                CategoryEntity categoryEntity = categoryRepository.findById(categoryId);
-                if (categoryEntity != null) {
-                    CategorySocialActionTypeEntity typeCategory = new CategorySocialActionTypeEntity();
-                    typeCategory.setCategoryEntity(categoryEntity);
-                    typeCategory.setSocialActionEntity(socialCreated);
-                    socialCreated.getCategorySocialActionTypeEntities().add(typeCategory);
-                }
-            }
-        }
-        if(forCategoryLevelIds != null) {
-            for (UUID categoryId : forCategoryLevelIds) {
-                CategoryEntity categoryEntity = categoryRepository.findById(categoryId);
-                if (categoryEntity != null) {
-                    CategorySocialActionLevelEntity levelCategory = new CategorySocialActionLevelEntity();
-                    levelCategory.setCategoryEntity(categoryEntity);
-                    levelCategory.setSocialActionEntity(socialCreated);
-                    socialCreated.getCategorySocialActionLevelEntities().add(levelCategory);
-                }
-            }
-        }
         // TODO:  ongId = findOneRandom("ong");
         return socialCreated;
     }
@@ -80,29 +58,29 @@ public class SocialActionFactory {
 //        return socialActionRepository.findById(socialActionEntity.getId());
     }
 
-    public List<SocialActionEntity> insertMany(int amount, List<UUID> forCategoryTypeIds, List<UUID> forCategoryLevelIds) {
+    public List<SocialActionEntity> insertMany(int amount) {
         List<SocialActionEntity> socials = new ArrayList<>();
         for (int i=0; i<amount; i++) {
-            SocialActionEntity socialActionEntity = this.makeFakeEntity(forCategoryTypeIds, forCategoryLevelIds);
+            SocialActionEntity socialActionEntity = this.makeFakeEntity();
             socials.add(this.insertOne(socialActionEntity));
         }
         return socials;
     }
 
-    public List<SocialActionEntity> insertManyFull(
-            int amount,
-            List<CategoryEntity> categoriesType,
-            List<CategoryEntity> categoriesLevel
-    ) {
-        List<UUID> forCategoryTypeIds = categoriesType.stream()
-                .map(category -> category.getId())
-                .collect(Collectors.toList());
-        List<UUID> forCategoryLevelIds = categoriesLevel.stream()
-                .map(category -> category.getId())
-                .collect(Collectors.toList());
-        List<SocialActionEntity> saved = insertMany(amount, forCategoryTypeIds, forCategoryLevelIds);
-        return saved;
-    }
+//    public List<SocialActionEntity> insertManyFull(
+//            int amount,
+//            List<CategoryEntity> categoriesType,
+//            List<CategoryEntity> categoriesLevel
+//    ) {
+//        List<UUID> forCategoryTypeIds = categoriesType.stream()
+//                .map(category -> category.getId())
+//                .collect(Collectors.toList());
+//        List<UUID> forCategoryLevelIds = categoriesLevel.stream()
+//                .map(category -> category.getId())
+//                .collect(Collectors.toList());
+//        List<SocialActionEntity> saved = insertMany(amount);
+//        return saved;
+//    }
 
 
 }

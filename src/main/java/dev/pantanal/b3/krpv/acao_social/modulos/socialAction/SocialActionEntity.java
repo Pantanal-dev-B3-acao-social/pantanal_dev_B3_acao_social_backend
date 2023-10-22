@@ -1,22 +1,30 @@
 package dev.pantanal.b3.krpv.acao_social.modulos.socialAction;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import dev.pantanal.b3.krpv.acao_social.config.audit.AuditListener;
 import dev.pantanal.b3.krpv.acao_social.modulos.category.entity.CategorySocialActionLevelEntity;
 import dev.pantanal.b3.krpv.acao_social.modulos.category.entity.CategorySocialActionTypeEntity;
+import dev.pantanal.b3.krpv.acao_social.modulos.investment.InvestmentEntity;
 import dev.pantanal.b3.krpv.acao_social.modulos.session.SessionEntity;
+import dev.pantanal.b3.krpv.acao_social.modulos.voluntary.VoluntaryEntity;
 import jakarta.persistence.*;
 import jakarta.validation.Valid;
 //import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
+
+
+import org.hibernate.annotations.SQLDelete;
 import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.hibernate.annotations.Where;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -34,6 +42,8 @@ import java.util.UUID;
 @AllArgsConstructor
 @EqualsAndHashCode
 @ToString
+@SQLDelete(sql = "UPDATE social_action SET deleted_date = CURRENT_DATE WHERE id=? and version=?")
+//@Where(clause = "deleted_date IS NOT NULL")
 public class SocialActionEntity {
 
     @Valid
@@ -81,21 +91,34 @@ public class SocialActionEntity {
      * orphanRemoval = true faz com que SocialActionEntity é optional ter preenchido alguma CategorySocialActionTypeEntity
      */
 //    @Optional
-    @OneToMany(mappedBy = "socialActionEntity", orphanRemoval = true, cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-//    @OneToMany(mappedBy = "socialActionEntity", orphanRemoval = true, cascade = CascadeType.DETACH , fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "socialActionEntity", fetch = FetchType.LAZY)
+//    @OneToMany(mappedBy = "socialActionEntity", orphanRemoval = true, cascade = CascadeType.ALL , fetch = FetchType.LAZY)
     @ToString.Exclude
     @JsonIgnore
     @JsonIgnoreProperties("socialActionEntity")
-    private List<CategorySocialActionTypeEntity> categorySocialActionTypeEntities = new ArrayList<>();
+    @JsonManagedReference
+    private List<CategorySocialActionTypeEntity> categorySocialActionTypeEntities;
 
-    @OneToMany(mappedBy = "socialActionEntity", orphanRemoval = true, cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "socialActionEntity", fetch = FetchType.LAZY)
     @ToString.Exclude
     @JsonIgnoreProperties("socialActionEntity")
-    private List<CategorySocialActionLevelEntity> categorySocialActionLevelEntities = new ArrayList<>();
+    @JsonManagedReference
+    private List<CategorySocialActionLevelEntity> categorySocialActionLevelEntities;
 
     @OneToMany(mappedBy = "socialAction", fetch = FetchType.LAZY /*, cascade = CascadeType.ALL */ )
     @ToString.Exclude
+    @JsonManagedReference
     private List<SessionEntity> sessionsEntities;
+
+    @OneToMany(mappedBy = "socialAction", fetch = FetchType.LAZY)
+    @ToString.Exclude
+    @JsonManagedReference
+    private List<VoluntaryEntity> voluntaryEntities;
+
+    @OneToMany(mappedBy = "socialAction", fetch = FetchType.LAZY)
+    @ToString.Exclude
+    @JsonBackReference
+    private List<InvestmentEntity> investment;
 
     @PrePersist
     protected void onCreate() {
@@ -116,15 +139,5 @@ public class SocialActionEntity {
             this.lastModifiedBy = UUID.fromString(userId);
         }
     }
-
-    @PreRemove
-    protected void onRemove() {
-        this.deletedDate = LocalDateTime.now();
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication != null && authentication.isAuthenticated()) {
-            String userId = authentication.getName();
-            this.deletedBy = UUID.fromString(userId);
-        }
-    }
-
 }
+

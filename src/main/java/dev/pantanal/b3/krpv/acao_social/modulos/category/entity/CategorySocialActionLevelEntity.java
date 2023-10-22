@@ -1,5 +1,6 @@
 package dev.pantanal.b3.krpv.acao_social.modulos.category.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import dev.pantanal.b3.krpv.acao_social.config.audit.AuditListener;
 import dev.pantanal.b3.krpv.acao_social.modulos.socialAction.SocialActionEntity;
@@ -7,6 +8,7 @@ import jakarta.persistence.*;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
+import org.hibernate.annotations.SQLDelete;
 import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedBy;
@@ -27,6 +29,7 @@ import java.util.UUID;
 @AllArgsConstructor
 @EqualsAndHashCode
 @ToString
+@SQLDelete(sql = "UPDATE category_social_action_level SET deleted_date = CURRENT_DATE WHERE id=? and version=?")
 public class CategorySocialActionLevelEntity {
 
 
@@ -42,11 +45,12 @@ public class CategorySocialActionLevelEntity {
 
     @ManyToOne()
     @JoinColumn(name = "category_id")
+    @JsonBackReference
     private CategoryEntity categoryEntity;
 
     @ManyToOne()
-    @JsonIgnore
     @JoinColumn(name = "social_action_id")
+    @JsonBackReference
     private SocialActionEntity socialActionEntity;
 
     @CreatedBy
@@ -88,16 +92,6 @@ public class CategorySocialActionLevelEntity {
         if (authentication != null && authentication.isAuthenticated()) {
             String userId = authentication.getName();
             this.lastModifiedBy = UUID.fromString(userId);
-        }
-    }
-
-    @PreRemove
-    protected void onRemove() {
-        this.deletedDate = LocalDateTime.now();
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication != null && authentication.isAuthenticated()) {
-            String userId = authentication.getName();
-            this.deletedBy = UUID.fromString(userId);
         }
     }
 

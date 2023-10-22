@@ -20,7 +20,9 @@ CREATE TABLE category (
 ALTER TABLE category
 ADD CONSTRAINT fk_category_category_group_id
 FOREIGN KEY (category_group_id)
-REFERENCES category_group (id);
+REFERENCES category_group (id)
+        ON DELETE SET NULL
+        ON UPDATE SET NULL;
 
 -- Cria um índice na coluna created_by para melhor desempenho em consultas
 CREATE INDEX idx_category_created_by

@@ -1,5 +1,7 @@
 package dev.pantanal.b3.krpv.acao_social.modulos.investment;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import dev.pantanal.b3.krpv.acao_social.config.audit.AuditListener;
 import dev.pantanal.b3.krpv.acao_social.modulos.company.CompanyEntity;
 import dev.pantanal.b3.krpv.acao_social.modulos.person.PersonEntity;
 import dev.pantanal.b3.krpv.acao_social.modulos.socialAction.SocialActionEntity;
@@ -8,6 +10,8 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.envers.Audited;
 import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedBy;
@@ -20,9 +24,9 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 //Implementar foreign key pra social action
 @Table(name="investment")
-@Entity(name="Investiment")
+@Entity(name="Investment")
 //@AuditTable("z_aud_investment")
-//@EntityListeners(AuditListener.class)
+@EntityListeners(AuditListener.class)
 //@Audited
 @Data
 @NoArgsConstructor
@@ -30,6 +34,7 @@ import java.util.UUID;
 @Builder
 @EqualsAndHashCode
 @ToString
+@SQLDelete(sql = "UPDATE investment SET deleted_date = CURRENT_DATE WHERE id=? and version=?")
 public class InvestmentEntity {
 
     @Valid
@@ -54,10 +59,6 @@ public class InvestmentEntity {
     @Column(nullable = false)
 //    @NotBlank
     private String motivation;
-
-//    @ManyToOne
-//    @JoinColumn("manager_id")
-//    private Person person;
 
     @ManyToOne
     @JoinColumn(name = "approved_by", nullable = true)
@@ -86,10 +87,12 @@ public class InvestmentEntity {
 
     @ManyToOne
     @JoinColumn(name="social_action_id", nullable = false)
+    @JsonManagedReference
     private SocialActionEntity socialAction;
 
     @ManyToOne
     @JoinColumn(name="company_id", nullable = false)
+    @JsonManagedReference
     private CompanyEntity company;
 
     @PrePersist
@@ -112,13 +115,4 @@ public class InvestmentEntity {
         }
     }
 
-    @PreRemove
-    protected void onRemove() {
-        this.deletedDate = LocalDateTime.now();
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication != null && authentication.isAuthenticated()) {
-            String userId = authentication.getName();
-            this.deletedBy = UUID.fromString(userId);
-        }
-    }
 }

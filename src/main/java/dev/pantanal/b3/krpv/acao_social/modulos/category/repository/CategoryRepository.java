@@ -62,7 +62,6 @@ public class CategoryRepository {
     }
 
     public void delete(UUID id) {
-        CategoryEntity objEntity = findById(id);
-        categoryPostgresRepository.delete(objEntity);
+        categoryPostgresRepository.deleteById(id);
     }
 }

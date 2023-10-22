@@ -71,8 +71,7 @@ public class SocialActionRepository {
     }
 
     public void delete(UUID id) {
-        SocialActionEntity objEntity = findById(id);
-        postgresSocialActionRepository.delete(objEntity);
+        postgresSocialActionRepository.deleteById(id);
     }
 
 }

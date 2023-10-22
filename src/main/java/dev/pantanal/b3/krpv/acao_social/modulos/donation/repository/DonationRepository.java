@@ -61,7 +61,6 @@ public class DonationRepository {
     }
 
     public void delete(UUID id) {
-        DonationEntity objEntity = findById(id);
-        donationPostgresRepository.delete(objEntity);
+        donationPostgresRepository.deleteById(id);
     }
 }

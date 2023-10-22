@@ -13,5 +13,8 @@ CREATE TABLE session (
     social_action_id UUID NOT NULL,
     version BIGINT,
 
-    FOREIGN KEY (social_action_id) REFERENCES social_action(id)
+    FOREIGN KEY (social_action_id)
+    REFERENCES social_action(id)
+            ON DELETE NO ACTION
+            ON UPDATE NO ACTION
 );

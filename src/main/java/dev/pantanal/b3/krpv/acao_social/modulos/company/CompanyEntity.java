@@ -1,11 +1,14 @@
 package dev.pantanal.b3.krpv.acao_social.modulos.company;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import dev.pantanal.b3.krpv.acao_social.config.audit.AuditListener;
+import dev.pantanal.b3.krpv.acao_social.modulos.investment.InvestmentEntity;
 import jakarta.persistence.*;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
+import org.hibernate.annotations.SQLDelete;
 import org.hibernate.envers.AuditTable;
 import org.hibernate.envers.Audited;
 import org.hibernate.validator.constraints.br.CNPJ;
@@ -16,19 +19,21 @@ import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.UUID;
 
 @Table(name="company")
 @Entity(name="Company")
-@AuditTable("z_aud_company")
+//@AuditTable("z_aud_company")
 @EntityListeners(AuditListener.class)
-@Audited
+//@Audited
 @Data
 @NoArgsConstructor
 @Builder
 @AllArgsConstructor
 @EqualsAndHashCode
 @ToString
+@SQLDelete(sql = "UPDATE company SET deleted_date = CURRENT_DATE WHERE id=? and version=?")
 public class CompanyEntity {
 
     @Valid
@@ -73,9 +78,10 @@ public class CompanyEntity {
     @Column(name = "deleted_by")
     private UUID deletedBy;
 
-    //@OneToMany
-    //@JoinColumn("manager_id")
-    //private Manager[] manager
+    @OneToMany(mappedBy = "company")
+    @ToString.Exclude
+    @JsonBackReference
+    private List<InvestmentEntity> investment;
 
     @PrePersist
     protected void onCreate() {
@@ -97,14 +103,14 @@ public class CompanyEntity {
         }
     }
 
-    @PreRemove
-    protected void onRemove() {
-        this.deletedDate = LocalDateTime.now();
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication != null && authentication.isAuthenticated()) {
-            String userId = authentication.getName();
-            this.deletedBy = UUID.fromString(userId);
-        }
-    }
+//    @PreRemove
+//    protected void onRemove() {
+//        this.deletedDate = LocalDateTime.now();
+//        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+//        if (authentication != null && authentication.isAuthenticated()) {
+//            String userId = authentication.getName();
+//            this.deletedBy = UUID.fromString(userId);
+//        }
+//    }
 
 }

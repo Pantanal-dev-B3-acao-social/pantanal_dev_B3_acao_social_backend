@@ -15,7 +15,7 @@ public record SessionResponseDto (
         UUID id,
         String description,
         @NotNull(message= "Campo 'socialAction' não pode estar vazio")
-        UUID socialActionId,
+        SocialActionEntity socialAction,
         LocalDateTime dateStartTime,
         LocalDateTime dateEndTime,
         @NotNull(message= "Campo 'status' não pode estar vazio")

@@ -1,5 +1,7 @@
 package dev.pantanal.b3.krpv.acao_social.modulos.category.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import dev.pantanal.b3.krpv.acao_social.config.audit.AuditListener;
 import dev.pantanal.b3.krpv.acao_social.modulos.category.enums.VisibilityCategoryEnum;
 import dev.pantanal.b3.krpv.acao_social.modulos.category.modules.categoryGroup.CategoryGroupEntity;
@@ -8,6 +10,7 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
+import org.hibernate.annotations.SQLDelete;
 import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedBy;
@@ -30,6 +33,7 @@ import java.util.UUID;
 @AllArgsConstructor
 @EqualsAndHashCode
 //@ToString
+@SQLDelete(sql = "UPDATE category SET deleted_date = CURRENT_DATE WHERE id=? and version=?")
 public class CategoryEntity {
 
     @Valid
@@ -82,16 +86,19 @@ public class CategoryEntity {
 
     @OneToMany(mappedBy = "categoryEntity", orphanRemoval = true, cascade = CascadeType.DETACH , fetch = FetchType.LAZY)
     @ToString.Exclude
-    private List<CategorySocialActionTypeEntity> categorySocialActionTypeEntities = new ArrayList<>();
+    @JsonManagedReference
+    private List<CategorySocialActionTypeEntity> categorySocialActionTypeEntities;
 
     @OneToMany(mappedBy = "categoryEntity", orphanRemoval = true, cascade = CascadeType.DETACH , fetch = FetchType.LAZY)
     @ToString.Exclude
-    private List<CategorySocialActionLevelEntity> categorySocialActionLevelEntities = new ArrayList<>();
+    @JsonManagedReference
+    private List<CategorySocialActionLevelEntity> categorySocialActionLevelEntities;
 
     @NotNull
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "category_group_id")
     @ToString.Exclude
+    @JsonBackReference
     private CategoryGroupEntity categoryGroup;
 
     @PrePersist
@@ -111,16 +118,6 @@ public class CategoryEntity {
         if (authentication != null && authentication.isAuthenticated()) {
             String userId = authentication.getName();
             this.lastModifiedBy = UUID.fromString(userId);
-        }
-    }
-
-    @PreRemove
-    protected void onRemove() {
-        this.deletedDate = LocalDateTime.now();
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication != null && authentication.isAuthenticated()) {
-            String userId = authentication.getName();
-            this.deletedBy = UUID.fromString(userId);
         }
     }
 

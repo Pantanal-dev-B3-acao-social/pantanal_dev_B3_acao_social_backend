@@ -1,5 +1,9 @@
 package dev.pantanal.b3.krpv.acao_social.modulos.voluntary;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import dev.pantanal.b3.krpv.acao_social.config.audit.AuditListener;
 import dev.pantanal.b3.krpv.acao_social.modulos.person.PersonEntity;
 import dev.pantanal.b3.krpv.acao_social.modulos.socialAction.SocialActionEntity;
@@ -8,6 +12,7 @@ import jakarta.persistence.*;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
+import org.hibernate.annotations.SQLDelete;
 import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedBy;
@@ -29,6 +34,7 @@ import java.util.UUID;
 @AllArgsConstructor
 @EqualsAndHashCode
 @ToString
+@SQLDelete(sql = "UPDATE voluntary SET deleted_date=CURRENT_DATE WHERE id=? and version=?")
 public class VoluntaryEntity {
 
     @Valid
@@ -45,11 +51,13 @@ public class VoluntaryEntity {
     private String observation;
 
     @ManyToOne
-    @JoinColumn(name = "social_action_id", nullable = false)
+    @JoinColumn(name= "social_action_id", nullable = false)
+    @JsonBackReference
     private SocialActionEntity socialAction;
 
     @ManyToOne
-    @JoinColumn(name = "person_id", nullable = false)
+    @JoinColumn(name= "person_id", nullable = false)
+    @JsonManagedReference
     private PersonEntity person;
 
     @ManyToOne
@@ -111,15 +119,4 @@ public class VoluntaryEntity {
             this.lastModifiedBy = UUID.fromString(userId);
         }
     }
-
-    @PreRemove
-    protected void onRemove() {
-        this.deletedDate = LocalDateTime.now();
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication != null && authentication.isAuthenticated()) {
-            String userId = authentication.getName();
-            this.deletedBy = UUID.fromString(userId);
-        }
-    }
-
 }

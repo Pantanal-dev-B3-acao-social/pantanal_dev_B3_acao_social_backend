@@ -1,11 +1,15 @@
 package dev.pantanal.b3.krpv.acao_social.modulos.person;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import dev.pantanal.b3.krpv.acao_social.config.audit.AuditListener;
 import dev.pantanal.b3.krpv.acao_social.modulos.person.enums.StatusEnum;
+import dev.pantanal.b3.krpv.acao_social.modulos.voluntary.VoluntaryEntity;
 import jakarta.persistence.*;
 //import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
+import org.hibernate.annotations.SQLDelete;
 import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedBy;
@@ -13,6 +17,7 @@ import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.UUID;
 
 @Table(name="person")
@@ -26,6 +31,7 @@ import java.util.UUID;
 @AllArgsConstructor
 @EqualsAndHashCode
 @ToString
+@SQLDelete(sql = "UPDATE person SET deleted_date = CURRENT_DATE where id=? and version=?")
 public class PersonEntity {
 
 //    @Valid
@@ -79,6 +85,11 @@ public class PersonEntity {
     @Column(name = "deleted_by")
     private UUID deletedBy;
 
+    @OneToMany(mappedBy = "person", fetch = FetchType.LAZY)
+    @ToString.Exclude
+    @JsonBackReference
+    private List<VoluntaryEntity> voluntaryEntities;
+
     @PrePersist
     protected void onCreate() {
         this.createdDate = LocalDateTime.now();
@@ -96,16 +107,6 @@ public class PersonEntity {
         if (authentication != null && authentication.isAuthenticated()) {
             String userId = authentication.getName();
             this.lastModifiedBy = UUID.fromString(userId);
-        }
-    }
-
-    @PreRemove
-    protected void onRemove() {
-        this.deletedDate = LocalDateTime.now();
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication != null && authentication.isAuthenticated()) {
-            String userId = authentication.getName();
-            this.deletedBy = UUID.fromString(userId);
         }
     }
 
