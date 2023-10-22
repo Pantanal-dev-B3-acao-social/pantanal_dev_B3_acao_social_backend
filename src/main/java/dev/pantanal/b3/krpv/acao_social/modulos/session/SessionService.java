@@ -7,6 +7,8 @@ import dev.pantanal.b3.krpv.acao_social.modulos.session.dto.request.SessionParam
 import dev.pantanal.b3.krpv.acao_social.modulos.session.dto.request.SessionUpdateDto;
 import dev.pantanal.b3.krpv.acao_social.modulos.session.repository.SessionPredicates;
 import dev.pantanal.b3.krpv.acao_social.modulos.session.repository.SessionRepository;
+import dev.pantanal.b3.krpv.acao_social.modulos.socialAction.SocialActionEntity;
+import dev.pantanal.b3.krpv.acao_social.modulos.socialAction.repository.SocialActionRepository;
 import dev.pantanal.b3.krpv.acao_social.utils.GeneratorCode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -20,18 +22,26 @@ public class SessionService {
     @Autowired
     private SessionRepository sessionRepository;
     @Autowired
+    private SocialActionRepository socialActionRepository;
+    @Autowired
     private SessionPredicates sessionPredicates;
     @Autowired
     private GeneratorCode generatorCode;
 
     public SessionEntity create(SessionCreateDto dataRequest) {
         SessionEntity entity = new SessionEntity();
+        SocialActionEntity socialAction = socialActionRepository.findById(dataRequest.socialAction());
         entity.setDescription(dataRequest.description());
         entity.setDateStartTime(dataRequest.dateStartTime());
         entity.setDateEndTime(dataRequest.dateEndTime());
         entity.setStatus(dataRequest.status());
         entity.setVisibility(dataRequest.visibility());
-        entity.setSocialAction(dataRequest.socialAction());
+        if (socialAction!=null){
+            entity.setSocialAction(socialAction);
+        }
+        else{
+            throw new ObjectNotFoundException("Social action not found");
+        }
         // TODO:
 //        entity.setLocal();dataRequest.local());
 //        entity.setResources();dataRequest.resouces());
@@ -75,9 +85,6 @@ public class SessionService {
         }
         if (request.visibility() != null) {
             obj.setVisibility(request.visibility());
-        }
-        if (request.socialAction() != null) {
-            obj.setSocialAction(request.socialAction());
         }
         SessionEntity updatedObj = sessionRepository.update(obj);
         return updatedObj;

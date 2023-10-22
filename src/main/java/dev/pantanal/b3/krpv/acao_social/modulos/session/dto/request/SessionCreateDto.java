@@ -3,16 +3,20 @@ package dev.pantanal.b3.krpv.acao_social.modulos.session.dto.request;
 import dev.pantanal.b3.krpv.acao_social.modulos.session.enums.StatusEnum;
 import dev.pantanal.b3.krpv.acao_social.modulos.session.enums.VisibilityEnum;
 import dev.pantanal.b3.krpv.acao_social.modulos.socialAction.SocialActionEntity;
+import jakarta.validation.constraints.*;
+
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 public record SessionCreateDto (
-//        @NotBlank(message= "Campo 'description' não pode estar vazio")
+        @NotBlank(message= "Campo 'description' não pode estar vazio")
         String description,
-//        @NotBlank(message= "Campo 'socialAction' não pode estar vazio")
-        SocialActionEntity socialAction,
+        @NotNull(message= "Campo 'socialAction' não pode estar vazio")
+        UUID socialAction,
+        @FutureOrPresent
         LocalDateTime dateStartTime,
+        @FutureOrPresent
         LocalDateTime dateEndTime,
         StatusEnum status,
-//        @NotBlank(message= "Campo 'visibility' não pode estar vazio")
         VisibilityEnum visibility
 ) {}
