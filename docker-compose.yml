@@ -46,7 +46,6 @@ services:
       - "3001:3001"
     depends_on:
       - keycloak
-      - postgres_acao_social
     networks:
       network-social:
         ipv4_address: 172.16.19.4
