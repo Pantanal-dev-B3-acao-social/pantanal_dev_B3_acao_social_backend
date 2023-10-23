@@ -1,0 +1,69 @@
+acao-social:
+  db:
+    active: dbinit
+    db-name: postgres
+    postgresUrl: 172.16.19.2
+  spring-boot:
+    environment: production
+    springbootUrl: 172.16.19.4
+  keyclock:
+    keyclockUrl: 172.16.19.3
+    baseUrl: http://${acao-social.keyclock.keyclockUrl}:8080
+    adminUsername: funcionario1
+    adminPassword: 123
+  frontend:
+    baseUrl: http://localhost:3000/
+
+server:
+  port: '3001'
+  host: http://${acao-social.spring-boot.springbootUrl}}/
+
+spring:
+  datasource:
+    username: dev_user
+    password: dev_password
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://${acao-social.db.postgresUrl}:5432/${acao-social.db.db-name}
+    hikari:
+      maxLifetime: '1800000'
+      connectionTimeout: '500000'
+      idleTimeout: '60000'
+      maximumPoolSize: '10'
+  flyway:
+    enabled: true
+    baseline-on-migrate: true
+    locations: classpath:db/migrations
+    schemas: public
+    url: jdbc:postgresql://${acao-social.db.postgresUrl}:5432/${acao-social.db.db-name}
+    user: dev_user
+    password: dev_password
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: false
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        envers:
+          default_schema: public
+          audit_table_suffix: z_aud
+          revision_field_name: rev
+          revision_type_field_name: revtype
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: ${acao-social.keyclock.baseUrl}/realms/realm-pantanal-dev
+          jwk-set-uri: ${spring.security.oauth2.resourceserver.jwt.issuer-uri}/protocol/openid-connect/certs
+      client:
+        registration:
+          realm-pantanal-dev:
+            provider: realm-pantanal-dev
+            client-name: client-id-backend-1
+            client-id: client-id-backend-1
+            client-secret: uXfLOkhKTekWg674dKs41GmU0a1vhHzG
+            scope: openid,offline_access,profile
+            authorization-grant-type: authorization_code
+        provider:
+          realm-pantanal-dev:
+            issuer-uri: ${spring.security.oauth2.resourceserver.jwt.issuer-uri}
