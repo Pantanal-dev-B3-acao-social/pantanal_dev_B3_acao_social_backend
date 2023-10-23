@@ -2,6 +2,10 @@ package dev.pantanal.b3.krpv.acao_social.modulos.voluntary;
 
 import com.querydsl.core.types.dsl.BooleanExpression;
 import dev.pantanal.b3.krpv.acao_social.exception.ObjectNotFoundException;
+import dev.pantanal.b3.krpv.acao_social.modulos.person.PersonEntity;
+import dev.pantanal.b3.krpv.acao_social.modulos.person.repository.PersonRepository;
+import dev.pantanal.b3.krpv.acao_social.modulos.socialAction.SocialActionEntity;
+import dev.pantanal.b3.krpv.acao_social.modulos.socialAction.repository.SocialActionRepository;
 import dev.pantanal.b3.krpv.acao_social.modulos.voluntary.dto.request.VoluntaryCreateDto;
 import dev.pantanal.b3.krpv.acao_social.modulos.voluntary.dto.request.VoluntaryParamsDto;
 import dev.pantanal.b3.krpv.acao_social.modulos.voluntary.dto.request.VoluntaryUpdateDto;
@@ -21,15 +25,22 @@ public class VoluntaryService {
     @Autowired
     private VoluntaryRepository voluntaryRepository;
     @Autowired
+    private PersonRepository personRepository;
+    @Autowired
+    private SocialActionRepository socialActionRepository;
+    @Autowired
     private VoluntaryPredicates voluntaryPredicates;
 
     public VoluntaryEntity create(VoluntaryCreateDto dataRequest) {
+        PersonEntity approvedBy = personRepository.findById(dataRequest.approvedBy());
+        PersonEntity voluntary = personRepository.findById(dataRequest.person());
+        SocialActionEntity socialAction = socialActionRepository.findById(dataRequest.socialAction());
         VoluntaryEntity entity = new VoluntaryEntity();
         entity.setObservation(dataRequest.observation());
-        entity.setSocialAction(dataRequest.socialAction());
-        entity.setPerson(dataRequest.person());
+        entity.setSocialAction(socialAction);
+        entity.setPerson(voluntary);
         entity.setStatus(dataRequest.status());
-        entity.setApprovedBy(dataRequest.approvedBy());
+        entity.setApprovedBy(approvedBy);
         entity.setApprovedDate(dataRequest.approvedDate());
         entity.setFeedbackScoreVoluntary(dataRequest.feedbackScoreVoluntary());
         entity.setFeedbackVoluntary(dataRequest.feedbackVoluntary());
@@ -61,7 +72,8 @@ public class VoluntaryService {
             obj.setObservation(request.observation());
         }
         if (request.approvedBy() != null) {
-            obj.setApprovedBy(request.approvedBy());
+            PersonEntity approvedBy = personRepository.findById(request.approvedBy());
+            obj.setApprovedBy(approvedBy);
         }
         if (request.approvedDate() != null) {
             obj.setApprovedDate(request.approvedDate());

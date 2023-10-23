@@ -69,7 +69,8 @@ public class OngService {
             obj.setCnpj(request.cnpj());
         }
         if (request.responsibleEntity() != null) {
-            obj.setResponsibleEntity(request.responsibleEntity());
+            PersonEntity resposible = personRepository.findById(request.responsibleEntity());
+            obj.setResponsibleEntity(resposible);
         }
         OngEntity updatedObj = ongRepository.update(obj);
         return updatedObj;
