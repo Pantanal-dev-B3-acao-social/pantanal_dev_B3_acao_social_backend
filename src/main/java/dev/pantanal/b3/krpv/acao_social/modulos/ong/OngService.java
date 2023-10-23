@@ -7,6 +7,8 @@ import dev.pantanal.b3.krpv.acao_social.modulos.ong.dto.request.OngParamsDto;
 import dev.pantanal.b3.krpv.acao_social.modulos.ong.dto.request.OngUpdateDto;
 import dev.pantanal.b3.krpv.acao_social.modulos.ong.repository.OngPredicates;
 import dev.pantanal.b3.krpv.acao_social.modulos.ong.repository.OngRepository;
+import dev.pantanal.b3.krpv.acao_social.modulos.person.PersonEntity;
+import dev.pantanal.b3.krpv.acao_social.modulos.person.repository.PersonRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -19,13 +21,19 @@ public class OngService {
     @Autowired
     private OngRepository ongRepository;
     @Autowired
+    private PersonRepository personRepository;
+    @Autowired
     private OngPredicates ongPredicates;
 
     public OngEntity create(OngCreateDto dataRequest) {
         OngEntity entity = new OngEntity();
         entity.setName(dataRequest.name());
         entity.setCnpj(dataRequest.cnpj());
-        entity.setResponsibleEntity(dataRequest.responsibleEntity());
+        PersonEntity responsibleEntity = personRepository.findById(dataRequest.responsibleEntity());
+        if (responsibleEntity == null){
+            throw new ObjectNotFoundException("Responsible not found");
+        }
+        entity.setResponsibleEntity(responsibleEntity);
         entity.setStatus(dataRequest.status());
         OngEntity savedObj = ongRepository.save(entity);
         return savedObj;
@@ -61,7 +69,8 @@ public class OngService {
             obj.setCnpj(request.cnpj());
         }
         if (request.responsibleEntity() != null) {
-            obj.setResponsibleEntity(request.responsibleEntity());
+            PersonEntity resposible = personRepository.findById(request.responsibleEntity());
+            obj.setResponsibleEntity(resposible);
         }
         OngEntity updatedObj = ongRepository.update(obj);
         return updatedObj;

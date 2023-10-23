@@ -257,7 +257,7 @@ Neste cenário, quando o usuário recebe um cargo, ele tem o mesmo cargo em toda
   - cria chave SSH da VM EC2 e faz download 
     - aws_ec2_pantanal_dev_ubuntu.pem
   - $ chmod 400 aws_ec2_pantanal_dev_ubuntu.pem
-  - $ ssh -i "aws_ec2_pantanal_dev_ubuntu.pem" ubuntu@ec2-3-89-248-188.compute-1.amazonaws.com
+  - $ ssh -i "aws_ec2_pantanal_dev_ubuntu.pem" ubuntu@ec2-3-94-146-39.compute-1.amazonaws.com
     - digite: yes
   - ja conecatado no terminal da VM, faça clone do projeto
   - $ git clone https://SEU_TOKEN_DE_ACESSO_COM_PERMISSAO_PARA_ORGANIZACOES@github.com/Pantanal-dev-B3-acao-social/pantanal_dev_B3_acao_social_backend.git
