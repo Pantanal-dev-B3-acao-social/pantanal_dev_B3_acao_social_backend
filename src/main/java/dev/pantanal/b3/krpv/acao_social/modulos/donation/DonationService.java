@@ -13,6 +13,10 @@ import dev.pantanal.b3.krpv.acao_social.modulos.donation.dto.request.DonationPar
 import dev.pantanal.b3.krpv.acao_social.modulos.donation.dto.request.DonationUpdateDto;
 import dev.pantanal.b3.krpv.acao_social.modulos.donation.repository.DonationPredicates;
 import dev.pantanal.b3.krpv.acao_social.modulos.donation.repository.DonationRepository;
+import dev.pantanal.b3.krpv.acao_social.modulos.person.PersonEntity;
+import dev.pantanal.b3.krpv.acao_social.modulos.person.repository.PersonRepository;
+import dev.pantanal.b3.krpv.acao_social.modulos.socialAction.SocialActionEntity;
+import dev.pantanal.b3.krpv.acao_social.modulos.socialAction.repository.SocialActionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -26,17 +30,31 @@ public class DonationService {
     @Autowired
     private DonationRepository repository;
     @Autowired
+    private SocialActionRepository socialActionRepository;
+    @Autowired
+    private PersonRepository personRepository;
+    @Autowired
     private DonationPredicates donationPredicates;
 
     public DonationEntity create(DonationCreateDto request) {
         DonationEntity newDonation = new DonationEntity();
-        newDonation.setSocialActionEntity(request.socialActionEntity());
-        newDonation.setDonatedByEntity(request.donatedByEntity());
+        SocialActionEntity socialAction = socialActionRepository.findById(request.socialActionEntity());
+        PersonEntity donatedByEntity = personRepository.findById(request.donatedByEntity());
+        PersonEntity approvedBy = personRepository.findById(request.approvedBy());
+
         newDonation.setDonationDate(request.donationDate());
         newDonation.setValueMoney(request.valueMoney());
         newDonation.setMotivation(request.motivation());
-        newDonation.setApprovedBy(request.approvedBy());
         newDonation.setApprovedDate(request.approvedDate());
+
+        if (socialAction != null && donatedByEntity != null && approvedBy !=null){
+            newDonation.setSocialActionEntity(socialAction);
+            newDonation.setDonatedByEntity(donatedByEntity);
+            newDonation.setApprovedBy(approvedBy);
+        }
+        else{
+            throw new ObjectNotFoundException("Element of ID invalid");
+        }
         DonationEntity savedDonation = repository.save(newDonation);
         return savedDonation;
     }
@@ -57,12 +75,7 @@ public class DonationService {
 
     public DonationEntity update(UUID id, DonationUpdateDto request) {
         DonationEntity obj = repository.findById(id);
-        if (request.socialActionEntity() != null) {
-            obj.setSocialActionEntity(request.socialActionEntity());
-        }
-        if (request.donatedByEntity() != null) {
-            obj.setDonatedByEntity(request.donatedByEntity());
-        }
+
         if (request.donationDate() != null) {
             obj.setDonationDate(request.donationDate());
         }
@@ -71,9 +84,6 @@ public class DonationService {
         }
         if (request.motivation() != null) {
             obj.setMotivation(request.motivation());
-        }
-        if (request.approvedBy() != null) {
-            obj.setApprovedBy(request.approvedBy());
         }
         if (request.approvedDate() != null) {
             obj.setApprovedDate(request.approvedDate());
