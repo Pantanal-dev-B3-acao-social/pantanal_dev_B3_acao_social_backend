@@ -10,7 +10,6 @@ import dev.pantanal.b3.krpv.acao_social.modulos.presence.PresenceEntity;
 import dev.pantanal.b3.krpv.acao_social.modulos.presence.repository.PresenceRepository;
 import dev.pantanal.b3.krpv.acao_social.modulos.session.SessionEntity;
 import dev.pantanal.b3.krpv.acao_social.modulos.socialAction.SocialActionEntity;
-import dev.pantanal.b3.krpv.acao_social.utils.FindRegisterRandom;
 import dev.pantanal.b3.krpv.acao_social.utils.GenerateTokenUserForLogged;
 import dev.pantanal.b3.krpv.acao_social.utils.LoginMock;
 import jakarta.persistence.EntityManager;
@@ -30,7 +29,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.transaction.annotation.Transactional;
-import java.time.LocalDateTime;
+
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
@@ -92,7 +91,7 @@ public class PresenceControllerIT {
         // cadastrar socialActons
         List<CategoryEntity> categoriesType = categoryFactory.makeFakeByGroup(2, "social action type", "grupo de categorias para usar no TIPO de ação social");
         List<CategoryEntity> categoriesLevel = categoryFactory.makeFakeByGroup(2, "social action level", "grupo de categorias para usar no NÍVEL de ação social");
-        List<SocialActionEntity> socialActionEntities = socialActionFactory.insertMany(3);
+        List<SocialActionEntity> socialActionEntities = socialActionFactory.insertMany(3, categoriesTypesIds, categoryLevelsIds);
         // cadastra session
         this.sessionsEntities = this.sessionFactory.insertMany(100);
         // cadastrar persons

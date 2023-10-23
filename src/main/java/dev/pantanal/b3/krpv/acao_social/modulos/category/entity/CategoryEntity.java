@@ -86,19 +86,19 @@ public class CategoryEntity {
 
     @OneToMany(mappedBy = "categoryEntity", orphanRemoval = true, cascade = CascadeType.DETACH , fetch = FetchType.LAZY)
     @ToString.Exclude
-    @JsonManagedReference
+    @JsonBackReference
     private List<CategorySocialActionTypeEntity> categorySocialActionTypeEntities;
 
     @OneToMany(mappedBy = "categoryEntity", orphanRemoval = true, cascade = CascadeType.DETACH , fetch = FetchType.LAZY)
     @ToString.Exclude
-    @JsonManagedReference
+    @JsonBackReference
     private List<CategorySocialActionLevelEntity> categorySocialActionLevelEntities;
 
     @NotNull
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "category_group_id")
     @ToString.Exclude
-    @JsonBackReference
+    @JsonManagedReference
     private CategoryGroupEntity categoryGroup;
 
     @PrePersist

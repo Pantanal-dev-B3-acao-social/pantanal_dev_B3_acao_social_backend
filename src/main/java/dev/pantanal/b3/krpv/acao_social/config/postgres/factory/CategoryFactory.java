@@ -58,6 +58,7 @@ public class CategoryFactory {
         Integer indexGroup = random.nextInt(groupEntities.size());
         CategoryGroupEntity groupEntity = groupEntities.get(indexGroup);
         for (int i=0; i<amount; i++) {
+
             CategoryEntity entity = this.makeFakeEntity(groupEntity);
             entities.add(this.insertOne(entity));
         }

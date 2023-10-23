@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import dev.pantanal.b3.krpv.acao_social.config.audit.AuditListener;
+import dev.pantanal.b3.krpv.acao_social.modulos.category.entity.CategoryEntity;
 import dev.pantanal.b3.krpv.acao_social.modulos.category.entity.CategorySocialActionLevelEntity;
 import dev.pantanal.b3.krpv.acao_social.modulos.category.entity.CategorySocialActionTypeEntity;
 import dev.pantanal.b3.krpv.acao_social.modulos.investment.InvestmentEntity;
@@ -91,19 +92,19 @@ public class SocialActionEntity {
      * orphanRemoval = true faz com que SocialActionEntity é optional ter preenchido alguma CategorySocialActionTypeEntity
      */
 //    @Optional
-    @OneToMany(mappedBy = "socialActionEntity", fetch = FetchType.LAZY)
-//    @OneToMany(mappedBy = "socialActionEntity", orphanRemoval = true, cascade = CascadeType.ALL , fetch = FetchType.LAZY)
+//    @OneToMany(mappedBy = "socialActionEntity", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "socialActionEntity", orphanRemoval = true, cascade = CascadeType.ALL , fetch = FetchType.LAZY)
     @ToString.Exclude
     @JsonIgnore
     @JsonIgnoreProperties("socialActionEntity")
     @JsonManagedReference
-    private List<CategorySocialActionTypeEntity> categorySocialActionTypeEntities;
+    private List<CategorySocialActionTypeEntity> categorySocialActionTypeEntities = new ArrayList<>();
 
-    @OneToMany(mappedBy = "socialActionEntity", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "socialActionEntity", orphanRemoval = true, cascade = CascadeType.ALL , fetch = FetchType.LAZY)
     @ToString.Exclude
     @JsonIgnoreProperties("socialActionEntity")
     @JsonManagedReference
-    private List<CategorySocialActionLevelEntity> categorySocialActionLevelEntities;
+    private List<CategorySocialActionLevelEntity> categorySocialActionLevelEntities = new ArrayList<>();
 
     @OneToMany(mappedBy = "socialAction", fetch = FetchType.LAZY /*, cascade = CascadeType.ALL */ )
     @ToString.Exclude

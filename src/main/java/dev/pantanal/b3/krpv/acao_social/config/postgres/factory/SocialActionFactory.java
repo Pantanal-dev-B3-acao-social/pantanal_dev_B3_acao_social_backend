@@ -5,15 +5,16 @@ import dev.pantanal.b3.krpv.acao_social.modulos.category.entity.CategoryEntity;
 import dev.pantanal.b3.krpv.acao_social.modulos.category.entity.CategorySocialActionLevelEntity;
 import dev.pantanal.b3.krpv.acao_social.modulos.category.entity.CategorySocialActionTypeEntity;
 import dev.pantanal.b3.krpv.acao_social.modulos.category.repository.CategoryRepository;
+import dev.pantanal.b3.krpv.acao_social.modulos.ong.OngEntity;
 import dev.pantanal.b3.krpv.acao_social.modulos.socialAction.SocialActionEntity;
 import dev.pantanal.b3.krpv.acao_social.modulos.socialAction.repository.SocialActionRepository;
+import dev.pantanal.b3.krpv.acao_social.utils.FindRegisterRandom;
 import jakarta.persistence.EntityManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Component;
 import org.springframework.jdbc.core.JdbcTemplate;
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Component
 public class SocialActionFactory {
@@ -31,12 +32,41 @@ public class SocialActionFactory {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public SocialActionEntity makeFakeEntity() {
+    public SocialActionEntity makeFakeEntity(List<UUID> categoryTypesIds, List<UUID> categoryLevelsIds) {
         SocialActionEntity socialCreated = new SocialActionEntity();
         socialCreated.setVersion(1L);
         socialCreated.setName(faker.name().fullName());
         socialCreated.setDescription(faker.lorem().sentence());
-        // TODO:  ongId = findOneRandom("ong");
+//        FindRegisterRandom<OngEntity> findOngRandom = new FindRegisterRandom<OngEntity>(entityManager);
+//        List<OngEntity> ong = findOngRandom.execute("ong", 1, OngEntity.class);
+//        socialCreated.setOng(ong.get(0)); //criar ONG
+        List<CategorySocialActionTypeEntity> categoryTypesList = new ArrayList<>();
+        List<CategorySocialActionLevelEntity> categoryLevelsList = new ArrayList<>();
+        for (int i = 0; i < categoryTypesIds.size(); i++){
+            //Criar Tipo de ação social
+            CategorySocialActionTypeEntity categorySocialActionTypeEntity = new CategorySocialActionTypeEntity();
+            CategoryEntity categoryTypeEntity = categoryRepository.findById(categoryTypesIds.get(i));
+            categorySocialActionTypeEntity.setCategoryEntity(categoryTypeEntity);
+            categorySocialActionTypeEntity.setSocialActionEntity(socialCreated);
+            socialCreated.getCategorySocialActionTypeEntities().add(categorySocialActionTypeEntity);
+
+            //Adicionar a respectiva lista
+//            categoryTypesList.add(categorySocialActionTypeEntity);
+
+        }
+        for (int i = 0; i < categoryLevelsIds.size(); i++){
+            //Criar level ação social
+            CategorySocialActionLevelEntity categorySocialActionLevelEntity = new CategorySocialActionLevelEntity();
+            CategoryEntity categoryLevelEntity = categoryRepository.findById(categoryLevelsIds.get(i));
+            categorySocialActionLevelEntity.setCategoryEntity(categoryLevelEntity);
+            categorySocialActionLevelEntity.setSocialActionEntity(socialCreated);
+            //Adicionar a respectiva lista
+//            categoryLevelsList.add(categorySocialActionLevelEntity);
+            socialCreated.getCategorySocialActionLevelEntities().add(categorySocialActionLevelEntity);
+        }
+         //Verificar qual entidade de categoria realmente adicionar
+
+
         return socialCreated;
     }
 
@@ -58,29 +88,13 @@ public class SocialActionFactory {
 //        return socialActionRepository.findById(socialActionEntity.getId());
     }
 
-    public List<SocialActionEntity> insertMany(int amount) {
+    public List<SocialActionEntity> insertMany(int amount, List<UUID> categoriesTypesIds, List<UUID> categoryLevelsIds) {
         List<SocialActionEntity> socials = new ArrayList<>();
         for (int i=0; i<amount; i++) {
-            SocialActionEntity socialActionEntity = this.makeFakeEntity();
+            SocialActionEntity socialActionEntity = this.makeFakeEntity(categoriesTypesIds, categoryLevelsIds);
             socials.add(this.insertOne(socialActionEntity));
         }
         return socials;
     }
-
-//    public List<SocialActionEntity> insertManyFull(
-//            int amount,
-//            List<CategoryEntity> categoriesType,
-//            List<CategoryEntity> categoriesLevel
-//    ) {
-//        List<UUID> forCategoryTypeIds = categoriesType.stream()
-//                .map(category -> category.getId())
-//                .collect(Collectors.toList());
-//        List<UUID> forCategoryLevelIds = categoriesLevel.stream()
-//                .map(category -> category.getId())
-//                .collect(Collectors.toList());
-//        List<SocialActionEntity> saved = insertMany(amount);
-//        return saved;
-//    }
-
 
 }

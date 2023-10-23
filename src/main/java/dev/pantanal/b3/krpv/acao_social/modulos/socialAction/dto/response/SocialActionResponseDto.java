@@ -1,5 +1,6 @@
 package dev.pantanal.b3.krpv.acao_social.modulos.socialAction.dto.response;
 
+import dev.pantanal.b3.krpv.acao_social.modulos.category.entity.CategoryEntity;
 import dev.pantanal.b3.krpv.acao_social.modulos.category.entity.CategorySocialActionLevelEntity;
 import dev.pantanal.b3.krpv.acao_social.modulos.category.entity.CategorySocialActionTypeEntity;
 import dev.pantanal.b3.krpv.acao_social.modulos.session.SessionEntity;

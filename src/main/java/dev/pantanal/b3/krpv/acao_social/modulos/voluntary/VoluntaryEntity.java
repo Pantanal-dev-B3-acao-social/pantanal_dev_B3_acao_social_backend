@@ -56,7 +56,7 @@ public class VoluntaryEntity {
     private SocialActionEntity socialAction;
 
     @ManyToOne
-    @JoinColumn(name= "person_id", nullable = false)
+    @ToString.Exclude
     @JsonManagedReference
     private PersonEntity person;
 

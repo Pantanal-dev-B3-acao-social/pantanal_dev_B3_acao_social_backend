@@ -18,8 +18,6 @@ import dev.pantanal.b3.krpv.acao_social.modulos.socialAction.SocialActionEntity;
 import dev.pantanal.b3.krpv.acao_social.modulos.socialAction.repository.SocialActionPostgresRepository;
 import dev.pantanal.b3.krpv.acao_social.modulos.socialAction.repository.SocialActionRepository;
 import dev.pantanal.b3.krpv.acao_social.utils.LoginMock;
-import org.hamcrest.Matcher;
-import org.hamcrest.Matchers;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -76,8 +74,6 @@ public class SocialActionControllerIT {
     @Autowired
     CategorySocialActionLevelPostgresRepository categorySocialActionLevelPostgresRepository;
     List<UUID> forCategoryTypeIds;
-    List<UUID> forCategoryLevelIds;
-
     @BeforeEach
     public void setup() throws Exception {
         // token de login
@@ -98,15 +94,13 @@ public class SocialActionControllerIT {
         CategoryGroupEntity levelGroupSaved = categoryGroupFactory.insertOne(typeGroupEntity);
         levelGroupEntities.add(levelGroupSaved);
         this.categoriesLevel = categoryFactory.insertMany(6, levelGroupEntities);
-        this.forCategoryLevelIds = this.categoriesLevel.stream()
-                .map(category -> category.getId())
-                .collect(Collectors.toList());
         // formatar data hora
         this.formatter = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
         // mapper
         this.objectMapper = new ObjectMapper();
         this.objectMapper.registerModule(new JavaTimeModule());
     }
+
 
     @AfterEach
     public void tearDown() {
@@ -116,7 +110,7 @@ public class SocialActionControllerIT {
     @DisplayName("lista paginada de ações sociais com sucesso")
         void findAllSocialAction() throws Exception {
         // Arrange (Organizar)
-        List<SocialActionEntity> saved = socialActionFactory.insertMany(3);
+        List<SocialActionEntity> saved = socialActionFactory.insertMany(3, categoriesTypesIds, categoryLevelsIds);
         // Act (ação)
         ResultActions resultActions = mockMvc.perform(
                 MockMvcRequestBuilders.get(ROUTE_SOCIAL)
@@ -127,7 +121,6 @@ public class SocialActionControllerIT {
         MockHttpServletResponse response = mvcResult.getResponse();
         String jsonResponse = response.getContentAsString();
         JsonNode jsonNode = objectMapper.readTree(jsonResponse);
-        List<UUID> categoryLevelIds = null;
         resultActions
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.content").isArray())
@@ -136,24 +129,11 @@ public class SocialActionControllerIT {
         for (SocialActionEntity item : saved) {
             String socialActionId = jsonNode.at("/content/" + i + "/id").asText();
             assert socialActionId != null && !socialActionId.isEmpty() : "O nó 'propertyName' não pode ser nulo.";
-            List<CategorySocialActionTypeEntity> categoryTypesEntities = categorySocialActionTypePostgresRepository.findBySocialActionId(
-                    UUID.fromString(socialActionId)
-            );
-//            List<String> categoryTypeIds = categoryTypesEntities.stream()
-//                    .map(category -> category.getId().toString())
-//                    .collect(Collectors.toList());
-            List<CategorySocialActionLevelEntity> categoryLevelsEntities = categorySocialActionLevelPostgresRepository.findBySocialActionEntityId(
-                    UUID.fromString(socialActionId)
-            );
             resultActions
                     .andExpect(MockMvcResultMatchers.jsonPath("$.content[" + i + "].id").value(item.getId().toString()))
                     .andExpect(MockMvcResultMatchers.jsonPath("$.content[" + i + "].name").value(item.getName()))
                     .andExpect(MockMvcResultMatchers.jsonPath("$.content[" + i + "].description").value(item.getDescription()))
-                    .andExpect(MockMvcResultMatchers.jsonPath("$.content[" + i + "].categoryTypeIds").isArray())
-// TODO: como testar categoryTypeIds e CategorySocialActionLevelEntity?
-//                    .andExpect(MockMvcResultMatchers.jsonPath("$.content[" + i + "].categoryTypeIds", hasSize(categoryTypeIds.size())))
-//                    .andExpect(MockMvcResultMatchers.jsonPath("$.content[" + i + "].categoryTypeIds", containsInAnyOrder(categoryTypeIds.toArray())))
-//                    .andExpect(MockMvcResultMatchers.jsonPath("$.content[" + i + "].categoryTypeIds").value(categoryTypeIds))
+                    .andExpect(MockMvcResultMatchers.jsonPath("$.content[" + i + "].categoryType").isArray())
                     .andExpect(MockMvcResultMatchers.jsonPath("$.content[" + i + "].createdBy").isNotEmpty())
                     .andExpect(MockMvcResultMatchers.jsonPath("$.content[" + i + "].createdDate").isNotEmpty())
                     .andExpect(MockMvcResultMatchers.jsonPath("$.content[" + i + "].createdBy").value(item.getCreatedBy().toString()))
@@ -176,7 +156,7 @@ public class SocialActionControllerIT {
     @DisplayName("lista paginada, filtrada e ordenada de ações sociais com sucesso")
     void findAllSocialActionWithFilters() throws Exception {
         // Arrange (Organizar)
-        List<SocialActionEntity> saved = socialActionFactory.insertMany(3);
+        List<SocialActionEntity> saved = socialActionFactory.insertMany(3, categoriesTypesIds, categoryLevelsIds);
         // Prepare filters, sorting, and paging parameters
         String filter = saved.get(0).getName(); //check for Filter
         String sort = "ASC";    //Check for Sorting
@@ -249,7 +229,7 @@ public class SocialActionControllerIT {
         makeBody.put("description", item.getDescription());
         makeBody.put("version", item.getVersion());
         makeBody.put("categoryTypeIds", forCategoryTypeIds.subList(0, forCategoryTypeIds.size() / 2));
-        makeBody.put("categoryLevelIds", forCategoryLevelIds.subList(0, forCategoryLevelIds.size() / 2));
+//        makeBody.put("categoryLevelIds", forCategoryLevelIds.subList(0, forCategoryLevelIds.size() / 2));
         String jsonRequest = objectMapper.writeValueAsString(makeBody);
         // Act (ação)
         ResultActions resultActions = mockMvc.perform(
@@ -296,7 +276,7 @@ public class SocialActionControllerIT {
     @DisplayName("Busca ação social por ID com sucesso")
     void findByIdSocialAction() throws Exception {
         // Arrange (Organizar)
-        List<SocialActionEntity> saved = socialActionFactory.insertMany(3);
+        List<SocialActionEntity> saved = socialActionFactory.insertMany(3, categoriesTypesIds, categoryLevelsIds);
         SocialActionEntity item = saved.get(0);
         // Act (ação)
         ResultActions resultActions = mockMvc.perform(
@@ -369,7 +349,7 @@ public class SocialActionControllerIT {
         makeBody.put("description", item.getDescription() + "_ATUALIZADO");
         makeBody.put("version", item.getVersion());
         makeBody.put("categoryTypeIds", forCategoryTypeIds.subList(0, forCategoryTypeIds.size() / 2));
-        makeBody.put("categoryLevelIds", forCategoryLevelIds.subList(0, forCategoryLevelIds.size() / 2));
+//        makeBody.put("categoryLevelIds", forCategoryLevelIds.subList(0, forCategoryLevelIds.size() / 2));
         String jsonRequest = objectMapper.writeValueAsString(makeBody);
         // Act (ação)
         ResultActions resultActions = mockMvc.perform(
