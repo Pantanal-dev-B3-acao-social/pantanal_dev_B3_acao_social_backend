@@ -2,11 +2,17 @@ package dev.pantanal.b3.krpv.acao_social.modulos.investment;
 
 import com.querydsl.core.types.dsl.BooleanExpression;
 import dev.pantanal.b3.krpv.acao_social.exception.ObjectNotFoundException;
+import dev.pantanal.b3.krpv.acao_social.modulos.company.CompanyEntity;
+import dev.pantanal.b3.krpv.acao_social.modulos.company.repository.CompanyRepository;
 import dev.pantanal.b3.krpv.acao_social.modulos.investment.dto.request.InvestmentCreateDto;
 import dev.pantanal.b3.krpv.acao_social.modulos.investment.dto.request.InvestmentParamsDto;
 import dev.pantanal.b3.krpv.acao_social.modulos.investment.dto.request.InvestmentUpdateDto;
 import dev.pantanal.b3.krpv.acao_social.modulos.investment.repository.InvestmentPredicates;
 import dev.pantanal.b3.krpv.acao_social.modulos.investment.repository.InvestmentRepository;
+import dev.pantanal.b3.krpv.acao_social.modulos.person.PersonEntity;
+import dev.pantanal.b3.krpv.acao_social.modulos.person.repository.PersonRepository;
+import dev.pantanal.b3.krpv.acao_social.modulos.socialAction.SocialActionEntity;
+import dev.pantanal.b3.krpv.acao_social.modulos.socialAction.repository.SocialActionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -20,17 +26,32 @@ public class InvestmentService {
     @Autowired
     private InvestmentRepository repository;
     @Autowired
+    private PersonRepository personRepository;
+    @Autowired
+    private SocialActionRepository socialActionRepository;
+    @Autowired
+    private CompanyRepository companyRepository;
+    @Autowired
     private InvestmentPredicates investmentPredicates;
 
     public InvestmentEntity create(InvestmentCreateDto request) {
         InvestmentEntity newInvestiment = new InvestmentEntity();
+        PersonEntity approvedBy = personRepository.findById(request.approvedBy());
+        SocialActionEntity socialAction = socialActionRepository.findById(request.socialAction());
+        CompanyEntity company = companyRepository.findById(request.company());
         newInvestiment.setValueMoney(request.valueMoney());
         newInvestiment.setDate(request.date());
         newInvestiment.setMotivation(request.motivation());
-        newInvestiment.setApprovedBy(request.approvedBy());
         newInvestiment.setApprovedDate(request.approvedDate());
-        newInvestiment.setSocialAction(request.socialAction());
-        newInvestiment.setCompany(request.company());
+        if (socialAction != null && approvedBy != null && company != null){
+            newInvestiment.setSocialAction(socialAction);
+            newInvestiment.setApprovedBy(approvedBy);
+            newInvestiment.setCompany(company);
+
+        }
+        else{
+            throw new ObjectNotFoundException("Invalid element ID");
+        }
         InvestmentEntity savedInvestment = repository.save(newInvestiment);
         return savedInvestment;
     }
@@ -62,18 +83,10 @@ public class InvestmentService {
         if (request.motivation() !=  null) {
             obj.setMotivation(request.motivation());
         }
-        if (request.approvedBy() != null) {
-            obj.setApprovedBy(request.approvedBy());
-        }
         if (request.approvedDate() != null) {
             obj.setApprovedDate(request.approvedDate());
         }
-        if (request.socialAction() != null) {
-            obj.setSocialAction(request.socialAction());
-        }
-        if (request.company() != null) {
-            obj.setCompany(request.company());
-        }
+
         return repository.update(obj);
     }
 
