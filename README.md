@@ -271,3 +271,6 @@ Neste cenário, quando o usuário recebe um cargo, ele tem o mesmo cargo em toda
   - $ sudo docker-compose -v
   - $ sudo docker-compose down -v
   - $ sudo docker-compose up --build
+  - $ git clone https://SEU_TOKEN_DE_ACESSO_COM_PERMISSAO_PARA_ORGANIZACOES@github.com/Pantanal-dev-B3-acao-social/pantanal_dev_B3_acao_social_frontend.git
+
+
