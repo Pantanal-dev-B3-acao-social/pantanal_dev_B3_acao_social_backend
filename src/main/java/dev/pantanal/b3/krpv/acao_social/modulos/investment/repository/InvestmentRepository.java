@@ -57,7 +57,9 @@ public class InvestmentRepository {
 
     @Transactional
     public InvestmentEntity update(InvestmentEntity obj) {
-        return entityManager.merge(obj);
+        InvestmentEntity updatedEntity = entityManager.merge(obj);
+        entityManager.flush();
+        return updatedEntity;
     }
 
     public void delete(UUID id) {

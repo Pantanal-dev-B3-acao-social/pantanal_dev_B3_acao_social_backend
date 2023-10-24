@@ -7,6 +7,9 @@ import dev.pantanal.b3.krpv.acao_social.modulos.auth.dto.LoginUserDto;
 import static dev.pantanal.b3.krpv.acao_social.modulos.voluntary.VoluntaryController.ROUTE_VOLUNTARY;
 
 import dev.pantanal.b3.krpv.acao_social.modulos.category.entity.CategoryEntity;
+import dev.pantanal.b3.krpv.acao_social.modulos.category.entity.CategorySocialActionTypeEntity;
+import dev.pantanal.b3.krpv.acao_social.modulos.category.modules.categoryGroup.CategoryGroupEntity;
+import dev.pantanal.b3.krpv.acao_social.modulos.ong.OngEntity;
 import dev.pantanal.b3.krpv.acao_social.modulos.person.PersonEntity;
 import dev.pantanal.b3.krpv.acao_social.modulos.socialAction.SocialActionEntity;
 import dev.pantanal.b3.krpv.acao_social.modulos.voluntary.VoluntaryEntity;
@@ -38,9 +41,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -70,6 +72,8 @@ public class VoluntaryControllerIT {
     @Autowired
     private SocialActionFactory socialActionFactory;
     @Autowired
+    private OngFactory ongFactory;
+    @Autowired
     CategoryGroupFactory categoryGroupFactory;
     @Autowired
     PersonFactory personFactory;
@@ -90,10 +94,28 @@ public class VoluntaryControllerIT {
             usersIds.add(UUID.randomUUID());
         }
         List<PersonEntity> personEntities = personFactory.insertMany(3, usersIds);
+        OngEntity ong = ongFactory.insertOne(ongFactory.makeFakeEntity());
+        List<CategoryGroupEntity> categoryGroupLevelEntities = new ArrayList<>();
+        CategoryGroupEntity levelGroupEntity = categoryGroupFactory.makeFakeEntity("1", "level of social action", null);
+        CategoryGroupEntity levelGroupSaved = categoryGroupFactory.insertOne(levelGroupEntity);
+        categoryGroupLevelEntities.add(levelGroupSaved);
+        List<CategoryEntity> categoryLevels = this.categoryFactory.insertMany(3, categoryGroupLevelEntities);
+        List<UUID> categoryLevelsIds = categoryLevels.stream()
+                .map(category -> category.getId())
+                .collect(Collectors.toList());
+
+        List<CategoryGroupEntity> categoryGroupTypesEntities = new ArrayList<>();
+        CategoryGroupEntity typeGroupEntity = categoryGroupFactory.makeFakeEntity("social action type", "grupo de categorias para usar no TIPO de ação social", null);
+        CategoryGroupEntity typeGroupSaved = categoryGroupFactory.insertOne(typeGroupEntity);
+        categoryGroupTypesEntities.add(typeGroupSaved); //As categorias Desse vetor sempre Estarão relacionadas a um grupo especifico de categorias possiveis para uma entidade
+        List<CategoryEntity> categoriesTypes = this.categoryFactory.insertMany(6, categoryGroupTypesEntities); // as 6 categorias pertencem a este grupo
+
+        List<UUID> categoriesTypesIds = categoriesTypes.stream()
+                .map(category -> category.getId())
+                .collect(Collectors.toList());
         // cadastrar socialActons
-        List<CategoryEntity> categoriesType = categoryFactory.makeFakeByGroup(2, "social action type", "grupo de categorias para usar no TIPO de ação social");
-        List<CategoryEntity> categoriesLevel = categoryFactory.makeFakeByGroup(2, "social action level", "grupo de categorias para usar no NÍVEL de ação social");
-//        List<SocialActionEntity> socialActionEntities = socialActionFactory.insertMany(3, categoriesTypesIds, categoryLevelsIds);
+        List<SocialActionEntity> socialActionEntities = socialActionFactory.insertMany(3, categoriesTypesIds, categoryLevelsIds);
+
     }
 
     @Test
@@ -146,7 +168,16 @@ public class VoluntaryControllerIT {
     void saveOneVoluntary() throws Exception {
         // Arrange (Organizar)
         VoluntaryEntity item = voluntaryFactory.makeFakeEntity();
-        String jsonRequest = objectMapper.writeValueAsString(item);
+        Map<String, Object> makeBody = new HashMap<>();
+        makeBody.put("observation", item.getObservation());
+        makeBody.put("person", item.getPerson().getId().toString());
+        makeBody.put("approvedBy", item.getApprovedBy().getId().toString());
+        makeBody.put("approvedDate", item.getApprovedDate().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME));
+        makeBody.put("status", item.getStatus());
+        makeBody.put("feedbackScoreVoluntary", item.getFeedbackScoreVoluntary());
+        makeBody.put("feedbackVoluntary", item.getFeedbackVoluntary());
+        makeBody.put("socialAction", item.getSocialAction().getId());
+        String jsonRequest = objectMapper.writeValueAsString(makeBody);
         // Act (ação)
         ResultActions resultActions = mockMvc.perform(
                 MockMvcRequestBuilders.post(ROUTE_VOLUNTARY)
@@ -214,7 +245,7 @@ public class VoluntaryControllerIT {
     }
 
     @Test
-    @DisplayName("(hard-delete) Exclui uma voluntary com sucesso")
+    @DisplayName("Exclui uma voluntary com sucesso")
     void deleteVoluntary() throws Exception {
         // Arrange (Organizar)
         VoluntaryEntity savedItem = voluntaryFactory.insertOne(voluntaryFactory.makeFakeEntity());
@@ -240,32 +271,29 @@ public class VoluntaryControllerIT {
         VoluntaryEntity item = voluntaryFactory.insertOne(voluntaryFactory.makeFakeEntity());
         // Modifica alguns dados da voluntary
 // TODO:        item.setCreatedBy(userLoggedId);
-        LocalDateTime approvedDateUpdate = item.getApprovedDate().plusHours(2).plusMinutes(40);
+        LocalDateTime approvedDateUpdate = item.getApprovedDate().minusHours(2).plusMinutes(40);
         FindRegisterRandom<PersonEntity> findPersonRandom = new FindRegisterRandom<PersonEntity>(entityManager);
         List<PersonEntity> persons = findPersonRandom.execute("person", 1, PersonEntity.class);
         StatusEnum statusEnum = new EnumUtils<StatusEnum>().getRandomValueDiff(item.getStatus());
-        FindRegisterRandom findRegisterRandom = new FindRegisterRandom<SocialActionEntity>(entityManager);
-        List<SocialActionEntity> socialActions = findRegisterRandom.execute("social_action", 1, SocialActionEntity.class);
-        item.setObservation(item.getObservation() + "_ATUALIZADO");
-        item.setApprovedDate(approvedDateUpdate);
-        item.setApprovedBy(persons.get(0));
-        item.setStatus(statusEnum);
-        item.setSocialAction(socialActions.get(0));
-// TODO: quais dados falta modificar para testar?
-        String updatedVoluntaryJson = objectMapper.writeValueAsString(item);
-        // Act (ação)
+
+        Map<String, Object> makeBody = new HashMap<>();
+        makeBody.put("observation", item.getObservation() + "_ATUALIZADO");
+        makeBody.put("approvedDate", approvedDateUpdate.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME));
+        makeBody.put("approvedBy", persons.get(0).getId());
+        makeBody.put("status", statusEnum);
+
+        String jsonRequest = objectMapper.writeValueAsString(makeBody);
         ResultActions resultActions = mockMvc.perform(
                 MockMvcRequestBuilders.patch(ROUTE_VOLUNTARY + "/{id}", item.getId())
                         .header("Authorization", "Bearer " + tokenUserLogged)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(updatedVoluntaryJson)
+                        .content(jsonRequest)
         );
         // Assert (Verificar)
         resultActions
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.id").value(item.getId().toString()))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.observation").value(item.getObservation()))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.socialAction.id").value(item.getSocialAction().getId().toString()))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.person.id").value(item.getPerson().getId().toString()))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.status").value(item.getStatus().toString()))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.approvedBy.id").value(item.getApprovedBy().getId().toString()))

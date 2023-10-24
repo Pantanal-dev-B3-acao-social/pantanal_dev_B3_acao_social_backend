@@ -13,5 +13,6 @@ CREATE TABLE person (
     last_modified_by UUID,
     last_modified_date TIMESTAMP,
     deleted_date TIMESTAMP,
-    deleted_by UUID
+    deleted_by UUID,
+    version BIGINT
 );

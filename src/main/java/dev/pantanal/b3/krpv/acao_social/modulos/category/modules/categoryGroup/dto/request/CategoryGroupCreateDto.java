@@ -5,13 +5,16 @@ import dev.pantanal.b3.krpv.acao_social.modulos.category.modules.categoryGroup.e
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
+import java.util.UUID;
+
 public record CategoryGroupCreateDto(
-        CategoryGroupEntity parentCategoryGroupEntity,
-        // @NotNull(message= "Campo 'visibility' não pode estar vazio")
-        VisibilityCategoryGroupEnum visibility,
         @NotBlank(message="Campo 'name' não pode estar vazio")
         String name,
         @NotBlank(message= "Campo 'description' não pode estar vazio")
-        String description
+        String description,
+        @NotNull
+        UUID parentCategoryGroupEntity,
+        // @NotNull(message= "Campo 'visibility' não pode estar vazio")
+        VisibilityCategoryGroupEnum visibility
 ) {
 }

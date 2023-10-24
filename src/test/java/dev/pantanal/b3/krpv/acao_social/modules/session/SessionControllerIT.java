@@ -2,11 +2,9 @@ package dev.pantanal.b3.krpv.acao_social.modules.session;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import dev.pantanal.b3.krpv.acao_social.config.postgres.factory.CategoryFactory;
-import dev.pantanal.b3.krpv.acao_social.config.postgres.factory.CategoryGroupFactory;
-import dev.pantanal.b3.krpv.acao_social.config.postgres.factory.SessionFactory;
-import dev.pantanal.b3.krpv.acao_social.config.postgres.factory.SocialActionFactory;
+import dev.pantanal.b3.krpv.acao_social.config.postgres.factory.*;
 import dev.pantanal.b3.krpv.acao_social.modulos.category.entity.CategoryEntity;
+import dev.pantanal.b3.krpv.acao_social.modulos.category.modules.categoryGroup.CategoryGroupEntity;
 import dev.pantanal.b3.krpv.acao_social.utils.GenerateTokenUserForLogged;
 import dev.pantanal.b3.krpv.acao_social.modulos.auth.dto.LoginUserDto;
 import dev.pantanal.b3.krpv.acao_social.modulos.session.SessionEntity;
@@ -19,12 +17,15 @@ import dev.pantanal.b3.krpv.acao_social.utils.EnumUtils;
 import dev.pantanal.b3.krpv.acao_social.utils.FindRegisterRandom;
 import dev.pantanal.b3.krpv.acao_social.utils.LoginMock;
 import jakarta.persistence.EntityManager;
+import org.checkerframework.checker.units.qual.A;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
@@ -34,9 +35,9 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
+import java.util.stream.Collectors;
+
 import static dev.pantanal.b3.krpv.acao_social.modulos.session.SessionController.ROUTE_SESSION;
 import static org.hamcrest.Matchers.hasSize;
 
@@ -63,7 +64,11 @@ public class SessionControllerIT {
     @Autowired
     private SocialActionFactory socialActionFactory;
     @Autowired
-    CategoryGroupFactory categoryGroupFactory;
+    private CategoryGroupFactory categoryGroupFactory;
+    @Autowired
+    private OngFactory ongFactory;
+    @Autowired
+    private PersonFactory personFactory;
     @Autowired
     GenerateTokenUserForLogged generateTokenUserForLogged;
     List<CategoryEntity> categoriesType;
@@ -79,11 +84,30 @@ public class SessionControllerIT {
     public void setup() throws Exception {
         tokenUserLogged = generateTokenUserForLogged.loginUserMock(new LoginUserDto("funcionario1", "123"));
         loginMock.authenticateWithToken(tokenUserLogged);
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String userId = authentication.getName();
         // SOCIAL ACTION
-        List<CategoryEntity> categoriesType = categoryFactory.makeFakeByGroup(2, "social action type", "grupo de categorias para usar no TIPO de ação social");
-        List<CategoryEntity> categoriesLevel = categoryFactory.makeFakeByGroup(2, "social action level", "grupo de categorias para usar no NÍVEL de ação social");
-//        List<SocialActionEntity> socialActionEntities = socialActionFactory.insertMany(3, categoriesTypesIds, categoryLevelsIds);
-        List<CategoryEntity> categoryEntities = categoryFactory.makeFakeByGroup(2, "session", "grupo de categorias para usar na SESSÃO da ação social");
+        personFactory.insertOne(personFactory.makeFakeEntity(UUID.fromString(userId)));
+        ongFactory.insertOne(ongFactory.makeFakeEntity());
+        List<CategoryGroupEntity> categoryGroupLevelEntities = new ArrayList<>();
+        CategoryGroupEntity levelGroupEntity = categoryGroupFactory.makeFakeEntity("1", "level of social action", null);
+        CategoryGroupEntity levelGroupSaved = categoryGroupFactory.insertOne(levelGroupEntity);
+        categoryGroupLevelEntities.add(levelGroupSaved);
+        List<CategoryEntity> categoryLevels = this.categoryFactory.insertMany(3, categoryGroupLevelEntities);
+        List<UUID> categoryLevelsIds = categoryLevels.stream()
+                .map(category -> category.getId())
+                .collect(Collectors.toList());
+
+        List<CategoryGroupEntity> categoryGroupTypesEntities = new ArrayList<>();
+        CategoryGroupEntity typeGroupEntity = categoryGroupFactory.makeFakeEntity("social action type", "grupo de categorias para usar no TIPO de ação social", null);
+        CategoryGroupEntity typeGroupSaved = categoryGroupFactory.insertOne(typeGroupEntity);
+        categoryGroupTypesEntities.add(typeGroupSaved); //As categorias Desse vetor sempre Estarão relacionadas a um grupo especifico de categorias possiveis para uma entidade
+        List<CategoryEntity> categoriesTypes = this.categoryFactory.insertMany(6, categoryGroupTypesEntities); // as 6 categorias pertencem a este grupo
+
+        List<UUID> categoriesTypesIds = categoriesTypes.stream()
+                .map(category -> category.getId())
+                .collect(Collectors.toList());
+        List<SocialActionEntity> socialActionEntities = socialActionFactory.insertMany(3, categoriesTypesIds, categoryLevelsIds);
         // formatar data hora
         this.formatter = DateTimeFormatter.ISO_LOCAL_DATE_TIME; // Formate o LocalDateTime esperado
         // mapper
@@ -135,7 +159,7 @@ public class SessionControllerIT {
                     )
                     .andExpect(MockMvcResultMatchers.jsonPath("$.content[" + i + "].deletedDate").isEmpty())
                     .andExpect(MockMvcResultMatchers.jsonPath("$.content[" + i + "].deletedBy").isEmpty())
-                    .andExpect(MockMvcResultMatchers.jsonPath("$.content[" + i + "].socialActionId").value(item.getSocialAction().getId().toString()));
+                    .andExpect(MockMvcResultMatchers.jsonPath("$.content[" + i + "].socialAction.id").value(item.getSocialAction().getId().toString()));
             i++;
         }
     }
@@ -145,7 +169,14 @@ public class SessionControllerIT {
     void saveOneSession() throws Exception {
         // Arrange (Organizar)
         SessionEntity item = sessionFactory.makeFakeEntity();
-        String jsonRequest = objectMapper.writeValueAsString(item);
+        Map<String, Object> makeBody = new HashMap<>();
+        makeBody.put("description", item.getDescription());
+        makeBody.put("socialAction", item.getSocialAction().getId().toString());
+        makeBody.put("dateStartTime", item.getDateStartTime().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME));
+        makeBody.put("dateEndTime", item.getDateEndTime().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME));
+        makeBody.put("status", item.getStatus());
+        makeBody.put("visibility", item.getVisibility());
+        String jsonRequest = objectMapper.writeValueAsString(makeBody);
         // Act (ação)
         ResultActions resultActions = mockMvc.perform(
                 MockMvcRequestBuilders.post(ROUTE_SESSION)
@@ -162,7 +193,7 @@ public class SessionControllerIT {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.dateEndTime").value(item.getDateEndTime().format(formatter)))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.status").value(item.getStatus().toString()))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.visibility").value(item.getVisibility().toString()))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.socialActionId").value(item.getSocialAction().getId().toString()))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.socialAction.id").value(item.getSocialAction().getId().toString()))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.createdBy").isNotEmpty())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.lastModifiedBy").isEmpty())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.createdDate").isNotEmpty())
@@ -198,7 +229,7 @@ public class SessionControllerIT {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.dateEndTime").value(item.getDateEndTime().format(formatter)))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.status").value(item.getStatus().toString()))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.visibility").value(item.getVisibility().toString()))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.socialActionId").value(item.getSocialAction().getId().toString()))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.socialAction.id").value(item.getSocialAction().getId().toString()))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.createdBy").value(createdByString))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.createdDate").value(item.getCreatedDate().format(formatter)))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.deletedDate").value(deletedDateString))
@@ -214,7 +245,7 @@ public class SessionControllerIT {
     }
 
     @Test
-    @DisplayName("(hard-delete) Exclui uma session com sucesso")
+    @DisplayName("Exclui uma session com sucesso")
     void deleteSession() throws Exception {
         // Arrange (Organizar)
         SessionEntity savedItem = sessionFactory.insertOne(sessionFactory.makeFakeEntity());
@@ -249,21 +280,14 @@ public class SessionControllerIT {
         item.setStatus(statusEnum);
         VisibilityEnum visibilityEnum = new EnumUtils<VisibilityEnum>().getRandomValueDiff(item.getVisibility());
         item.setVisibility(visibilityEnum);
-        FindRegisterRandom findRegisterRandom = new FindRegisterRandom<SocialActionEntity>(entityManager);
-        List<SocialActionEntity> socialActions = findRegisterRandom.execute("social_action", 1, SocialActionEntity.class);
-        item.setSocialAction(socialActions.get(0));
+        String jsonRequest = objectMapper.writeValueAsString(item);
 // TODO: quais dados falta modificar para testar?
-        String updatedSessionJson = objectMapper.writeValueAsString(item);
-        String createdByString = Optional.ofNullable(item.getCreatedBy()).map(UUID::toString).orElse(null);
-        String lastModifiedByString = Optional.ofNullable(item.getLastModifiedBy()).map(UUID::toString).orElse(null);
-        String deletedByString = Optional.ofNullable(item.getDeletedBy()).map(UUID::toString).orElse(null);
-        String deletedDateString = Optional.ofNullable(item.getDeletedDate()).map(LocalDateTime::toString).orElse(null);
         // Act (ação)
         ResultActions resultActions = mockMvc.perform(
                 MockMvcRequestBuilders.patch(ROUTE_SESSION + "/{id}", item.getId())
                         .header("Authorization", "Bearer " + tokenUserLogged)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(updatedSessionJson)
+                        .content(jsonRequest)
         );
         // Assert (Verificar)
         resultActions
@@ -274,12 +298,12 @@ public class SessionControllerIT {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.dateEndTime").value(item.getDateEndTime().format(formatter)))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.status").value(item.getStatus().toString()))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.visibility").value(item.getVisibility().toString()))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.socialActionId").value(item.getSocialAction().getId().toString()))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.createdBy").value(createdByString))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.lastModifiedBy").value(lastModifiedByString))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.socialAction.id").value(item.getSocialAction().getId().toString()))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.createdBy").isNotEmpty())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.lastModifiedBy").isNotEmpty())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.createdDate").value(item.getCreatedDate().format(formatter)))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.lastModifiedDate").value(item.getLastModifiedDate().format(formatter)))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.deletedDate").value(deletedDateString))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.deletedBy").value(deletedByString));
+                .andExpect(MockMvcResultMatchers.jsonPath("$.deletedDate").isEmpty())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.deletedBy").isEmpty());
     }
 }

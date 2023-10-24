@@ -4,6 +4,8 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import dev.pantanal.b3.krpv.acao_social.config.audit.AuditListener;
 import dev.pantanal.b3.krpv.acao_social.modulos.person.enums.StatusEnum;
+import dev.pantanal.b3.krpv.acao_social.modulos.presence.PresenceEntity;
+import dev.pantanal.b3.krpv.acao_social.modulos.presence.QPresenceEntity;
 import dev.pantanal.b3.krpv.acao_social.modulos.voluntary.VoluntaryEntity;
 import jakarta.persistence.*;
 //import jakarta.validation.Valid;
@@ -89,6 +91,11 @@ public class PersonEntity {
     @ToString.Exclude
     @JsonBackReference
     private List<VoluntaryEntity> voluntaryEntities;
+
+    @OneToMany(mappedBy = "person", fetch = FetchType.LAZY)
+    @ToString.Exclude
+    @JsonBackReference
+    private List<PresenceEntity> presenceEntities;
 
     @PrePersist
     protected void onCreate() {

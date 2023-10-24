@@ -38,19 +38,21 @@ public class PresenceService {
         if (sessionEntity != null){
             entity.setSession(sessionEntity);
         }
-        else if (personEntity != null){
+        if (personEntity != null){
             entity.setPerson(personEntity);
 
         }
-        else if (approvedBy != null){
+        if (approvedBy != null){
             entity.setApprovedBy(approvedBy);
         }
-        else{
-            throw new ObjectNotFoundException("Invalid id");
+        if (approvedBy != null && personEntity != null && sessionEntity !=null){
+            entity.setApprovedDate(dataRequest.approvedDate());
+            PresenceEntity savedObj = presenceRepository.save(entity);
+            return savedObj;
         }
-        entity.setApprovedDate(dataRequest.approvedDate());
-        PresenceEntity savedObj = presenceRepository.save(entity);
-        return savedObj;
+        else {
+            throw new ObjectNotFoundException("Id of elements can not be null");
+        }
     }
 
     public void delete(UUID id) {

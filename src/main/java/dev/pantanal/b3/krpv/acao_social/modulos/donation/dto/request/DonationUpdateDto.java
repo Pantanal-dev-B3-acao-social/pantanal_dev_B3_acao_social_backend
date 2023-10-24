@@ -12,11 +12,8 @@ import java.util.UUID;
 
 public record DonationUpdateDto (
 
-        SocialActionEntity socialActionEntity,
-        PersonEntity donatedByEntity,
         LocalDateTime donationDate,
         BigDecimal valueMoney,
         String motivation,
-        PersonEntity approvedBy,
         LocalDateTime approvedDate
 ){}
