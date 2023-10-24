@@ -13,9 +13,6 @@ public record InvestmentUpdateDto(
         BigDecimal valueMoney,
         LocalDateTime date,
         String motivation,
-        PersonEntity approvedBy,
-        LocalDateTime approvedDate,
-        SocialActionEntity socialAction,
-        CompanyEntity company
+        LocalDateTime approvedDate
 ) {
 }

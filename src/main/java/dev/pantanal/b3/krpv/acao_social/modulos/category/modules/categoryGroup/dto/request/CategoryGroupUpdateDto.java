@@ -6,6 +6,5 @@ import dev.pantanal.b3.krpv.acao_social.modulos.category.modules.categoryGroup.e
 public record CategoryGroupUpdateDto(
         String name,
         String description,
-        CategoryGroupEntity parentCategoryGroupEntity,
         VisibilityCategoryGroupEnum visibility
 ) {}

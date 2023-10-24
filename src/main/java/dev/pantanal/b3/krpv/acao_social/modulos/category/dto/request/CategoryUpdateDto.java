@@ -6,7 +6,6 @@ import jakarta.validation.constraints.NotNull;
 
 public record CategoryUpdateDto(
         String name,
-        String description,
-        CategoryGroupEntity categoryGroup
+        String description
 ) {
 }
