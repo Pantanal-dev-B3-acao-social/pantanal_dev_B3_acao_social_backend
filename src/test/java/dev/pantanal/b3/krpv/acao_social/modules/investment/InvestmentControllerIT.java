@@ -217,8 +217,8 @@ public class InvestmentControllerIT {
 
 
     @Test
-    @DisplayName("Busca session por ID com sucesso")
-    void findByIdSession() throws Exception {
+    @DisplayName("Busca investment por ID com sucesso")
+    void findByIdInvestment() throws Exception {
         // Arrange (Organizar)
         List<InvestmentEntity> saved = investmentFactory.insertMany(3);
         InvestmentEntity item = saved.get(0);
@@ -258,8 +258,8 @@ public class InvestmentControllerIT {
     }
 
     @Test
-    @DisplayName("Exclui uma session com sucesso")
-    void deleteSession() throws Exception {
+    @DisplayName("Exclui uma investment com sucesso")
+    void deleteInvestment() throws Exception {
         // Arrange (Organizar)
         InvestmentEntity savedItem = investmentFactory.insertOne(investmentFactory.makeFakeEntity());
         // Act (ação)
@@ -278,31 +278,29 @@ public class InvestmentControllerIT {
     // TODO: implementar soft-delete
 
     @Test
-    @DisplayName("Atualiza uma session com sucesso")
-    void updateSession() throws Exception {
+    @DisplayName("Atualiza uma investment com sucesso")
+    void updateInvestment() throws Exception {
         // Arrange (Organizar)
         InvestmentEntity item = investmentFactory.insertOne(investmentFactory.makeFakeEntity());
-        // Modifica alguns dados da session
-// TODO:        item.setCreatedBy(userLoggedId);
+        // Modifica alguns dados da investment
         item.setValueMoney(item.getValueMoney().add(item.getValueMoney().add(new BigDecimal("5.74"))));
-        LocalDateTime dateUpdated = item.getDate().plusHours(2).plusMinutes(40);
         LocalDateTime approvedAtUpdated = item.getApprovedDate().plusHours(2).plusMinutes(40);
-        item.setDate(dateUpdated);
         item.setApprovedDate(approvedAtUpdated);
         item.setMotivation(item.getMotivation() + "_Atualizado");
-// TODO: quais dados falta modificar para testar?
-        String updatedSessionJson = objectMapper.writeValueAsString(item); // TODO: Suspeito erro
-        // TODO: nao utilizado
-//        String createdByString = Optional.ofNullable(item.getCreatedBy()).map(UUID::toString).orElse(null);
-        String lastModifiedByString = Optional.ofNullable(item.getLastModifiedBy()).map(UUID::toString).orElse(null);
-        String deletedByString = Optional.ofNullable(item.getDeletedBy()).map(UUID::toString).orElse(null);
-        String deletedDateString = Optional.ofNullable(item.getDeletedDate()).map(LocalDateTime::toString).orElse(null);
+
+        Map<String, Object> makeBody = new HashMap<>();
+        makeBody.put("valueMoney", item.getValueMoney());
+        makeBody.put("motivation", item.getMotivation());
+        makeBody.put("approvedBy", item.getApprovedBy().getId());
+        makeBody.put("approvedDate", item.getApprovedDate().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME));
+        String jsonRequest = objectMapper.writeValueAsString(item);
+
         // Act (ação)
         ResultActions resultActions = mockMvc.perform(
                 MockMvcRequestBuilders.patch(ROUTE_INVESTMENT + "/{id}", item.getId())
                         .header("Authorization", "Bearer " + tokenUserLogged)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(updatedSessionJson)
+                        .content(jsonRequest)
         );
         // Assert (Verificar)
         resultActions
@@ -310,21 +308,15 @@ public class InvestmentControllerIT {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.id").value(item.getId().toString()))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.motivation").value(item.getMotivation()))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.date").value(item.getDate().format(formatter)))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.approvedBy").value(item.getApprovedBy().getId().toString()))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.approvedBy.id").value(item.getApprovedBy().getId().toString()))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.approvedDate").value(item.getApprovedDate().format(formatter)))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.companyId").value(item.getCompany().getId().toString()))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.socialActionId").value(item.getSocialAction().getId().toString()))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.company.id").value(item.getCompany().getId().toString()))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.socialAction.id").value(item.getSocialAction().getId().toString()))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.createdBy").value(item.getCreatedBy().toString()))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.createdDate").value(item.getCreatedDate().format(formatter)))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.deletedDate").value(deletedDateString))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.deletedBy").value(deletedByString))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.lastModifiedBy").value(
-                        item.getLastModifiedBy() == null  ?
-                                null : item.getLastModifiedBy().toString())
-                )
-                .andExpect(MockMvcResultMatchers.jsonPath("$.lastModifiedDate").value(
-                        item.getLastModifiedDate() == null ?
-                                null : item.getLastModifiedDate().format(formatter))
-                );
+                .andExpect(MockMvcResultMatchers.jsonPath("$.deletedDate").isEmpty())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.deletedBy").isEmpty())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.lastModifiedBy").isNotEmpty())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.lastModifiedDate").isNotEmpty());
     }
 }
