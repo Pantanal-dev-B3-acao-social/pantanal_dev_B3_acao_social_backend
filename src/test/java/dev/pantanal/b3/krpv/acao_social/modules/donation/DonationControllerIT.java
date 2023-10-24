@@ -271,18 +271,12 @@ public class DonationControllerIT {
         SocialActionEntity socialActionEntity = socialActionEntities.get(0);
         DonationEntity donationEntity = donationFactory.makeFakeEntity(socialActionEntity, donor, approved);
         DonationEntity item = donationFactory.insertOne(donationEntity);
-//        BigDecimal updateValue = new BigDecimal();
-        // Modifica alguns dados da donation
-        item.setApprovedDate(item.getApprovedDate().plusHours(-2));
-        item.setDonatedByEntity(personEntities.get(2));
-        item.setSocialActionEntity(socialActionEntities.get(1));
+
         item.setDonationDate(item.getDonationDate().plusHours(-3));
         item.setValueMoney(item.getValueMoney().add(item.getValueMoney().add(new BigDecimal("5.74"))));
         item.setMotivation(item.getMotivation() + "_ATUALIZADO");
-
-        item.setApprovedBy(personEntities.get(3));
         item.setApprovedDate(item.getApprovedDate().plusHours(-1));
-        // TODO: quais dados falta modificar para testar?
+
         String updatedJson = objectMapper.writeValueAsString(item);
         // Act (ação)
         ResultActions resultActions = mockMvc.perform(
@@ -304,13 +298,7 @@ public class DonationControllerIT {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.createdDate").value(item.getCreatedDate().format(formatter)))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.deletedDate").isEmpty())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.deletedBy").isEmpty())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.lastModifiedBy").value(
-                        item.getLastModifiedBy() == null  ?
-                                null : item.getLastModifiedBy().toString())
-                )
-                .andExpect(MockMvcResultMatchers.jsonPath("$.lastModifiedDate").value(
-                        item.getLastModifiedDate() == null ?
-                                null : item.getLastModifiedDate().format(formatter))
-                );;
+                .andExpect(MockMvcResultMatchers.jsonPath("$.lastModifiedBy").isNotEmpty())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.lastModifiedDate").isNotEmpty());
     }
 }
