@@ -89,7 +89,7 @@ public class CategoryControllerIT {
                     .andExpect(MockMvcResultMatchers.jsonPath("$.content[" + i + "].name").value(item.getName()))
                     .andExpect(MockMvcResultMatchers.jsonPath("$.content[" + i + "].description").value(item.getDescription()))
                     .andExpect(MockMvcResultMatchers.jsonPath("$.content[" + i + "].code").value(item.getCode()))
-                    .andExpect(MockMvcResultMatchers.jsonPath("$.content[" + i + "].categoryGroupId").value(item.getCategoryGroup().getId().toString()))
+                    .andExpect(MockMvcResultMatchers.jsonPath("$.content[" + i + "].categoryGroup.id").value(item.getCategoryGroup().getId().toString()))
                     .andExpect(MockMvcResultMatchers.jsonPath("$.content[" + i + "].createdBy").isNotEmpty())
                     .andExpect(MockMvcResultMatchers.jsonPath("$.content[" + i + "].createdDate").isNotEmpty())
                     .andExpect(MockMvcResultMatchers.jsonPath("$.content[" + i + "].createdBy").value(item.getCreatedBy().toString()))
@@ -160,7 +160,7 @@ public class CategoryControllerIT {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.id").value(item.getId().toString()))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.name").value(item.getName()))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.code").value(item.getCode()))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.categoryGroupId").value(
+                .andExpect(MockMvcResultMatchers.jsonPath("$.categoryGroup.id").value(
                     item.getCategoryGroup() == null ? null : item.getCategoryGroup().getId().toString())
                 )
                 .andExpect(MockMvcResultMatchers.jsonPath("$.createdBy").isNotEmpty())
@@ -180,7 +180,7 @@ public class CategoryControllerIT {
     }
 
     @Test
-    @DisplayName("(hard-delete) Exclui uma categoria com sucesso")
+    @DisplayName("Exclui uma categoria com sucesso")
     void deleteCategory() throws Exception {
         // Arrange (Organizar)
         CategoryEntity savedItem = categoryFactory.insertOne(categoryFactory.makeFakeEntity(this.groupEntities.get(0)));
