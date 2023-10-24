@@ -74,7 +74,7 @@ public class DonationControllerIT {
     List<UUID> usersRandom = IntStream.range(0, 4)
             .mapToObj(i -> UUID.randomUUID())
             .collect(Collectors.toList());
-    List<PersonEntity> personEntities;
+    List<PersonEntity> personEntities = new ArrayList<>();
     List<SocialActionEntity> socialActionEntities;
     @Autowired
     DonationRepository donationRepository;
@@ -91,7 +91,8 @@ public class DonationControllerIT {
         this.objectMapper = new ObjectMapper();
         this.objectMapper.registerModule(new JavaTimeModule());
         //
-        personFactory.insertOne(personFactory.makeFakeEntity(UUID.fromString(userId)));
+        PersonEntity personEntity = personFactory.insertOne(personFactory.makeFakeEntity(UUID.fromString(userId)));
+        this.personEntities.add(personEntity);
         ongFactory.insertOne(ongFactory.makeFakeEntity());
         List<CategoryGroupEntity> categoryGroupLevelEntities = new ArrayList<>();
         CategoryGroupEntity levelGroupEntity = categoryGroupFactory.makeFakeEntity("1", "level of social action", null);
@@ -111,7 +112,7 @@ public class DonationControllerIT {
         List<UUID> categoriesTypesIds = categoriesTypes.stream()
                 .map(category -> category.getId())
                 .collect(Collectors.toList());
-        List<SocialActionEntity> socialActionEntities = socialActionFactory.insertMany(3, categoriesTypesIds, categoryLevelsIds);
+        this.socialActionEntities = socialActionFactory.insertMany(3, categoriesTypesIds, categoryLevelsIds);
     }
 
     @AfterEach
