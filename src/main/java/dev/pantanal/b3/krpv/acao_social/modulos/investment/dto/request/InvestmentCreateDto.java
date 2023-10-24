@@ -7,6 +7,7 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.FutureOrPresent;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.PastOrPresent;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -15,7 +16,7 @@ import java.util.UUID;
 public record InvestmentCreateDto(
         @NotNull
         BigDecimal valueMoney,
-        @FutureOrPresent
+        @PastOrPresent
         LocalDateTime date,
         @NotBlank(message = "field motivation can not be empty")
         String motivation,

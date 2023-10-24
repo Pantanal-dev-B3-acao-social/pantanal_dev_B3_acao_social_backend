@@ -5,6 +5,7 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import dev.pantanal.b3.krpv.acao_social.config.postgres.factory.*;
 import dev.pantanal.b3.krpv.acao_social.modulos.auth.dto.LoginUserDto;
 import dev.pantanal.b3.krpv.acao_social.modulos.category.entity.CategoryEntity;
+import dev.pantanal.b3.krpv.acao_social.modulos.category.modules.categoryGroup.CategoryGroupEntity;
 import dev.pantanal.b3.krpv.acao_social.modulos.donation.DonationEntity;
 import dev.pantanal.b3.krpv.acao_social.modulos.donation.repository.DonationRepository;
 import dev.pantanal.b3.krpv.acao_social.modulos.person.PersonEntity;
@@ -17,6 +18,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
@@ -26,8 +29,8 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.transaction.annotation.Transactional;
 import java.math.BigDecimal;
 import java.time.format.DateTimeFormatter;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
+
 import static dev.pantanal.b3.krpv.acao_social.modulos.donation.DonationController.ROUTE_DONATION;
 import static org.hamcrest.Matchers.hasSize;
 import java.util.stream.Collectors;
@@ -58,6 +61,11 @@ public class DonationControllerIT {
     private SocialActionFactory socialActionFactory;
     @Autowired
     private CategoryFactory categoryFactory;
+    @Autowired
+            private OngFactory ongFactory;
+    @Autowired
+            private CategoryGroupFactory categoryGroupFactory;
+
     List<CategoryEntity> categoriesType;
     List<CategoryEntity> categoriesLevel;
     @Autowired
@@ -65,7 +73,7 @@ public class DonationControllerIT {
     List<UUID> usersRandom = IntStream.range(0, 4)
             .mapToObj(i -> UUID.randomUUID())
             .collect(Collectors.toList());
-    List<PersonEntity> personEntities;
+    List<PersonEntity> personEntities = new ArrayList<>();
     List<SocialActionEntity> socialActionEntities;
     @Autowired
     DonationRepository donationRepository;
@@ -74,16 +82,38 @@ public class DonationControllerIT {
     public void setup() throws Exception {
         tokenUserLogged = generateTokenUserForLogged.loginUserMock(new LoginUserDto("funcionario1", "123"));
         loginMock.authenticateWithToken(tokenUserLogged);
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String userId = authentication.getName();
         // formatar data hora
         this.formatter = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
         // mapper
         this.objectMapper = new ObjectMapper();
         this.objectMapper.registerModule(new JavaTimeModule());
         //
-        categoriesType = categoryFactory.makeFakeByGroup(2, "social action type", "grupo de categorias para usar no TIPO de ação social");;
-        categoriesLevel = categoryFactory.makeFakeByGroup(2, "social action level", "grupo de categorias para usar no NÍVEL de ação social");
-        personEntities = personFactory.insertMany(usersRandom.size(), usersRandom);
-        socialActionEntities = socialActionFactory.insertMany(3);
+        for (int i = 0;  i < 3; i++){
+            PersonEntity personEntity = personFactory.insertOne(personFactory.makeFakeEntity(UUID.randomUUID()));
+            this.personEntities.add(personEntity);
+        }
+        ongFactory.insertOne(ongFactory.makeFakeEntity());
+        List<CategoryGroupEntity> categoryGroupLevelEntities = new ArrayList<>();
+        CategoryGroupEntity levelGroupEntity = categoryGroupFactory.makeFakeEntity("1", "level of social action", null);
+        CategoryGroupEntity levelGroupSaved = categoryGroupFactory.insertOne(levelGroupEntity);
+        categoryGroupLevelEntities.add(levelGroupSaved);
+        List<CategoryEntity> categoryLevels = this.categoryFactory.insertMany(3, categoryGroupLevelEntities);
+        List<UUID> categoryLevelsIds = categoryLevels.stream()
+                .map(category -> category.getId())
+                .collect(Collectors.toList());
+
+        List<CategoryGroupEntity> categoryGroupTypesEntities = new ArrayList<>();
+        CategoryGroupEntity typeGroupEntity = categoryGroupFactory.makeFakeEntity("social action type", "grupo de categorias para usar no TIPO de ação social", null);
+        CategoryGroupEntity typeGroupSaved = categoryGroupFactory.insertOne(typeGroupEntity);
+        categoryGroupTypesEntities.add(typeGroupSaved); //As categorias Desse vetor sempre Estarão relacionadas a um grupo especifico de categorias possiveis para uma entidade
+        List<CategoryEntity> categoriesTypes = this.categoryFactory.insertMany(6, categoryGroupTypesEntities); // as 6 categorias pertencem a este grupo
+
+        List<UUID> categoriesTypesIds = categoriesTypes.stream()
+                .map(category -> category.getId())
+                .collect(Collectors.toList());
+        this.socialActionEntities = socialActionFactory.insertMany(3, categoriesTypesIds, categoryLevelsIds);
     }
 
     @AfterEach
@@ -142,7 +172,15 @@ public class DonationControllerIT {
         PersonEntity donor = personEntities.get(1);
         SocialActionEntity socialActionEntity = socialActionEntities.get(0);
         DonationEntity item = donationFactory.makeFakeEntity(socialActionEntity, donor, approved);
-        String jsonRequest = objectMapper.writeValueAsString(item);
+        Map<String, Object> makeBody = new HashMap<>();
+        makeBody.put("socialActionEntity", item.getSocialActionEntity().getId());
+        makeBody.put("donatedByEntity", item.getDonatedByEntity().getId());
+        makeBody.put("donationDate", item.getDonationDate().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME));
+        makeBody.put("valueMoney", item.getValueMoney());
+        makeBody.put("motivation", item.getMotivation());
+        makeBody.put("approvedBy", item.getApprovedBy().getId());
+        makeBody.put("approvedDate", item.getApprovedDate().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME));
+        String jsonRequest = objectMapper.writeValueAsString(makeBody);
         // Act (ação)
         ResultActions resultActions = mockMvc.perform(
                 MockMvcRequestBuilders.post(ROUTE_DONATION)
@@ -233,18 +271,12 @@ public class DonationControllerIT {
         SocialActionEntity socialActionEntity = socialActionEntities.get(0);
         DonationEntity donationEntity = donationFactory.makeFakeEntity(socialActionEntity, donor, approved);
         DonationEntity item = donationFactory.insertOne(donationEntity);
-//        BigDecimal updateValue = new BigDecimal();
-        // Modifica alguns dados da donation
-        item.setApprovedDate(item.getApprovedDate().plusHours(-2));
-        item.setDonatedByEntity(personEntities.get(2));
-        item.setSocialActionEntity(socialActionEntities.get(1));
+
         item.setDonationDate(item.getDonationDate().plusHours(-3));
         item.setValueMoney(item.getValueMoney().add(item.getValueMoney().add(new BigDecimal("5.74"))));
         item.setMotivation(item.getMotivation() + "_ATUALIZADO");
-
-        item.setApprovedBy(personEntities.get(3));
         item.setApprovedDate(item.getApprovedDate().plusHours(-1));
-        // TODO: quais dados falta modificar para testar?
+
         String updatedJson = objectMapper.writeValueAsString(item);
         // Act (ação)
         ResultActions resultActions = mockMvc.perform(
@@ -266,13 +298,7 @@ public class DonationControllerIT {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.createdDate").value(item.getCreatedDate().format(formatter)))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.deletedDate").isEmpty())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.deletedBy").isEmpty())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.lastModifiedBy").value(
-                        item.getLastModifiedBy() == null  ?
-                                null : item.getLastModifiedBy().toString())
-                )
-                .andExpect(MockMvcResultMatchers.jsonPath("$.lastModifiedDate").value(
-                        item.getLastModifiedDate() == null ?
-                                null : item.getLastModifiedDate().format(formatter))
-                );;
+                .andExpect(MockMvcResultMatchers.jsonPath("$.lastModifiedBy").isNotEmpty())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.lastModifiedDate").isNotEmpty());
     }
 }

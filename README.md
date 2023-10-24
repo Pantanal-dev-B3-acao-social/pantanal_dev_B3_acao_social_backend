@@ -271,6 +271,42 @@ Neste cenário, quando o usuário recebe um cargo, ele tem o mesmo cargo em toda
   - $ sudo docker-compose -v
   - $ sudo docker-compose down -v
   - $ sudo docker-compose up --build
+
+  # Vercel
   - $ git clone https://SEU_TOKEN_DE_ACESSO_COM_PERMISSAO_PARA_ORGANIZACOES@github.com/Pantanal-dev-B3-acao-social/pantanal_dev_B3_acao_social_frontend.git
+  - curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.0/install.sh | bash
+  - source ~/.bashrc
+  - nvm --version
+  - nvm ls-remote
+  - nvm install 20.6
+  - nvm use 20.6
+  - node -v
+  - nvm install-latest-npm
+  - npm -v
+  - npm install
+  - npm start
+
+
+# Nginx
+https://medium.com/@stevernewman/installation-of-nginx-on-aws-ubuntu-instance-e73e72cb8450
+- sudo apt update -y
+- sudo apt install nginx -y
+- sudo systemctl status nginx
+- sudo ufw allow 'Nginx Full'
+- sudo ufw status
+- cd /etc/nginx/sites-available/
+- sudo nano meu_app_react
+server {
+    listen 80;
+    server_name seu_nome_de_domínio_ou_endereço_ip;
+
+    location / {
+        proxy_pass http://127.0.0.1:3000;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+    }
+}
+
+
 
 

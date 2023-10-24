@@ -57,6 +57,7 @@ public class DonationRepository {
     @Transactional
     public DonationEntity update(DonationEntity obj) {
         DonationEntity updatedEntity = entityManager.merge(obj);
+        entityManager.flush();
         return updatedEntity;
     }
 

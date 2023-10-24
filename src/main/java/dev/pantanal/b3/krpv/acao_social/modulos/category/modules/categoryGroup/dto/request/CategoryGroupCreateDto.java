@@ -12,9 +12,9 @@ public record CategoryGroupCreateDto(
         String name,
         @NotBlank(message= "Campo 'description' não pode estar vazio")
         String description,
-        @NotNull
+
         UUID parentCategoryGroupEntity,
-        @NotNull(message= "Campo 'visibility' não pode estar vazio")
+        
         VisibilityCategoryGroupEnum visibility
 ) {
 }

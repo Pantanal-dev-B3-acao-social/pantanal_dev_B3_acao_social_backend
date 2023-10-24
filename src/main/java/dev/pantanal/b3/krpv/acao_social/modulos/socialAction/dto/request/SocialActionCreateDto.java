@@ -2,6 +2,7 @@ package dev.pantanal.b3.krpv.acao_social.modulos.socialAction.dto.request;
 
 import dev.pantanal.b3.krpv.acao_social.modulos.category.entity.CategoryEntity;
 import dev.pantanal.b3.krpv.acao_social.modulos.category.entity.CategorySocialActionTypeEntity;
+import dev.pantanal.b3.krpv.acao_social.modulos.ong.OngEntity;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
@@ -18,6 +19,8 @@ public record SocialActionCreateDto(
         @NotBlank(message= "Campo 'description' não pode estar vazio")
         @Size(min = 2)
         String description,
+
+        UUID ongEntity,
         List<UUID> categoryTypeIds,
         List<UUID> categoryLevelIds
 

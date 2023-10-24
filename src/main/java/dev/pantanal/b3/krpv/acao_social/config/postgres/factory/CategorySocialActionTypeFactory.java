@@ -39,7 +39,7 @@ public class CategorySocialActionTypeFactory {
         return created;
     }
 
-    public List<CategorySocialActionTypeEntity> insertManyFakeEntities(
+    public List<CategorySocialActionTypeEntity> insertMany(
             SocialActionEntity socialActionEntity,
             CategoryEntity category,
             Integer amount

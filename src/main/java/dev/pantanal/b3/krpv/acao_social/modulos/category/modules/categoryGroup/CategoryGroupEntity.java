@@ -1,5 +1,6 @@
 package dev.pantanal.b3.krpv.acao_social.modulos.category.modules.categoryGroup;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import dev.pantanal.b3.krpv.acao_social.config.audit.AuditListener;
 import dev.pantanal.b3.krpv.acao_social.modulos.category.entity.CategoryEntity;
@@ -62,6 +63,7 @@ public class CategoryGroupEntity {
     @JsonManagedReference
     private CategoryGroupEntity parentCategoryGroupEntity;
 
+
     @Enumerated(EnumType.STRING)
     @Column(name = "visibility")
     private VisibilityCategoryGroupEnum visibility;
@@ -89,6 +91,7 @@ public class CategoryGroupEntity {
     private UUID deletedBy;
 
     @OneToMany(mappedBy = "categoryGroup")
+    @JsonBackReference
     private List<CategoryEntity> categories = new ArrayList<>();
 
     @PrePersist

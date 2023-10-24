@@ -21,7 +21,10 @@ import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.transaction.annotation.Transactional;
 import java.time.format.DateTimeFormatter;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
 import static dev.pantanal.b3.krpv.acao_social.modulos.category.modules.categoryGroup.CategoryGroupController.ROUTE_CATEGORY_GROUP;
 import static org.hamcrest.Matchers.hasSize;
 
@@ -107,6 +110,11 @@ public class CategoryGroupControllerIT {
         CategoryGroupEntity item = categoryGroupFactory.makeFakeEntity(null, null, null);
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.registerModule(new JavaTimeModule()); // registrar o módulo JSR-310
+        Map<String, Object> makeBody = new HashMap<>();
+        makeBody.put("name", item.getName());
+        makeBody.put("description", item.getDescription());
+        makeBody.put("parentCategoryGroupEntity", item.getParentCategoryGroupEntity() == null? null: item.getParentCategoryGroupEntity().getId());
+        makeBody.put("visibility",item.getVisibility());
         String bodyJson = objectMapper.writeValueAsString(item);
         // Act (ação)
         ResultActions resultActions = mockMvc.perform(
@@ -118,6 +126,7 @@ public class CategoryGroupControllerIT {
         // Assert (Verificar)
         resultActions
 //                .andExpect(MockMvcResultMatchers.jsonPath("$.id").value(item.getId()))
+                .andExpect(MockMvcResultMatchers.status().isCreated())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.id").isNotEmpty())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.name").value(item.getName()))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.description").value(item.getDescription()))

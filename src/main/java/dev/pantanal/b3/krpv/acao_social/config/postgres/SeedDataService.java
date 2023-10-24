@@ -84,12 +84,22 @@ public class SeedDataService {
         // Arrange (Organizar) category
         List<CategoryGroupEntity> groupEntities = this.categoryGroupFactory.insertMany(4, null);
         // Arrange (Organizar) social action
-        List<CategoryGroupEntity> typesGroupEntities = new ArrayList<>();
+        List<CategoryGroupEntity> categoryGroupLevelEntities = new ArrayList<>();
+        CategoryGroupEntity levelGroupEntity = categoryGroupFactory.makeFakeEntity("1", "level of social action", null);
+        CategoryGroupEntity levelGroupSaved = categoryGroupFactory.insertOne(levelGroupEntity);
+        categoryGroupLevelEntities.add(levelGroupSaved);
+        List<CategoryEntity> categoryLevels = this.categoryFactory.insertMany(3, categoryGroupLevelEntities);
+        List<UUID> categoryLevelsIds = categoryLevels.stream()
+                .map(category -> category.getId())
+                .collect(Collectors.toList());
+
+        List<CategoryGroupEntity> categoryGroupTypesEntities = new ArrayList<>();
         CategoryGroupEntity typeGroupEntity = categoryGroupFactory.makeFakeEntity("social action type", "grupo de categorias para usar no TIPO de ação social", null);
         CategoryGroupEntity typeGroupSaved = categoryGroupFactory.insertOne(typeGroupEntity);
-        typesGroupEntities.add(typeGroupSaved);
-        List<CategoryEntity> categoriesType = categoryFactory.insertMany(6, typesGroupEntities); // as 6 categorias pertencem a este grupo
-        List<UUID> forCategoryTypeIds = categoriesType.stream()
+        categoryGroupTypesEntities.add(typeGroupSaved); //As categorias Desse vetor sempre Estarão relacionadas a um grupo especifico de categorias possiveis para uma entidade
+        List<CategoryEntity> categoriesTypes = this.categoryFactory.insertMany(6, categoryGroupTypesEntities); // as 6 categorias pertencem a este grupo
+
+        List<UUID> categoriesTypesIds = categoriesTypes.stream()
                 .map(category -> category.getId())
                 .collect(Collectors.toList());
         List<UUID> usersRandom = IntStream.range(0, 30)
@@ -100,7 +110,7 @@ public class SeedDataService {
         List<PersonEntity> personEntities = this.personFactory.insertMany(usersRandom.size(), usersRandom);
         this.companyFactory.insertMany(4);
         this.ongFactory.insertMany(10);
-        List<SocialActionEntity> socialActionEntities = this.socialActionFactory.insertMany(20);
+        List<SocialActionEntity> socialActionEntities = this.socialActionFactory.insertMany(20, categoriesTypesIds, categoryLevelsIds);
         this.investmentFactory.insertMany(250);
         List<SessionEntity> sessions = this.sessionFactory.insertMany(100);
         this.donationFactory.insertMany(450, socialActionEntities, personEntities, personEntities);

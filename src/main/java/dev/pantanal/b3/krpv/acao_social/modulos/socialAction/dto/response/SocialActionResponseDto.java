@@ -1,7 +1,9 @@
 package dev.pantanal.b3.krpv.acao_social.modulos.socialAction.dto.response;
 
+import dev.pantanal.b3.krpv.acao_social.modulos.category.entity.CategoryEntity;
 import dev.pantanal.b3.krpv.acao_social.modulos.category.entity.CategorySocialActionLevelEntity;
 import dev.pantanal.b3.krpv.acao_social.modulos.category.entity.CategorySocialActionTypeEntity;
+import dev.pantanal.b3.krpv.acao_social.modulos.ong.OngEntity;
 import dev.pantanal.b3.krpv.acao_social.modulos.session.SessionEntity;
 import dev.pantanal.b3.krpv.acao_social.modulos.voluntary.VoluntaryEntity;
 import jakarta.validation.constraints.NotBlank;
@@ -21,6 +23,7 @@ public record SocialActionResponseDto(
         List<VoluntaryEntity> voluntaryEntities,
         List<CategorySocialActionTypeEntity> categoryType,
         List<CategorySocialActionLevelEntity> categoryLevel,
+        OngEntity ong,
         @NotBlank(message= "Campo 'createdBy' não pode estar vazio")
         UUID createdBy,
         UUID lastModifiedBy,

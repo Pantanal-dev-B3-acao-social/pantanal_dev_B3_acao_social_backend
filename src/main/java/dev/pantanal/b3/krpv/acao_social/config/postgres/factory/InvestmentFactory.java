@@ -40,17 +40,20 @@ public class InvestmentFactory {
     public InvestmentEntity makeFakeEntity() {
         LocalDateTime date = LocalDateTime.now().plusHours(-9);
         String motivation = faker.lorem().sentence();
-        LocalDateTime approvedAt = LocalDateTime.now();
+        LocalDateTime approvedAt = LocalDateTime.now().plusHours(1);
         FindRegisterRandom findRegisterRandomSocial = new FindRegisterRandom<SocialActionEntity>(entityManager);
         List<SocialActionEntity> socialActions = findRegisterRandomSocial.execute("social_action", 1, SocialActionEntity.class);
         FindRegisterRandom findRandomCompany = new FindRegisterRandom<CompanyEntity>(entityManager);
         List<CompanyEntity> companies = findRandomCompany.execute("company", 1, CompanyEntity.class);
+        FindRegisterRandom findRegisterRandomPerson = new FindRegisterRandom<PersonEntity>(entityManager);
+        List<PersonEntity> approvedBy = findRegisterRandomPerson.execute("person", 1, PersonEntity.class);
         InvestmentEntity entity = new InvestmentEntity();
         entity.setValueMoney(new BigDecimal(faker.number().numberBetween(1, 1000000)));
         entity.setDate(date);
         entity.setCompany(companies.get(0));
         entity.setMotivation(motivation);
         entity.setSocialAction(socialActions.get(0));
+        entity.setApprovedBy(approvedBy.get(0));
         entity.setApprovedDate(approvedAt);
         return entity;
     }

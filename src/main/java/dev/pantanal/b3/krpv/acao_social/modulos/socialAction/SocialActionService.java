@@ -7,6 +7,8 @@ import dev.pantanal.b3.krpv.acao_social.modulos.category.entity.CategorySocialAc
 import dev.pantanal.b3.krpv.acao_social.modulos.category.repository.CategoryRepository;
 import dev.pantanal.b3.krpv.acao_social.modulos.category.repository.CategorySocialActionLevelPostgresRepository;
 import dev.pantanal.b3.krpv.acao_social.modulos.category.repository.CategorySocialActionTypePostgresRepository;
+import dev.pantanal.b3.krpv.acao_social.modulos.ong.OngEntity;
+import dev.pantanal.b3.krpv.acao_social.modulos.ong.repository.OngRepository;
 import dev.pantanal.b3.krpv.acao_social.modulos.socialAction.repository.SocialActionPredicates;
 import org.springframework.stereotype.Service;
 import dev.pantanal.b3.krpv.acao_social.modulos.socialAction.dto.request.SocialActionCreateDto;
@@ -30,6 +32,8 @@ public class SocialActionService {
     @Autowired
     private CategoryRepository categoryRepository;
     @Autowired
+    private OngRepository ongRepository;
+    @Autowired
     private SocialActionPredicates socialActionPredicates;
     @Autowired
     private CategorySocialActionTypePostgresRepository categorySocialActionTypePostgresRepository;
@@ -42,6 +46,10 @@ public class SocialActionService {
         toSave.setDescription(dataRequest.description());
         saveSocialActionType(dataRequest.categoryTypeIds(), toSave);
         saveSocialActionLevel(dataRequest.categoryLevelIds(), toSave);
+        OngEntity ongEntity = ongRepository.findById(dataRequest.ongEntity());
+        if (ongEntity == null){
+            throw new ObjectNotFoundException("Ong not valid");
+        }
         SocialActionEntity socialActionSaved = socialActionRepository.save(toSave);
         return socialActionSaved;
     }
