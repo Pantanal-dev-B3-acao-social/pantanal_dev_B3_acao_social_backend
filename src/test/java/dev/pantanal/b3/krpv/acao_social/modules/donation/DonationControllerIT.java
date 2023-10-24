@@ -29,9 +29,8 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.transaction.annotation.Transactional;
 import java.math.BigDecimal;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
+
 import static dev.pantanal.b3.krpv.acao_social.modulos.donation.DonationController.ROUTE_DONATION;
 import static org.hamcrest.Matchers.hasSize;
 import java.util.stream.Collectors;
@@ -173,7 +172,15 @@ public class DonationControllerIT {
         PersonEntity donor = personEntities.get(1);
         SocialActionEntity socialActionEntity = socialActionEntities.get(0);
         DonationEntity item = donationFactory.makeFakeEntity(socialActionEntity, donor, approved);
-        String jsonRequest = objectMapper.writeValueAsString(item);
+        Map<String, Object> makeBody = new HashMap<>();
+        makeBody.put("socialActionEntity", item.getSocialActionEntity().getId());
+        makeBody.put("donatedByEntity", item.getDonatedByEntity().getId());
+        makeBody.put("donationDate", item.getDonationDate().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME));
+        makeBody.put("valueMoney", item.getValueMoney());
+        makeBody.put("motivation", item.getMotivation());
+        makeBody.put("approvedBy", item.getApprovedBy().getId());
+        makeBody.put("approvedDate", item.getApprovedDate().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME));
+        String jsonRequest = objectMapper.writeValueAsString(makeBody);
         // Act (ação)
         ResultActions resultActions = mockMvc.perform(
                 MockMvcRequestBuilders.post(ROUTE_DONATION)
