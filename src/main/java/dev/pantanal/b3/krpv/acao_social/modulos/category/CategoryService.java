@@ -6,6 +6,8 @@ import dev.pantanal.b3.krpv.acao_social.modulos.category.dto.request.CategoryCre
 import dev.pantanal.b3.krpv.acao_social.modulos.category.dto.request.CategoryParamsDto;
 import dev.pantanal.b3.krpv.acao_social.modulos.category.dto.request.CategoryUpdateDto;
 import dev.pantanal.b3.krpv.acao_social.modulos.category.entity.CategoryEntity;
+import dev.pantanal.b3.krpv.acao_social.modulos.category.modules.categoryGroup.CategoryGroupEntity;
+import dev.pantanal.b3.krpv.acao_social.modulos.category.modules.categoryGroup.repository.CategoryGroupRepository;
 import dev.pantanal.b3.krpv.acao_social.modulos.category.repository.CategoryPredicates;
 import dev.pantanal.b3.krpv.acao_social.modulos.category.repository.CategoryRepository;
 import dev.pantanal.b3.krpv.acao_social.utils.GeneratorCode;
@@ -21,17 +23,25 @@ public class CategoryService {
     @Autowired
     private CategoryRepository categoryRepository;
     @Autowired
+    private CategoryGroupRepository categoryGroupRepository;
+    @Autowired
     private CategoryPredicates categoryPredicates;
     @Autowired
     private GeneratorCode generatorCode;
 
     public CategoryEntity create(CategoryCreateDto dataRequest) {
         CategoryEntity entity = new CategoryEntity();
+        CategoryGroupEntity categoryGroup = categoryGroupRepository.findById(dataRequest.categoryGroup());
         entity.setName(dataRequest.name());
         entity.setDescription(dataRequest.description());
-        entity.setCategoryGroup(dataRequest.categoryGroup());
         String code = generatorCode.execute(entity.getName());
         entity.setCode(code);
+        if (categoryGroup != null){
+            entity.setCategoryGroup(categoryGroup);
+        }
+        else{
+            throw new ObjectNotFoundException("Invalid element ID");
+        }
         CategoryEntity savedObj = categoryRepository.save(entity);
         // lançar exceções
         return savedObj;
@@ -66,9 +76,6 @@ public class CategoryService {
         }
         if (request.description() != null) {
             obj.setDescription(request.description());
-        }
-        if (request.categoryGroup() != null) {
-            obj.setCategoryGroup(request.categoryGroup());
         }
         CategoryEntity updatedObj = categoryRepository.update(obj);
         return updatedObj;

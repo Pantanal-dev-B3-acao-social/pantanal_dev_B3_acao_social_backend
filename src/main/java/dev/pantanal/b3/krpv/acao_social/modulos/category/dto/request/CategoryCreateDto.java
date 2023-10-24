@@ -12,7 +12,7 @@ public record CategoryCreateDto (
         @NotBlank(message= "Campo 'description' não pode estar vazio")
         String description,
         @NotNull
-        CategoryGroupEntity categoryGroup
+        UUID categoryGroup
 
 ) {
 }

@@ -45,12 +45,14 @@ public class PresenceService {
         if (approvedBy != null){
             entity.setApprovedBy(approvedBy);
         }
-        if (sessionEntity == null || personEntity == null || approvedBy == null){
-            throw new ObjectNotFoundException("Invalid id");
+        if (approvedBy != null && personEntity != null && sessionEntity !=null){
+            entity.setApprovedDate(dataRequest.approvedDate());
+            PresenceEntity savedObj = presenceRepository.save(entity);
+            return savedObj;
         }
-        entity.setApprovedDate(dataRequest.approvedDate());
-        PresenceEntity savedObj = presenceRepository.save(entity);
-        return savedObj;
+        else {
+            throw new ObjectNotFoundException("Id of elements can not be null");
+        }
     }
 
     public void delete(UUID id) {

@@ -26,12 +26,18 @@ public class CategoryGroupService {
 
     public CategoryGroupEntity create(CategoryGroupCreateDto dataRequest) {
         CategoryGroupEntity entity = new CategoryGroupEntity();
+        CategoryGroupEntity fatherEntity = categoryGroupRepository.findById(dataRequest.parentCategoryGroupEntity());
         entity.setName(dataRequest.name());
         entity.setDescription(dataRequest.description());
         String code = generatorCode.execute(entity.getName());
         entity.setCode(code);
-        entity.setParentCategoryGroupEntity(dataRequest.parentCategoryGroupEntity());
         entity.setVisibility(dataRequest.visibility());
+        if (fatherEntity != null){
+            entity.setParentCategoryGroupEntity(fatherEntity);
+        }
+        else{
+            throw new ObjectNotFoundException("Invalid related element ID");
+        }
         CategoryGroupEntity savedObj = categoryGroupRepository.save(entity);
         return savedObj;
     }
@@ -61,12 +67,11 @@ public class CategoryGroupService {
         }
         if (request.name() != null) {
             obj.setName(request.name());
+            String code = generatorCode.execute(request.name());
+            obj.setCode(code);
         }
         if (request.description() != null) {
             obj.setDescription(request.description());
-        }
-        if (request.parentCategoryGroupEntity() != null) {
-            obj.setParentCategoryGroupEntity(request.parentCategoryGroupEntity());
         }
         if (request.visibility() != null) {
             obj.setVisibility(request.visibility());
