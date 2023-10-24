@@ -42,7 +42,7 @@ public class PresenceFactory {
             PersonEntity approved
     ) {
         Integer index = random.nextInt(0, 10);
-        LocalDateTime approvedDate = LocalDateTime.now().plusHours(index);
+        LocalDateTime approvedDate = LocalDateTime.now();
         PresenceEntity entity = new PresenceEntity();
         entity.setPerson(person);
         entity.setSession(session);

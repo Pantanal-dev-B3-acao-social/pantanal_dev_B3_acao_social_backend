@@ -38,14 +38,14 @@ public class PresenceService {
         if (sessionEntity != null){
             entity.setSession(sessionEntity);
         }
-        else if (personEntity != null){
+        if (personEntity != null){
             entity.setPerson(personEntity);
 
         }
-        else if (approvedBy != null){
+        if (approvedBy != null){
             entity.setApprovedBy(approvedBy);
         }
-        else{
+        if (sessionEntity == null || personEntity == null || approvedBy == null){
             throw new ObjectNotFoundException("Invalid id");
         }
         entity.setApprovedDate(dataRequest.approvedDate());
