@@ -227,8 +227,13 @@ public class OngControllerIT {
         item.setResponsibleEntity(person);
         item.setCnpj(cnpj);
         item.setStatus(statusEnum);
+        Map<String, Object> makeBody = new HashMap<>();
+        makeBody.put("name", item.getName());
+        makeBody.put("status", item.getStatus());
+        makeBody.put("cnpj", item.getCnpj());
+        makeBody.put("responsibleEntity", item.getResponsibleEntity().getId());
         // TODO: quais dados falta modificar para testar?
-        String updatedJson = objectMapper.writeValueAsString(item);
+        String updatedJson = objectMapper.writeValueAsString(makeBody);
         // Act (ação)
         ResultActions resultActions = mockMvc.perform(
                 MockMvcRequestBuilders.patch(ROUTE_ONG + "/{id}", item.getId())
