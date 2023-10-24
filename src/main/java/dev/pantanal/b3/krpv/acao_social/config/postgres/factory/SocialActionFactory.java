@@ -37,9 +37,9 @@ public class SocialActionFactory {
         socialCreated.setVersion(1L);
         socialCreated.setName(faker.name().fullName());
         socialCreated.setDescription(faker.lorem().sentence());
-//        FindRegisterRandom<OngEntity> findOngRandom = new FindRegisterRandom<OngEntity>(entityManager);
-//        List<OngEntity> ong = findOngRandom.execute("ong", 1, OngEntity.class);
-//        socialCreated.setOng(ong.get(0)); //criar ONG
+        FindRegisterRandom<OngEntity> findOngRandom = new FindRegisterRandom<OngEntity>(entityManager);
+        List<OngEntity> ong = findOngRandom.execute("ong", 1, OngEntity.class);
+        socialCreated.setOng(ong.get(0)); //criar ONG
         List<CategorySocialActionTypeEntity> categoryTypesList = new ArrayList<>();
         List<CategorySocialActionLevelEntity> categoryLevelsList = new ArrayList<>();
         for (int i = 0; i < categoryTypesIds.size(); i++){

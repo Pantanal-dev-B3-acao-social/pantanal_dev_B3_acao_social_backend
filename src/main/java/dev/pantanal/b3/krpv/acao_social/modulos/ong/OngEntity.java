@@ -1,7 +1,10 @@
 package dev.pantanal.b3.krpv.acao_social.modulos.ong;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import dev.pantanal.b3.krpv.acao_social.modulos.ong.enums.StatusEnum;
 import dev.pantanal.b3.krpv.acao_social.modulos.person.PersonEntity;
+import dev.pantanal.b3.krpv.acao_social.modulos.socialAction.SocialActionEntity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -15,6 +18,7 @@ import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.UUID;
 
 @Table(name="ong")
@@ -73,6 +77,11 @@ public class OngEntity {
     @JoinColumn(name = "responsibility_id")
     @ToString.Exclude
     private PersonEntity responsibleEntity;
+
+    @OneToMany
+    @ToString.Exclude
+    @JsonBackReference
+    private List<SocialActionEntity> socialAction;
 
     @PrePersist
     protected void onCreate() {

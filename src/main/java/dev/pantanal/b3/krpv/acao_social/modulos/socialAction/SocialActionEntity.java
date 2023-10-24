@@ -9,6 +9,7 @@ import dev.pantanal.b3.krpv.acao_social.modulos.category.entity.CategoryEntity;
 import dev.pantanal.b3.krpv.acao_social.modulos.category.entity.CategorySocialActionLevelEntity;
 import dev.pantanal.b3.krpv.acao_social.modulos.category.entity.CategorySocialActionTypeEntity;
 import dev.pantanal.b3.krpv.acao_social.modulos.investment.InvestmentEntity;
+import dev.pantanal.b3.krpv.acao_social.modulos.ong.OngEntity;
 import dev.pantanal.b3.krpv.acao_social.modulos.session.SessionEntity;
 import dev.pantanal.b3.krpv.acao_social.modulos.voluntary.VoluntaryEntity;
 import jakarta.persistence.*;
@@ -18,6 +19,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
 
+import org.apache.commons.lang3.builder.ToStringExclude;
 import org.hibernate.annotations.SQLDelete;
 import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
@@ -120,6 +122,12 @@ public class SocialActionEntity {
     @ToString.Exclude
     @JsonBackReference
     private List<InvestmentEntity> investment;
+
+    @ManyToOne()
+    @ToString.Exclude
+    @JsonManagedReference
+    private OngEntity ong;
+
 
     @PrePersist
     protected void onCreate() {

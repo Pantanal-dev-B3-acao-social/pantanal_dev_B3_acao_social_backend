@@ -47,6 +47,7 @@ public class SocialActionController {
                 entity.getVoluntaryEntities(),
                 entity.getCategorySocialActionTypeEntities(),
                 entity.getCategorySocialActionLevelEntities(),
+                entity.getOng(),
                 entity.getCreatedBy(),
                 entity.getLastModifiedBy(),
                 entity.getCreatedDate(),

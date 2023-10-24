@@ -8,7 +8,9 @@ CREATE TABLE social_action (
     created_date TIMESTAMP,
     last_modified_date TIMESTAMP,
     deleted_date TIMESTAMP,
-    deleted_by UUID
+    deleted_by UUID,
+    ong_id UUID,
+    Foreign key (ong_id) references ong (id)
 );
 
 -- Cria um índice na coluna last_modified_by para melhor desempenho em consultas
