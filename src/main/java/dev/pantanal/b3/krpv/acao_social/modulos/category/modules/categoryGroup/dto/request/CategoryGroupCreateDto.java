@@ -6,12 +6,12 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
 public record CategoryGroupCreateDto(
+        CategoryGroupEntity parentCategoryGroupEntity,
+        // @NotNull(message= "Campo 'visibility' não pode estar vazio")
+        VisibilityCategoryGroupEnum visibility,
         @NotBlank(message="Campo 'name' não pode estar vazio")
         String name,
         @NotBlank(message= "Campo 'description' não pode estar vazio")
-        String description,
-        CategoryGroupEntity parentCategoryGroupEntity,
-        @NotNull(message= "Campo 'visibility' não pode estar vazio")
-        VisibilityCategoryGroupEnum visibility
+        String description
 ) {
 }
