@@ -40,7 +40,7 @@ public class InvestmentFactory {
     public InvestmentEntity makeFakeEntity() {
         LocalDateTime date = LocalDateTime.now().plusHours(-9);
         String motivation = faker.lorem().sentence();
-        LocalDateTime approvedAt = LocalDateTime.now();
+        LocalDateTime approvedAt = LocalDateTime.now().plusHours(1);
         FindRegisterRandom findRegisterRandomSocial = new FindRegisterRandom<SocialActionEntity>(entityManager);
         List<SocialActionEntity> socialActions = findRegisterRandomSocial.execute("social_action", 1, SocialActionEntity.class);
         FindRegisterRandom findRandomCompany = new FindRegisterRandom<CompanyEntity>(entityManager);

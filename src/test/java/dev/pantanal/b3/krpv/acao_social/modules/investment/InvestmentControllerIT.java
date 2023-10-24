@@ -33,10 +33,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static dev.pantanal.b3.krpv.acao_social.modulos.investment.InvestmentController.ROUTE_INVESTMENT;
@@ -190,8 +187,15 @@ public class InvestmentControllerIT {
     void saveOneInvestment() throws Exception {
         // Arrange (Organizar)
         InvestmentEntity item = investmentFactory.makeFakeEntity();
-        // TODO:        item.setCreatedBy(userLoggedId);
-        String jsonRequest = objectMapper.writeValueAsString(item);
+        Map<String, Object> makeBody = new HashMap<>();
+        makeBody.put("valueMoney", item.getValueMoney());
+        makeBody.put("date", item.getDate().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME));
+        makeBody.put("motivation", item.getMotivation());
+        makeBody.put("approvedBy", item.getApprovedBy().getId());
+        makeBody.put("approvedDate", item.getApprovedDate().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME));
+        makeBody.put("socialAction", item.getSocialAction().getId());
+        makeBody.put("company", item.getCompany().getId());
+        String jsonRequest = objectMapper.writeValueAsString(makeBody);
         // Act (ação)
         ResultActions resultActions = mockMvc.perform(
                 MockMvcRequestBuilders.post(ROUTE_INVESTMENT)
@@ -204,11 +208,11 @@ public class InvestmentControllerIT {
                 .andExpect(MockMvcResultMatchers.status().isCreated())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.valueMoney").value(item.getValueMoney()))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.date").value(item.getDate().format(formatter)))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.approvedBy").value(item.getApprovedBy().getId().toString()))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.approvedBy.id").value(item.getApprovedBy().getId().toString()))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.approvedDate").value(item.getApprovedDate().format(formatter)))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.motivation").value(item.getMotivation()))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.socialActionId").value(item.getSocialAction().getId().toString()))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.companyId").value(item.getCompany().getId().toString()));
+                .andExpect(MockMvcResultMatchers.jsonPath("$.socialAction.id").value(item.getSocialAction().getId().toString()))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.company.id").value(item.getCompany().getId().toString()));
     }
 
 
