@@ -91,8 +91,10 @@ public class DonationControllerIT {
         this.objectMapper = new ObjectMapper();
         this.objectMapper.registerModule(new JavaTimeModule());
         //
-        PersonEntity personEntity = personFactory.insertOne(personFactory.makeFakeEntity(UUID.fromString(userId)));
-        this.personEntities.add(personEntity);
+        for (int i = 0;  i < 3; i++){
+            PersonEntity personEntity = personFactory.insertOne(personFactory.makeFakeEntity(UUID.randomUUID()));
+            this.personEntities.add(personEntity);
+        }
         ongFactory.insertOne(ongFactory.makeFakeEntity());
         List<CategoryGroupEntity> categoryGroupLevelEntities = new ArrayList<>();
         CategoryGroupEntity levelGroupEntity = categoryGroupFactory.makeFakeEntity("1", "level of social action", null);
