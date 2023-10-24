@@ -47,7 +47,7 @@ public class SocialActionService {
         saveSocialActionType(dataRequest.categoryTypeIds(), toSave);
         saveSocialActionLevel(dataRequest.categoryLevelIds(), toSave);
         OngEntity ongEntity = ongRepository.findById(dataRequest.ongEntity());
-        if (ongEntity != null){
+        if (ongEntity == null){
             throw new ObjectNotFoundException("Ong not valid");
         }
         SocialActionEntity socialActionSaved = socialActionRepository.save(toSave);

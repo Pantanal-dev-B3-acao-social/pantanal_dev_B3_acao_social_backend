@@ -2,16 +2,14 @@ package dev.pantanal.b3.krpv.acao_social.modules.socialAction;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import dev.pantanal.b3.krpv.acao_social.config.postgres.factory.CategoryFactory;
-import dev.pantanal.b3.krpv.acao_social.config.postgres.factory.CategoryGroupFactory;
-import dev.pantanal.b3.krpv.acao_social.config.postgres.factory.CategorySocialActionTypeFactory;
+import dev.pantanal.b3.krpv.acao_social.config.postgres.factory.*;
 import dev.pantanal.b3.krpv.acao_social.modulos.category.entity.CategoryEntity;
 import dev.pantanal.b3.krpv.acao_social.modulos.category.entity.CategorySocialActionLevelEntity;
 import dev.pantanal.b3.krpv.acao_social.modulos.category.entity.CategorySocialActionTypeEntity;
+import dev.pantanal.b3.krpv.acao_social.modulos.category.repository.CategoryRepository;
 import dev.pantanal.b3.krpv.acao_social.modulos.category.repository.CategorySocialActionLevelPostgresRepository;
 import dev.pantanal.b3.krpv.acao_social.modulos.category.repository.CategorySocialActionTypePostgresRepository;
 import dev.pantanal.b3.krpv.acao_social.utils.GenerateTokenUserForLogged;
-import dev.pantanal.b3.krpv.acao_social.config.postgres.factory.SocialActionFactory;
 import dev.pantanal.b3.krpv.acao_social.modulos.auth.dto.LoginUserDto;
 import dev.pantanal.b3.krpv.acao_social.modulos.category.modules.categoryGroup.CategoryGroupEntity;
 import dev.pantanal.b3.krpv.acao_social.modulos.socialAction.SocialActionEntity;
@@ -24,6 +22,8 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpServletResponse;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
@@ -73,27 +73,42 @@ public class SocialActionControllerIT {
     CategorySocialActionTypePostgresRepository categorySocialActionTypePostgresRepository;
     @Autowired
     CategorySocialActionLevelPostgresRepository categorySocialActionLevelPostgresRepository;
-    List<UUID> forCategoryTypeIds;
+    @Autowired
+    CategoryRepository categoryRepository;
+    @Autowired
+    OngFactory ongFactory;
+    @Autowired
+            PersonFactory personFactory;
+    List<UUID> categoriesTypesIds;
+    List<UUID> categoryLevelsIds;
+
     @BeforeEach
     public void setup() throws Exception {
         // token de login
         this.tokenUserLogged = generateTokenUserForLogged.loginUserMock(new LoginUserDto("funcionario1", "123"));
         this.loginMock.authenticateWithToken(tokenUserLogged);
-        List<CategoryGroupEntity> typesGroupEntities = new ArrayList<>();
-        // cria grupo de categoria e categorias para TIPO
-        CategoryGroupEntity typeGroupEntity = categoryGroupFactory.makeFakeEntity("social action type", "grupo de categorias para usar no TIPO de ação social", null);
-        CategoryGroupEntity typeGroupSaved = categoryGroupFactory.insertOne(typeGroupEntity);
-        typesGroupEntities.add(typeGroupSaved);
-        this.categoriesType = categoryFactory.insertMany(6, typesGroupEntities);
-        this.forCategoryTypeIds = this.categoriesType.stream()
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String userId = authentication.getName();
+        personFactory.insertOne(personFactory.makeFakeEntity(UUID.fromString(userId)));
+        ongFactory.insertOne(ongFactory.makeFakeEntity());
+        List<CategoryGroupEntity> categoryGroupLevelEntities = new ArrayList<>();
+        CategoryGroupEntity levelGroupEntity = categoryGroupFactory.makeFakeEntity("1", "level of social action", null);
+        CategoryGroupEntity levelGroupSaved = categoryGroupFactory.insertOne(levelGroupEntity);
+        categoryGroupLevelEntities.add(levelGroupSaved);
+        List<CategoryEntity> categoryLevels = this.categoryFactory.insertMany(3, categoryGroupLevelEntities);
+        this.categoryLevelsIds = categoryLevels.stream()
                 .map(category -> category.getId())
                 .collect(Collectors.toList());
-        // cria grupo de categoria e categorias para LEVEL
-        List<CategoryGroupEntity> levelGroupEntities = new ArrayList<>();
-        CategoryGroupEntity levelGroupEntity = categoryGroupFactory.makeFakeEntity("social action level", "grupo de categorias para usar no NÍVEL de ação social", null);
-        CategoryGroupEntity levelGroupSaved = categoryGroupFactory.insertOne(typeGroupEntity);
-        levelGroupEntities.add(levelGroupSaved);
-        this.categoriesLevel = categoryFactory.insertMany(6, levelGroupEntities);
+
+        List<CategoryGroupEntity> categoryGroupTypesEntities = new ArrayList<>();
+        CategoryGroupEntity typeGroupEntity = categoryGroupFactory.makeFakeEntity("social action type", "grupo de categorias para usar no TIPO de ação social", null);
+        CategoryGroupEntity typeGroupSaved = categoryGroupFactory.insertOne(typeGroupEntity);
+        categoryGroupTypesEntities.add(typeGroupSaved); //As categorias Desse vetor sempre Estarão relacionadas a um grupo especifico de categorias possiveis para uma entidade
+        List<CategoryEntity> categoriesTypes = this.categoryFactory.insertMany(6, categoryGroupTypesEntities); // as 6 categorias pertencem a este grupo
+
+        this.categoriesTypesIds = categoriesTypes.stream()
+                .map(category -> category.getId())
+                .collect(Collectors.toList());
         // formatar data hora
         this.formatter = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
         // mapper
@@ -134,6 +149,8 @@ public class SocialActionControllerIT {
                     .andExpect(MockMvcResultMatchers.jsonPath("$.content[" + i + "].name").value(item.getName()))
                     .andExpect(MockMvcResultMatchers.jsonPath("$.content[" + i + "].description").value(item.getDescription()))
                     .andExpect(MockMvcResultMatchers.jsonPath("$.content[" + i + "].categoryType").isArray())
+                    .andExpect(MockMvcResultMatchers.jsonPath("$.content[" + i + "].categoryLevel").isArray())
+                    .andExpect(MockMvcResultMatchers.jsonPath("$.content[" + i + "].ong.id").value(item.getOng().getId().toString()))
                     .andExpect(MockMvcResultMatchers.jsonPath("$.content[" + i + "].createdBy").isNotEmpty())
                     .andExpect(MockMvcResultMatchers.jsonPath("$.content[" + i + "].createdDate").isNotEmpty())
                     .andExpect(MockMvcResultMatchers.jsonPath("$.content[" + i + "].createdBy").value(item.getCreatedBy().toString()))
@@ -202,14 +219,15 @@ public class SocialActionControllerIT {
                 Assertions.assertEquals(jsonLastModifiedDate.isNull() ? null : jsonLastModifiedDate.asText(),
                         saved.get(i).getLastModifiedDate() == null ? null : saved.get(i).getLastModifiedDate().format(formatter)
                 );
-                Assertions.assertFalse(element.get("categoryTypeIds").isEmpty());
+                Assertions.assertFalse(element.get("categoryType").isEmpty());
+                Assertions.assertFalse(element.get("categoryLevel").isEmpty());
                 int i_type = 0;
-                JsonNode jsonCategoryTypeIds = element.get("categoryTypeIds");
-                Assertions.assertTrue(jsonCategoryTypeIds.isArray());
+                JsonNode jsonCategoryType = element.get("categoryType");
+                Assertions.assertTrue(jsonCategoryType.isArray());
                 List<CategorySocialActionTypeEntity> categoryTypesEntities = categorySocialActionTypePostgresRepository.findBySocialActionId(saved.get(i).getId());
-                Assertions.assertEquals(jsonCategoryTypeIds.size(), categoryTypesEntities.size());
-                for (JsonNode jsonType : jsonCategoryTypeIds) {
-                    String jsonId = jsonType.asText();
+                Assertions.assertEquals(jsonCategoryType.size(), categoryTypesEntities.size());
+                for (JsonNode jsonType : jsonCategoryType) {
+                    String jsonId = jsonType.get("id").asText();
                     String saveId = categoryTypesEntities.get(i_type).getId().toString();
                     Assertions.assertEquals(jsonId, saveId);
                     i_type++;
@@ -223,13 +241,14 @@ public class SocialActionControllerIT {
     @DisplayName("salva uma nova ação social com sucesso")
     void saveOneSocialAction() throws Exception {
         // Arrange (Organizar)
-        SocialActionEntity item = socialActionFactory.makeFakeEntity();
+        SocialActionEntity item = socialActionFactory.makeFakeEntity(categoriesTypesIds, categoryLevelsIds);
         Map<String, Object> makeBody = new HashMap<>();
         makeBody.put("name", item.getName());
         makeBody.put("description", item.getDescription());
         makeBody.put("version", item.getVersion());
-        makeBody.put("categoryTypeIds", forCategoryTypeIds.subList(0, forCategoryTypeIds.size() / 2));
-//        makeBody.put("categoryLevelIds", forCategoryLevelIds.subList(0, forCategoryLevelIds.size() / 2));
+        makeBody.put("ongEntity", item.getOng().getId().toString());
+        makeBody.put("categoryType", categoriesTypesIds.subList(0, categoriesTypesIds.size() / 2));
+        makeBody.put("categoryLevel", categoryLevelsIds.subList(0, categoryLevelsIds.size() / 2));
         String jsonRequest = objectMapper.writeValueAsString(makeBody);
         // Act (ação)
         ResultActions resultActions = mockMvc.perform(
@@ -256,14 +275,14 @@ public class SocialActionControllerIT {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.lastModifiedDate").isEmpty())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.deletedDate").isEmpty())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.deletedBy").isEmpty());
-        Assertions.assertFalse(jsonNode.get("categoryTypeIds").isNull());
+        Assertions.assertFalse(jsonNode.get("categoryType").isNull());
         int i_type = 0;
-        JsonNode jsonCategoryTypeIds = jsonNode.get("categoryTypeIds");
-        Assertions.assertTrue(jsonCategoryTypeIds.isArray());
+        JsonNode jsonCategoryType = jsonNode.get("categoryType");
+        Assertions.assertTrue(jsonCategoryType.isArray());
         UUID socialId = UUID.fromString(jsonNode.get("id").asText());
         List<CategorySocialActionTypeEntity> categoryTypesEntities = categorySocialActionTypePostgresRepository.findBySocialActionId(socialId);
-        Assertions.assertEquals(jsonCategoryTypeIds.size(), categoryTypesEntities.size());
-        for (JsonNode jsonType : jsonCategoryTypeIds) {
+        Assertions.assertEquals(jsonCategoryType.size(), categoryTypesEntities.size());
+        for (JsonNode jsonType : jsonCategoryType) {
             String jsonId = jsonType.asText();
             String saveId = categoryTypesEntities.get(i_type).getId().toString();
             Assertions.assertEquals(jsonId, saveId);
@@ -306,13 +325,13 @@ public class SocialActionControllerIT {
                 Assertions.assertEquals(jsonLastModifiedDate.isNull() ? null : jsonLastModifiedDate.asText(),
                         item.getLastModifiedDate() == null ? null : item.getLastModifiedDate().format(formatter)
                 );
-                Assertions.assertFalse(jsonNode.get("categoryTypeIds").isNull());
+                Assertions.assertFalse(jsonNode.get("categoryType").isNull());
                 int i_type = 0;
-                JsonNode jsonCategoryTypeIds = jsonNode.get("categoryTypeIds");
-                Assertions.assertTrue(jsonCategoryTypeIds.isArray());
+                JsonNode jsonCategoryType = jsonNode.get("categoryType");
+                Assertions.assertTrue(jsonCategoryType.isArray());
                 List<CategorySocialActionTypeEntity> categoryTypesEntities = categorySocialActionTypePostgresRepository.findBySocialActionId(item.getId());
-                Assertions.assertEquals(jsonCategoryTypeIds.size(), categoryTypesEntities.size());
-                for (JsonNode jsonType : jsonCategoryTypeIds) {
+                Assertions.assertEquals(jsonCategoryType.size(), categoryTypesEntities.size());
+                for (JsonNode jsonType : jsonCategoryType) {
                     String jsonId = jsonType.asText();
                     String saveId = categoryTypesEntities.get(i_type).getId().toString();
                     Assertions.assertEquals(jsonId, saveId);
@@ -324,7 +343,7 @@ public class SocialActionControllerIT {
     @DisplayName("Exclui uma ação social com sucesso")
     void deleteSocialAction() throws Exception {
         // Arrange (Organizar)
-        SocialActionEntity item = socialActionFactory.insertOne(socialActionFactory.makeFakeEntity());
+        SocialActionEntity item = socialActionFactory.insertOne(socialActionFactory.makeFakeEntity(categoriesTypesIds, categoryLevelsIds));
         // Act (ação)
         ResultActions resultActions = mockMvc.perform(
                 MockMvcRequestBuilders.delete(ROUTE_SOCIAL + "/{id}", item.getId())
@@ -342,13 +361,13 @@ public class SocialActionControllerIT {
     @DisplayName("Atualiza uma ação social com sucesso")
     void updateSocialAction() throws Exception {
         // Arrange (Organizar)
-        SocialActionEntity item = socialActionFactory.insertOne(socialActionFactory.makeFakeEntity());
+        SocialActionEntity item = socialActionFactory.insertOne(socialActionFactory.makeFakeEntity(categoriesTypesIds, categoryLevelsIds));
         // Modifica alguns dados da ação social
         Map<String, Object> makeBody = new HashMap<>();
         makeBody.put("name", item.getName() + "_ATUALIZADO");
         makeBody.put("description", item.getDescription() + "_ATUALIZADO");
         makeBody.put("version", item.getVersion());
-        makeBody.put("categoryTypeIds", forCategoryTypeIds.subList(0, forCategoryTypeIds.size() / 2));
+        makeBody.put("categoryType", categoriesTypesIds.subList(0, categoriesTypesIds.size() / 2));
 //        makeBody.put("categoryLevelIds", forCategoryLevelIds.subList(0, forCategoryLevelIds.size() / 2));
         String jsonRequest = objectMapper.writeValueAsString(makeBody);
         // Act (ação)
@@ -381,9 +400,9 @@ public class SocialActionControllerIT {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.id").value(item.getId().toString()))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.name").value(item.getName()))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.description").value(item.getDescription()))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.categoryTypeIds").isArray())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.categoryTypeIds", hasSize(categoryTypeIds.size())))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.categoryTypeIds", containsInAnyOrder(categoryTypeIds.toArray())))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.categoryType").isArray())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.categoryType", hasSize(categoryTypeIds.size())))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.categoryType", containsInAnyOrder(categoryTypeIds.toArray())))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.categoryLevelIds").isArray())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.categoryLevelIds", hasSize(categoryLevelIds.size())))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.categoryLevelIds", containsInAnyOrder(categoryLevelIds.toArray())))

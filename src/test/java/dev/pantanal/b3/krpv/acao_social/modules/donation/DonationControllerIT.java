@@ -83,7 +83,7 @@ public class DonationControllerIT {
         categoriesType = categoryFactory.makeFakeByGroup(2, "social action type", "grupo de categorias para usar no TIPO de ação social");;
         categoriesLevel = categoryFactory.makeFakeByGroup(2, "social action level", "grupo de categorias para usar no NÍVEL de ação social");
         personEntities = personFactory.insertMany(usersRandom.size(), usersRandom);
-        socialActionEntities = socialActionFactory.insertMany(3, categoriesTypesIds, categoryLevelsIds);
+//        socialActionEntities = socialActionFactory.insertMany(3, categoriesTypesIds, categoryLevelsIds);
     }
 
     @AfterEach
