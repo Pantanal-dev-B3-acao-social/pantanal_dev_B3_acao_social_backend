@@ -332,7 +332,7 @@ public class SocialActionControllerIT {
                 List<CategorySocialActionTypeEntity> categoryTypesEntities = categorySocialActionTypePostgresRepository.findBySocialActionId(item.getId());
                 Assertions.assertEquals(jsonCategoryType.size(), categoryTypesEntities.size());
                 for (JsonNode jsonType : jsonCategoryType) {
-                    String jsonId = jsonType.asText();
+                    String jsonId = jsonType.get("id").asText();
                     String saveId = categoryTypesEntities.get(i_type).getId().toString();
                     Assertions.assertEquals(jsonId, saveId);
                     i_type++;
