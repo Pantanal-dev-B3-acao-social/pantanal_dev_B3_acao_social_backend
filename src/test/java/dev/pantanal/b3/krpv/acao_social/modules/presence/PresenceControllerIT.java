@@ -248,7 +248,7 @@ public class PresenceControllerIT {
     }
 
     @Test
-    @DisplayName("(hard-delete) Exclui uma presence com sucesso")
+    @DisplayName("Exclui uma presence com sucesso")
     void deletePresence() throws Exception {
         // Arrange (Organizar)
         Integer indexPerson = random.nextInt(0, personEntities.size());

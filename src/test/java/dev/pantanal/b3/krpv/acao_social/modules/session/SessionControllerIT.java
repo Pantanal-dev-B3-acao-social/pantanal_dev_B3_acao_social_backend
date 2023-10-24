@@ -245,7 +245,7 @@ public class SessionControllerIT {
     }
 
     @Test
-    @DisplayName("(hard-delete) Exclui uma session com sucesso")
+    @DisplayName("Exclui uma session com sucesso")
     void deleteSession() throws Exception {
         // Arrange (Organizar)
         SessionEntity savedItem = sessionFactory.insertOne(sessionFactory.makeFakeEntity());

@@ -27,9 +27,8 @@ import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.transaction.annotation.Transactional;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
+
 import static dev.pantanal.b3.krpv.acao_social.modulos.ong.OngController.ROUTE_ONG;
 import static org.hamcrest.Matchers.hasSize;
 import org.springframework.http.MediaType;
@@ -133,7 +132,12 @@ public class OngControllerIT {
     void saveOneOng() throws Exception {
         // Arrange (Organizar)
         OngEntity item = ongFactory.makeFakeEntity();
-        String jsonRequest = objectMapper.writeValueAsString(item);
+        Map<String, Object> makeBody = new HashMap<>();
+        makeBody.put("name", item.getName());
+        makeBody.put("status", item.getStatus());
+        makeBody.put("cnpj", item.getCnpj());
+        makeBody.put("responsibleEntity", item.getResponsibleEntity().getId());
+        String jsonRequest = objectMapper.writeValueAsString(makeBody);
         // Act (ação)
         ResultActions resultActions = mockMvc.perform(
                 MockMvcRequestBuilders.post(ROUTE_ONG)
