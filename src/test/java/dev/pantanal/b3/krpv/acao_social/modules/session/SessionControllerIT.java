@@ -225,7 +225,7 @@ public class SessionControllerIT {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.dateEndTime").value(item.getDateEndTime().format(formatter)))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.status").value(item.getStatus().toString()))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.visibility").value(item.getVisibility().toString()))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.socialActionId").value(item.getSocialAction().getId().toString()))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.socialAction.id").value(item.getSocialAction().getId().toString()))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.createdBy").value(createdByString))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.createdDate").value(item.getCreatedDate().format(formatter)))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.deletedDate").value(deletedDateString))
