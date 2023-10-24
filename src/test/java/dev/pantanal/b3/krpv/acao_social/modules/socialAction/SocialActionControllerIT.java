@@ -401,15 +401,6 @@ public class SocialActionControllerIT {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.name").value(item.getName()))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.description").value(item.getDescription()))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.categoryType").isArray())
-        for (:
-             ) {
-            
-        }
-                .andExpect(MockMvcResultMatchers.jsonPath("$.categoryType", hasSize(categoryTypesEntities.size())))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.categoryType", containsInAnyOrder(categoryTypesEntities)))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.categoryLevel").isArray())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.categoryLevel", hasSize(categoryLevelsEntities.size())))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.categoryLevel", containsInAnyOrder(categoryLevelsEntities.toArray())))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.createdBy").isNotEmpty())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.createdDate").isNotEmpty())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.createdBy").value(item.getCreatedBy().toString()))
@@ -418,6 +409,20 @@ public class SocialActionControllerIT {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.lastModifiedDate").value(item.getLastModifiedDate().format(formatter)))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.deletedDate").isEmpty())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.deletedBy").isEmpty());
+
+        resultActions.andExpect(MockMvcResultMatchers.status().isOk());
+        Assertions.assertEquals(jsonNode.get("id").asText(), item.getId().toString());
+                Assertions.assertEquals(jsonNode.get("name").asText(), item.getName());
+        int i_type = 0;
+        for (JsonNode categoryType: jsonNode.get("categoryType")) {
+            Assertions.assertEquals(categoryType.get("id").asText(), categoryTypesEntities.get(i_type).getId().toString());
+            i_type++;
+        }
+        int i_level = 0;
+        for (JsonNode categoryType: jsonNode.get("categoryLevel")) {
+            Assertions.assertEquals(categoryType.get("id").asText(), categoryLevelsEntities.get(i_level).getId().toString());
+            i_level++;
+        }
     }
 
 }
