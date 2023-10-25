@@ -3,6 +3,7 @@ package dev.pantanal.b3.krpv.acao_social.modulos.person;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import dev.pantanal.b3.krpv.acao_social.config.audit.AuditListener;
+import dev.pantanal.b3.krpv.acao_social.modulos.interest.InterestEntity;
 import dev.pantanal.b3.krpv.acao_social.modulos.person.enums.StatusEnum;
 import dev.pantanal.b3.krpv.acao_social.modulos.presence.PresenceEntity;
 import dev.pantanal.b3.krpv.acao_social.modulos.presence.QPresenceEntity;
@@ -96,6 +97,11 @@ public class PersonEntity {
     @ToString.Exclude
     @JsonBackReference
     private List<PresenceEntity> presenceEntities;
+
+    @OneToMany(mappedBy = "person", fetch = FetchType.LAZY)
+    @ToString.Exclude
+    @JsonBackReference
+    private List<InterestEntity> interestEntities;
 
     @PrePersist
     protected void onCreate() {
