@@ -59,7 +59,6 @@ public class CategoryGroupService {
 
     public CategoryGroupEntity update(UUID id, CategoryGroupUpdateDto request){
         CategoryGroupEntity obj = categoryGroupRepository.findById(id);
-        CategoryGroupEntity parent = categoryGroupRepository.findById(request.parentCategoryGroupId());
 
         if (obj == null) {
             throw new ObjectNotFoundException("Registro não encontrado: " + id);
@@ -75,10 +74,14 @@ public class CategoryGroupService {
         if (request.visibility() != null) {
             obj.setVisibility(request.visibility());
         }
-        if (parent != null){
-            obj.setParentCategoryGroupEntity(parent);
+        CategoryGroupEntity parent = null;
+        if (request.parentCategoryGroupId() != null) {
+            parent = categoryGroupRepository.findById(request.parentCategoryGroupId());
+            if (parent == null) {
+                throw new ObjectNotFoundException("Registro não encontrado: " + request.parentCategoryGroupId());
+            }
         }
-
+        obj.setParentCategoryGroupEntity(parent);
         CategoryGroupEntity updatedObj = categoryGroupRepository.update(obj);
         return updatedObj;
     }
