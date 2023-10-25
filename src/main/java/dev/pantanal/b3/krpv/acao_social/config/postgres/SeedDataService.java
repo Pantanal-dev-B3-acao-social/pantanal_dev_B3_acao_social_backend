@@ -35,8 +35,9 @@ public class SeedDataService {
     private final PersonFactory personFactory;
     private final CompanyFactory companyFactory;
     private final PresenceFactory presenceFactory;
-
     private final VoluntaryFactory voluntaryFactory;
+    private final InterestFactory interestFactory;
+
 
     @Value("${acao-social.keyclock.adminUsername}")
     private String adminUsername;
@@ -62,7 +63,8 @@ public class SeedDataService {
             PersonFactory personFactory,
             CompanyFactory companyFactory,
             PresenceFactory presenceFactory,
-            VoluntaryFactory voluntaryFactory
+            VoluntaryFactory voluntaryFactory,
+            InterestFactory interestFactory
     ) {
         this.socialActionFactory = socialActionFactory;
         this.sessionFactory = sessionFactory;
@@ -75,6 +77,7 @@ public class SeedDataService {
         this.companyFactory = companyFactory;
         this.presenceFactory = presenceFactory;
         this.voluntaryFactory = voluntaryFactory;
+        this.interestFactory = interestFactory;
     }
 
     public void executeAllSeed() {
@@ -85,7 +88,7 @@ public class SeedDataService {
         List<CategoryGroupEntity> groupEntities = this.categoryGroupFactory.insertMany(4, null);
         // Arrange (Organizar) social action
         List<CategoryGroupEntity> categoryGroupLevelEntities = new ArrayList<>();
-        CategoryGroupEntity levelGroupEntity = categoryGroupFactory.makeFakeEntity("1", "level of social action", null);
+        CategoryGroupEntity levelGroupEntity = categoryGroupFactory.makeFakeEntity("Social Action Level", "level of social action", null);
         CategoryGroupEntity levelGroupSaved = categoryGroupFactory.insertOne(levelGroupEntity);
         categoryGroupLevelEntities.add(levelGroupSaved);
         List<CategoryEntity> categoryLevels = this.categoryFactory.insertMany(3, categoryGroupLevelEntities);
@@ -116,6 +119,7 @@ public class SeedDataService {
         this.donationFactory.insertMany(450, socialActionEntities, personEntities, personEntities);
         this.presenceFactory.insertMany(100, personEntities, sessions, personEntities);
         this.voluntaryFactory.insertMany(100);
+        this.interestFactory.insertMany(20, personEntities, categoriesTypes);
     }
 
 }

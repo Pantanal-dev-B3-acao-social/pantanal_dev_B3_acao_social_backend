@@ -1,15 +1,13 @@
-package dev.pantanal.b3.krpv.acao_social.modulos.person;
+package dev.pantanal.b3.krpv.acao_social.modulos.interest;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import dev.pantanal.b3.krpv.acao_social.config.audit.AuditListener;
-import dev.pantanal.b3.krpv.acao_social.modulos.interest.InterestEntity;
-import dev.pantanal.b3.krpv.acao_social.modulos.person.enums.StatusEnum;
-import dev.pantanal.b3.krpv.acao_social.modulos.presence.PresenceEntity;
-import dev.pantanal.b3.krpv.acao_social.modulos.presence.QPresenceEntity;
-import dev.pantanal.b3.krpv.acao_social.modulos.voluntary.VoluntaryEntity;
+import dev.pantanal.b3.krpv.acao_social.modulos.category.entity.CategoryEntity;
+import dev.pantanal.b3.krpv.acao_social.modulos.person.PersonEntity;
+import dev.pantanal.b3.krpv.acao_social.modulos.session.SessionEntity;
 import jakarta.persistence.*;
-//import jakarta.validation.Valid;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import org.hibernate.annotations.SQLDelete;
@@ -19,25 +17,23 @@ import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.UUID;
 
-@Table(name="person")
-@Entity(name="Person")
+@Table(name="interest")
+@Entity(name="Interest")
 @EntityListeners(AuditListener.class)
-//@AuditTable("z_aud_person")
-//@Audited
+
 @Data
 @NoArgsConstructor
 @Builder
 @AllArgsConstructor
 @EqualsAndHashCode
 @ToString
-@SQLDelete(sql = "UPDATE person SET deleted_date = CURRENT_DATE where id=? and version=?")
-public class PersonEntity {
-
-//    @Valid
+@SQLDelete(sql = "UPDATE interest SET deleted_date = CURRENT_DATE WHERE id=? and version=?")
+public class InterestEntity {
+    @Valid
     @Version
     private Long version = 1L;
 
@@ -47,24 +43,23 @@ public class PersonEntity {
     @NotNull
     UUID id;
 
-//    @CreatedBy
-    @Column(name = "user_by", nullable = false, unique = true)
-    private UUID userId;
+    @ManyToOne
+    @JoinColumn(name = "person_id", nullable = false)
+    @JsonManagedReference
+    private PersonEntity person;
 
-    @Column(nullable = false)
-    private String name;
+    @ManyToOne
+    @JoinColumn(name = "category_id", nullable = false)
+    @JsonManagedReference
+    private CategoryEntity category;
 
-    @Column(name = "date_birth")
-    private LocalDateTime dateBirth;
+    @ManyToOne
+    @JoinColumn(name = "approved_by", nullable = true)
+    private PersonEntity approvedBy;
 
-    @Enumerated(EnumType.STRING)
-    @Column(length = 255)
-    private StatusEnum status;
+    @Column(name = "approved_date")
+    private LocalDateTime approvedDate;
 
-    @Column(nullable = false, unique = true)
-//    @NotBlank
-//    @CPF
-    String cpf;
 
     @CreatedBy
     @Column(name = "created_by")
@@ -88,21 +83,6 @@ public class PersonEntity {
     @Column(name = "deleted_by")
     private UUID deletedBy;
 
-    @OneToMany(mappedBy = "person", fetch = FetchType.LAZY)
-    @ToString.Exclude
-    @JsonBackReference
-    private List<VoluntaryEntity> voluntaryEntities;
-
-    @OneToMany(mappedBy = "person", fetch = FetchType.LAZY)
-    @ToString.Exclude
-    @JsonBackReference
-    private List<PresenceEntity> presenceEntities;
-
-    @OneToMany(mappedBy = "person", fetch = FetchType.LAZY)
-    @ToString.Exclude
-    @JsonBackReference
-    private List<InterestEntity> interestEntities;
-
     @PrePersist
     protected void onCreate() {
         this.createdDate = LocalDateTime.now();
@@ -122,5 +102,4 @@ public class PersonEntity {
             this.lastModifiedBy = UUID.fromString(userId);
         }
     }
-
 }
