@@ -54,13 +54,6 @@ public class InterestRepository {
         return interestEntity;
     }
 
-    @Transactional
-    public InterestEntity update(InterestEntity obj) {
-        InterestEntity updatedEntity = entityManager.merge(obj);
-        entityManager.flush();
-        return updatedEntity;
-    }
-
     public void delete(UUID id) {
         interestPostgresRepository.deleteById(id);
     }
