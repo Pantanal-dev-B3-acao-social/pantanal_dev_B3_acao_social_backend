@@ -88,7 +88,7 @@ public class SeedDataService {
         List<CategoryGroupEntity> groupEntities = this.categoryGroupFactory.insertMany(4, null);
         // Arrange (Organizar) social action
         List<CategoryGroupEntity> categoryGroupLevelEntities = new ArrayList<>();
-        CategoryGroupEntity levelGroupEntity = categoryGroupFactory.makeFakeEntity("1", "level of social action", null);
+        CategoryGroupEntity levelGroupEntity = categoryGroupFactory.makeFakeEntity("Social Action Level", "level of social action", null);
         CategoryGroupEntity levelGroupSaved = categoryGroupFactory.insertOne(levelGroupEntity);
         categoryGroupLevelEntities.add(levelGroupSaved);
         List<CategoryEntity> categoryLevels = this.categoryFactory.insertMany(3, categoryGroupLevelEntities);
