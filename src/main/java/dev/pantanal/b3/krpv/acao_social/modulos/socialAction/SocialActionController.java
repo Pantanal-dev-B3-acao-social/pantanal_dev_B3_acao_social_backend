@@ -65,7 +65,7 @@ public class SocialActionController {
     })
     public Page<SocialActionResponseDto> findAll(
             @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "50") int size,
             @SortDefault(sort="name", direction = Sort.Direction.DESC) Sort sort,
             @Valid SocialActionParamsDto request
     ) {
