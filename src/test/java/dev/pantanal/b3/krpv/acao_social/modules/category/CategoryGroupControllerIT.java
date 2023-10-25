@@ -2,7 +2,9 @@ package dev.pantanal.b3.krpv.acao_social.modules.category;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import com.github.javafaker.Cat;
 import dev.pantanal.b3.krpv.acao_social.config.postgres.factory.CategoryGroupFactory;
+import dev.pantanal.b3.krpv.acao_social.modulos.category.modules.categoryGroup.enums.VisibilityCategoryGroupEnum;
 import dev.pantanal.b3.krpv.acao_social.utils.GenerateTokenUserForLogged;
 import dev.pantanal.b3.krpv.acao_social.modulos.auth.dto.LoginUserDto;
 import dev.pantanal.b3.krpv.acao_social.modulos.category.modules.categoryGroup.CategoryGroupEntity;
@@ -132,6 +134,7 @@ public class CategoryGroupControllerIT {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.description").value(item.getDescription()))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.code").value(item.getCode()))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.visibility").value(item.getVisibility().toString()))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.parentCategoryGroupId").value(item.getParentCategoryGroupEntity() == null? null : item.getParentCategoryGroupEntity().getId().toString()))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.createdBy").isNotEmpty())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.createdBy").value(loginMock.extractUserIdFromJwt(tokenUserLogged)))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.lastModifiedBy").isEmpty())
@@ -200,13 +203,20 @@ public class CategoryGroupControllerIT {
     @DisplayName("Atualiza uma grupo de categoria com sucesso")
     void updateCategoryGroup() throws Exception {
         // Arrange (Organizar)
+        CategoryGroupEntity parentUpdateEntity = categoryGroupFactory.insertOne(categoryGroupFactory.makeFakeEntity(null, null, null));
         CategoryGroupEntity item = categoryGroupFactory.insertOne(categoryGroupFactory.makeFakeEntity(null, null, null));
         // Modifica alguns dados da grupo de categoria
         item.setName(item.getName() + "_ATUALIZADO");
         item.setDescription(item.getDescription() + "_ATUALIZADO");
+        item.setVisibility(VisibilityCategoryGroupEnum.PUBLIC_EXTERNALLY);
+        Map<String, Object> makeBody = new HashMap<>();
+        makeBody.put("name", item.getName());
+        makeBody.put("description", item.getDescription());
+        makeBody.put("parentCategoryGroupId", parentUpdateEntity.getId());
+        makeBody.put("visibility", item.getVisibility());
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.registerModule(new JavaTimeModule());
-        String updatedCategoryGroupJson = objectMapper.writeValueAsString(item);
+        String updatedCategoryGroupJson = objectMapper.writeValueAsString(makeBody);
         // Act (ação)
         ResultActions resultActions = mockMvc.perform(
                 MockMvcRequestBuilders.patch(ROUTE_CATEGORY_GROUP + "/{id}", item.getId())
@@ -222,6 +232,7 @@ public class CategoryGroupControllerIT {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.description").value(item.getDescription()))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.code").value(item.getCode()))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.visibility").value(item.getVisibility().toString()))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.parentCategoryGroupId").value(parentUpdateEntity == null? null : parentUpdateEntity.getId().toString()))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.createdBy").isNotEmpty())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.createdDate").isNotEmpty())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.lastModifiedBy").isNotEmpty())
