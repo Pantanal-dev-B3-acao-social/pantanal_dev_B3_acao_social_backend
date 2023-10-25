@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 import java.util.UUID;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -49,6 +50,8 @@ public class SeedDataService {
     GenerateTokenUserForLogged generateTokenUserForLogged;
     @Autowired
     LoginMock loginMock;
+
+    private static final Random random = new Random();
 
     @Autowired
     public SeedDataService(
@@ -83,9 +86,10 @@ public class SeedDataService {
     public void executeAllSeed() {
         String tokenUserLogged = generateTokenUserForLogged.loginUserMock(new LoginUserDto(adminUsername, adminPassword));
         loginMock.authenticateWithToken(tokenUserLogged);
-
         // Arrange (Organizar) category
-        List<CategoryGroupEntity> groupEntities = this.categoryGroupFactory.insertMany(4, null);
+        List<CategoryGroupEntity> groupEntitiesParents = this.categoryGroupFactory.insertMany(2, null);
+        int amountGroupEntitiesSons = 2;
+        List<CategoryGroupEntity> groupEntitiesSons = this.categoryGroupFactory.insertMany(amountGroupEntitiesSons, groupEntitiesParents.get(0));
         // Arrange (Organizar) social action
         List<CategoryGroupEntity> categoryGroupLevelEntities = new ArrayList<>();
         CategoryGroupEntity levelGroupEntity = categoryGroupFactory.makeFakeEntity("Social Action Level", "level of social action", null);
@@ -109,7 +113,8 @@ public class SeedDataService {
                 .mapToObj(i -> UUID.randomUUID())
                 .collect(Collectors.toList());
         // SEED
-        this.categoryFactory.insertMany(100, groupEntities);
+        this.categoryFactory.insertMany(50, groupEntitiesParents);
+        this.categoryFactory.insertMany(50, groupEntitiesSons);
         List<PersonEntity> personEntities = this.personFactory.insertMany(usersRandom.size(), usersRandom);
         this.companyFactory.insertMany(4);
         this.ongFactory.insertMany(10);
