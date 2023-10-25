@@ -30,7 +30,7 @@ public class InterestController {
 
     @Autowired
     private InterestService service;
-    public static final String ROUTE_INTEREST = "/v1/presence";
+    public static final String ROUTE_INTEREST = "/v1/interest";
 
     public InterestResponseDto mapEntityToDto(InterestEntity entity) {
         InterestResponseDto dto = new InterestResponseDto(
