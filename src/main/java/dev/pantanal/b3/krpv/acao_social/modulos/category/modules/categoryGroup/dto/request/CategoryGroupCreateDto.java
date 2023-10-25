@@ -4,7 +4,6 @@ import dev.pantanal.b3.krpv.acao_social.modulos.category.modules.categoryGroup.C
 import dev.pantanal.b3.krpv.acao_social.modulos.category.modules.categoryGroup.enums.VisibilityCategoryGroupEnum;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-
 import java.util.UUID;
 
 public record CategoryGroupCreateDto(
@@ -13,7 +12,7 @@ public record CategoryGroupCreateDto(
         @NotBlank(message= "Campo 'description' não pode estar vazio")
         String description,
 
-        UUID parentCategoryGroupEntity,
+        UUID parentCategoryGroupId,
         
         VisibilityCategoryGroupEnum visibility
 ) {

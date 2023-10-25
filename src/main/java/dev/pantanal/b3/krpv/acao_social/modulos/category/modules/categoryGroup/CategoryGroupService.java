@@ -26,8 +26,8 @@ public class CategoryGroupService {
 
     public CategoryGroupEntity create(CategoryGroupCreateDto dataRequest) {
         CategoryGroupEntity entity = new CategoryGroupEntity();
-        if (dataRequest.parentCategoryGroupEntity() != null){
-            CategoryGroupEntity fatherEntity = categoryGroupRepository.findById(dataRequest.parentCategoryGroupEntity());
+        if (dataRequest.parentCategoryGroupId() != null){
+            CategoryGroupEntity fatherEntity = categoryGroupRepository.findById(dataRequest.parentCategoryGroupId());
             entity.setParentCategoryGroupEntity(fatherEntity);
         }
         entity.setName(dataRequest.name());
