@@ -1,5 +1,7 @@
 package dev.pantanal.b3.krpv.acao_social.modulos.presence;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import dev.pantanal.b3.krpv.acao_social.config.audit.AuditListener;
 import dev.pantanal.b3.krpv.acao_social.modulos.person.PersonEntity;
 import dev.pantanal.b3.krpv.acao_social.modulos.session.SessionEntity;
@@ -44,10 +46,12 @@ public class PresenceEntity {
 
     @ManyToOne
     @JoinColumn(name = "person_id", nullable = false)
+    @JsonManagedReference
     private PersonEntity person;
 
     @ManyToOne
     @JoinColumn(name = "session_id", nullable = false)
+    @JsonManagedReference
     private SessionEntity session;
 
     @ManyToOne

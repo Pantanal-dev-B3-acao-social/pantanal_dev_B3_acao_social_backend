@@ -1,6 +1,7 @@
 package dev.pantanal.b3.krpv.acao_social.modulos.interest;
 
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import dev.pantanal.b3.krpv.acao_social.config.audit.AuditListener;
 import dev.pantanal.b3.krpv.acao_social.modulos.category.entity.CategoryEntity;
 import dev.pantanal.b3.krpv.acao_social.modulos.person.PersonEntity;
@@ -44,10 +45,12 @@ public class InterestEntity {
 
     @ManyToOne
     @JoinColumn(name = "person_id", nullable = false)
+    @JsonManagedReference
     private PersonEntity person;
 
     @ManyToOne
     @JoinColumn(name = "category_id", nullable = false)
+    @JsonManagedReference
     private CategoryEntity category;
 
     @ManyToOne

@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 import dev.pantanal.b3.krpv.acao_social.config.audit.AuditListener;
 import dev.pantanal.b3.krpv.acao_social.modulos.category.enums.VisibilityCategoryEnum;
 import dev.pantanal.b3.krpv.acao_social.modulos.category.modules.categoryGroup.CategoryGroupEntity;
+import dev.pantanal.b3.krpv.acao_social.modulos.interest.InterestEntity;
 import jakarta.persistence.*;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
@@ -100,6 +101,11 @@ public class CategoryEntity {
     @ToString.Exclude
     @JsonManagedReference
     private CategoryGroupEntity categoryGroup;
+
+    @OneToMany(mappedBy = "category", fetch = FetchType.LAZY)
+    @ToString.Exclude
+    @JsonBackReference
+    private List<InterestEntity> interest;
 
     @PrePersist
     protected void onCreate() {
