@@ -1,6 +1,7 @@
 package dev.pantanal.b3.krpv.acao_social.modulos.category.modules.categoryGroup.repository;
 
 import com.querydsl.core.types.dsl.*;
+import dev.pantanal.b3.krpv.acao_social.modulos.category.modules.categoryGroup.QCategoryGroupEntity;
 import dev.pantanal.b3.krpv.acao_social.modulos.category.modules.categoryGroup.dto.request.CategoryGroupParamsDto;
 import dev.pantanal.b3.krpv.acao_social.modulos.category.modules.categoryGroup.enums.VisibilityCategoryGroupEnum;
 import org.springframework.stereotype.Component;
@@ -28,8 +29,7 @@ public class CategoryGroupPredicates {
             predicate = predicate.and(filterPath.eq(filters.code()));
         }
         if (filters.parentCategoryGroupId() != null) {
-            QCategoryGroupEntity filterPath = q.categoryGroupEntity;
-            predicate = predicate.and(filterPath.eq(filters.parentCategoryGroupId()));
+            predicate = predicate.and(q.parentCategoryGroupEntity.id.in(filters.parentCategoryGroupId()));
         }
         if (filters.visibility() != null) {
             EnumPath<VisibilityCategoryGroupEnum> filterPath = q.visibility;
