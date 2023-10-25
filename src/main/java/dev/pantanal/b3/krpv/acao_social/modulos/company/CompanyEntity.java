@@ -58,7 +58,7 @@ public class CompanyEntity {
     @Column(nullable = false, unique = true)
     @NotBlank
     @CNPJ
-    String cnpj;
+    private String cnpj;
 
     @CreatedBy
     private UUID createdBy;
