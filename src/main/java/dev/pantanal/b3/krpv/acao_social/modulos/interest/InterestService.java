@@ -4,7 +4,6 @@ import com.querydsl.core.types.dsl.BooleanExpression;
 import dev.pantanal.b3.krpv.acao_social.exception.ObjectNotFoundException;
 import dev.pantanal.b3.krpv.acao_social.modulos.category.entity.CategoryEntity;
 import dev.pantanal.b3.krpv.acao_social.modulos.category.repository.CategoryRepository;
-import dev.pantanal.b3.krpv.acao_social.modulos.interest.InterestEntity;
 import dev.pantanal.b3.krpv.acao_social.modulos.interest.dto.request.InterestCreateDto;
 import dev.pantanal.b3.krpv.acao_social.modulos.interest.dto.request.InterestParamsDto;
 import dev.pantanal.b3.krpv.acao_social.modulos.interest.repository.InterestPredicates;

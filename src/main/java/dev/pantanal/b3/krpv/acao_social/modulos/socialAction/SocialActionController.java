@@ -33,12 +33,6 @@ public class SocialActionController {
     public static final String ROUTE_SOCIAL = "/v1/social";
 
     public SocialActionResponseDto mapEntityToDto(SocialActionEntity entity) {
-//        List<UUID> categoryTypeIds = entity.getCategorySocialActionTypeEntities().stream()
-//                .map(type -> type.getId())
-//                .collect(Collectors.toList());
-//        List<UUID> categoryLevelIds = entity.getCategorySocialActionLevelEntities().stream()
-//                .map(level -> level.getId())
-//                .collect(Collectors.toList());
         SocialActionResponseDto dto = new SocialActionResponseDto(
                 entity.getId(),
                 entity.getName(),
