@@ -65,7 +65,7 @@ public class VoluntaryController {
     })
     public Page<VoluntaryResponseDto> findAll(
             @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "50") int size,
             @SortDefault(sort="feedbackScoreVoluntary", direction = Sort.Direction.DESC) Sort sort,
             @Valid VoluntaryParamsDto request
     ) {

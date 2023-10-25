@@ -28,9 +28,8 @@ public class CategoryGroupPredicates {
             StringPath filterPath = q.code;
             predicate = predicate.and(filterPath.eq(filters.code()));
         }
-        if (filters.categoryGroupEntity() != null) {
-            QCategoryGroupEntity filterPath = q.categoryGroupEntity;
-            predicate = predicate.and(filterPath.eq(filters.categoryGroupEntity()));
+        if (filters.parentCategoryGroupId() != null) {
+            predicate = predicate.and(q.parentCategoryGroupEntity.id.in(filters.parentCategoryGroupId()));
         }
         if (filters.visibility() != null) {
             EnumPath<VisibilityCategoryGroupEnum> filterPath = q.visibility;
