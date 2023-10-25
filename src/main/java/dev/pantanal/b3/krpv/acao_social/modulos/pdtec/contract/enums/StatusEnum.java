@@ -1,4 +1,4 @@
-package dev.pantanal.b3.krpv.acao_social.modulos.contract.enums;
+package dev.pantanal.b3.krpv.acao_social.modulos.pdtec.contract.enums;
 
 public enum StatusEnum {
     PEDING("Pendente"),

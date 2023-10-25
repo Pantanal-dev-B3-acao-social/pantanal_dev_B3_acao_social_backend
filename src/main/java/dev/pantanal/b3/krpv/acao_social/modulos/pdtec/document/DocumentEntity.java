@@ -1,12 +1,8 @@
-package dev.pantanal.b3.krpv.acao_social.modulos.contract;
+package dev.pantanal.b3.krpv.acao_social.modulos.pdtec.document;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import dev.pantanal.b3.krpv.acao_social.config.audit.AuditListener;
-import dev.pantanal.b3.krpv.acao_social.modulos.company.CompanyEntity;
-import dev.pantanal.b3.krpv.acao_social.modulos.contract.enums.StatusEnum;
-import dev.pantanal.b3.krpv.acao_social.modulos.ong.OngEntity;
-import dev.pantanal.b3.krpv.acao_social.modulos.person.PersonEntity;
-import dev.pantanal.b3.krpv.acao_social.modulos.socialAction.SocialActionEntity;
+import dev.pantanal.b3.krpv.acao_social.modulos.pdtec.contract.ContractEntity;
 import jakarta.persistence.*;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
@@ -22,10 +18,10 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
-@Table(name="contract")
-@Entity(name="Contract")
+@Table(name="document")
+@Entity(name="Document")
 @EntityListeners(AuditListener.class)
-//@AuditTable("z_aud_contract")
+//@AuditTable("z_aud_document")
 //@Audited
 @Data
 @NoArgsConstructor
@@ -33,8 +29,8 @@ import java.util.UUID;
 @AllArgsConstructor
 @EqualsAndHashCode
 @ToString
-@SQLDelete(sql = "UPDATE contract SET deleted_date = CURRENT_DATE WHERE id=? and version=?")
-public class ContractEntity {
+@SQLDelete(sql = "UPDATE document SET deleted_date = CURRENT_DATE WHERE id=? and version=?")
+public class DocumentEntity {
 
     @Valid
     @Version
@@ -47,40 +43,12 @@ public class ContractEntity {
     UUID id;
 
     @ManyToOne
-    @JoinColumn(name = "company_id", nullable = false)
+    @JoinColumn(name = "contract_id", nullable = false)
     @JsonManagedReference
-    private CompanyEntity company;
+    private ContractEntity contract;
 
-    @OneToOne
-    @JoinColumn(name = "social_action_id", nullable = false)
-    @JsonManagedReference
-    private SocialActionEntity socialAction;
-
-    @ManyToOne
-    @JoinColumn(name = "ong_id", nullable = true)
-    private OngEntity ong;
-
-    @Column(name = "process_id", unique = true)
-    UUID processoId;
-
-    @Column(name = "title")
-    private String title;
-
-    @Column(name = "description")
-    private String description;
-
-    @Column(name = "justification")
-    private String justification;
-
-    @Column(name = "status")
-    private StatusEnum status;
-
-    @Column(name = "evalueted_at")
-    private LocalDateTime evaluatedAt;
-
-    @OneToOne
-    @JoinColumn(name = "person_id")
-    private PersonEntity evaluatedBy;
+    @Column(name = "document_id", nullable = false)
+    private UUID pdtecDocumentId;
 
     @CreatedBy
     @Column(name = "created_by")
