@@ -50,7 +50,7 @@ public class InterestController {
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    @PreAuthorize("hasAnyRole('INTEREST_GET_ALL')")
+    //@PreAuthorize("hasAnyRole('INTEREST_GET_ALL')")
     @Operation(summary = "Gets Interest", method = "GET")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Element(s) found successfully"),
@@ -72,7 +72,7 @@ public class InterestController {
 
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    @PreAuthorize("hasAnyRole('INTEREST_GET_ONE')")
+    //@PreAuthorize("hasAnyRole('INTEREST_GET_ONE')")
     @Operation(summary = "Gets one Interest", method = "GET")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Element found successfully"),
@@ -88,7 +88,7 @@ public class InterestController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    @PreAuthorize("hasAnyRole('INTEREST_CREATE')")
+    //@PreAuthorize("hasAnyRole('INTEREST_CREATE')")
     @Operation(summary = "Creates an Interest", method = "POST")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "Interest succesfully created"),
@@ -106,7 +106,7 @@ public class InterestController {
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    @PreAuthorize("hasAnyRole('INTEREST_DELETE')")
+    //@PreAuthorize("hasAnyRole('INTEREST_DELETE')")
     @Operation(summary = "Deletes an Interest", method = "DELETE")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "204", description = "Successfully deleted"),
