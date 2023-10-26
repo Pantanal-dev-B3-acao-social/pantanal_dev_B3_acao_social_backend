@@ -84,6 +84,9 @@ public class PresenceEntity {
     @Column(name = "deleted_by")
     private UUID deletedBy;
 
+    @Column(name = "score_value")
+    private Integer scoreValue;
+
     @PrePersist
     protected void onCreate() {
         this.createdDate = LocalDateTime.now();

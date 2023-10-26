@@ -88,6 +88,9 @@ public class SessionEntity {
     @JsonBackReference
     private SocialActionEntity socialAction;
 
+    @Column(name = "score_value")
+    private Integer scoreValue;
+
 // oneToMany
 // private LocalEntity local;
 // ManyToOne
