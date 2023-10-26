@@ -77,14 +77,14 @@ public class CategoryGroupControllerIT {
                 .andDo(MockMvcResultHandlers.print())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.content").isArray())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.content", hasSize(4)));
-        int i = 1;
+        int i = 0;
         for (CategoryGroupEntity item : saved) {
             perform
                     .andExpect(MockMvcResultMatchers.jsonPath("$.content[" + i + "].id").value(item.getId().toString()))
                     .andExpect(MockMvcResultMatchers.jsonPath("$.content[" + i + "].name").value(item.getName()))
                     .andExpect(MockMvcResultMatchers.jsonPath("$.content[" + i + "].description").value(item.getDescription()))
                     .andExpect(MockMvcResultMatchers.jsonPath("$.content[" + i + "].code").value(item.getCode()))
-                    .andExpect(MockMvcResultMatchers.jsonPath("$.content[" + i + "].parentCategoryGroupId").value(item.getParentCategoryGroupEntity().getId().toString()))
+                    .andExpect(MockMvcResultMatchers.jsonPath("$.content[" + i + "].parentCategoryGroupId").value(item.getParentCategoryGroupEntity() == null? null : item.getParentCategoryGroupEntity().getId().toString()))
                     .andExpect(MockMvcResultMatchers.jsonPath("$.content[" + i + "].visibility").value(item.getVisibility().toString()))
 // TODO: One nao testa seus Many                   .andExpect(MockMvcResultMatchers.jsonPath("$.content[" + i + "].categories").value(item.getCategories().toString()))
                     .andExpect(MockMvcResultMatchers.jsonPath("$.content[" + i + "].createdBy").isNotEmpty())

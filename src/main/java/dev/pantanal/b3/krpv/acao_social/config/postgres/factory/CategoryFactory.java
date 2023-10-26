@@ -3,6 +3,7 @@ package dev.pantanal.b3.krpv.acao_social.config.postgres.factory;
 import com.github.javafaker.Faker;
 import dev.pantanal.b3.krpv.acao_social.modulos.auth.dto.LoginUserDto;
 import dev.pantanal.b3.krpv.acao_social.modulos.category.entity.CategoryEntity;
+import dev.pantanal.b3.krpv.acao_social.modulos.category.enums.VisibilityCategoryEnum;
 import dev.pantanal.b3.krpv.acao_social.modulos.category.modules.categoryGroup.CategoryGroupEntity;
 import dev.pantanal.b3.krpv.acao_social.modulos.category.repository.CategoryRepository;
 import dev.pantanal.b3.krpv.acao_social.utils.GeneratorCode;
@@ -45,6 +46,7 @@ public class CategoryFactory {
         categoryEntity.setDescription(faker.lorem().sentence());
         categoryEntity.setCode(code);
         categoryEntity.setCategoryGroup(groupEntity);
+        categoryEntity.setVisibility(VisibilityCategoryEnum.PUBLIC_EXTERNALLY);
         return categoryEntity;
     }
 
