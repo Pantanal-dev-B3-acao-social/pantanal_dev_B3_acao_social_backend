@@ -1,14 +1,18 @@
 package dev.pantanal.b3.krpv.acao_social.modulos.pdtec.contract.dto.request;
 
 import dev.pantanal.b3.krpv.acao_social.modulos.pdtec.contract.enums.StatusEnum;
+import jakarta.validation.constraints.NotNull;
+
 import java.util.List;
 import java.util.UUID;
 
 public record ContractCreateDto (
 
+        @NotNull
         CompanyDto companyId,
+        @NotNull
         UUID socialAction,
-
+        @NotNull
         UUID ong,
 
         String title,

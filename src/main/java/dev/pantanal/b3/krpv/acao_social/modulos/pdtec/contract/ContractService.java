@@ -1,6 +1,7 @@
 package dev.pantanal.b3.krpv.acao_social.modulos.pdtec.contract;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import dev.pantanal.b3.krpv.acao_social.exception.ObjectNotFoundException;
@@ -47,20 +48,23 @@ public class ContractService {
     @Value("${acao-social.pdtec.baseUrl}")
     private String pdtecUrl;
 
+    @Value("${acao-social.pdtec.x-tenant}")
+    private String xTenant;
+
     public ContractEntity create(ContractCreateDto request, String token) {
         String requestUrlEndpoint = pdtecUrl + "/processes";
         HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
         headers.setBearerAuth(token);
-        //6cbe14eb-fae5-4d47-b697-9128d512649e verificar se vai precisar passar esse X-tenant ou ele já vai junto do token
-//        ProcessCreateDto newProcess;
+        headers.set("x-Tenant", xTenant);
+
         Map<String, Object> makeBody = new HashMap<>();
         makeBody.put("title", request.title());
         makeBody.put("requester", request.requester());
-        makeBody.put("company", request.companyId());
         makeBody.put("flow", request.flow());
         makeBody.put("members", request.members());
-
         String jsonRequest;
+
         try {
             jsonRequest = objectMapper.writeValueAsString(makeBody);
         } catch (JsonProcessingException e) {
@@ -74,12 +78,20 @@ public class ContractService {
                 requestPdtec,
                 String.class
         );
-        if (responsePdtec != null) {
+        String responseBody = responsePdtec.getBody();
+        JsonNode responseJson;
+        try {
+            responseJson = objectMapper.readTree(responseBody);
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
+        String responseId = responseJson.get("id").asText();
+        if (responseId != null) {
 
             ContractEntity newContract = new ContractEntity();
             SocialActionEntity socialAction = socialActionRepository.findById(request.socialAction());
-            CompanyEntity company = companyRepository.findById(request.companyId().id());
-            OngEntity ong = ongRepository.findById(request.ong());
+            CompanyEntity company = companyRepository.findById((request.companyId().id()));
+            OngEntity ong = ongRepository.findById((request.ong()));
             if (socialAction != null && socialAction != null && company != null && ong != null) {
                 newContract.setSocialAction(socialAction);
                 newContract.setCompany(company);
@@ -87,7 +99,7 @@ public class ContractService {
             } else {
                 throw new ObjectNotFoundException("Invalid ID in the request");
             }
-            newContract.setProcessId(UUID.fromString(responsePdtec.getBody()));
+            newContract.setProcessId(UUID.fromString(responseId));
             newContract.setDescription(request.description());
             newContract.setJustification(request.justification());
             newContract.setStatus(request.status());
@@ -125,6 +137,7 @@ public class ContractService {
         String requestUrlEndpoint = String.format("%s/processes/%s",pdtecUrl, contract.processId);
         HttpHeaders headers = new HttpHeaders();
         headers.setBearerAuth(token);
+        headers.setContentType(MediaType.APPLICATION_JSON);
         Map<String, Object> makeBody = new HashMap<>();
         makeBody.put("status", contract.getStatus());
         String jsonRequest;
@@ -137,7 +150,7 @@ public class ContractService {
         RestTemplate restTemplate = new RestTemplate();
         ResponseEntity<String> responsePdtec = restTemplate.exchange(
                 requestUrlEndpoint,
-                HttpMethod.POST,
+                HttpMethod.PATCH,
                 requestPdtec,
                 String.class
         );

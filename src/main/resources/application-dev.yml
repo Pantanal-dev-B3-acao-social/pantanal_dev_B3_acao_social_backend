@@ -20,6 +20,7 @@ acao-social:
     password: eq91eB70ok!
     client_id: assinador-app
     grant_type: password
+    x-tenant: 6cbe14eb-fae5-4d47-b697-9128d512649e
 
 
 server:
