@@ -35,7 +35,7 @@ public class CategoryGroupController {
                 entity.getName(),
                 entity.getDescription(),
                 entity.getCode(),
-                entity.getParentCategoryGroupEntity() == null ? null : entity.getParentCategoryGroupEntity().getId(),
+                entity.getParentCategoryGroupEntity() == null ? null : entity.getParentCategoryGroupEntity(),
                 entity.getVisibility(),
                 entity.getCreatedBy(),
                 entity.getCreatedDate(),

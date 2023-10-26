@@ -1,5 +1,6 @@
 package dev.pantanal.b3.krpv.acao_social.modulos.pdtec.contract;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import dev.pantanal.b3.krpv.acao_social.config.audit.AuditListener;
 import dev.pantanal.b3.krpv.acao_social.modulos.company.CompanyEntity;
@@ -51,9 +52,7 @@ public class ContractEntity {
     @JsonManagedReference
     private CompanyEntity company;
 
-    @OneToOne
-    @JoinColumn(name = "social_action_id", nullable = false)
-    @JsonManagedReference
+    @OneToOne(targetEntity = SocialActionEntity.class)
     private SocialActionEntity socialAction;
 
     @ManyToOne

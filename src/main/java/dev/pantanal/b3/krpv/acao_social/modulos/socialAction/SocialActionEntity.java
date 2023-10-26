@@ -129,6 +129,8 @@ public class SocialActionEntity {
     private OngEntity ong;
 
 
+
+
     @PrePersist
     protected void onCreate() {
         this.createdDate = LocalDateTime.now();
