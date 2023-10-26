@@ -83,6 +83,9 @@ public class SessionService {
         if (request.visibility() != null) {
             obj.setVisibility(request.visibility());
         }
+        if (request.engagementScore() != null) {
+            obj.setEngagementScore(request.engagementScore());
+        }
         SessionEntity updatedObj = sessionRepository.update(obj);
         return updatedObj;
     }
