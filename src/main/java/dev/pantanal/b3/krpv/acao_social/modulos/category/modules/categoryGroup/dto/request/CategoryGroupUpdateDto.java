@@ -7,5 +7,5 @@ public record CategoryGroupUpdateDto(
         String name,
         String description,
         VisibilityCategoryGroupEnum visibility,
-        UUID parentCategoryGroupId
+        UUID parentCategoryGroup
 ) {}
