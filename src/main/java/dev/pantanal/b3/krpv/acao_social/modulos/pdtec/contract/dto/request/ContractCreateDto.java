@@ -28,6 +28,8 @@ public record ContractCreateDto (
 
         RequesterDto requester,
 
+        CompanyDto company,
+
         FlowDto flow,
 
         List<MemberDto> members
