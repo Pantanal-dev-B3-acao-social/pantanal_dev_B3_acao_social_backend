@@ -22,7 +22,7 @@ public record ContractResponseDto(
 
         OngEntity ong,
 
-        UUID processoId,
+        UUID processId,
 
         String title,
 

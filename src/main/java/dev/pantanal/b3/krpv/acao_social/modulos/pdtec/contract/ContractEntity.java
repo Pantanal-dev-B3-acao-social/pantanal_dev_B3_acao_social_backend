@@ -61,7 +61,7 @@ public class ContractEntity {
     private OngEntity ong;
 
     @Column(name = "process_id", unique = true)
-    UUID processoId;
+    UUID processId;
 
     @Column(name = "title")
     private String title;

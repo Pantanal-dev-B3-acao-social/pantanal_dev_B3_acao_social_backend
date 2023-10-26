@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import dev.pantanal.b3.krpv.acao_social.modulos.pdtec.PdtecClient;
 import dev.pantanal.b3.krpv.acao_social.modulos.pdtec.contract.dto.request.ContractCreateDto;
+import dev.pantanal.b3.krpv.acao_social.modulos.pdtec.contract.dto.request.ContractParamsDto;
 import dev.pantanal.b3.krpv.acao_social.modulos.pdtec.contract.dto.request.ContractUpdateDto;
 import dev.pantanal.b3.krpv.acao_social.modulos.pdtec.contract.dto.response.ContractResponseDto;
 import dev.pantanal.b3.krpv.acao_social.modulos.pdtec.contract.enums.StatusEnum;
@@ -44,7 +45,7 @@ public class ContractController {
                 response.getCompany(),
                 response.getSocialAction(),
                 response.getOng(),
-                response.getProcessoId(),
+                response.getProcessId(),
                 response.getTitle(),
                 response.getDescription(),
                 response.getJustification(),
@@ -71,23 +72,21 @@ public class ContractController {
         ContractResponseDto response = mapEntityToDto(contract);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
-//
-//    @GetMapping()
-//    @PreAuthorize("hasAnyRole('USER_GET_ALL')")
-//    @ResponseStatus(HttpStatus.OK)
-//    public Page<ContractResponseDto> findAll (
-//            @RequestParam(defaultValue = "0") int page,
-//            @RequestParam(defaultValue = "50") int size,
-//            @SortDefault(sort="name", direction = Sort.Direction.DESC) Sort sort
-//    ) {
-//        Pageable paging = PageRequest.of(page, size, sort);
-//        ResponseEntity<String> result = this.service.findAll(
-//                page,
-//                size
-//        );
-//        List<ContractResponseDto> dtos = mapEntityToDto(result);
-//        return new PageImpl<>(dtos, paging, dtos.size());
-//    }
+
+    @GetMapping()
+    @PreAuthorize("hasAnyRole('USER_GET_ALL')")
+    @ResponseStatus(HttpStatus.OK)
+    public Page<ContractResponseDto> findAll (
+            @RequestBody @Valid ContractParamsDto params,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "50") int size,
+            @SortDefault(sort="name", direction = Sort.Direction.DESC) Sort sort
+    ) {
+        Pageable paging = PageRequest.of(page, size, sort);
+        Page<ContractEntity> pages = this.service.findAll(paging, params);
+        List<ContractResponseDto> results = pages.map(this::mapEntityToDto).getContent();
+        return new PageImpl<>(results, paging, results.size());
+    }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)

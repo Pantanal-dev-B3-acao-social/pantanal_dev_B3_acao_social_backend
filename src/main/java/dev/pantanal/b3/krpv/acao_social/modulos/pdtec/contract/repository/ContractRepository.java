@@ -3,6 +3,7 @@ package dev.pantanal.b3.krpv.acao_social.modulos.pdtec.contract.repository;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import dev.pantanal.b3.krpv.acao_social.modulos.pdtec.contract.ContractEntity;
+import dev.pantanal.b3.krpv.acao_social.modulos.pdtec.contract.QContractEntity;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import lombok.RequiredArgsConstructor;
@@ -34,25 +35,25 @@ public class ContractRepository {
         ContractEntity contractEntity = contractPostgresRepository.findById(id).orElse(null);
         return contractEntity;
     }
-//
-//    public Page<ContractEntity> findAll(Pageable pageable, BooleanExpression predicate) {
-//        JPAQueryFactory queryFactory = new JPAQueryFactory(entityManager);
-//        QContractEntity qContractEntity = QContractEntity.contractEntity;
-//        List<ContractEntity> results = queryFactory.selectFrom(qContractEntity)
-//                .where(predicate)
-//                .offset(pageable.getOffset())
-//                .limit(pageable.getPageSize())
-//                .fetch();
-//        long total = queryFactory.query()
-//                .select(qContractEntity)
-//                .from(qContractEntity)
-//                .where(predicate)
-//                .fetch()
-//                .stream().count();
-//
-//        return new PageImpl<>(results,pageable,total);
-//    }
-//
+
+    public Page<ContractEntity> findAll(Pageable pageable, BooleanExpression predicate) {
+        JPAQueryFactory queryFactory = new JPAQueryFactory(entityManager);
+        QContractEntity qContractEntity = QContractEntity.contractEntity;
+        List<ContractEntity> results = queryFactory.selectFrom(qContractEntity)
+                .where(predicate)
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
+                .fetch();
+        long total = queryFactory.query()
+                .select(qContractEntity)
+                .from(qContractEntity)
+                .where(predicate)
+                .fetch()
+                .stream().count();
+
+        return new PageImpl<>(results,pageable,total);
+    }
+
     public void delete(UUID id) {
         contractPostgresRepository.deleteById(id);
     }

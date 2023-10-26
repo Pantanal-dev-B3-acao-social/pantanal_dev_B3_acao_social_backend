@@ -2,6 +2,7 @@ package dev.pantanal.b3.krpv.acao_social.modulos.pdtec.contract;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.querydsl.core.types.dsl.BooleanExpression;
 import dev.pantanal.b3.krpv.acao_social.exception.ObjectNotFoundException;
 import dev.pantanal.b3.krpv.acao_social.modulos.company.CompanyEntity;
 import dev.pantanal.b3.krpv.acao_social.modulos.company.repository.CompanyRepository;
@@ -9,9 +10,13 @@ import dev.pantanal.b3.krpv.acao_social.modulos.ong.OngEntity;
 import dev.pantanal.b3.krpv.acao_social.modulos.ong.repository.OngRepository;
 import dev.pantanal.b3.krpv.acao_social.modulos.pdtec.contract.dto.request.ContractCreateDto;
 //import dev.pantanal.b3.krpv.acao_social.modulos.pdtec.contract.repository.ContractPredicates;
+import dev.pantanal.b3.krpv.acao_social.modulos.pdtec.contract.dto.request.ContractParamsDto;
+import dev.pantanal.b3.krpv.acao_social.modulos.pdtec.contract.repository.ContractPredicates;
 import dev.pantanal.b3.krpv.acao_social.modulos.pdtec.contract.repository.ContractRepository;
 import dev.pantanal.b3.krpv.acao_social.modulos.socialAction.SocialActionEntity;
 import dev.pantanal.b3.krpv.acao_social.modulos.socialAction.repository.SocialActionRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,8 +41,8 @@ public class ContractService {
     private OngRepository ongRepository;
     @Autowired
     private CompanyRepository companyRepository;
-//    @Autowired
-//    private ContractPredicates contractPredicates;
+    @Autowired
+    private ContractPredicates contractPredicates;
     @Autowired
     ObjectMapper objectMapper = new ObjectMapper();
 
@@ -84,7 +89,7 @@ public class ContractService {
             } else {
                 throw new ObjectNotFoundException("Invalid ID in the request");
             }
-            newContract.setProcessoId(UUID.fromString(responsePdtec.getBody()));
+            newContract.setProcessId(UUID.fromString(responsePdtec.getBody()));
             newContract.setDescription(request.description());
             newContract.setJustification(request.justification());
             newContract.setStatus(request.status());
@@ -97,12 +102,12 @@ public class ContractService {
     }
 
 
-//    public Page<ContractEntity> findAll(Pageable paging, ContractParamsDto filters) {
-//        BooleanExpression predicate = contractPredicates.buildPredicate(filters);
-//        Page<ContractEntity> objects = repository.findAll(paging, predicate);
-//        return objects;
-//    }
-//
+    public Page<ContractEntity> findAll(Pageable paging, ContractParamsDto filters) {
+        BooleanExpression predicate = contractPredicates.buildPredicate(filters);
+        Page<ContractEntity> objects = repository.findAll(paging, predicate);
+        return objects;
+    }
+
     public ContractEntity findById(UUID id) {
         ContractEntity obj = repository.findById(id);
         if (obj == null) {
