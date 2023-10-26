@@ -12,8 +12,6 @@ public record CategoryCreateDto (
         String name,
         @NotBlank(message= "Campo 'description' não pode estar vazio")
         String description,
-
-        VisibilityCategoryEnum visibility,
         @NotNull
         UUID categoryGroup,
         @NotNull
