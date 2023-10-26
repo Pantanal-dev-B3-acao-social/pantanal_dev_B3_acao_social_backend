@@ -1,9 +1,10 @@
-package dev.pantanal.b3.krpv.acao_social.modulos.contract;
+package dev.pantanal.b3.krpv.acao_social.modulos.pdtec.contract;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import dev.pantanal.b3.krpv.acao_social.config.audit.AuditListener;
 import dev.pantanal.b3.krpv.acao_social.modulos.company.CompanyEntity;
-import dev.pantanal.b3.krpv.acao_social.modulos.contract.enums.StatusEnum;
+import dev.pantanal.b3.krpv.acao_social.modulos.pdtec.contract.enums.StatusEnum;
 import dev.pantanal.b3.krpv.acao_social.modulos.ong.OngEntity;
 import dev.pantanal.b3.krpv.acao_social.modulos.person.PersonEntity;
 import dev.pantanal.b3.krpv.acao_social.modulos.socialAction.SocialActionEntity;
@@ -51,9 +52,7 @@ public class ContractEntity {
     @JsonManagedReference
     private CompanyEntity company;
 
-    @OneToOne
-    @JoinColumn(name = "social_action_id", nullable = false)
-    @JsonManagedReference
+    @OneToOne(targetEntity = SocialActionEntity.class)
     private SocialActionEntity socialAction;
 
     @ManyToOne
@@ -61,7 +60,7 @@ public class ContractEntity {
     private OngEntity ong;
 
     @Column(name = "process_id", unique = true)
-    UUID processoId;
+    UUID processId;
 
     @Column(name = "title")
     private String title;

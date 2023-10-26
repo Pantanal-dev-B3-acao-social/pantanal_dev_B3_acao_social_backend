@@ -15,7 +15,7 @@ public record CategoryGroupResponseDto(
         String description,
         @NotBlank(message= "Campo 'code' não pode estar vazio")
         String code,
-        UUID parentCategoryGroupId,
+        CategoryGroupEntity parentCategoryGroup,
         @NotBlank(message= "Campo 'visibility' não pode estar vazio")
         VisibilityCategoryGroupEnum visibility,
         @NotBlank(message= "Campo 'createdBy' não pode estar vazio")

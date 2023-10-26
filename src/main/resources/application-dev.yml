@@ -13,6 +13,15 @@ acao-social:
     adminPassword: 123
   frontend:
     baseUrl: http://localhost:3000/
+  pdtec:
+    loginUrl: https://h-auth.pd.tec.br/auth/realms/assinador/protocol/openid-connect/token
+    baseUrl: https://esign-api-pprd.portaldedocumentos.com.br
+    username: time8@pantanal.dev
+    password: eq91eB70ok!
+    client_id: assinador-app
+    grant_type: password
+    x-tenant: 6cbe14eb-fae5-4d47-b697-9128d512649e
+
 
 server:
   port: '3001'
