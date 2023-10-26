@@ -36,18 +36,15 @@ public class SessionService {
         entity.setDateEndTime(dataRequest.dateEndTime());
         entity.setStatus(dataRequest.status());
         entity.setVisibility(dataRequest.visibility());
-        if (socialAction!=null){
-            entity.setSocialAction(socialAction);
-        }
-        else{
+        entity.setEngagementScore(dataRequest.engagementScore());
+        if (socialAction == null) {
             throw new ObjectNotFoundException("Social action not found");
         }
         // TODO:
-//        entity.setLocal();dataRequest.local());
-//        entity.setResources();dataRequest.resouces());
-//        entity.setPresences(dataRequest.presences());
+        // entity.setLocal();dataRequest.local());
+        // entity.setResources();dataRequest.resouces());
+        // entity.setPresences(dataRequest.presences());
         SessionEntity savedObj = sessionRepository.save(entity);
-        // lançar exceções
         return savedObj;
     }
 
@@ -85,6 +82,9 @@ public class SessionService {
         }
         if (request.visibility() != null) {
             obj.setVisibility(request.visibility());
+        }
+        if (request.engagementScore() != null) {
+            obj.setEngagementScore(request.engagementScore());
         }
         SessionEntity updatedObj = sessionRepository.update(obj);
         return updatedObj;

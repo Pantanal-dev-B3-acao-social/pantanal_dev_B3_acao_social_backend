@@ -13,10 +13,13 @@ public record SessionCreateDto (
         String description,
         @NotNull(message= "Campo 'socialAction' não pode estar vazio")
         UUID socialAction,
-        @FutureOrPresent
+// TODO: comentando para facilitar pro frontend
+//        @FutureOrPresent
         LocalDateTime dateStartTime,
-        @FutureOrPresent
+// TODO: comentando para facilitar pro frontend
+//        @FutureOrPresent
         LocalDateTime dateEndTime,
         StatusEnum status,
-        VisibilityEnum visibility
+        VisibilityEnum visibility,
+        Integer engagementScore
 ) {}

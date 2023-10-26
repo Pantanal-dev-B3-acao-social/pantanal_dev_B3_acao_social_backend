@@ -75,13 +75,11 @@
 - Kanban para controle de demandas a serem desenvolvidas
 - google docs para brainStorm, elaboração e documentação os requisitos
 
-
-# Processo de Deploy
-## Processo de execução em ambiente de produção
-$ docker-compose up
-$ ./mvnw spring-boot:run
-
 ## Processo de execução em ambiente de desenvolvimento
+- para executar em ambiente de desenvolvimento deve usar o docker/docker-compose.yml
+- desta forma somente o keyclock e postgres estarão dentro do container
+- assim podendo executar o spring boot diretamente no intellij para ter acesso ao debug
+$ cd docker/
 $ docker-compose down -v
 $ docker-compose up
 $ ./mvnw clean install
@@ -89,33 +87,91 @@ $ SPRING_PROFILES_ACTIVE=dev ./mvnw spring-boot:run
 - variavel de ambiente para executar em ambiente de teste: "SPRING_PROFILES_ACTIVE=dev"
 
 ## Processo de execução em ambiente de teste
+$ cd docker/
 $ docker-compose up
-$ SPRING_PROFILES_ACTIVE=test ./mvnw spring-boot:run
-- variavel de ambiente para executar em ambiente de teste: "SPRING_PROFILES_ACTIVE=test"
+- criar manualmente o database "postgres_testing" ao lado do database "postgres"
+- executar os testes pelo intellij
 
+
+# Processo de Deploy
+
+## Processo de execução em ambiente de produção
+$ docker-compose up
+$ ./mvnw spring-boot:run
+
+## AWS - EC2
+- acesso via SSH
+  - cria chave SSH da VM EC2 e faz download
+    - aws_ec2_pantanal_dev_ubuntu.pem
+  - $ chmod 400 aws_ec2_pantanal_dev_ubuntu.pem
+  - $ ssh -i "aws_ec2_pantanal_dev_ubuntu.pem" ubuntu@ec2-3-94-146-39.compute-1.amazonaws.com
+    - digite: yes
+  - ja conecatado no terminal da VM, faça clone do projeto
+  - $ git clone https://SEU_TOKEN_DE_ACESSO_COM_PERMISSAO_PARA_ORGANIZACOES@github.com/Pantanal-dev-B3-acao-social/pantanal_dev_B3_acao_social_backend.git
+    - login e senha do github
+  - baixa e instala o docker, instalar o docker pelo curl ja vem configurado, pelo apt  e snap tem q configurar
+  - $ curl -fsSL https://get.docker.com/ | sh  #
+  - $ sudo docker -v
+  - instalando docker-compose
+  - $ sudo curl -L "https://github.com/docker/compose/releases/download/v2.3.3/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+  - $ sudo chmod +x /usr/local/bin/docker-compose
+  - $ sudo docker-compose -v
+  - $ sudo docker-compose down -v
+  - $ sudo docker-compose up --build
+
+## Nginx
+https://medium.com/@stevernewman/installation-of-nginx-on-aws-ubuntu-instance-e73e72cb8450
+- sudo apt update -y
+- sudo apt install nginx -y
+- sudo systemctl status nginx
+- sudo ufw allow 'Nginx Full'
+- sudo ufw status
+- cd /etc/nginx/sites-available/
+- sudo nano meu_app_react
+```txt
+server {
+  listen 80;
+  server_name seu_nome_de_domínio_ou_endereço_ip;
+  location / {
+    proxy_pass http://127.0.0.1:3000;
+    proxy_set_header Host $host;
+    proxy_set_header X-Real-IP $remote_addr;
+  }
+}
+```
+
+# Testes
+- estamos usando como base principal os testes de integração, que apesar de mais custosos para implementar
+- agregam uma boa cobertura de testes, desde a funcionalidade em si estar funcionando e sua respectiva regra de negocio
+- até integração com outros serviços
+  - não estamos mockando o banco de dados e nem o SSO
+  - cada caso de teste usa realmente o keyclock para autenticar e autorizar
+  - verificando se o usuario esta autenticado para executar a action do controller, caso seja necessário
+  - verificando se o usuario tem a permissão para executar a action do controller, caso seja necessário
+  - o banco de dados é realmente o postgres, para que garanta que restrições seja as mesmas do ambiente de produção
+  - desta forma garantimos que os erros de consistencia sejam validados
+  - todo caso de teste esta em uma transaction que faz rollback apos terminar
+  - ao preparar os casos de teste, as vezes é preciso inserir dados fake para poder usados como base dos testes
+    - o problema de que ao inserir dados pelo teste nao tem userLoggedId, e para resolver este problema foi criado uma classe LoginMock que é capaz de mock do spring security o userlogged
+    - desta forma quando o teste inserir um registro no DB, será o user do token como createdBy UUID
+- possibilidade de melhoria nos teste, os testes foram inicialmente criados para contemplar somente o caso de sucesso com todos os campos sendo passados
+  - criar testes de casos de falha
+  - criar testes de casos de sucesso somente com campos obrigatorio
 
 # Gerencia e configuração com git e github
-- não recomendado commitar diretamente na branch main
-- proibido fazer merge para a main sem Pull Request (PR)
-- PR deve ter como prefixo do nome id do card da demanda e a descrição da demanda
-- criaçaõ de branch
-@main
-pois esta sendo criada a partir da branch main
- e assim por diantes
-
-@main/54687_feijao
-
-se quiser criar uma branch a partida da feijao fica assim
-
-
-@main/@54687_feijao/89743_pipoca
-
-- gitflow
-- commit semantico
-
-# Variaveis de ambiente
-SPRING_PROFILES_ACTIVE=test
-SPRING_PROFILES_ACTIVE=dev
+- evitamos realizar commit diretamente na branch main
+- merge para a main somente por meio de PR (Pull Request)
+- tentamos usar ommit semantico, padrão utilziado: https://blog.geekhunter.com.br/o-que-e-commit-e-como-usar-commits-semanticos/ 
+- nomenclatura padrão para criação de branch:
+- prefixo sempre é: @main
+- pois esta sendo criada a partir da branch main
+- e quando uma branch e criado a partir de outra, segue o mesmo padrão
+- desta forma:
+- main
+- @main/ticket56_titulo
+- @main/@ticket56_titulo/ticket57_titulo
+- @main/@ticket56_titulo/@ticket58_titulo
+- @main/@ticket56_titulo/@ticket58_titulo/ticket59_titulo
 
 # Organização de diretorios
 - os diretorios estão organizados em modulos 
@@ -123,13 +179,13 @@ SPRING_PROFILES_ACTIVE=dev
 - a equipe optou por esta organização para facilitar na visualizações de arquivos durante o desenvolvimento
 
 # Arquitetutra do software
-- Arquitetura Monolítica, apesar de ter SSO
+- Arquitetura Monolítica, apesar de ter SSO/IAM
 - A arquitetura do software é inspirada na arquitetura baseada em serviço, pois o fluxo das requisições são orientadas por "services" não "domain"
 - a maior parte das regras de negocio estão contidas na camada de "service"
 - podem existir algumas regras de negocio voltada para dados em outras cadamadas, principalmente validadores
 - como na camada de DTO, Entity e Migration
-- 
-### SSO (Single sign-on) Autenticação única / Identity and Access Management (IAM) gerenciamento de identidade e acesso
+
+## SSO (Single sign-on) Autenticação única / Identity and Access Management (IAM) gerenciamento de identidade e acesso
 - optamos por não implementar os serviços de autenticação e autorização
 - optemos por usar uma ferramenta de SSO, no caso o Keyclock
 - em nossa arquitetura, tercerizamos para o Keyclock gerencia tudo do usuário
@@ -137,22 +193,31 @@ SPRING_PROFILES_ACTIVE=dev
 - que ja esta integrado com o spring security e validando a autenticação e autorização antes de executar as ações do controller
 - os endpoint da api do keyclock são acionados pelo keyclock passando o token do user logged, para que o keyclock tenha log de auditoria de quem realizou as operações 
 
-### responsabilidade de cada camada de acordo com a arquitetura proposta
+## Responsabilidade de cada camada de acordo com a arquitetura proposta
 - controller
   - a camada de controller tem a responsabilidade de receber e retornar requisições HTTP rest
 - service
-- dto
+  - a camada de service tem a responsabilidade de executar o fluxo do serviço necessário, incluindo regra de negocio
+- dto (Data Transfer Object)
+  - declara e valida entrada e saida de dados, Objeto de Transferência de Dados entre camadas, tanto internas quanto externas
 - entity
+  - classe que possui declarações de mapeamento de objeto relacional (ORM) do JPA 
 - config
   - security
-  - annotaion
+  - audit
+  - web
   - postgres
 - enum
-  - para evitar valores magicos e constantes soltas, vamos usar enum para estrurar as constantes
-  - serão utilizadas principalmente para status, tipo, categorias, e outras informação que precisam aplcar regra de negocio em condições fixas
+  - para evitar valores magicos e constantes soltas, vamos usar enum para estrurar as constantes, aumentando a qualidade de codigo do clean code
+  - serão utilizadas principalmente para status e tipo, e outras informação que precisam aplicar regra de negocio em condicionais
 - repository
-  - É uma camada intermediária entre a aplicação e a fonte de dados. Ele fornece métodos para acessar e manipular os dados, como criar, ler, atualizar e excluir (CRUD). O Repository abstrai a complexidade do acesso aos dados subjacentes e fornece uma interface consistente para a aplicação.
-- db/migration/dataDefinitionProduction
+  - É uma camada intermediária entre a aplicação e a base de dados
+  - Ele fornece métodos para acessar e manipular os dados, como criar, ler, atualizar e excluir (CRUD)
+  - O Repository abstrai a complexidade do acesso aos dados subjacentes e fornece uma interface consistente para a aplicação.
+- db/migration
+  - migrações do banco de dados
+  - versionamento do banco de dados 
+  - historico de mudanças na estrutura do banco de dados
 
 # Configurações para o Keyclock
 - criar realm: realm-pantanal-dev
@@ -186,26 +251,29 @@ SPRING_PROFILES_ACTIVE=dev
   - password: 123
  
 # Banco de ddos
+### exemplo de como acessar o DB por terminal de dentro do container docker
 ```bash
-# entra dentro do container docker postgres  keycloack_postgres_db
+# entra dentro do container docker postgres
 $ docker exec -it postgres_acao_social bash
 # entre na databse
 root@24de07c13cb3:/# PGPASSWORD=dev_password psql -U dev_user -d keycloack_postgres_db
 ```
-- gerar dump do database do keyclock:
+
+### Como exportar dados para fazer backup do keyclock
 ```bash
 # gera dump
 $ sudo docker exec -u postgres postgres_acao_social pg_dump -U dev_user -d keycloack_postgres_db -f /tmp/backup_keycloak.sql
 # copia o backup de dentro do docker para o a maquina host 
 $ sudo docker cp postgres_acao_social:/tmp/backup_keycloak.sql /home/kaio/Documentos/ufms/pantanal_dev/projeto/acao_social/db/
 ```
-- Migration
+
+### Orientações sobre Migration
   - sempre que criar uma nova tabela, lembre de criar junto sua tabela de auditoria, com o prefixo "z_aud_"
-- Seed
+### Orientações sobre Seed
   - as seed são executada automaticamente no ambiente de "development"
   - observação: em ambiente de "development" a estrutura do banco de dados esta sendo gerado a partir das migration
-- https://github.com/DiUS/java-faker
-- A variavel de ambiente executa o arquivo PostgresDatabaseInitialization (spring.profiles.active: dbinit)
+  - https://github.com/DiUS/java-faker
+  - A variavel de ambiente executa o arquivo PostgresDatabaseInitialization (spring.profiles.active: dbinit)
 
 # Auditoria
 - Revisão de mudanças dos registros
@@ -221,29 +289,7 @@ $ sudo docker cp postgres_acao_social:/tmp/backup_keycloak.sql /home/kaio/Docume
   - por exemplo "voluntario", deve ser uma tabela de junção/pivô para mapear que esta pessoa se voluntariou para participar de determinada ação social. Desta forma "voluntario" nao pode ser um cargo, pois quando uma pessoa se voluntaria é somente e exclusivamente para aquela ação social, e não automaticamente para todas.
 - mas em Cargos e Permissoes do Keyclock diz respeito das capacidades que user logado tem de executar ou não determinada ação, como por exemplo o cargo funcionario_gerente_nivel_1 possui todas as permissões para criar, deletar, buscar e atualizar uma determinada ação social ou dados da empresa.
 Neste cenário, quando o usuário recebe um cargo, ele tem o mesmo cargo em todas as partes do sistema, independente se ele for voluntario em uma ação social e tambem for gerente da empresa
-- é de responsabilidade do Keyclock com redirecionamento de autenticação, recuperação de senha, atualizar cadastro do usuario, delegar cargos e permissões para usuario 
-
-# Melhorias futuras
-- implementar integração do Spring Boot com Redis
-  - armazenar detalhes do usuario no Redis
-
-# Testes
-- estamos usando como base principal os testes de integração, que apesar de mais custosos para implementar
-- agregam uma boa cobertura de testes, desde a funcionalidade em si estar funcionando e sua respectiva regra de negocio
-- até integração com outros serviços
-  - não estamos mockando o banco de dados e nem o SSO
-  - cada caso de teste usa realmente o keyclock para autenticar e autorizar
-  - verificando se o usuario esta autenticado para executar a action do controller, caso seja necessário 
-  - verificando se o usuario tem a permissão para executar a action do controller, caso seja necessário
-  - o banco de dados é realmente o postgres, para que garanta que restrições seja as mesmas do ambiente de produção
-  - desta forma garantimos que os erros de consistencia sejam validados
-  - todo caso de teste esta em uma transaction que faz rollback apos terminar
-  - ao preparar os casos de teste, as vezes é preciso inserir dados fake para poder usados como base dos testes
-    - o problema de que ao inserir dados pelo teste nao tem userLoggedId, e para resolver este problema foi criado uma classe LoginMock que é capaz de mock do spring security o userlogged 
-    - desta forma quando o teste inserir um registro no DB, será o user do token como createdBy UUID
-- possibilidade de melhoria nos teste, os testes foram inicialmente criados para contemplar somente o caso de sucesso com todos os campos sendo passados
-  - criar testes de casos de falha
-  - criar testes de casos de sucesso somente com campos obrigatorio
+- é de responsabilidade do Keyclock com redirecionamento de autenticação, recuperação de senha, atualizar cadastro do usuario, delegar cargos e permissões para usuario
 
 # Auxilio I.A.
 - uso de I.A. para aumentar a curva de aprendizagem
@@ -252,61 +298,48 @@ Neste cenário, quando o usuário recebe um cargo, ele tem o mesmo cargo em toda
 - Copilot
 
 
-# AWS - EC2
-- acesso via SSH
-  - cria chave SSH da VM EC2 e faz download 
-    - aws_ec2_pantanal_dev_ubuntu.pem
-  - $ chmod 400 aws_ec2_pantanal_dev_ubuntu.pem
-  - $ ssh -i "aws_ec2_pantanal_dev_ubuntu.pem" ubuntu@ec2-3-94-146-39.compute-1.amazonaws.com
-    - digite: yes
-  - ja conecatado no terminal da VM, faça clone do projeto
-  - $ git clone https://SEU_TOKEN_DE_ACESSO_COM_PERMISSAO_PARA_ORGANIZACOES@github.com/Pantanal-dev-B3-acao-social/pantanal_dev_B3_acao_social_backend.git
-    - login e senha do github
-  - baixa e instala o docker, instalar o docker pelo curl ja vem configurado, pelo apt  e snap tem q configurar
-  - $ curl -fsSL https://get.docker.com/ | sh  #
-  - $ sudo docker -v
-  - instalando docker-compose
-  - $ sudo curl -L "https://github.com/docker/compose/releases/download/v2.3.3/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
-  - $ sudo chmod +x /usr/local/bin/docker-compose
-  - $ sudo docker-compose -v
-  - $ sudo docker-compose down -v
-  - $ sudo docker-compose up --build
-
-  # Vercel
-  - $ git clone https://SEU_TOKEN_DE_ACESSO_COM_PERMISSAO_PARA_ORGANIZACOES@github.com/Pantanal-dev-B3-acao-social/pantanal_dev_B3_acao_social_frontend.git
-  - curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.0/install.sh | bash
-  - source ~/.bashrc
-  - nvm --version
-  - nvm ls-remote
-  - nvm install 20.6
-  - nvm use 20.6
-  - node -v
-  - nvm install-latest-npm
-  - npm -v
-  - npm install
-  - npm start
-
-
-# Nginx
-https://medium.com/@stevernewman/installation-of-nginx-on-aws-ubuntu-instance-e73e72cb8450
-- sudo apt update -y
-- sudo apt install nginx -y
-- sudo systemctl status nginx
-- sudo ufw allow 'Nginx Full'
-- sudo ufw status
-- cd /etc/nginx/sites-available/
-- sudo nano meu_app_react
-server {
-    listen 80;
-    server_name seu_nome_de_domínio_ou_endereço_ip;
-
-    location / {
-        proxy_pass http://127.0.0.1:3000;
-        proxy_set_header Host $host;
-        proxy_set_header X-Real-IP $remote_addr;
-    }
-}
-
-
-
-
+# Melhorias futuras
+- corrigir paginação no frontend
+- implementar tratamento de exceções
+- implementar testes unitarios para as regras de negocio
+- implementar filtro no frontend
+- implementar funcionalidade de gestão de tarefas na sessão da ação social
+- permitir funcionários da ONG acessar ao sistema 
+  - para fazer a gestão de tarefas a serem executadas da ação social
+  - para submeter documentos em contrato
+- implementar testes unitários nas regras de negócio
+- Business Intelligence e inteligência artificial
+- analise a necessidade de migrar para arquitetura de microservices
+- melhorar UX/UI
+- implementar tratamento de exceções
+- implementar CI/CD
+- aumentar a porcentagem de cobertura de testes
+- categoria de 
+- implementar midia social para
+  - tipo de investimento
+  - tipo de responsabilidade do contrato (obrigatorio, opcional, obrigario em ensino, obrigatirio em emergencial)
+  - tipo de sessão (presencial, remoto, sincrona, assincrona, esforço, qualquer caracteristica)
+  - tipo de doação (tem bonus de pontuação de engajamento, em evento, internet)
+- implementar contato para (acessivel por: publico externo, puplico interno, privado)
+  - contato da ong
+  - contato da pessoa
+  - contato da empresa
+  - contato da ação social
+- implementar local
+  - localização da Ong
+  - localizacao da empresa
+  - localizacao da pessoa
+- implementar email
+  - enviar email para todas as pessoas que estão previamente cadastradas como voluntario
+  - enviar email para todas as pessoas que estavam presentes
+  - enviar email para todas as pessoas que moram em determinada região 
+  - enviar email para todas as pessoas que doaram
+  - enviar email para todas as pessoas de determinada empresa
+- implementar upload de arquivo
+- implementar fomulario dinamico para colher dados personalizados dos voluntarios em cada ação social
+- implementar gestão de recursos, com responsavel, coutelado por, cautelado em, devolução em, estado de conservação
+  - recursos materiais consumiveis
+  - recursos materiais permanente
+- pagina home com todas as ações sociais publica
+- implementrar possibilidade dos funcionarios logar para acessar ações sociais com visibilidade para somente publico interno
+- unificar person e user do keyclock

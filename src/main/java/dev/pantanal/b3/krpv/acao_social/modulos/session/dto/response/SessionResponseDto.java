@@ -29,5 +29,6 @@ public record SessionResponseDto (
         UUID lastModifiedBy,
         LocalDateTime lastModifiedDate,
         UUID deletedBy,
-        LocalDateTime deletedDate
+        LocalDateTime deletedDate,
+        Integer engagementScore
 ) {}

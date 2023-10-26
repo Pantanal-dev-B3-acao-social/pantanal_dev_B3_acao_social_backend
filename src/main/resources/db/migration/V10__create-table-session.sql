@@ -12,6 +12,7 @@ CREATE TABLE session (
     deleted_by UUID,
     social_action_id UUID NOT NULL,
     version BIGINT,
+    engagement_score INT,
 
     FOREIGN KEY (social_action_id)
     REFERENCES social_action(id)

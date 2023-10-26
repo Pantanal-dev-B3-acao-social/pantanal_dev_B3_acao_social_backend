@@ -10,5 +10,6 @@ public record SessionUpdateDto (
         LocalDateTime dateStart,
         LocalDateTime dateEnd,
         StatusEnum status,
-        VisibilityEnum visibility
+        VisibilityEnum visibility,
+        Integer engagementScore
 ) {}
