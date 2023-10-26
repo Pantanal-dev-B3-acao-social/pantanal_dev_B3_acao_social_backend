@@ -60,6 +60,7 @@ public class ContractService {
 
         Map<String, Object> makeBody = new HashMap<>();
         makeBody.put("title", request.title());
+        makeBody.put("company", request.company());
         makeBody.put("requester", request.requester());
         makeBody.put("flow", request.flow());
         makeBody.put("members", request.members());
