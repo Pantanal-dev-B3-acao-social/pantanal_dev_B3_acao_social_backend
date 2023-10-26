@@ -46,6 +46,7 @@ public class PresenceFactory {
         PresenceEntity entity = new PresenceEntity();
         entity.setPerson(person);
         entity.setSession(session);
+        entity.setEngagementScore(session.getEngagementScore());
         entity.setApprovedBy(approved);
         entity.setApprovedDate(approvedDate);
         return entity;
