@@ -103,14 +103,14 @@ public class ContractService {
 //        return objects;
 //    }
 //
-//    public ContractEntity findById(UUID id) {
-//        ContractEntity obj = repository.findById(id);
-//        if (obj == null) {
-//            throw new ObjectNotFoundException("Registro não encontrado: " + id);
-//        }
-//        return obj;
-//    }
-//
+    public ContractEntity findById(UUID id) {
+        ContractEntity obj = repository.findById(id);
+        if (obj == null) {
+            throw new ObjectNotFoundException("Registro não encontrado: " + id);
+        }
+        return obj;
+    }
+
     public void delete(UUID id) { repository.delete(id); }
 
 }

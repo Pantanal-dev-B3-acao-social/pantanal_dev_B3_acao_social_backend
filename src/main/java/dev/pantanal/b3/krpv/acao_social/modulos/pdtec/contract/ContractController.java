@@ -6,6 +6,7 @@ import dev.pantanal.b3.krpv.acao_social.modulos.pdtec.PdtecClient;
 import dev.pantanal.b3.krpv.acao_social.modulos.pdtec.contract.dto.request.ContractCreateDto;
 import dev.pantanal.b3.krpv.acao_social.modulos.pdtec.contract.dto.request.ContractUpdateDto;
 import dev.pantanal.b3.krpv.acao_social.modulos.pdtec.contract.dto.response.ContractResponseDto;
+import dev.pantanal.b3.krpv.acao_social.modulos.pdtec.contract.enums.StatusEnum;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -36,21 +37,40 @@ public class ContractController {
 
     public static final String ROUTE_CONTRACT = "/v1/contract";
 
-    public List<ContractResponseDto> mapEntityToDto(ResponseEntity<String> response) {
-        List<ContractResponseDto> dtos = new ArrayList<>();
-        String responseBody = response.getBody();
+    public ContractResponseDto mapEntityToDto(ContractEntity response) {
+        ContractResponseDto dtos = new ContractResponseDto(
+
+                response.getId(),
+                response.getCompany(),
+                response.getSocialAction(),
+                response.getOng(),
+                response.getProcessoId(),
+                response.getTitle(),
+                response.getDescription(),
+                response.getJustification(),
+                response.getStatus(),
+                response.getEvaluatedAt(),
+                response.getEvaluatedBy(),
+                response.getCreatedBy(),
+                response.getLastModifiedBy(),
+                response.getCreatedDate(),
+                response.getLastModifiedDate(),
+                response.getDeletedDate(),
+                response.getDeletedBy()
+        );
 
         return dtos;
     }
 
 
-//    @GetMapping("/{contractId}")
-//    @PreAuthorize("hasAnyRole('USER_GET_ONE')")
-//    @ResponseStatus(HttpStatus.OK)
-//    public ResponseEntity<ContractResponseDto> findById(JwtAuthenticationToken contractLogged, @PathVariable UUID contractId) {
-//        ContractResponseDto responseDto = this.service.findById(contractId);
-//        return new ResponseEntity<>(responseDto, HttpStatus.OK);
-//    }
+    @GetMapping("/{contractId}")
+    @PreAuthorize("hasAnyRole('USER_GET_ONE')")
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseEntity<ContractResponseDto> findById(JwtAuthenticationToken contractLogged, @PathVariable UUID contractId) {
+        ContractEntity contract = this.service.findById(contractId);
+        ContractResponseDto response = mapEntityToDto(contract);
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
 //
 //    @GetMapping()
 //    @PreAuthorize("hasAnyRole('USER_GET_ALL')")
@@ -81,13 +101,13 @@ public class ContractController {
             @ApiResponse(responseCode = "422", description = "Invalid request data"),
             @ApiResponse(responseCode = "500", description = "Error when creating Contract"),
     })
-    public ResponseEntity<ContractEntity> create(
+    public ResponseEntity<ContractResponseDto> create(
             @RequestBody @Valid ContractCreateDto request
     ) {
         String token = pdtecClient.getAccessToken();
         ContractEntity contract = service.create(request, token);
-
-        return new ResponseEntity<ContractEntity>(contract, HttpStatus.OK);
+        ContractResponseDto response = mapEntityToDto(contract);
+        return new ResponseEntity<ContractResponseDto>(response, HttpStatus.OK);
     }
 
 //    @PatchMapping("/{id}")
@@ -109,21 +129,21 @@ public class ContractController {
 //        return response;
 //    }
 //
-//    @DeleteMapping("/{id}")
-//    @ResponseStatus(HttpStatus.NO_CONTENT)
-//    @Operation(summary = "Deletes an contract", method = "DELETE")
-//    @ApiResponses(value = {
-//            @ApiResponse(responseCode = "204", description = "Successfully deleted"),
-//            @ApiResponse(responseCode = "400", description = "Invalid Id"),
-//            @ApiResponse(responseCode = "401", description = "Contract not authenticated"),
-//            @ApiResponse(responseCode = "404", description = "Contract not found"),
-//            @ApiResponse(responseCode = "500", description = "Error when excluding Contract"),
-//    })
-//    public void delete(
-//            @PathVariable UUID id
-//    ) {
-//        service.delete(id);
-//    }
+    @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @Operation(summary = "Deletes an contract", method = "DELETE")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "204", description = "Successfully deleted"),
+            @ApiResponse(responseCode = "400", description = "Invalid Id"),
+            @ApiResponse(responseCode = "401", description = "Contract not authenticated"),
+            @ApiResponse(responseCode = "404", description = "Contract not found"),
+            @ApiResponse(responseCode = "500", description = "Error when excluding Contract"),
+    })
+    public void delete(
+            @PathVariable UUID id
+    ) {
+        service.delete(id);
+    }
 
 }
 

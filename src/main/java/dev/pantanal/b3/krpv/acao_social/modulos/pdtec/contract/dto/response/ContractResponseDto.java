@@ -2,7 +2,7 @@ package dev.pantanal.b3.krpv.acao_social.modulos.pdtec.contract.dto.response;
 
 import dev.pantanal.b3.krpv.acao_social.modulos.company.CompanyEntity;
 import dev.pantanal.b3.krpv.acao_social.modulos.ong.OngEntity;
-import dev.pantanal.b3.krpv.acao_social.modulos.ong.enums.StatusEnum;
+import dev.pantanal.b3.krpv.acao_social.modulos.pdtec.contract.enums.StatusEnum;
 import dev.pantanal.b3.krpv.acao_social.modulos.person.PersonEntity;
 import dev.pantanal.b3.krpv.acao_social.modulos.socialAction.SocialActionEntity;
 import jakarta.validation.Valid;

@@ -30,10 +30,10 @@ public class ContractRepository {
         return contractEntity;
     }
 
-//    public ContractEntity findById(UUID id) {
-//        ContractEntity contractEntity = contractPostgresRepository.findById(id).orElse(null);
-//        return contractEntity;
-//    }
+    public ContractEntity findById(UUID id) {
+        ContractEntity contractEntity = contractPostgresRepository.findById(id).orElse(null);
+        return contractEntity;
+    }
 //
 //    public Page<ContractEntity> findAll(Pageable pageable, BooleanExpression predicate) {
 //        JPAQueryFactory queryFactory = new JPAQueryFactory(entityManager);
