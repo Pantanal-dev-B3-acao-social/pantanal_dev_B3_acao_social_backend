@@ -299,5 +299,47 @@ Neste cenário, quando o usuário recebe um cargo, ele tem o mesmo cargo em toda
 
 
 # Melhorias futuras
+- corrigir paginação no frontend
 - implementar tratamento de exceções
 - implementar testes unitarios para as regras de negocio
+- implementar filtro no frontend
+- implementar funcionalidade de gestão de tarefas na sessão da ação social
+- permitir funcionários da ONG acessar ao sistema 
+  - para fazer a gestão de tarefas a serem executadas da ação social
+  - para submeter documentos em contrato
+- implementar testes unitários nas regras de negócio
+- Business Intelligence e inteligência artificial
+- analise a necessidade de migrar para arquitetura de microservices
+- melhorar UX/UI
+- implementar tratamento de exceções
+- implementar CI/CD
+- aumentar a porcentagem de cobertura de testes
+- categoria de 
+- implementar midia social para
+  - tipo de investimento
+  - tipo de responsabilidade do contrato (obrigatorio, opcional, obrigario em ensino, obrigatirio em emergencial)
+  - tipo de sessão (presencial, remoto, sincrona, assincrona, esforço, qualquer caracteristica)
+  - tipo de doação (tem bonus de pontuação de engajamento, em evento, internet)
+- implementar contato para (acessivel por: publico externo, puplico interno, privado)
+  - contato da ong
+  - contato da pessoa
+  - contato da empresa
+  - contato da ação social
+- implementar local
+  - localização da Ong
+  - localizacao da empresa
+  - localizacao da pessoa
+- implementar email
+  - enviar email para todas as pessoas que estão previamente cadastradas como voluntario
+  - enviar email para todas as pessoas que estavam presentes
+  - enviar email para todas as pessoas que moram em determinada região 
+  - enviar email para todas as pessoas que doaram
+  - enviar email para todas as pessoas de determinada empresa
+- implementar upload de arquivo
+- implementar fomulario dinamico para colher dados personalizados dos voluntarios em cada ação social
+- implementar gestão de recursos, com responsavel, coutelado por, cautelado em, devolução em, estado de conservação
+  - recursos materiais consumiveis
+  - recursos materiais permanente
+- pagina home com todas as ações sociais publica
+- implementrar possibilidade dos funcionarios logar para acessar ações sociais com visibilidade para somente publico interno
+- unificar person e user do keyclock
