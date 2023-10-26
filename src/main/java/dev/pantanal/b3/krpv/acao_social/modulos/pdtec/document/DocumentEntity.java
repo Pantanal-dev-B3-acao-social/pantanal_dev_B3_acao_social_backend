@@ -1,31 +1,27 @@
-package dev.pantanal.b3.krpv.acao_social.modulos.company;
+package dev.pantanal.b3.krpv.acao_social.modulos.pdtec.document;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import dev.pantanal.b3.krpv.acao_social.config.audit.AuditListener;
-import dev.pantanal.b3.krpv.acao_social.modulos.investment.InvestmentEntity;
+import dev.pantanal.b3.krpv.acao_social.modulos.pdtec.contract.ContractEntity;
 import jakarta.persistence.*;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import org.hibernate.annotations.SQLDelete;
-import org.hibernate.envers.AuditTable;
-import org.hibernate.envers.Audited;
-import org.hibernate.validator.constraints.br.CNPJ;
 import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.UUID;
 
-@Table(name="company")
-@Entity(name="Company")
-//@AuditTable("z_aud_company")
+@Table(name="document")
+@Entity(name="Document")
 @EntityListeners(AuditListener.class)
+//@AuditTable("z_aud_document")
 //@Audited
 @Data
 @NoArgsConstructor
@@ -33,12 +29,12 @@ import java.util.UUID;
 @AllArgsConstructor
 @EqualsAndHashCode
 @ToString
-@SQLDelete(sql = "UPDATE company SET deleted_date = CURRENT_DATE WHERE id=? and version=?")
-public class CompanyEntity {
+@SQLDelete(sql = "UPDATE document SET deleted_date = CURRENT_DATE WHERE id=? and version=?")
+public class DocumentEntity {
 
     @Valid
     @Version
-    private Long version;
+    private Long version = 1L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -46,30 +42,28 @@ public class CompanyEntity {
     @NotNull
     UUID id;
 
-    @Column(nullable = false)
-    @NotBlank
-    private String name;
+    @ManyToOne
+    @JoinColumn(name = "contract_id", nullable = false)
+    @JsonManagedReference
+    private ContractEntity contract;
 
-    @Column(nullable = false)
-    @NotBlank
-    private String description;
-
-
-    @Column(nullable = false, unique = true)
-    @NotBlank
-    @CNPJ
-    private String cnpj;
+    @Column(name = "document_id", nullable = false)
+    private UUID pdtecDocumentId;
 
     @CreatedBy
+    @Column(name = "created_by")
     private UUID createdBy;
 
-    @LastModifiedBy
-    private UUID lastModifiedBy;
-
     @CreatedDate
+    @Column(name = "created_date")
     private LocalDateTime createdDate;
 
+    @LastModifiedBy
+    @Column(name = "last_modified_by")
+    private UUID lastModifiedBy;
+
     @LastModifiedDate
+    @Column(name = "last_modified_date")
     private LocalDateTime lastModifiedDate;
 
     @Column(name = "deleted_date")
@@ -77,11 +71,6 @@ public class CompanyEntity {
 
     @Column(name = "deleted_by")
     private UUID deletedBy;
-
-    @OneToMany(mappedBy = "company")
-    @ToString.Exclude
-    @JsonBackReference
-    private List<InvestmentEntity> investment;
 
     @PrePersist
     protected void onCreate() {
@@ -102,15 +91,5 @@ public class CompanyEntity {
             this.lastModifiedBy = UUID.fromString(userId);
         }
     }
-
-//    @PreRemove
-//    protected void onRemove() {
-//        this.deletedDate = LocalDateTime.now();
-//        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-//        if (authentication != null && authentication.isAuthenticated()) {
-//            String userId = authentication.getName();
-//            this.deletedBy = UUID.fromString(userId);
-//        }
-//    }
 
 }
