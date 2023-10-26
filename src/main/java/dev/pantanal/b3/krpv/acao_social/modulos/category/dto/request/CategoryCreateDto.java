@@ -15,5 +15,7 @@ public record CategoryCreateDto (
 
         VisibilityCategoryEnum visibility,
         @NotNull
-        UUID categoryGroup
+        UUID categoryGroup,
+        @NotNull
+        VisibilityCategoryEnum visibility
 ) {}

@@ -5,6 +5,7 @@ CREATE TABLE presence (
   session_id UUID NOT NULL,
   approved_by UUID,
   approved_date TIMESTAMP,
+  engagement_score INT,
   created_by UUID NOT NULL,
   created_date TIMESTAMP NOT NULL,
   last_modified_by UUID,
