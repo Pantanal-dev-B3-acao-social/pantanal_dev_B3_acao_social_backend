@@ -18,5 +18,6 @@ public record SessionCreateDto (
         @FutureOrPresent
         LocalDateTime dateEndTime,
         StatusEnum status,
-        VisibilityEnum visibility
+        VisibilityEnum visibility,
+        Integer engagementScore
 ) {}

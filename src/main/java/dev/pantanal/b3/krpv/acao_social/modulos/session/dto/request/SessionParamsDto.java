@@ -18,5 +18,6 @@ public record SessionParamsDto (
         LocalDateTime createdDate,
         LocalDateTime lastModifiedDate,
         LocalDateTime deletedDate,
-        UUID deletedBy
+        UUID deletedBy,
+        Integer engagementScore
 ) {}

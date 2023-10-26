@@ -44,7 +44,8 @@ public class SessionController {
                 entity.getLastModifiedBy(),
                 entity.getLastModifiedDate(),
                 entity.getDeletedBy(),
-                entity.getDeletedDate()
+                entity.getDeletedDate(),
+                entity.getEngagementScore()
         );
         return dto;
     }

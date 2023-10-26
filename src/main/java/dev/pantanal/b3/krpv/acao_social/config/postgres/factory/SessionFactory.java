@@ -54,6 +54,7 @@ public class SessionFactory {
         sessionEntity.setStatus(statusEnum);
         sessionEntity.setVisibility(visibilityEnum);
         sessionEntity.setSocialAction(socialActions.get(0));
+        sessionEntity.setEngagementScore(random.nextInt(100));
         return sessionEntity;
     }
 

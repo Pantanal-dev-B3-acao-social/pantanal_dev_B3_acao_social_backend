@@ -84,8 +84,8 @@ public class PresenceEntity {
     @Column(name = "deleted_by")
     private UUID deletedBy;
 
-    @Column(name = "score_value")
-    private Integer scoreValue;
+    @Column(name = "engagement_score")
+    private Integer engagementScore;
 
     @PrePersist
     protected void onCreate() {

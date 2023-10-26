@@ -10,6 +10,7 @@ import dev.pantanal.b3.krpv.acao_social.modulos.presence.repository.PresencePred
 import dev.pantanal.b3.krpv.acao_social.modulos.presence.repository.PresenceRepository;
 import dev.pantanal.b3.krpv.acao_social.modulos.session.SessionEntity;
 import dev.pantanal.b3.krpv.acao_social.modulos.session.repository.SessionRepository;
+import dev.pantanal.b3.krpv.acao_social.modulos.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -29,30 +30,24 @@ public class PresenceService {
     @Autowired
     private PresencePredicates presencePredicates;
 
+    @Autowired
+    private UserService userService;
 
     public PresenceEntity create(PresenceCreateDto dataRequest) {
-        PresenceEntity entity = new PresenceEntity();
         SessionEntity sessionEntity = sessionRepository.findById(dataRequest.session());
         PersonEntity personEntity = personRepository.findById(dataRequest.person());
         PersonEntity approvedBy = personRepository.findById(dataRequest.approvedBy());
-        if (sessionEntity != null){
-            entity.setSession(sessionEntity);
+        if (approvedBy == null || personEntity == null || sessionEntity == null || dataRequest.approvedDate() == null) {
+            throw new ObjectNotFoundException("Deve estar preenchido approvedBy, personEntity, sessionEntity e approvedDate.");
         }
-        if (personEntity != null){
-            entity.setPerson(personEntity);
-
-        }
-        if (approvedBy != null){
-            entity.setApprovedBy(approvedBy);
-        }
-        if (approvedBy != null && personEntity != null && sessionEntity !=null){
-            entity.setApprovedDate(dataRequest.approvedDate());
-            PresenceEntity savedObj = presenceRepository.save(entity);
-            return savedObj;
-        }
-        else {
-            throw new ObjectNotFoundException("Id of elements can not be null");
-        }
+        PresenceEntity entity = new PresenceEntity();
+        entity.setPerson(personEntity);
+        entity.setSession(sessionEntity);
+        entity.setEngagementScore(sessionEntity.getEngagementScore());
+        entity.setApprovedBy(approvedBy);
+        entity.setApprovedDate(dataRequest.approvedDate());
+        PresenceEntity savedObj = presenceRepository.save(entity);
+        return savedObj;
     }
 
     public void delete(UUID id) {
