@@ -138,6 +138,7 @@ public class ContractService {
         HttpHeaders headers = new HttpHeaders();
         headers.setBearerAuth(token);
         headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.set("x-Tenant", xTenant);
         Map<String, Object> makeBody = new HashMap<>();
         makeBody.put("status", contract.getStatus());
         String jsonRequest;

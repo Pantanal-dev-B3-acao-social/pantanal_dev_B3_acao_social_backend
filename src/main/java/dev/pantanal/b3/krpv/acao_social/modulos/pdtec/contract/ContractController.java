@@ -65,19 +65,19 @@ public class ContractController {
 
 
     @GetMapping("/{contractId}")
-    @PreAuthorize("hasAnyRole('USER_GET_ONE')")
+    //@PreAuthorize("hasAnyRole('USER_GET_ONE')")
     @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity<ContractResponseDto> findById(JwtAuthenticationToken contractLogged, @PathVariable UUID contractId) {
+    public ResponseEntity<ContractResponseDto> findById(@PathVariable UUID contractId) {
         ContractEntity contract = this.service.findById(contractId);
         ContractResponseDto response = mapEntityToDto(contract);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
-    @GetMapping()
-    @PreAuthorize("hasAnyRole('USER_GET_ALL')")
+    @GetMapping
+    //@PreAuthorize("hasAnyRole('USER_GET_ALL')")
     @ResponseStatus(HttpStatus.OK)
     public Page<ContractResponseDto> findAll (
-            @RequestBody @Valid ContractParamsDto params,
+            @Valid ContractParamsDto params,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "50") int size,
             @SortDefault(sort="name", direction = Sort.Direction.DESC) Sort sort

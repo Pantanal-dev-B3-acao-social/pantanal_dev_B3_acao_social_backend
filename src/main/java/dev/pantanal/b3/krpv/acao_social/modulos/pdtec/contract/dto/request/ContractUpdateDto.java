@@ -9,6 +9,6 @@ import jakarta.validation.constraints.Pattern;
 public record ContractUpdateDto(
 
         @NotNull
-        //@Pattern(regexp = "^(RUNNING|CLOSED|)") use to validate the enum
+//        @Pattern(regexp = "^(RUNNING|CREATED|DRAFTED|PENDING|CANCELED|DONE|REJECTED|EXPIRATED|EXPIRED)")
         StatusEnum status
 ) {}
