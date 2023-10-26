@@ -28,7 +28,7 @@ public class InterestService {
     @Autowired
     private PersonRepository personRepository;
     @Autowired
-    private InterestPredicates donationPredicates;
+    private InterestPredicates interestPredicates;
 
     public InterestEntity create(InterestCreateDto request) {
         InterestEntity newInterest = new InterestEntity();
@@ -47,7 +47,7 @@ public class InterestService {
     }
 
     public Page<InterestEntity> findAll(Pageable paging, InterestParamsDto filters) {
-        BooleanExpression predicate = donationPredicates.buildPredicate(filters);
+        BooleanExpression predicate = interestPredicates.buildPredicate(filters);
         Page<InterestEntity> objects = repository.findAll(paging, predicate);
         return objects;
     }

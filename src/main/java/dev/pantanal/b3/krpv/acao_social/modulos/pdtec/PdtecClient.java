@@ -56,7 +56,7 @@ public class PdtecClient {
         return System.currentTimeMillis() >= tokenExpirationTime;
     }
 
-    public synchronized String extractAccessToken() {
+    public synchronized String getAccessToken() {
         if (isTokenExpired()) {
             ResponseEntity<String> result = this.getAuthToken();
             if (result.getStatusCode() == HttpStatus.OK) {

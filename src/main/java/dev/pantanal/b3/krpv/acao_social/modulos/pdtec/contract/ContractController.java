@@ -44,84 +44,86 @@ public class ContractController {
     }
 
 
-    @GetMapping("/{contractId}")
-    @PreAuthorize("hasAnyRole('USER_GET_ONE')")
-    @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity<ContractResponseDto> findById(JwtAuthenticationToken contractLogged, @PathVariable UUID contractId) {
-        ContractResponseDto responseDto = this.service.findById(contractId);
-        return new ResponseEntity<>(responseDto, HttpStatus.OK);
-    }
-
-    @GetMapping()
-    @PreAuthorize("hasAnyRole('USER_GET_ALL')")
-    @ResponseStatus(HttpStatus.OK)
-    public Page<ContractResponseDto> findAll (
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "50") int size,
-            @SortDefault(sort="name", direction = Sort.Direction.DESC) Sort sort
-    ) {
-        Pageable paging = PageRequest.of(page, size, sort);
-        ResponseEntity<String> result = this.service.findAll(
-                page,
-                size
-        );
-        List<ContractResponseDto> dtos = mapEntityToDto(result);
-        return new PageImpl<>(dtos, paging, dtos.size());
-    }
+//    @GetMapping("/{contractId}")
+//    @PreAuthorize("hasAnyRole('USER_GET_ONE')")
+//    @ResponseStatus(HttpStatus.OK)
+//    public ResponseEntity<ContractResponseDto> findById(JwtAuthenticationToken contractLogged, @PathVariable UUID contractId) {
+//        ContractResponseDto responseDto = this.service.findById(contractId);
+//        return new ResponseEntity<>(responseDto, HttpStatus.OK);
+//    }
+//
+//    @GetMapping()
+//    @PreAuthorize("hasAnyRole('USER_GET_ALL')")
+//    @ResponseStatus(HttpStatus.OK)
+//    public Page<ContractResponseDto> findAll (
+//            @RequestParam(defaultValue = "0") int page,
+//            @RequestParam(defaultValue = "50") int size,
+//            @SortDefault(sort="name", direction = Sort.Direction.DESC) Sort sort
+//    ) {
+//        Pageable paging = PageRequest.of(page, size, sort);
+//        ResponseEntity<String> result = this.service.findAll(
+//                page,
+//                size
+//        );
+//        List<ContractResponseDto> dtos = mapEntityToDto(result);
+//        return new PageImpl<>(dtos, paging, dtos.size());
+//    }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    @PreAuthorize("hasAnyRole('USER_CREATE')")
-    @Operation(summary = "Creates an User", method = "POST")
+    //@PreAuthorize("hasAnyRole('USER_CREATE')")
+    @Operation(summary = "Creates an Contract", method = "POST")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "201", description = "User succesfully created"),
+            @ApiResponse(responseCode = "201", description = "Contract succesfully created"),
             @ApiResponse(responseCode = "400", description = "Invalid parameters"),
-            @ApiResponse(responseCode = "401", description = "User not authenticated"),
-            @ApiResponse(responseCode = "404", description = "User not found"),
+            @ApiResponse(responseCode = "401", description = "Contract not authenticated"),
+            @ApiResponse(responseCode = "404", description = "Contract not found"),
             @ApiResponse(responseCode = "422", description = "Invalid request data"),
-            @ApiResponse(responseCode = "500", description = "Error when creating User"),
+            @ApiResponse(responseCode = "500", description = "Error when creating Contract"),
     })
-    public ResponseEntity<String> create(
+    public ResponseEntity<ContractEntity> create(
             @RequestBody @Valid ContractCreateDto request
     ) {
-        ContractResponseDto contractId = service.create(request);
-        return new ResponseEntity<>(contractId.toString(), HttpStatus.OK);
+        String token = pdtecClient.getAccessToken();
+        ContractEntity contract = service.create(request, token);
+
+        return new ResponseEntity<ContractEntity>(contract, HttpStatus.OK);
     }
 
-    @PatchMapping("/{id}")
-    @ResponseStatus(HttpStatus.OK)
-    @Operation(summary = "Updates an Contract", method = "PATCH")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Successfully Updated"),
-            @ApiResponse(responseCode = "400", description = "Invalid parameters"),
-            @ApiResponse(responseCode = "401", description = "User is not authenticated"),
-            @ApiResponse(responseCode = "404", description = "Contract no found"),
-            @ApiResponse(responseCode = "422", description = "Invalid request data"),
-            @ApiResponse(responseCode = "500", description = "Error when creating User"),
-    })
-    public ResponseEntity<String> update(
-            @PathVariable UUID id,
-            @Valid @RequestBody ContractUpdateDto dto
-    ) {
-        ResponseEntity<String> response = service.update(id, dto);
-        return response;
-    }
-
-    @DeleteMapping("/{id}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    @Operation(summary = "Deletes an contract", method = "DELETE")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "204", description = "Successfully deleted"),
-            @ApiResponse(responseCode = "400", description = "Invalid Id"),
-            @ApiResponse(responseCode = "401", description = "User not authenticated"),
-            @ApiResponse(responseCode = "404", description = "User not found"),
-            @ApiResponse(responseCode = "500", description = "Error when excluding User"),
-    })
-    public void delete(
-            @PathVariable UUID id
-    ) {
-        service.delete(id);
-    }
+//    @PatchMapping("/{id}")
+//    @ResponseStatus(HttpStatus.OK)
+//    @Operation(summary = "Updates an Contract", method = "PATCH")
+//    @ApiResponses(value = {
+//            @ApiResponse(responseCode = "200", description = "Successfully Updated"),
+//            @ApiResponse(responseCode = "400", description = "Invalid parameters"),
+//            @ApiResponse(responseCode = "401", description = "Contract is not authenticated"),
+//            @ApiResponse(responseCode = "404", description = "Contract no found"),
+//            @ApiResponse(responseCode = "422", description = "Invalid request data"),
+//            @ApiResponse(responseCode = "500", description = "Error when creating Contract"),
+//    })
+//    public ResponseEntity<String> update(
+//            @PathVariable UUID id,
+//            @Valid @RequestBody ContractUpdateDto dto
+//    ) {
+//        ResponseEntity<String> response = service.update(id, dto);
+//        return response;
+//    }
+//
+//    @DeleteMapping("/{id}")
+//    @ResponseStatus(HttpStatus.NO_CONTENT)
+//    @Operation(summary = "Deletes an contract", method = "DELETE")
+//    @ApiResponses(value = {
+//            @ApiResponse(responseCode = "204", description = "Successfully deleted"),
+//            @ApiResponse(responseCode = "400", description = "Invalid Id"),
+//            @ApiResponse(responseCode = "401", description = "Contract not authenticated"),
+//            @ApiResponse(responseCode = "404", description = "Contract not found"),
+//            @ApiResponse(responseCode = "500", description = "Error when excluding Contract"),
+//    })
+//    public void delete(
+//            @PathVariable UUID id
+//    ) {
+//        service.delete(id);
+//    }
 
 }
 
