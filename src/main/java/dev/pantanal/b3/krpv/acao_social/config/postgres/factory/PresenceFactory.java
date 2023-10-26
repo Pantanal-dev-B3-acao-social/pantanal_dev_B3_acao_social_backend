@@ -64,10 +64,10 @@ public class PresenceFactory {
             List<PersonEntity> approveds
     ) {
         List<PresenceEntity> entities = new ArrayList<>();
-        Integer indexPerson = random.nextInt(0, persons.size());
-        Integer indexSession = random.nextInt(0, sessions.size());
-        Integer indexApproved = random.nextInt(0, approveds.size());
         for (int i=0; i<amount; i++) {
+            Integer indexPerson = random.nextInt(0, persons.size());
+            Integer indexSession = random.nextInt(0, sessions.size());
+            Integer indexApproved = random.nextInt(0, approveds.size());
             PresenceEntity entity = this.makeFakeEntity(
                     persons.get(indexPerson),
                     sessions.get(indexSession),
