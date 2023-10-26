@@ -11,11 +11,8 @@ import dev.pantanal.b3.krpv.acao_social.utils.GenerateTokenUserForLogged;
 import dev.pantanal.b3.krpv.acao_social.utils.LoginMock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.DependsOn;
-import org.springframework.core.annotation.Order;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -87,9 +84,8 @@ public class SeedDataService {
         String tokenUserLogged = generateTokenUserForLogged.loginUserMock(new LoginUserDto(adminUsername, adminPassword));
         loginMock.authenticateWithToken(tokenUserLogged);
         // Arrange (Organizar) category
-        List<CategoryGroupEntity> groupEntitiesParents = this.categoryGroupFactory.insertMany(2, null);
-        int amountGroupEntitiesSons = 2;
-        List<CategoryGroupEntity> groupEntitiesSons = this.categoryGroupFactory.insertMany(amountGroupEntitiesSons, groupEntitiesParents.get(0));
+        List<CategoryGroupEntity> groupEntitiesParents = this.categoryGroupFactory.insertMany(3, null);
+        List<CategoryGroupEntity> groupEntitiesSons = this.categoryGroupFactory.insertMany(3, groupEntitiesParents.get(0));
         // Arrange (Organizar) social action
         List<CategoryGroupEntity> categoryGroupLevelEntities = new ArrayList<>();
         CategoryGroupEntity levelGroupEntity = categoryGroupFactory.makeFakeEntity("Social Action Level", "level of social action", null);
@@ -113,8 +109,8 @@ public class SeedDataService {
                 .mapToObj(i -> UUID.randomUUID())
                 .collect(Collectors.toList());
         // SEED
-        this.categoryFactory.insertMany(50, groupEntitiesParents);
-        this.categoryFactory.insertMany(50, groupEntitiesSons);
+        this.categoryFactory.insertMany(20, groupEntitiesParents);
+        this.categoryFactory.insertMany(20, groupEntitiesSons);
         List<PersonEntity> personEntities = this.personFactory.insertMany(usersRandom.size(), usersRandom);
         this.companyFactory.insertMany(4);
         this.ongFactory.insertMany(10);
