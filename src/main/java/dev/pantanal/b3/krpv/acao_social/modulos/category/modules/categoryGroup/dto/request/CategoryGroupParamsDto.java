@@ -9,7 +9,7 @@ public record CategoryGroupParamsDto(
         String name,
         String description,
         String code,
-        UUID parentCategoryGroupId,
+        UUID parentCategoryGroup,
         VisibilityCategoryGroupEnum visibility,
         UUID createdBy,
         UUID lastModifiedBy,

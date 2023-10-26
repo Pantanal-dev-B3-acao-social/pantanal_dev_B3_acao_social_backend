@@ -26,8 +26,8 @@ public class CategoryGroupService {
 
     public CategoryGroupEntity create(CategoryGroupCreateDto dataRequest) {
         CategoryGroupEntity entity = new CategoryGroupEntity();
-        if (dataRequest.parentCategoryGroupId() != null){
-            CategoryGroupEntity fatherEntity = categoryGroupRepository.findById(dataRequest.parentCategoryGroupId());
+        if (dataRequest.parentCategoryGroup() != null){
+            CategoryGroupEntity fatherEntity = categoryGroupRepository.findById(dataRequest.parentCategoryGroup());
             entity.setParentCategoryGroupEntity(fatherEntity);
         }
         entity.setName(dataRequest.name());
@@ -75,10 +75,10 @@ public class CategoryGroupService {
             obj.setVisibility(request.visibility());
         }
         CategoryGroupEntity parent = null;
-        if (request.parentCategoryGroupId() != null) {
-            parent = categoryGroupRepository.findById(request.parentCategoryGroupId());
+        if (request.parentCategoryGroup() != null) {
+            parent = categoryGroupRepository.findById(request.parentCategoryGroup());
             if (parent == null) {
-                throw new ObjectNotFoundException("Registro não encontrado: " + request.parentCategoryGroupId());
+                throw new ObjectNotFoundException("Registro não encontrado: " + request.parentCategoryGroup());
             }
         }
         obj.setParentCategoryGroupEntity(parent);

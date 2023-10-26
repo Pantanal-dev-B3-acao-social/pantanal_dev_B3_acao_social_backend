@@ -1,5 +1,6 @@
 package dev.pantanal.b3.krpv.acao_social.modulos.category.dto.response;
 
+import dev.pantanal.b3.krpv.acao_social.modulos.category.enums.VisibilityCategoryEnum;
 import dev.pantanal.b3.krpv.acao_social.modulos.category.modules.categoryGroup.CategoryGroupEntity;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -14,6 +15,8 @@ public record CategoryResponseDto(
         String description,
         @NotBlank(message= "Campo 'code' não pode estar vazio")
         String code,
+        @NotNull
+        VisibilityCategoryEnum visibility,
         @NotNull
         CategoryGroupEntity categoryGroup,
         @NotBlank(message= "Campo 'createdBy' não pode estar vazio")

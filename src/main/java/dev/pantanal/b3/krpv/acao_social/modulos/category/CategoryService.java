@@ -30,20 +30,18 @@ public class CategoryService {
     private GeneratorCode generatorCode;
 
     public CategoryEntity create(CategoryCreateDto dataRequest) {
-        CategoryEntity entity = new CategoryEntity();
         CategoryGroupEntity categoryGroup = categoryGroupRepository.findById(dataRequest.categoryGroup());
+        if (categoryGroup == null) {
+            throw new ObjectNotFoundException("Invalid element ID");
+        }
+        CategoryEntity entity = new CategoryEntity();
+        entity.setCategoryGroup(categoryGroup);
         entity.setName(dataRequest.name());
         entity.setDescription(dataRequest.description());
         String code = generatorCode.execute(entity.getName());
         entity.setCode(code);
-        if (categoryGroup != null){
-            entity.setCategoryGroup(categoryGroup);
-        }
-        else{
-            throw new ObjectNotFoundException("Invalid element ID");
-        }
+        entity.setVisibility(dataRequest.visibility());
         CategoryEntity savedObj = categoryRepository.save(entity);
-        // lançar exceções
         return savedObj;
     }
 
@@ -76,6 +74,16 @@ public class CategoryService {
         }
         if (request.description() != null) {
             obj.setDescription(request.description());
+        }
+        if (request.visibility() != null) {
+            obj.setVisibility(request.visibility());
+        }
+        if (request.categoryGroup() != null) {
+            CategoryGroupEntity groupEntity = categoryGroupRepository.findById(request.categoryGroup());
+            if (groupEntity == null) {
+                throw new ObjectNotFoundException("Registro não encontrado: " + request.categoryGroup());
+            }
+            obj.setCategoryGroup(groupEntity);
         }
         CategoryEntity updatedObj = categoryRepository.update(obj);
         return updatedObj;

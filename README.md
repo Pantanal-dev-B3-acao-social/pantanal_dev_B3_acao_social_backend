@@ -172,6 +172,19 @@ server {
 - @main/@ticket56_titulo/ticket57_titulo
 - @main/@ticket56_titulo/@ticket58_titulo
 - @main/@ticket56_titulo/@ticket58_titulo/ticket59_titulo
+- exemplo real:
+```bash
+$ git branch
+  @main/38305473_docker
+  @main/40263979_Interest_CRUD
+  @main/41130419_criar_seeds
+  @main/41673713_fix_getAll_session
+  @main/41826671_fix_getAll_investimento
+  @main/42261853_fix_tests
+  @main/42468431_pontuacao_engajamento
+* main
+```
+
 
 # Organização de diretorios
 - os diretorios estão organizados em modulos 
