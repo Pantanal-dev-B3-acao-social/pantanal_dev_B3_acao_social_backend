@@ -104,6 +104,7 @@ public class ContractService {
             newContract.setDescription(request.description());
             newContract.setJustification(request.justification());
             newContract.setStatus(request.status());
+            newContract.setTitle(request.title());
 
             ContractEntity savedContract = repository.save(newContract);
             return savedContract;
