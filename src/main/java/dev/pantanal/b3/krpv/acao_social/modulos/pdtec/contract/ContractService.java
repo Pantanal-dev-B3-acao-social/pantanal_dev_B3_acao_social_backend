@@ -11,18 +11,16 @@ import dev.pantanal.b3.krpv.acao_social.modulos.ong.repository.OngRepository;
 import dev.pantanal.b3.krpv.acao_social.modulos.pdtec.contract.dto.request.ContractCreateDto;
 //import dev.pantanal.b3.krpv.acao_social.modulos.pdtec.contract.repository.ContractPredicates;
 import dev.pantanal.b3.krpv.acao_social.modulos.pdtec.contract.dto.request.ContractParamsDto;
+import dev.pantanal.b3.krpv.acao_social.modulos.pdtec.contract.dto.request.ContractUpdateDto;
 import dev.pantanal.b3.krpv.acao_social.modulos.pdtec.contract.repository.ContractPredicates;
 import dev.pantanal.b3.krpv.acao_social.modulos.pdtec.contract.repository.ContractRepository;
 import dev.pantanal.b3.krpv.acao_social.modulos.socialAction.SocialActionEntity;
 import dev.pantanal.b3.krpv.acao_social.modulos.socialAction.repository.SocialActionRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
+import org.springframework.http.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -116,6 +114,45 @@ public class ContractService {
         return obj;
     }
 
-    public void delete(UUID id) { repository.delete(id); }
 
+
+    public ContractEntity update(UUID id, ContractUpdateDto dto, String token) {
+        ContractEntity contract = repository.findById(id);
+        if (contract == null){
+            throw new ObjectNotFoundException("Contrato inexistente");
+        }
+
+        String requestUrlEndpoint = String.format("%s/processes/%s",pdtecUrl, contract.processId);
+        HttpHeaders headers = new HttpHeaders();
+        headers.setBearerAuth(token);
+        Map<String, Object> makeBody = new HashMap<>();
+        makeBody.put("status", contract.getStatus());
+        String jsonRequest;
+        try {
+            jsonRequest = objectMapper.writeValueAsString(makeBody);
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
+        HttpEntity<String> requestPdtec = new HttpEntity<>(jsonRequest, headers);
+        RestTemplate restTemplate = new RestTemplate();
+        ResponseEntity<String> responsePdtec = restTemplate.exchange(
+                requestUrlEndpoint,
+                HttpMethod.POST,
+                requestPdtec,
+                String.class
+        );
+        HttpStatusCode statusCode = responsePdtec.getStatusCode();
+        int statusCodeValue = statusCode.value();
+
+        if (statusCodeValue == 200){
+            contract.setStatus(dto.status());
+        }
+        else{
+            throw new RuntimeException("Not a valid StatusCode");
+        }
+        ContractEntity contractUpdated = repository.update(contract);
+        return contract;
+    }
+
+    public void delete(UUID id) { repository.delete(id); }
 }

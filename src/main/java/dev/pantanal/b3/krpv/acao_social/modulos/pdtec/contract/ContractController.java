@@ -109,24 +109,26 @@ public class ContractController {
         return new ResponseEntity<ContractResponseDto>(response, HttpStatus.OK);
     }
 
-//    @PatchMapping("/{id}")
-//    @ResponseStatus(HttpStatus.OK)
-//    @Operation(summary = "Updates an Contract", method = "PATCH")
-//    @ApiResponses(value = {
-//            @ApiResponse(responseCode = "200", description = "Successfully Updated"),
-//            @ApiResponse(responseCode = "400", description = "Invalid parameters"),
-//            @ApiResponse(responseCode = "401", description = "Contract is not authenticated"),
-//            @ApiResponse(responseCode = "404", description = "Contract no found"),
-//            @ApiResponse(responseCode = "422", description = "Invalid request data"),
-//            @ApiResponse(responseCode = "500", description = "Error when creating Contract"),
-//    })
-//    public ResponseEntity<String> update(
-//            @PathVariable UUID id,
-//            @Valid @RequestBody ContractUpdateDto dto
-//    ) {
-//        ResponseEntity<String> response = service.update(id, dto);
-//        return response;
-//    }
+    @PatchMapping("/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    @Operation(summary = "Updates an Contract", method = "PATCH")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Successfully Updated"),
+            @ApiResponse(responseCode = "400", description = "Invalid parameters"),
+            @ApiResponse(responseCode = "401", description = "Contract is not authenticated"),
+            @ApiResponse(responseCode = "404", description = "Contract no found"),
+            @ApiResponse(responseCode = "422", description = "Invalid request data"),
+            @ApiResponse(responseCode = "500", description = "Error when creating Contract"),
+    })
+    public ContractResponseDto update(
+            @PathVariable UUID id,
+            @Valid @RequestBody ContractUpdateDto dto
+    ) {
+        String token = pdtecClient.getAccessToken();
+        ContractEntity contractUpdated = service.update(id, dto, token);
+        ContractResponseDto response = mapEntityToDto(contractUpdated);
+        return response;
+    }
 //
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)

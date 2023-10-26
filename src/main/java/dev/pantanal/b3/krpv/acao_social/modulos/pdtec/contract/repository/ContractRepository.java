@@ -54,6 +54,12 @@ public class ContractRepository {
         return new PageImpl<>(results,pageable,total);
     }
 
+    public ContractEntity update(ContractEntity toUpdate){
+        ContractEntity contractUpdated = entityManager.merge(toUpdate);
+        entityManager.flush();
+        return contractUpdated;
+    }
+
     public void delete(UUID id) {
         contractPostgresRepository.deleteById(id);
     }

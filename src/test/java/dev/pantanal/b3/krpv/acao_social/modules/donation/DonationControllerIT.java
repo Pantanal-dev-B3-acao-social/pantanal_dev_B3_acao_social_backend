@@ -215,7 +215,7 @@ public class DonationControllerIT {
         DonationEntity item = saved.get(0);
         // Act (ação)
         ResultActions resultActions = mockMvc.perform(
-                MockMvcRequestBuilders.get(ROUTE_DONATION + "/{id}", item.getId().toString())
+                MockMvcRequestBuilders.get(ROUTE_DONATION + "/${id}", item.getId().toString())
                         .header("Authorization", "Bearer " + tokenUserLogged)
         );
         // Assert (Verificar)
