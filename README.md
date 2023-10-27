@@ -70,15 +70,21 @@
   - Poderá ser implemetado um alerta para o gerente sobre a possível necessidade de gerar acessibilidade quando alguem com PCD se voluntaria para Ação Social.
 - Gestão de Pessoas
 - Gestão de Ação social com
-  - Toda ação social deve pertencer a uma Ong 
+  - Toda ação social deve pertencer a uma Ong
+  - A ação social possui "visibilidade" que pode estar "privada", "pública somente para interno", "Pública até para os externos"
   - A ação social pode ter um Nivel
   - A ação social pode ter um Tipo
 - Gestão de voluntarios da Ação Social
   - As pessoas cadastradas no sistema podem manifestar interesse em ser voluntário em uma ação social
-  - 
+  - Será possível que um gerente aprove ou não o voluntário para efetivar sua participação
+  - Os voluntários aprovados poderão visualizar dados da ação social mesmo que esta esteja com "visibilidade" com valor "privada"
 - Gestão de sessões da ação social
+  - Sessão é a execução com data e hora de inicio e fim, e futuramente com local
+  - Possui "visibilidade" que pode estar "privada", "pública somente para interno", "Pública até para os externos"
+  - sessão deve ter quantos pontos de engajamento as pessoas presentes devem receber
 - Gestão de presenças
-- 
+  - Quando a pessoa esta presente na sessão ela deve ser registrada
+  - e a pessoa recebe pontuação de engajamento, que cada sessão vindo da sessão
 
 ## Tecnologias <a name="tecnologias"> </a>
 - spring boot
@@ -94,6 +100,7 @@
     - ![img.png](img.png)
   - [LOG DE RASTREABILIDADE PARA AUDITORIA]
 - postgres
+  - 
 - docker
 - docker-compose
 - keyclock
@@ -242,7 +249,7 @@ $ git branch
 - podem existir algumas regras de negócio voltada para dados em outras cadamadas, principalmente validadores
 - como na camada de DTO, Entity e Migration
 
-## SSO (Single sign-on) Autenticação única / Identity and Access Management (IAM) gerenciamento de identidade e acesso <a name="sso"> </a>
+## Keyclock: SSO (Single sign-on) Autenticação única / Identity and Access Management (IAM) gerenciamento de identidade e acesso <a name="sso"> </a>
 - optamos por não implementar os serviços de autenticação e autorização
 - optemos por usar uma ferramenta de SSO, no caso o Keyclock
 - em nossa arquitetura, tercerizamos para o Keyclock gerencia tudo do usuário
