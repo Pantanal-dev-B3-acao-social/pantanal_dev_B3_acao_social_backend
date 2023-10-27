@@ -111,6 +111,13 @@ public class SocialActionService {
         if (request.description() != null){
             obj.setDescription(request.description());
         }
+        if(request.ong() != null) {
+            OngEntity ongEntity = ongRepository.findById(request.ong());
+            if (ongEntity == null) {
+                throw new ObjectNotFoundException("Ong not valid");
+            }
+            obj.setOng(ongEntity);
+        }
         if (request.categoryTypeIds() != null) {
             List<CategorySocialActionTypeEntity> categorySocialActionTypeEntityList = new ArrayList<>();
             for (UUID categoryId : request.categoryTypeIds()) {

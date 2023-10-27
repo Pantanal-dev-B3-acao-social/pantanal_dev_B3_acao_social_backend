@@ -13,5 +13,6 @@ public record SocialActionUpdateDto(
         String name,
         String description,
         List<UUID> categoryTypeIds,
-        List<UUID> categoryLevelIds
+        List<UUID> categoryLevelIds,
+        UUID ong
 ) {}
