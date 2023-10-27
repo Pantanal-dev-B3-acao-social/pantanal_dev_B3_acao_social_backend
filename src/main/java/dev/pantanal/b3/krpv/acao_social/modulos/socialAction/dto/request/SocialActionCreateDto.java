@@ -6,6 +6,7 @@ import dev.pantanal.b3.krpv.acao_social.modulos.ong.OngEntity;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
 import java.util.List;
@@ -19,8 +20,8 @@ public record SocialActionCreateDto(
         @NotBlank(message= "Campo 'description' não pode estar vazio")
         @Size(min = 2)
         String description,
-
-        UUID ongEntity,
+        @NotNull
+        UUID ong,
         List<UUID> categoryTypeIds,
         List<UUID> categoryLevelIds
 
