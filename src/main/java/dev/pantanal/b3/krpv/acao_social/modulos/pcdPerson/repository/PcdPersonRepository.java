@@ -3,6 +3,7 @@ package dev.pantanal.b3.krpv.acao_social.modulos.pcdPerson.repository;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import dev.pantanal.b3.krpv.acao_social.modulos.pcdPerson.PcdPersonEntity;
+import dev.pantanal.b3.krpv.acao_social.modulos.pcdPerson.QPcdPersonEntity;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import lombok.RequiredArgsConstructor;
@@ -33,7 +34,7 @@ public class PcdPersonRepository {
 
     public Page<PcdPersonEntity> findAll(Pageable pageable, BooleanExpression predicate) {
         JPAQueryFactory queryFactory = new JPAQueryFactory(entityManager);
-        QPcdPersonEntity qEntity = QPcdPersonEntity.pcdEntity;
+        QPcdPersonEntity qEntity = QPcdPersonEntity.pcdPersonEntity;
         List<PcdPersonEntity> results = queryFactory.selectFrom(qEntity)
                 .where(predicate)
                 .offset(pageable.getOffset())
