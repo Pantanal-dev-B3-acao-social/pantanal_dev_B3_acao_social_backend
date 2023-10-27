@@ -13,7 +13,7 @@ import org.springframework.data.domain.*;
 import org.springframework.data.web.SortDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
+//import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import io.swagger.v3.oas.annotations.Operation;
 
@@ -25,7 +25,7 @@ import static dev.pantanal.b3.krpv.acao_social.modulos.pcd.PcdController.ROUTE_P
 
 @RestController
 @RequestMapping(ROUTE_PCD)
-@PreAuthorize("hasAnyRole('PCD')")
+//@PreAuthorize("hasAnyRole('PCD')")
 public class PcdController {
 
     @Autowired
@@ -52,7 +52,7 @@ public class PcdController {
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    @PreAuthorize("hasAnyRole('PCD_GET_ALL')")
+//    @PreAuthorize("hasAnyRole('PCD_GET_ALL')")
     @Operation(summary = "Gets Pcds", method = "GET")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Element(s) found successfully"),
@@ -74,7 +74,7 @@ public class PcdController {
 
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    @PreAuthorize("hasAnyRole('PCD_GET_ONE')")
+//    @PreAuthorize("hasAnyRole('PCD_GET_ONE')")
     @Operation(summary = "Gets one Pcd", method = "GET")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Element found successfully"),
@@ -90,7 +90,7 @@ public class PcdController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    @PreAuthorize("hasAnyRole('PCD_CREATE')")
+//    @PreAuthorize("hasAnyRole('PCD_CREATE')")
     @Operation(summary = "Creates an Pcd", method = "POST")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "Social action succesfully created"),
