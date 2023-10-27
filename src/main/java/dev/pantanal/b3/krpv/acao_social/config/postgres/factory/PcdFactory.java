@@ -32,10 +32,10 @@ public class PcdFactory {
 
     public PcdEntity makeFakeEntity() {
         PcdEntity pcdEntity = new PcdEntity();
-        pcdEntity.setName(faker.name().toString());
+        pcdEntity.setName(faker.lorem().word());
         pcdEntity.setObservation(faker.lorem().sentence());
         pcdEntity.setCode(faker.name().toString().toUpperCase());
-        pcdEntity.setAcronym(faker.name().toString());
+        pcdEntity.setAcronym(faker.lorem().word());
         return pcdEntity;
     }
 
