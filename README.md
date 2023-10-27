@@ -106,7 +106,7 @@ $ ./mvnw spring-boot:run
   - $ chmod 400 aws_ec2_pantanal_dev_ubuntu.pem
   - $ ssh -i "aws_ec2_pantanal_dev_ubuntu.pem" ubuntu@ec2-3-94-146-39.compute-1.amazonaws.com
     - digite: yes
-  - ja conectado no terminal da VM, faça clone do projeto
+  - já conectado no terminal da VM, faça clone do projeto
   - $ git clone https://SEU_TOKEN_DE_ACESSO_COM_PERMISSAO_PARA_ORGANIZACOES@github.com/Pantanal-dev-B3-acao-social/pantanal_dev_B3_acao_social_backend.git
     - login e senha do github
   - baixa e instala o docker, instalar o docker pelo curl ja vem configurado, pelo apt  e snap tem q configurar
@@ -146,8 +146,8 @@ server {
 - até integração com outros serviços
   - não estamos mockando o banco de dados e nem o SSO
   - cada caso de teste usa realmente o keyclock para autenticar e autorizar
-  - verificando se o usuario esta autenticado para executar a action do controller, caso seja necessário
-  - verificando se o usuario tem a permissão para executar a action do controller, caso seja necessário
+  - verificando se o usuário esta autenticado para executar a action do controller, caso seja necessário
+  - verificando se o usuário tem a permissão para executar a action do controller, caso seja necessário
   - o banco de dados é realmente o postgres, para que garanta que restrições seja as mesmas do ambiente de produção
   - desta forma garantimos que os erros de consistência sejam validados
   - todo caso de teste está em uma transaction que faz rollback apos terminar
@@ -158,7 +158,7 @@ server {
   - criar testes de casos de falha
   - criar testes de casos de sucesso somente com campos obrigatorio
 
-# Gerencia e configuração com git e github
+# Gerência e configuração com git e github
 - evitamos realizar commit diretamente na branch main
 - merge para a main somente por meio de PR (Pull Request)
 - tentamos usar commit semântico, padrão utilizado: https://blog.geekhunter.com.br/o-que-e-commit-e-como-usar-commits-semanticos/ 
@@ -252,11 +252,11 @@ $ git branch
   - SOCIAL_ACTION_GET_ONE
   - SOCIAL_ACTION_UPDATE
   - SOCIAL_ACTION_DELETE
-- Cadastrar usuario
+- Cadastrar usuário
   - username: funcionario1
   - password: 123
   - depois de salvar, na aba "credentials" adicionar uma senha
-  - atribuir cargos para o usuario (role mapping)
+  - atribuir cargos para o usuário (role mapping)
 - request para autenticação, e retorna access_token
   - grant_type: password
   - client_id: client-id-backend-1
@@ -293,16 +293,16 @@ $ sudo docker cp postgres_acao_social:/tmp/backup_keycloak.sql /home/kaio/Docume
   - cada vez que um registro é criado ou alterado é criado uma revisão
   - spring-data-envers
   - createdDate, createdBy, lastModifiedDate, lastModifiedBy, deletedDate, deletedBy
-- Auditoria de ações do usuario logado
+- Auditoria de ações do usuário logado
   - https://medium.com/@helder.versatti/implementando-correlation-id-em-uma-aplica%C3%A7%C3%A3o-spring-c9c3a92c67e5
-  - cada request feita, é criada um registro em formato json no STDOUT, com ID único para cada request, e quem o usuario ID que fez esta request
+  - cada request feita, é criada um registro em formato json no STDOUT, com ID único para cada request, e quem o usuário ID que fez esta request
   
 # Cargos e permissões (Roles and Permission)
 - existem algumas tabelas no bd utilizadas para determinar o relacionamento ManyToMany, como por exemplo, doação, voluntário e presente,
   - por exemplo "voluntário", deve ser uma tabela de junção/pivô para mapear que esta pessoa se voluntariou para participar de determinada ação social. Desta forma "voluntário" nao pode ser um cargo, pois quando uma pessoa se voluntaria é somente e exclusivamente para aquela ação social, e não automaticamente para todas.
 - mas em Cargos e Permissoes do Keyclock diz respeito das capacidades que user logado tem de executar ou não determinada ação, como por exemplo o cargo funcionario_gerente_nivel_1 possui todas as permissões para criar, deletar, buscar e atualizar uma determinada ação social ou dados da empresa.
 Neste cenário, quando o usuário recebe um cargo, ele tem o mesmo cargo em todas as partes do sistema, independente se ele for voluntario em uma ação social e tambem for gerente da empresa
-- é de responsabilidade do Keyclock com redirecionamento de autenticação, recuperação de senha, atualizar cadastro do usuario, delegar cargos e permissões para usuario
+- é de responsabilidade do Keyclock com redirecionamento de autenticação, recuperação de senha, atualizar cadastro do usuário, delegar cargos e permissões para usuário
 
 # Auxílio I.A.
 - uso de I.A. para aumentar a curva de aprendizagem
@@ -322,13 +322,13 @@ Neste cenário, quando o usuário recebe um cargo, ele tem o mesmo cargo em toda
   - para submeter documentos em contrato
 - implementar testes unitários nas regras de negócio
 - Business Intelligence e inteligência artificial
-- analise a necessidade de migrar para arquitetura de microservices
+- análise a necessidade de migrar para arquitetura de microservices
 - melhorar UX/UI
 - implementar tratamento de exceções
 - implementar CI/CD
 - aumentar a porcentagem de cobertura de testes
 - categoria de 
-- implementar midia social para
+- implementar mídia social para
   - tipo de investimento
   - tipo de responsabilidade do contrato (obrigatório, opcional, obrigatório em ensino, obrigatório em emergencial)
   - tipo de sessão (presencial, remoto, síncrona, assíncrona, esforço, qualquer característica)
@@ -354,5 +354,5 @@ Neste cenário, quando o usuário recebe um cargo, ele tem o mesmo cargo em toda
   - recursos materiais consumíveis
   - recursos materiais permanente
 - página home com todas as ações sociais pública
-- implementrar possibilidade dos funcionarios logar para acessar ações sociais com visibilidade para somente público interno
+- implementrar possibilidade dos funcionários logar para acessar ações sociais com visibilidade para somente público interno
 - unificar person e user do keyclock
