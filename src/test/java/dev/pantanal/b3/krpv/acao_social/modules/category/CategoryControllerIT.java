@@ -222,10 +222,10 @@ public class CategoryControllerIT {
         makeBody.put("name", item.getName());
         makeBody.put("description", item.getDescription());
         makeBody.put("visibility", item.getVisibility());
-        makeBody.put("categoryGroup", item.getCategoryGroup());
+        makeBody.put("categoryGroup", item.getCategoryGroup().getId());
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.registerModule(new JavaTimeModule());
-        String updatedCategoryJson = objectMapper.writeValueAsString(item);
+        String updatedCategoryJson = objectMapper.writeValueAsString(makeBody);
         // Act (ação)
         ResultActions resultActions = mockMvc.perform(
                 MockMvcRequestBuilders.patch(ROUTE_CATEGORY + "/{id}", item.getId())
