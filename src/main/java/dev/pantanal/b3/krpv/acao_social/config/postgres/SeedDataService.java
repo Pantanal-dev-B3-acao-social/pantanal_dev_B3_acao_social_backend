@@ -35,6 +35,8 @@ public class SeedDataService {
     private final PresenceFactory presenceFactory;
     private final VoluntaryFactory voluntaryFactory;
     private final InterestFactory interestFactory;
+    private final PcdFactory pcdFactory;
+    private final PcdPersonFactory pcdPersonFactory;
 
 
     @Value("${acao-social.keyclock.adminUsername}")
@@ -64,7 +66,9 @@ public class SeedDataService {
             CompanyFactory companyFactory,
             PresenceFactory presenceFactory,
             VoluntaryFactory voluntaryFactory,
-            InterestFactory interestFactory
+            InterestFactory interestFactory,
+            PcdFactory pcdFactory,
+            PcdPersonFactory pcdPersonFactory
     ) {
         this.socialActionFactory = socialActionFactory;
         this.sessionFactory = sessionFactory;
@@ -78,6 +82,9 @@ public class SeedDataService {
         this.presenceFactory = presenceFactory;
         this.voluntaryFactory = voluntaryFactory;
         this.interestFactory = interestFactory;
+        this.pcdFactory = pcdFactory;
+        this.pcdPersonFactory = pcdPersonFactory;
+
     }
 
     public void executeAllSeed() {
@@ -121,6 +128,8 @@ public class SeedDataService {
         this.presenceFactory.insertMany(40, personEntities, sessions, personEntities);
         this.voluntaryFactory.insertMany(40);
         this.interestFactory.insertMany(20, personEntities, categoriesTypes);
+        this.pcdFactory.insertMany(20);
+        this.pcdPersonFactory.insertMany(20);
     }
 
 }
