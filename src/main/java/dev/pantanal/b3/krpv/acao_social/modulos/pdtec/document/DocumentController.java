@@ -3,16 +3,9 @@ package dev.pantanal.b3.krpv.acao_social.modulos.pdtec.document;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import dev.pantanal.b3.krpv.acao_social.modulos.pdtec.PdtecClient;
-import dev.pantanal.b3.krpv.acao_social.modulos.pdtec.document.DocumentEntity;
-import dev.pantanal.b3.krpv.acao_social.modulos.pdtec.contract.dto.request.DocumentUpdateDto;
-import dev.pantanal.b3.krpv.acao_social.modulos.pdtec.document.dto.request.DocumentUpdateDto;
 import dev.pantanal.b3.krpv.acao_social.modulos.pdtec.document.dto.response.DocumentResponseDto;
-import dev.pantanal.b3.krpv.acao_social.modulos.pdtec.document.DocumentEntity;
-import dev.pantanal.b3.krpv.acao_social.modulos.pdtec.contract.dto.request.ContractParamsDto;
 import dev.pantanal.b3.krpv.acao_social.modulos.pdtec.document.dto.request.DocumentParamsDto;
-import dev.pantanal.b3.krpv.acao_social.modulos.pdtec.document.dto.response.DocumentResponseDto;
 import dev.pantanal.b3.krpv.acao_social.modulos.pdtec.document.dto.request.DocumentCreateDto;
-import dev.pantanal.b3.krpv.acao_social.modulos.pdtec.document.dto.response.DocumentResponseDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -97,15 +90,7 @@ public class DocumentController {
         return new ResponseEntity<DocumentResponseDto>(response, HttpStatus.OK);
     }
 
-    public DocumentResponseDto update(
-            @PathVariable UUID id,
-            @Valid @RequestBody DocumentUpdateDto dto
-    ) {
-        DocumentEntity document = service.update(id, dto);
-        DocumentResponseDto response = mapEntityToDto(document);
-        return response;
-    }
-    //
+
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @Operation(summary = "Deletes an contract", method = "DELETE")

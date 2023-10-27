@@ -3,19 +3,27 @@ package dev.pantanal.b3.krpv.acao_social.modulos.pdtec.document;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.querydsl.core.types.dsl.BooleanExpression;
 import dev.pantanal.b3.krpv.acao_social.exception.ObjectNotFoundException;
 import dev.pantanal.b3.krpv.acao_social.modulos.company.CompanyEntity;
 import dev.pantanal.b3.krpv.acao_social.modulos.company.repository.CompanyRepository;
 import dev.pantanal.b3.krpv.acao_social.modulos.ong.OngEntity;
 import dev.pantanal.b3.krpv.acao_social.modulos.ong.repository.OngRepository;
 import dev.pantanal.b3.krpv.acao_social.modulos.pdtec.contract.ContractEntity;
+import dev.pantanal.b3.krpv.acao_social.modulos.pdtec.contract.dto.request.ContractParamsDto;
+import dev.pantanal.b3.krpv.acao_social.modulos.pdtec.contract.repository.ContractPredicates;
+import dev.pantanal.b3.krpv.acao_social.modulos.pdtec.document.dto.request.DocumentParamsDto;
+import dev.pantanal.b3.krpv.acao_social.modulos.pdtec.document.dto.request.DocumentUpdateDto;
 import dev.pantanal.b3.krpv.acao_social.modulos.pdtec.contract.repository.ContractRepository;
 import dev.pantanal.b3.krpv.acao_social.modulos.pdtec.document.dto.request.DocumentCreateDto;
+import dev.pantanal.b3.krpv.acao_social.modulos.pdtec.document.repository.DocumentPredicates;
 import dev.pantanal.b3.krpv.acao_social.modulos.pdtec.document.repository.DocumentRepository;
 import dev.pantanal.b3.krpv.acao_social.modulos.socialAction.SocialActionEntity;
 import dev.pantanal.b3.krpv.acao_social.modulos.socialAction.repository.SocialActionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -31,6 +39,8 @@ public class DocumentService {
     private DocumentRepository repository;
     @Autowired
     private ContractRepository contractRepository;
+    @Autowired
+    private DocumentPredicates documentPredicates;
     @Autowired
     ObjectMapper objectMapper = new ObjectMapper();
     @Value("${acao-social.pdtec.baseUrl}")
@@ -91,4 +101,21 @@ public class DocumentService {
             throw new ObjectNotFoundException("Invalid request, could not create proccess");
         }
     }
+
+    public Page<DocumentEntity> findAll(Pageable paging, DocumentParamsDto filters) {
+        BooleanExpression predicate = documentPredicates.buildPredicate(filters);
+        Page<DocumentEntity> objects = repository.findAll(paging, predicate);
+        return objects;
+    }
+
+    public DocumentEntity findById(UUID id) {
+        DocumentEntity obj = repository.findById(id);
+        if (obj == null) {
+            throw new ObjectNotFoundException("Registro não encontrado: " + id);
+        }
+        return obj;
+    }
+
+
+    public void delete(UUID id) { repository.delete(id); }
 }

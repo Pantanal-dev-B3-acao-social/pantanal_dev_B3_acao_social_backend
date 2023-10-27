@@ -56,14 +56,6 @@ public class DocumentRepository {
 
         return new PageImpl<>(results,pageable,total);
     }
-
-    @Transactional
-    public DocumentEntity update(DocumentEntity toUpdate){
-        DocumentEntity documentUpdated = entityManager.merge(toUpdate);
-        entityManager.flush();
-        return documentUpdated;
-    }
-
     public void delete(UUID id) {
         documentPostgresRepository.deleteById(id);
     }
