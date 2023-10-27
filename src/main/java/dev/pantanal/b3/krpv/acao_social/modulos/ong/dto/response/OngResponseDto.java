@@ -24,5 +24,5 @@ public record OngResponseDto (
         LocalDateTime lastModifiedDate,
         LocalDateTime deletedDate,
         UUID deletedBy,
-        PersonEntity responsibleEntity
+        PersonEntity person
 ) {}
