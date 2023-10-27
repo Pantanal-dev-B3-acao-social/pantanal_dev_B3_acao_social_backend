@@ -53,7 +53,7 @@ public class ContractRepository {
 
         return new PageImpl<>(results,pageable,total);
     }
-
+    @Transactional
     public ContractEntity update(ContractEntity toUpdate){
         ContractEntity contractUpdated = entityManager.merge(toUpdate);
         entityManager.flush();

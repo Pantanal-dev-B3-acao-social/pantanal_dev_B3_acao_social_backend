@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import dev.pantanal.b3.krpv.acao_social.config.postgres.factory.CategoryFactory;
 import dev.pantanal.b3.krpv.acao_social.config.postgres.factory.CategoryGroupFactory;
+import dev.pantanal.b3.krpv.acao_social.modulos.category.enums.VisibilityCategoryEnum;
 import dev.pantanal.b3.krpv.acao_social.utils.GenerateTokenUserForLogged;
 import dev.pantanal.b3.krpv.acao_social.modulos.auth.dto.LoginUserDto;
 import dev.pantanal.b3.krpv.acao_social.modulos.category.entity.CategoryEntity;
@@ -122,6 +123,7 @@ public class CategoryControllerIT {
         makeBody.put("name", item.getName());
         makeBody.put("description", item.getDescription());
         makeBody.put("categoryGroup", item.getCategoryGroup().getId());
+        makeBody.put("visibility", item.getVisibility());
         String bodyJson = objectMapper.writeValueAsString(makeBody);
         // Act (ação)
         ResultActions resultActions = mockMvc.perform(
@@ -215,6 +217,12 @@ public class CategoryControllerIT {
         item.setName(item.getName() + "_ATUALIZADO");
         item.setDescription(item.getDescription() + "_ATUALIZADO");
         item.setCategoryGroup(this.groupEntities.get(1));
+        item.setVisibility(VisibilityCategoryEnum.PRIVATE);
+        Map<String, Object> makeBody = new HashMap<>();
+        makeBody.put("name", item.getName());
+        makeBody.put("description", item.getDescription());
+        makeBody.put("visibility", item.getVisibility());
+        makeBody.put("categoryGroup", item.getCategoryGroup());
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.registerModule(new JavaTimeModule());
         String updatedCategoryJson = objectMapper.writeValueAsString(item);

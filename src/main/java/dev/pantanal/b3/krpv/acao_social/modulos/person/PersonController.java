@@ -17,6 +17,7 @@ import org.springframework.data.web.SortDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
@@ -93,8 +94,8 @@ public class PersonController {
             @ApiResponse(responseCode = "422", description = "Invalid request data"),
             @ApiResponse(responseCode = "500", description = "Error when creating social action"),
     })
-    public ResponseEntity<PersonResponseDto> create(@RequestBody @Valid PersonCreateDto request) {
-        PersonEntity entity = service.create(request);
+    public ResponseEntity<PersonResponseDto> create(JwtAuthenticationToken userLogged, @RequestBody @Valid PersonCreateDto request) {
+        PersonEntity entity = service.create(request, userLogged.getToken().getTokenValue());
         PersonResponseDto response = new PersonResponseDto(
                 entity.getId(),
                 entity.getUserId(),

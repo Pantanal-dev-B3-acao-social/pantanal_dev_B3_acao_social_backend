@@ -39,7 +39,7 @@ public class DefaultSecurityConfig {
                     authorizeConfig.requestMatchers(HttpMethod.OPTIONS, "/**").permitAll();
                     authorizeConfig.requestMatchers(ROUTE_AUTH+"/login").permitAll();
                     authorizeConfig.requestMatchers( ROUTE_ONG+"/home").permitAll();
-                    authorizeConfig.requestMatchers( "/swagger-ui", "/swagger-ui/**", "/swagger-ui/index.html#").permitAll();
+                    authorizeConfig.requestMatchers( "/swagger-ui", "/swagger-ui/**", "/swagger-ui/index.html#", "/v3/api-docs/swagger-config", "/v3/api-docs").permitAll();
                     authorizeConfig.anyRequest().authenticated();
                 }
         );
