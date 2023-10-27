@@ -24,7 +24,7 @@
 
 
 ## Descrição <a name="descrição"> </a>
-- O projeto consiste em uma aplicação monolítica de gestão de ação social.
+- O projeto consiste em uma aplicação de gestão de ação social.
 - Empresa (Company)
 - ONG
 - Ação Social (Social Action) é o projeto de uma ONG
