@@ -38,12 +38,13 @@ public class DocumentService {
 
     @Value("${acao-social.pdtec.x-tenant}")
     private String xTenant;
+
     public DocumentEntity create(DocumentCreateDto request, String token) {
         ContractEntity contract = contractRepository.findById(request.contractId());
         if (contract == null){
             throw new ObjectNotFoundException("Invalid Contract Id");
         }
-        String requestUrlEndpoint = String.format("%s/processes/$s/documents", pdtecUrl, contract.getProcessId());
+        String requestUrlEndpoint = String.format("%s/processes/%s/documents", pdtecUrl, contract.getProcessId());
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
         headers.setBearerAuth(token);

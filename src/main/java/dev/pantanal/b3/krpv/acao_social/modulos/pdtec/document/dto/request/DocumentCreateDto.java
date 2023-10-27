@@ -10,8 +10,6 @@ public record DocumentCreateDto(
 
         @NotNull
         UUID contractId,
-        @NotNull
-        UUID documentPdtecId,
         @NotBlank
         String extension,
         @NotNull
