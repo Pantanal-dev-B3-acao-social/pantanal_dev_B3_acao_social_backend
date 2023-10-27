@@ -100,101 +100,45 @@
     - ![img.png](img.png)
   - [LOG DE RASTREABILIDADE PARA AUDITORIA]
 - postgres
-  - 
+  - Tomamos a decisão do banco de dados do postgres por alguns motivos
+    - Padrão de mercado, amplamente usado
+    - Grande quantidade de conteudo disponível
+    - Conhecimento prévio dos membros da equipe
 - docker
-- docker-compose
-- keyclock
-- spring-data-envers (revisao de mudança do registro)
+  - Decidimos utilizar docker por todas as vantagens de container
+  - padronização de ambiente em que as diferentes aplicações estão, desde ambiente de desenvolvimento Linux e Windows
+  - facilidade para executar as aplicações rapidamente por meio do docker-compose.yml
+- Keyclock
+  - É um dos maiores e mais populares SSO e IAM
+  - É gratuito
+  - Possui boa documentação e informações 
+  - membros da equipe possuim conhecimento prévio
 
 ## Perfis <a name="perfis"> </a>
 - Admininstrador
+  - pessoa responsavel por instalar o sistema e cadastrar empresas e seu primeiro gerente
 - Gerente da empresa
-- [futuro] funcionário da empresa
+  - gerente da empresa é responsavel por gerir
+- [futuro] Funcionário da empresa
 - [futuro] Gerente pela ONG
-- [futuro] funcionário da ONG
-- [futuro] doador PF
+- [futuro] Doador PF (não funcionário)
 
 ## Processo de desenvolvimento <a name="processodesenvolvimento"> </a>
 
-- servidor do discord para comunicação persistente
+- Kanban para controle de demandas a serem desenvolvidas
+- Google docs para brainStorm, elaboração e documentação os requisitos
+- Servidor do Discord para comunicação
   - compartilhamento de conteúdos 
   - compartilhamento de dúvidas
   - tira dúvidas técnicas
   - reuniões síncronas por chamada de voz
-- grupo do whatsApp para comunicação rápida e lembretes e avisos urgentes
+- Grupo do whatsApp para comunicação rápida e lembretes e avisos urgentes
 - Foi utilizado o github para gerência e configuração de versionamento 
-- Kanban para controle de demandas a serem desenvolvidas
-- google docs para brainStorm, elaboração e documentação os requisitos
-
-## Processo de execução em ambiente de desenvolvimento <a name="processoexecução"> </a>
-- para executar em ambiente de desenvolvimento deve usar o docker/docker-compose.yml
-- desta forma somente o keyclock e postgres estarão dentro do container
-- assim podendo executar o spring boot diretamente no intellij para ter acesso ao debug
-$ cd docker/
-$ docker-compose down -v
-$ docker-compose up
-$ ./mvnw clean install
-$ SPRING_PROFILES_ACTIVE=dev ./mvnw spring-boot:run
-- variável de ambiente para executar em ambiente de teste: "SPRING_PROFILES_ACTIVE=dev"
-
-## Processo de execução em ambiente de teste
-$ cd docker/
-$ docker-compose up
-- criar manualmente o database "postgres_testing" ao lado do database "postgres"
-- executar os testes pelo intellij
-
-
-## Processo de Deploy <a name="processodeploy"> </a>
-
-## Processo de execução em ambiente de produção
-$ docker-compose up
-$ ./mvnw spring-boot:run
-
-## AWS - EC2 <a name="awsec"> </a>
-- acesso via SSH
-  - cria chave SSH da VM EC2 e faz download
-    - aws_ec2_pantanal_dev_ubuntu.pem
-  - $ chmod 400 aws_ec2_pantanal_dev_ubuntu.pem
-  - $ ssh -i "aws_ec2_pantanal_dev_ubuntu.pem" ubuntu@ec2-3-94-146-39.compute-1.amazonaws.com
-    - digite: yes
-  - já conectado no terminal da VM, faça clone do projeto
-  - $ git clone https://SEU_TOKEN_DE_ACESSO_COM_PERMISSAO_PARA_ORGANIZACOES@github.com/Pantanal-dev-B3-acao-social/pantanal_dev_B3_acao_social_backend.git
-    - login e senha do github
-  - baixa e instala o docker, instalar o docker pelo curl ja vem configurado, pelo apt  e snap tem q configurar
-  - $ curl -fsSL https://get.docker.com/ | sh  #
-  - $ sudo docker -v
-  - instalando docker-compose
-  - $ sudo curl -L "https://github.com/docker/compose/releases/download/v2.3.3/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
-  - $ sudo chmod +x /usr/local/bin/docker-compose
-  - $ sudo docker-compose -v
-  - $ sudo docker-compose down -v
-  - $ sudo docker-compose up --build
-
-## Nginx <a name="nginx"> </a>
-https://medium.com/@stevernewman/installation-of-nginx-on-aws-ubuntu-instance-e73e72cb8450
-- sudo apt update -y
-- sudo apt install nginx -y
-- sudo systemctl status nginx
-- sudo ufw allow 'Nginx Full'
-- sudo ufw status
-- cd /etc/nginx/sites-available/
-- sudo nano meu_app_react
-```txt
-server {
-  listen 80;
-  server_name seu_nome_de_domínio_ou_endereço_ip;
-  location / {
-    proxy_pass http://127.0.0.1:3000;
-    proxy_set_header Host $host;
-    proxy_set_header X-Real-IP $remote_addr;
-  }
-}
-```
 
 ## Testes <a name="testes"> </a>
-- estamos usando como base principal os testes de integração, que apesar de mais custosos para implementar
-- agregam uma boa cobertura de testes, desde a funcionalidade em si estar funcionando e sua respectiva regra de negócio
-- até integração com outros serviços
+- Estamos usando como base principal os testes de integração, que apesar de mais custosos para implementar
+- Agregam uma boa cobertura de testes, desde a funcionalidade em si estar funcionando e sua respectiva regra de negócio
+- Até integração com outros serviços
   - não estamos mockando o banco de dados e nem o SSO
   - cada caso de teste usa realmente o keyclock para autenticar e autorizar
   - verificando se o usuário esta autenticado para executar a action do controller, caso seja necessário
@@ -205,7 +149,7 @@ server {
   - ao preparar os casos de teste, as vezes é preciso inserir dados fake para poder usados como base dos testes
     - o problema de que ao inserir dados pelo teste nao tem userLoggedId, e para resolver este problema foi criado uma classe LoginMock que é capaz de mock do spring security o userlogged
     - desta forma quando o teste inserir um registro no DB, será o user do token como createdBy UUID
-- possibilidade de melhoria nos teste, os testes foram inicialmente criados para contemplar somente o caso de sucesso com todos os campos sendo passados
+- Possibilidade de melhoria nos teste, os testes foram inicialmente criados para contemplar somente o caso de sucesso com todos os campos sendo passados
   - criar testes de casos de falha
   - criar testes de casos de sucesso somente com campos obrigatorio
 
@@ -235,7 +179,6 @@ $ git branch
   @main/42468431_pontuacao_engajamento
 * main
 ```
-
 
 # Organização de diretórios
 - os diretórios estão organizados em modulos 
@@ -363,6 +306,69 @@ Neste cenário, quando o usuário recebe um cargo, ele tem o mesmo cargo em toda
 - Bito (chat gpt integrado com intellij)
 - Copilot
 
+## Processo de execução em ambiente de desenvolvimento <a name="processoexecução"> </a>
+- para executar em ambiente de desenvolvimento deve usar o docker/docker-compose.yml
+- desta forma somente o keyclock e postgres estarão dentro do container
+- assim podendo executar o spring boot diretamente no intellij para ter acesso ao debug
+  $ cd docker/
+  $ docker-compose down -v
+  $ docker-compose up
+  $ ./mvnw clean install
+  $ SPRING_PROFILES_ACTIVE=dev ./mvnw spring-boot:run
+- variável de ambiente para executar em ambiente de teste: "SPRING_PROFILES_ACTIVE=dev"
+
+## Processo de execução em ambiente de teste
+$ cd docker/
+$ docker-compose up
+- criar manualmente o database "postgres_testing" ao lado do database "postgres"
+- executar os testes pelo intellij
+
+## Processo de Deploy <a name="processodeploy"> </a>
+
+## Processo de execução em ambiente de produção
+$ docker-compose up
+$ ./mvnw spring-boot:run
+
+## AWS - EC2 <a name="awsec"> </a>
+- acesso via SSH
+  - cria chave SSH da VM EC2 e faz download
+    - aws_ec2_pantanal_dev_ubuntu.pem
+  - $ chmod 400 aws_ec2_pantanal_dev_ubuntu.pem
+  - $ ssh -i "aws_ec2_pantanal_dev_ubuntu.pem" ubuntu@ec2-3-94-146-39.compute-1.amazonaws.com
+    - digite: yes
+  - já conectado no terminal da VM, faça clone do projeto
+  - $ git clone https://SEU_TOKEN_DE_ACESSO_COM_PERMISSAO_PARA_ORGANIZACOES@github.com/Pantanal-dev-B3-acao-social/pantanal_dev_B3_acao_social_backend.git
+    - login e senha do github
+  - baixa e instala o docker, instalar o docker pelo curl ja vem configurado, pelo apt  e snap tem q configurar
+  - $ curl -fsSL https://get.docker.com/ | sh  #
+  - $ sudo docker -v
+  - instalando docker-compose
+  - $ sudo curl -L "https://github.com/docker/compose/releases/download/v2.3.3/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+  - $ sudo chmod +x /usr/local/bin/docker-compose
+  - $ sudo docker-compose -v
+  - $ sudo docker-compose down -v
+  - $ sudo docker-compose up --build
+
+## Nginx <a name="nginx"> </a>
+https://medium.com/@stevernewman/installation-of-nginx-on-aws-ubuntu-instance-e73e72cb8450
+- sudo apt update -y
+- sudo apt install nginx -y
+- sudo systemctl status nginx
+- sudo ufw allow 'Nginx Full'
+- sudo ufw status
+- cd /etc/nginx/sites-available/
+- sudo nano meu_app_react
+```txt
+server {
+  listen 80;
+  server_name seu_nome_de_domínio_ou_endereço_ip;
+  location / {
+    proxy_pass http://127.0.0.1:3000;
+    proxy_set_header Host $host;
+    proxy_set_header X-Real-IP $remote_addr;
+  }
+}
+```
 
 ## Melhorias futuras <a name="futuro"> </a>
 - pontuação de engajamento pode ser usada para gameficação
