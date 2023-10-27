@@ -1,10 +1,5 @@
-package dev.pantanal.b3.krpv.acao_social.modulos.pcd;
+package dev.pantanal.b3.krpv.acao_social.modulos.pcdPerson;
 
-
-import dev.pantanal.b3.krpv.acao_social.modulos.pcd.dtos.request.PcdPersonCreateDto;
-import dev.pantanal.b3.krpv.acao_social.modulos.pcd.dtos.request.PcdPersonParamsDto;
-import dev.pantanal.b3.krpv.acao_social.modulos.pcd.dtos.request.PcdPersonUpdateDto;
-import dev.pantanal.b3.krpv.acao_social.modulos.pcd.dtos.response.PcdPersonResponseDto;
 import dev.pantanal.b3.krpv.acao_social.modulos.pcdPerson.PcdPersonEntity;
 import dev.pantanal.b3.krpv.acao_social.modulos.pcdPerson.PcdPersonService;
 import dev.pantanal.b3.krpv.acao_social.modulos.pcdPerson.dtos.request.PcdPersonCreateDto;
@@ -26,8 +21,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import java.util.List;
 import java.util.UUID;
 
-
-import static dev.pantanal.b3.krpv.acao_social.modulos.pcd.PcdPersonController.ROUTE_PCDPERSON;
+import static dev.pantanal.b3.krpv.acao_social.modulos.pcdPerson.PcdPersonController.ROUTE_PCDPERSON;
 
 @RestController
 @RequestMapping(ROUTE_PCDPERSON)
