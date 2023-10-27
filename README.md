@@ -355,4 +355,4 @@ Neste cenário, quando o usuário recebe um cargo, ele tem o mesmo cargo em toda
   - recursos materiais permanente
 - pagina home com todas as ações sociais publica
 - implementrar possibilidade dos funcionarios logar para acessar ações sociais com visibilidade para somente publico interno
-- unificar person e user do keyclock
+- unificar person e user do keyclock alem do create, fazer tambem no update, delete e get
