@@ -56,11 +56,10 @@
 
 ## Funcionalidades <a name="funcionalidades"> </a>
 - Ação social
-  - criar
-  - atualizar
-  - buscar um
-  - buscar todos
-  - deletar
+  - criar, atualizar, buscar, buscar todos, deletar
+  - Nivel da ação social
+  - Tipo da ação social
+  - 
 
 ## Tecnologias <a name="tecnologias"> </a>
 - spring boot
@@ -272,7 +271,7 @@ $ git branch
   - Web origins: *
   - Admin URL: http://localhost:3001/
   - Credentials: client_secret: gerar secret e salvar no application.yml e application-dev.yml
-- Cadastrar role
+- Cadastrar role neste padrão:
   - SOCIAL_ACTION_CREATE
   - SOCIAL_ACTION_GET_ALL
   - SOCIAL_ACTION_GET_ONE
@@ -382,3 +381,13 @@ Neste cenário, quando o usuário recebe um cargo, ele tem o mesmo cargo em toda
 - página home com todas as ações sociais pública
 - implementrar possibilidade dos funcionários logar para acessar ações sociais com visibilidade para somente público interno
 - unificar person e user do keyclock
+- pagina home com todas as ações sociais publica
+- implementrar possibilidade dos funcionarios logar para acessar ações sociais com visibilidade para somente publico interno
+- unificar person e user do keyclock alem do create, fazer tambem no update, delete e get
+- implementar integração com Keyclock
+  - atribuir cargo a user por tela
+  - criar cargo por tela
+  - recuperar senha
+- cargos e permissões no frontend
+- deixar o sistema com a capacidade de Multi-tenancy para isolar em uma unica instancia dados de diferentes empresas, para que os gerentes de uma não acesse dados das outras empresas
+
