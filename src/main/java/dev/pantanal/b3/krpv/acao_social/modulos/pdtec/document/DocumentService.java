@@ -116,7 +116,7 @@ public class DocumentService {
         if (document == null){
             throw new ObjectNotFoundException("Invalid Contract Id");
         }
-        String requestUrlEndpoint = String.format("%s/processes/%s/documents/%s", pdtecUrl, document.getContract().getProcessId(), id);
+        String requestUrlEndpoint = String.format("%s/processes/%s/documents/%s/upload", pdtecUrl, document.getContract().getProcessId(), document.getPdtecDocumentId());
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.MULTIPART_FORM_DATA);
         headers.setBearerAuth(token);
