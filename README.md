@@ -24,7 +24,7 @@
 
 
 ## Descrição <a name="descrição"> </a>
-- O projeto consiste em uma aplicação de gestão de ação social.
+- O projeto consiste em uma aplicação de gestão de ações sociais, defirentes Ong. Com a empresa
 - Empresa (Company)
 - ONG
 - Ação Social (Social Action) é o projeto de uma ONG
@@ -52,11 +52,33 @@
   - recursos comprados com dinheiro de doação de pessoa física
 
 ## Funcionalidades <a name="funcionalidades"> </a>
-- Ação social
-  - criar, atualizar, buscar, buscar todos, deletar
-  - Nivel da ação social
-  - Tipo da ação social
+- Observação, "gestão" inclui normalmente criar, atualizar, buscar e deletar
+- Autenticação e Autorização
+- Gestão de Categorias
+- Gestão de Empresas
+  - Será possível cadastrar mais de uma empresa na mesmoa instancia do sistema, 
+  - mas somente gerente de alto nível de acesso poderão visualizar dados de todas as empresas
+- Gestão de Doações de Pessoa Física
+  - É possivel registrar no sistema que determinada pessoa realizou doação de tal valor em determinado dia, com aprovação de um gerente de necessário
+- Gestão de Investimento
+  - É possivel que o gerente da empresa faça investimento em determinada Ong
+- Pessoa pode manisvestar interesse em determinado tipo de ação social, futuramente irá para receber notificações
+- Gestão de Ong
+  - É possível cadastrar diversas Ongs e realizar sua gestão
+- Gestão de Pcd
+  - As pessoas podem informas que são PCD, e esta informação sempre será visivel para os gerente
+  - Poderá ser implemetado um alerta para o gerente sobre a possível necessidade de gerar acessibilidade quando alguem com PCD se voluntaria para Ação Social.
+- Gestão de Pessoas
+- Gestão de Ação social com
+  - Toda ação social deve pertencer a uma Ong 
+  - A ação social pode ter um Nivel
+  - A ação social pode ter um Tipo
+- Gestão de voluntarios da Ação Social
+  - As pessoas cadastradas no sistema podem manifestar interesse em ser voluntário em uma ação social
   - 
+- Gestão de sessões da ação social
+- Gestão de presenças
+- 
 
 ## Tecnologias <a name="tecnologias"> </a>
 - spring boot
@@ -314,6 +336,8 @@ $ sudo docker cp postgres_acao_social:/tmp/backup_keycloak.sql /home/kaio/Docume
 - Revisão de mudanças dos registros
   - cada vez que um registro é criado ou alterado é criado uma revisão
   - spring-data-envers
+- Dados de acesso rápido de detalhes de auditoria
+  - todas as entidades do sistema possem estes dados para facilitar ao gerente um acesso rápido, sem precisar entrar em contato com o SRE para ter acesso aos detalhes da auditoria
   - createdDate, createdBy, lastModifiedDate, lastModifiedBy, deletedDate, deletedBy
 - Auditoria de ações do usuário logado
   - https://medium.com/@helder.versatti/implementando-correlation-id-em-uma-aplica%C3%A7%C3%A3o-spring-c9c3a92c67e5
