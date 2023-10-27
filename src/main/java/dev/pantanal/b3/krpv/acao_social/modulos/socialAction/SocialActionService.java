@@ -41,15 +41,16 @@ public class SocialActionService {
     private CategorySocialActionLevelPostgresRepository categorySocialActionLevelPostgresRepository;
 
     public SocialActionEntity create(SocialActionCreateDto dataRequest) {
-        SocialActionEntity toSave = new SocialActionEntity();
-        toSave.setName(dataRequest.name());
-        toSave.setDescription(dataRequest.description());
-        saveSocialActionType(dataRequest.categoryTypeIds(), toSave);
-        saveSocialActionLevel(dataRequest.categoryLevelIds(), toSave);
-        OngEntity ongEntity = ongRepository.findById(dataRequest.ongEntity());
+        OngEntity ongEntity = ongRepository.findById(dataRequest.ong());
         if (ongEntity == null){
             throw new ObjectNotFoundException("Ong not valid");
         }
+        SocialActionEntity toSave = new SocialActionEntity();
+        toSave.setName(dataRequest.name());
+        toSave.setDescription(dataRequest.description());
+        toSave.setOng(ongEntity);
+        saveSocialActionType(dataRequest.categoryTypeIds(), toSave);
+        saveSocialActionLevel(dataRequest.categoryLevelIds(), toSave);
         SocialActionEntity socialActionSaved = socialActionRepository.save(toSave);
         return socialActionSaved;
     }
