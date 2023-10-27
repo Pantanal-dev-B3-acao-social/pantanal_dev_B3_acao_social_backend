@@ -41,10 +41,7 @@
   - categoria da sessão
   - categoria do investimento 
   - categoria do recurso
-- Mídia social
-  - mídias sociais da ação social
-  - mídias sociais da empresa
-  - mídias sociais da ONG
+
 - Recursos
   - recursos da sessão
   - recursos da ação social
