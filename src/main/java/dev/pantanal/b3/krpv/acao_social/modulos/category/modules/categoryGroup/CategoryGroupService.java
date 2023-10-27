@@ -75,10 +75,10 @@ public class CategoryGroupService {
             obj.setVisibility(request.visibility());
         }
         CategoryGroupEntity parent = null;
-        if (request.parentCategoryGroup() != null) {
-            parent = categoryGroupRepository.findById(request.parentCategoryGroup());
+        if (request.parentCategoryGroupId() != null) {
+            parent = categoryGroupRepository.findById(request.parentCategoryGroupId());
             if (parent == null) {
-                throw new ObjectNotFoundException("Registro não encontrado: " + request.parentCategoryGroup());
+                throw new ObjectNotFoundException("Registro não encontrado: " + request.parentCategoryGroupId());
             }
         }
         obj.setParentCategoryGroupEntity(parent);
