@@ -16,7 +16,9 @@ import org.springframework.data.web.SortDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
 import java.util.List;
 import java.util.UUID;
 
@@ -33,6 +35,7 @@ public class DocumentController {
     ObjectMapper objectMapper;
 
     public static final String ROUTE_DOCUMENT = "/v1/document";
+    private File request;
 
     public DocumentResponseDto mapEntityToDto(DocumentEntity response) {
         DocumentResponseDto dtos = new DocumentResponseDto(
@@ -72,7 +75,7 @@ public class DocumentController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     //@PreAuthorize("hasAnyRole('USER_CREATE')")
-    @Operation(summary = "Creates an Document", method = "POST")
+    @Operation(summary = "Creates a Document", method = "POST")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "Document succesfully created"),
             @ApiResponse(responseCode = "400", description = "Invalid parameters"),
@@ -89,6 +92,26 @@ public class DocumentController {
         DocumentResponseDto response = mapEntityToDto(contract);
         return new ResponseEntity<DocumentResponseDto>(response, HttpStatus.OK);
     }
+
+    @PostMapping("/{id}/upload")
+    @ResponseStatus(HttpStatus.OK)
+    @Operation(summary = "Upload a Document", method = "POST")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Document succesfully Uploaded"),
+            @ApiResponse(responseCode = "400", description = "Invalid parameters"),
+            @ApiResponse(responseCode = "401", description = "Document not authenticated"),
+            @ApiResponse(responseCode = "404", description = "Document not found"),
+            @ApiResponse(responseCode = "422", description = "Invalid request data"),
+            @ApiResponse(responseCode = "500", description = "Error when creating Document"),
+    })
+    public void upload(
+            @PathVariable UUID request,
+            @RequestParam("file") MultipartFile file
+    ) {
+        String token = pdtecClient.getAccessToken();
+        service.upload(request, token, file);
+    }
+
 
 
     @DeleteMapping("/{id}")
