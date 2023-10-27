@@ -1,6 +1,25 @@
 # pantanal_dev_B3_acao_social
 
-# Descrição
+
+## Tabela de Conteúdo
+
+1. [Descrição](#descrição)
+2. [Funcionalidades](#funcionalidades)
+3. [Tecnologias](#tecnologias)
+4. [Perfis](#perfis)
+5. [Processo de Desenvolvimento](#processoDesenvolvimento)
+6. [Processos de Execução](#processoExecução)
+7. [Processo de Deploy](#processoDeploy)
+8. [AWS-EC2](#AWSEC2)
+9. [Nginx](#nginx)
+10. [Arquitetura de Software](#arquitetura)
+11. [SSO](#sso)
+12. [Keyclock](#keyclock)
+13. [Auditoria](#auditoria)
+14. [Cargos e Permissões](#cargosepermissoes)
+15. [Melhorias Futuras](#futuro)
+
+## Descrição <a name="descrição"> </a>
 - O projeto consiste em uma aplicação monolítica de gestão de ação social.
 - Empresa (Company)
 - ONG
@@ -31,7 +50,7 @@
   - recursos comprados com dinheiro de investimento da empresa
   - recursos comprados com dinheiro de doação de pessoa física
 
-# Funcionalidades
+## Funcionalidades <a name="funcionalidades"> </a>
 - Ação social
   - criar
   - atualizar
@@ -39,7 +58,7 @@
   - buscar todos
   - deletar
 
-# Tecnologias
+## Tecnologias <a name="tecnologias"> </a>
 - spring boot
   - spring security
   - jpa
@@ -55,7 +74,7 @@
 - keyclock
 - spring-data-envers (revisao de mudança do registro)
 
-# Perfis
+## Perfis <a name="perfis"> </a>
 - Admininstrador
 - Gerente da empresa
 - [futuro] funcionário da empresa
@@ -63,7 +82,7 @@
 - [futuro] funcionário da ONG
 - [futuro] doador PF
 
-# Processo de desenvolvimento
+## Processo de desenvolvimento <a name="processoDesenvolvimento"> </a>
 
 - servidor do discord para comunicação persistente
   - compartilhamento de conteúdos 
@@ -75,7 +94,7 @@
 - Kanban para controle de demandas a serem desenvolvidas
 - google docs para brainStorm, elaboração e documentação os requisitos
 
-## Processo de execução em ambiente de desenvolvimento
+## Processo de execução em ambiente de desenvolvimento <a name="processoExecução"> </a>
 - para executar em ambiente de desenvolvimento deve usar o docker/docker-compose.yml
 - desta forma somente o keyclock e postgres estarão dentro do container
 - assim podendo executar o spring boot diretamente no intellij para ter acesso ao debug
@@ -93,13 +112,13 @@ $ docker-compose up
 - executar os testes pelo intellij
 
 
-# Processo de Deploy
+## Processo de Deploy <a name="processoDeploy"> </a>
 
 ## Processo de execução em ambiente de produção
 $ docker-compose up
 $ ./mvnw spring-boot:run
 
-## AWS - EC2
+## AWS - EC2 <a name="AWSEC2"> </a>
 - acesso via SSH
   - cria chave SSH da VM EC2 e faz download
     - aws_ec2_pantanal_dev_ubuntu.pem
@@ -119,7 +138,7 @@ $ ./mvnw spring-boot:run
   - $ sudo docker-compose down -v
   - $ sudo docker-compose up --build
 
-## Nginx
+## Nginx <a name="nginx"> </a>
 https://medium.com/@stevernewman/installation-of-nginx-on-aws-ubuntu-instance-e73e72cb8450
 - sudo apt update -y
 - sudo apt install nginx -y
@@ -191,14 +210,14 @@ $ git branch
 - apesar de não ser uma arquitetura modular 
 - a equipe optou por esta organização para facilitar na visualizações de arquivos durante o desenvolvimento
 
-# Arquitetutra do software
+# Arquitetutra do software <a name="arquitetura"> </a>
 - Arquitetura Monolítica, apesar de ter SSO/IAM
 - A arquitetura do software é inspirada na arquitetura baseada em serviço, pois o fluxo das requisições são orientadas por "services" não "domain"
 - a maior parte das regras de negócio estão contidas na camada de "service"
 - podem existir algumas regras de negócio voltada para dados em outras cadamadas, principalmente validadores
 - como na camada de DTO, Entity e Migration
 
-## SSO (Single sign-on) Autenticação única / Identity and Access Management (IAM) gerenciamento de identidade e acesso
+## SSO (Single sign-on) Autenticação única / Identity and Access Management (IAM) gerenciamento de identidade e acesso <a name="sso"> </a>
 - optamos por não implementar os serviços de autenticação e autorização
 - optemos por usar uma ferramenta de SSO, no caso o Keyclock
 - em nossa arquitetura, tercerizamos para o Keyclock gerencia tudo do usuário
@@ -232,7 +251,7 @@ $ git branch
   - versionamento do banco de dados 
   - historico de mudanças na estrutura do banco de dados
 
-# Configurações para o Keyclock
+## Configurações para o Keyclock <a name="Keyclock"> </a>
 - criar realm: realm-pantanal-dev
 - criar client:
   - client-id: client-id-backend-1
@@ -288,7 +307,7 @@ $ sudo docker cp postgres_acao_social:/tmp/backup_keycloak.sql /home/kaio/Docume
   - https://github.com/DiUS/java-faker
   - A variável de ambiente executa o arquivo PostgresDatabaseInitialization (spring.profiles.active: dbinit)
 
-# Auditoria
+## Auditoria <a name="Auditoria"> </a>
 - Revisão de mudanças dos registros
   - cada vez que um registro é criado ou alterado é criado uma revisão
   - spring-data-envers
@@ -297,7 +316,7 @@ $ sudo docker cp postgres_acao_social:/tmp/backup_keycloak.sql /home/kaio/Docume
   - https://medium.com/@helder.versatti/implementando-correlation-id-em-uma-aplica%C3%A7%C3%A3o-spring-c9c3a92c67e5
   - cada request feita, é criada um registro em formato json no STDOUT, com ID único para cada request, e quem o usuário ID que fez esta request
   
-# Cargos e permissões (Roles and Permission)
+## Cargos e permissões (Roles and Permission) <a name="cargosepermissoes"> </a>
 - existem algumas tabelas no bd utilizadas para determinar o relacionamento ManyToMany, como por exemplo, doação, voluntário e presente,
   - por exemplo "voluntário", deve ser uma tabela de junção/pivô para mapear que esta pessoa se voluntariou para participar de determinada ação social. Desta forma "voluntário" nao pode ser um cargo, pois quando uma pessoa se voluntaria é somente e exclusivamente para aquela ação social, e não automaticamente para todas.
 - mas em Cargos e Permissoes do Keyclock diz respeito das capacidades que user logado tem de executar ou não determinada ação, como por exemplo o cargo funcionario_gerente_nivel_1 possui todas as permissões para criar, deletar, buscar e atualizar uma determinada ação social ou dados da empresa.
@@ -311,7 +330,7 @@ Neste cenário, quando o usuário recebe um cargo, ele tem o mesmo cargo em toda
 - Copilot
 
 
-# Melhorias futuras
+## Melhorias futuras <a name="futuro"> </a>
 - corrigir paginação no frontend
 - implementar tratamento de exceções
 - implementar testes unitários para as regras de negócio
