@@ -11,5 +11,5 @@ public record OngUpdateDto (
         String name,
         StatusEnum status,
         String cnpj,
-        UUID responsibleEntity
+        UUID person
 ) {}

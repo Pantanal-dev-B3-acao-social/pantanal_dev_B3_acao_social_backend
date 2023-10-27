@@ -16,5 +16,5 @@ public record OngCreateDto (
         @NotBlank(message= "Campo 'cnpj' não pode estar vazio")
         String cnpj,
         @NotNull
-        UUID responsibleEntity
+        UUID person
 ) {}

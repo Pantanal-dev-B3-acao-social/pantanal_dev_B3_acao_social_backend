@@ -29,11 +29,11 @@ public class OngService {
         OngEntity entity = new OngEntity();
         entity.setName(dataRequest.name());
         entity.setCnpj(dataRequest.cnpj());
-        PersonEntity responsibleEntity = personRepository.findById(dataRequest.responsibleEntity());
-        if (responsibleEntity == null){
+        PersonEntity person = personRepository.findById(dataRequest.person());
+        if (person == null){
             throw new ObjectNotFoundException("Responsible not found");
         }
-        entity.setResponsibleEntity(responsibleEntity);
+        entity.setResponsibleEntity(person);
         entity.setStatus(dataRequest.status());
         OngEntity savedObj = ongRepository.save(entity);
         return savedObj;
@@ -68,8 +68,8 @@ public class OngService {
         if (request.cnpj() != null) {
             obj.setCnpj(request.cnpj());
         }
-        if (request.responsibleEntity() != null) {
-            PersonEntity resposible = personRepository.findById(request.responsibleEntity());
+        if (request.person() != null) {
+            PersonEntity resposible = personRepository.findById(request.person());
             obj.setResponsibleEntity(resposible);
         }
         OngEntity updatedObj = ongRepository.update(obj);
