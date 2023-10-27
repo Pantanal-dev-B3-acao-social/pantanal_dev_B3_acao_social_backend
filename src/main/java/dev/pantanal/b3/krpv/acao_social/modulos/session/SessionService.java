@@ -29,17 +29,17 @@ public class SessionService {
     private GeneratorCode generatorCode;
 
     public SessionEntity create(SessionCreateDto dataRequest) {
-        SessionEntity entity = new SessionEntity();
         SocialActionEntity socialAction = socialActionRepository.findById(dataRequest.socialAction());
+        if (socialAction == null) {
+            throw new ObjectNotFoundException("Social action not found");
+        }
+        SessionEntity entity = new SessionEntity();
         entity.setDescription(dataRequest.description());
         entity.setDateStartTime(dataRequest.dateStartTime());
         entity.setDateEndTime(dataRequest.dateEndTime());
         entity.setStatus(dataRequest.status());
         entity.setVisibility(dataRequest.visibility());
         entity.setEngagementScore(dataRequest.engagementScore());
-        if (socialAction == null) {
-            throw new ObjectNotFoundException("Social action not found");
-        }
         entity.setSocialAction(socialAction);
         // TODO:
         // entity.setLocal();dataRequest.local());
