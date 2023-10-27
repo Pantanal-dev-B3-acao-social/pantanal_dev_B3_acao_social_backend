@@ -16,5 +16,6 @@ public record PresenceResponseDto(
         LocalDateTime createdDate,
         LocalDateTime lastModifiedDate,
         LocalDateTime deletedDate,
-        UUID deletedBy
+        UUID deletedBy,
+        Integer engagementScore
 ) {}
