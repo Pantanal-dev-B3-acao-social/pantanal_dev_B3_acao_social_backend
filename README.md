@@ -7,17 +7,21 @@
 2. [Funcionalidades](#funcionalidades)
 3. [Tecnologias](#tecnologias)
 4. [Perfis](#perfis)
-5. [Processo de Desenvolvimento](#processoDesenvolvimento)
-6. [Processos de Execução](#processoExecução)
-7. [Processo de Deploy](#processoDeploy)
-8. [AWS-EC2](#AWSEC2)
+5. [Processo de Desenvolvimento](#processodesenvolvimento)
+6. [Processos de Execução](#processoexecução)
+7. [Processo de Deploy](#processodeploy)
+8. [AWS-EC2](#awsec)
 9. [Nginx](#nginx)
-10. [Arquitetura de Software](#arquitetura)
-11. [SSO](#sso)
-12. [Keyclock](#keyclock)
-13. [Auditoria](#auditoria)
-14. [Cargos e Permissões](#cargosepermissoes)
-15. [Melhorias Futuras](#futuro)
+10. [Testes](#testes)
+11. [Arquitetura de Software](#arquitetura)
+12. [SSO](#sso)
+13. [Keyclock](#keyclock)
+14. [Auditoria](#auditoria)
+15. [Cargos e Permissões](#cargosepermissoes)
+16. [Melhorias Futuras](#futuro)
+17. [Gerência e configuração com git e github](#gerencia)
+
+
 
 ## Descrição <a name="descrição"> </a>
 - O projeto consiste em uma aplicação monolítica de gestão de ação social.
@@ -82,7 +86,7 @@
 - [futuro] funcionário da ONG
 - [futuro] doador PF
 
-## Processo de desenvolvimento <a name="processoDesenvolvimento"> </a>
+## Processo de desenvolvimento <a name="processodesenvolvimento"> </a>
 
 - servidor do discord para comunicação persistente
   - compartilhamento de conteúdos 
@@ -94,7 +98,7 @@
 - Kanban para controle de demandas a serem desenvolvidas
 - google docs para brainStorm, elaboração e documentação os requisitos
 
-## Processo de execução em ambiente de desenvolvimento <a name="processoExecução"> </a>
+## Processo de execução em ambiente de desenvolvimento <a name="processoexecução"> </a>
 - para executar em ambiente de desenvolvimento deve usar o docker/docker-compose.yml
 - desta forma somente o keyclock e postgres estarão dentro do container
 - assim podendo executar o spring boot diretamente no intellij para ter acesso ao debug
@@ -112,13 +116,13 @@ $ docker-compose up
 - executar os testes pelo intellij
 
 
-## Processo de Deploy <a name="processoDeploy"> </a>
+## Processo de Deploy <a name="processodeploy"> </a>
 
 ## Processo de execução em ambiente de produção
 $ docker-compose up
 $ ./mvnw spring-boot:run
 
-## AWS - EC2 <a name="AWSEC2"> </a>
+## AWS - EC2 <a name="awsec"> </a>
 - acesso via SSH
   - cria chave SSH da VM EC2 e faz download
     - aws_ec2_pantanal_dev_ubuntu.pem
@@ -159,7 +163,7 @@ server {
 }
 ```
 
-# Testes
+## Testes <a name="testes"> </a>
 - estamos usando como base principal os testes de integração, que apesar de mais custosos para implementar
 - agregam uma boa cobertura de testes, desde a funcionalidade em si estar funcionando e sua respectiva regra de negócio
 - até integração com outros serviços
@@ -177,7 +181,7 @@ server {
   - criar testes de casos de falha
   - criar testes de casos de sucesso somente com campos obrigatorio
 
-# Gerência e configuração com git e github
+# Gerência e configuração com git e github <a name="gerencia"> </a>
 - evitamos realizar commit diretamente na branch main
 - merge para a main somente por meio de PR (Pull Request)
 - tentamos usar commit semântico, padrão utilizado: https://blog.geekhunter.com.br/o-que-e-commit-e-como-usar-commits-semanticos/ 
@@ -251,7 +255,7 @@ $ git branch
   - versionamento do banco de dados 
   - historico de mudanças na estrutura do banco de dados
 
-## Configurações para o Keyclock <a name="Keyclock"> </a>
+## Configurações para o Keyclock <a name="keyclock"> </a>
 - criar realm: realm-pantanal-dev
 - criar client:
   - client-id: client-id-backend-1
@@ -307,7 +311,7 @@ $ sudo docker cp postgres_acao_social:/tmp/backup_keycloak.sql /home/kaio/Docume
   - https://github.com/DiUS/java-faker
   - A variável de ambiente executa o arquivo PostgresDatabaseInitialization (spring.profiles.active: dbinit)
 
-## Auditoria <a name="Auditoria"> </a>
+## Auditoria <a name="auditoria"> </a>
 - Revisão de mudanças dos registros
   - cada vez que um registro é criado ou alterado é criado uma revisão
   - spring-data-envers
