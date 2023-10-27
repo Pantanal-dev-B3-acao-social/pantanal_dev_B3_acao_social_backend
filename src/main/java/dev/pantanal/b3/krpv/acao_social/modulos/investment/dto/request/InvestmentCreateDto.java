@@ -16,13 +16,13 @@ import java.util.UUID;
 public record InvestmentCreateDto(
         @NotNull
         BigDecimal valueMoney,
-        @PastOrPresent
+        // TODO: @PastOrPresent
         LocalDateTime date,
         @NotBlank(message = "field motivation can not be empty")
         String motivation,
         @NotNull(message = "field approvedBy can not be empty")
         UUID approvedBy,
-        @FutureOrPresent
+        // TODO: @FutureOrPresent
         LocalDateTime approvedDate,
         @NotNull(message = "field socialAction can not be empty")
         UUID socialAction,
