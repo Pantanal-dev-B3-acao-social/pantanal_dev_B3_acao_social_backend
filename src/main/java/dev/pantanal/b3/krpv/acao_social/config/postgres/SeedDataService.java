@@ -115,11 +115,11 @@ public class SeedDataService {
         this.companyFactory.insertMany(4);
         this.ongFactory.insertMany(10);
         List<SocialActionEntity> socialActionEntities = this.socialActionFactory.insertMany(20, categoriesTypesIds, categoryLevelsIds);
-        this.investmentFactory.insertMany(50);
-        List<SessionEntity> sessions = this.sessionFactory.insertMany(50);
-        this.donationFactory.insertMany(50, socialActionEntities, personEntities, personEntities);
-        this.presenceFactory.insertMany(50, personEntities, sessions, personEntities);
-        this.voluntaryFactory.insertMany(50);
+        this.investmentFactory.insertMany(40);
+        List<SessionEntity> sessions = this.sessionFactory.insertMany(40);
+        this.donationFactory.insertMany(40, socialActionEntities, personEntities, personEntities);
+        this.presenceFactory.insertMany(40, personEntities, sessions, personEntities);
+        this.voluntaryFactory.insertMany(40);
         this.interestFactory.insertMany(20, personEntities, categoriesTypes);
     }
 
