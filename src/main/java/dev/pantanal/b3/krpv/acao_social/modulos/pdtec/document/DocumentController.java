@@ -93,9 +93,9 @@ public class DocumentController {
         return new ResponseEntity<DocumentResponseDto>(response, HttpStatus.OK);
     }
 
-    @PostMapping("/{id}/upload")
+    @PostMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    @Operation(summary = "Upload a Document", method = "POST")
+    @Operation(summary = "Upload a Document", method = "PATCH")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Document succesfully Uploaded"),
             @ApiResponse(responseCode = "400", description = "Invalid parameters"),
@@ -105,11 +105,11 @@ public class DocumentController {
             @ApiResponse(responseCode = "500", description = "Error when creating Document"),
     })
     public void upload(
-            @PathVariable UUID request,
+            @PathVariable UUID id,
             @RequestParam("file") MultipartFile file
     ) {
         String token = pdtecClient.getAccessToken();
-        service.upload(request, token, file);
+        service.upload(id, token, file);
     }
 
 

@@ -26,7 +26,7 @@ import static dev.pantanal.b3.krpv.acao_social.modulos.pcdPerson.PcdPersonContro
 @RestController
 @RequestMapping(ROUTE_PCDPERSON)
 //@PreAuthorize("hasAnyRole('PCDPERSON')")
-public class PcdPersonController {
+public class  PcdPersonController {
 
     @Autowired
     private PcdPersonService service;
