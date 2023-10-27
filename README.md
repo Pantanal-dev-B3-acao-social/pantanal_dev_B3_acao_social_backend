@@ -13,13 +13,13 @@
 8. [AWS-EC2](#awsec)
 9. [Nginx](#nginx)
 10. [Testes](#testes)
-11. [Arquitetura de Software](#arquitetura)
-12. [SSO](#sso)
-13. [Keyclock](#keyclock)
-14. [Auditoria](#auditoria)
-15. [Cargos e Permissões](#cargosepermissoes)
-16. [Melhorias Futuras](#futuro)
-17. [Gerência e configuração com git e github](#gerencia)
+11. [Gerência e configuração com git e github](#gerencia)
+12. [Arquitetura de Software](#arquitetura)
+13. [SSO](#sso)
+14. [Keyclock](#keyclock)
+15. [Auditoria](#auditoria)
+16. [Cargos e Permissões](#cargosepermissoes)
+17. [Melhorias Futuras](#futuro)
 
 
 
@@ -286,7 +286,7 @@ $ git branch
   - username: funcionario1
   - password: 123
  
-# Banco de ddos
+# Banco de dados
 ### exemplo de como acessar o DB por terminal de dentro do container docker
 ```bash
 # entra dentro do container docker postgres
