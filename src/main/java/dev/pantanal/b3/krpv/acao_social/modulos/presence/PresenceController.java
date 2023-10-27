@@ -75,7 +75,8 @@ public class PresenceController {
                 entity.getCreatedDate(),
                 entity.getLastModifiedDate(),
                 entity.getDeletedDate(),
-                entity.getDeletedBy()
+                entity.getDeletedBy(),
+                entity.getEngagementScore()
         );
         return new ResponseEntity<PresenceResponseDto>(response, HttpStatus.OK);
     }
@@ -105,7 +106,8 @@ public class PresenceController {
                 entity.getCreatedDate(),
                 entity.getLastModifiedDate(),
                 entity.getDeletedDate(),
-                entity.getDeletedBy()
+                entity.getDeletedBy(),
+                entity.getEngagementScore()
         );
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
