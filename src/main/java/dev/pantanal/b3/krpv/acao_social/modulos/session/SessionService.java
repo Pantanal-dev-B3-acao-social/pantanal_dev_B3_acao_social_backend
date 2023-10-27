@@ -40,6 +40,7 @@ public class SessionService {
         if (socialAction == null) {
             throw new ObjectNotFoundException("Social action not found");
         }
+        entity.setSocialAction(socialAction);
         // TODO:
         // entity.setLocal();dataRequest.local());
         // entity.setResources();dataRequest.resouces());
