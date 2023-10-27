@@ -1,14 +1,10 @@
-package dev.pantanal.b3.krpv.acao_social.modulos.socialAction;
+package dev.pantanal.b3.krpv.acao_social.modulos.pcd;
 
-import dev.pantanal.b3.krpv.acao_social.modulos.pcd.PcdEntity;
-import dev.pantanal.b3.krpv.acao_social.modulos.pcd.PcdService;
+
+import dev.pantanal.b3.krpv.acao_social.modulos.pcd.dtos.request.PcdCreateDto;
 import dev.pantanal.b3.krpv.acao_social.modulos.pcd.dtos.request.PcdParamsDto;
 import dev.pantanal.b3.krpv.acao_social.modulos.pcd.dtos.request.PcdUpdateDto;
 import dev.pantanal.b3.krpv.acao_social.modulos.pcd.dtos.response.PcdResponseDto;
-import dev.pantanal.b3.krpv.acao_social.modulos.socialAction.dto.request.PcdCreateDto;
-import dev.pantanal.b3.krpv.acao_social.modulos.socialAction.dto.request.PcdParamsDto;
-import dev.pantanal.b3.krpv.acao_social.modulos.socialAction.dto.request.PcdUpdateDto;
-import dev.pantanal.b3.krpv.acao_social.modulos.socialAction.dto.response.PcdResponseDto;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
@@ -20,22 +16,21 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import io.swagger.v3.oas.annotations.Operation;
-import static dev.pantanal.b3.krpv.acao_social.modulos.socialAction.PcdController.ROUTE_SOCIAL;
-import static dev.pantanal.b3.krpv.acao_social.modulos.socialAction.PcdController.SOFT_DELETE_QUERY;
 
 import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
+
+
+import static dev.pantanal.b3.krpv.acao_social.modulos.pcd.PcdController.ROUTE_PCD;
 
 @RestController
-@RequestMapping(ROUTE_SOCIAL)
+@RequestMapping(ROUTE_PCD)
 @PreAuthorize("hasAnyRole('PCD')")
 public class PcdController {
 
     @Autowired
     private PcdService service;
-    public static final String SOFT_DELETE_QUERY = "";
-    public static final String ROUTE_SOCIAL = "/v1/pcd";
+    public static final String ROUTE_PCD = "/v1/pcd";
 
     public PcdResponseDto mapEntityToDto(PcdEntity entity) {
         PcdResponseDto dto = new PcdResponseDto(
