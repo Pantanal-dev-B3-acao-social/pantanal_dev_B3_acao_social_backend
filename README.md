@@ -48,6 +48,9 @@
   - spring web
   - lombok
   - Junit
+  - Swagger
+    - http://localhost:3001/swagger-ui/index.html#/
+    - ![img.png](img.png)
   - [LOG DE RASTREABILIDADE PARA AUDITORIA]
 - postgres
 - docker
