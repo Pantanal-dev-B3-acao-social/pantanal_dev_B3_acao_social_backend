@@ -337,6 +337,9 @@ Neste cenário, quando o usuário recebe um cargo, ele tem o mesmo cargo em toda
 
 
 ## Melhorias futuras <a name="futuro"> </a>
+- pontuação de engajamento pode ser usada para gameficação
+  - pessoas com maior ponto podem receber insignia, como ouro, prata e bronze
+  - pessoas com maior pontuação ganhar algo da empresa
 - corrigir paginação no frontend
 - implementar tratamento de exceções
 - implementar testes unitários para as regras de negócio
