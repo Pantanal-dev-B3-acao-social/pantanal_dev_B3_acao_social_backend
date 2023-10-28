@@ -330,7 +330,7 @@ $ docker-compose up
 - executar os testes pelo intellij
 
 ## Processo de Deploy <a name="processodeploy"> </a>
-
+- frontend usa pm2
 ## Processo de execução em ambiente de produção
 $ docker-compose up
 $ ./mvnw spring-boot:run
