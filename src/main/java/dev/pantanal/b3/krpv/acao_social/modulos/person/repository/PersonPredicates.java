@@ -6,6 +6,8 @@ import dev.pantanal.b3.krpv.acao_social.modulos.person.dto.request.PersonParamsD
 import dev.pantanal.b3.krpv.acao_social.modulos.person.enums.StatusEnum;
 import org.springframework.stereotype.Component;
 
+import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.time.LocalDateTime;
 
 @Component
@@ -30,6 +32,11 @@ public class PersonPredicates {
             StringPath filterPath = qEntity.cpf;
             predicate = predicate.and(filterPath.eq(filters.cpf()));
         }
+        if (filters.engagementScore() != null) {
+            NumberPath<BigInteger> filterPath = qEntity.engagementScore;
+            predicate = predicate.and(filterPath.eq(filters.engagementScore()));
+        }
+
         return predicate;
     }
 }

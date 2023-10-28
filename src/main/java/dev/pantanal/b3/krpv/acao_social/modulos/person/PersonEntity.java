@@ -19,6 +19,9 @@ import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+
+import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
@@ -65,6 +68,9 @@ public class PersonEntity {
 //    @NotBlank
 //    @CPF
     String cpf;
+
+    @Column(name = "engagement_score", nullable = true)
+    BigInteger engagementScore;
 
     @CreatedBy
     @Column(name = "created_by")

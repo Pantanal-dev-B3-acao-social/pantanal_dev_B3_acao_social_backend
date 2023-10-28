@@ -87,6 +87,9 @@ public class PersonService {
         if (request.status() != null) {
             obj.setStatus(request.status());
         }
+        if (request.engagementScore() != null){
+            obj.setEngagementScore(request.engagementScore());
+        }
         PersonEntity updatedObj = personRepository.update(obj);
         return updatedObj;
     }
