@@ -21,6 +21,26 @@
 16. [Cargos e Permissões](#cargosepermissoes)
 17. [Melhorias Futuras](#futuro)
 
+
+## Contato da equipe:
+- Kaio Lino:
+  - Linkedin: https://www.linkedin.com/in/kaio-lino-3982535a/
+  - Github: https://github.com/kaiomudkt
+
+- Roberto Fernandes:
+  - Linkedin: https://www.linkedin.com/in/roberto-fernandes-fortes-neto-b30455234/
+  - Github: https://github.com/RobertoFORTs
+
+- Vitor Manuel:
+  - Linkedin: https://www.linkedin.com/in/victor-manuel-chang-24aa70291/
+  - Github: https://github.com/VictorManuelChang
+
+- Pedro Nicoletti:
+  - Linkedin: https://www.linkedin.com/in/pedro-nicoletti-17ab99251/
+  - Github: https://github.com/Pedrao1234
+
+
+
 ## Descrição <a name="descrição"> </a>
 
   Nosso projeto tem como objetivo automatizar a gestão de ações sociais, estabelecendo uma conexão eficaz entre empresas, ONGs e voluntários. Utilizamos tecnologias modernas, incluindo Spring Boot 3 e Keycloak 21, além de implementar Docker para facilitar o desenvolvimento e a implantação do sistema. No frontend, criamos uma interface gráfica com React.js para demonstrar as funcionalidades essenciais do backend.
