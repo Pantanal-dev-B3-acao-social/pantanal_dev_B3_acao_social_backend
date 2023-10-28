@@ -89,7 +89,7 @@ public class SessionEntity {
     private SocialActionEntity socialAction;
 
     @Column(name = "engagement_score")
-    private Integer engagementScore;
+    private Integer engagementScore = 0;
 
 // oneToMany
 // private LocalEntity local;

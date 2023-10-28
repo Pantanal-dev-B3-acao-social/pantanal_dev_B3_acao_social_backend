@@ -33,7 +33,7 @@ public class PersonPredicates {
             predicate = predicate.and(filterPath.eq(filters.cpf()));
         }
         if (filters.engagementScore() != null) {
-            NumberPath<BigInteger> filterPath = qEntity.engagementScore;
+            NumberPath<Integer> filterPath = qEntity.engagementScore;
             predicate = predicate.and(filterPath.eq(filters.engagementScore()));
         }
 
