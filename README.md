@@ -113,6 +113,8 @@
   - É gratuito
   - Possui boa documentação e informações 
   - membros da equipe possuim conhecimento prévio
+- React.js
+  - PM2 
 
 ## Perfis <a name="perfis"> </a>
 - Admininstrador
