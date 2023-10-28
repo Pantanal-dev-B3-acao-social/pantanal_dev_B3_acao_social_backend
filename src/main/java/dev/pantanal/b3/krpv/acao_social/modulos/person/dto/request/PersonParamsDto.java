@@ -12,7 +12,7 @@ public record PersonParamsDto(
         LocalDateTime dateBirth,
         StatusEnum status,
         String cpf,
-        BigInteger engagementScore,
+        Integer engagementScore,
         UUID createdBy,
         LocalDateTime createdDate,
         UUID lastModifiedBy,

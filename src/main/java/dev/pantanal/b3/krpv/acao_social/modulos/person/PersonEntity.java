@@ -70,7 +70,7 @@ public class PersonEntity {
     String cpf;
 
     @Column(name = "engagement_score", nullable = true)
-    BigInteger engagementScore;
+    Integer engagementScore = 0;
 
     @CreatedBy
     @Column(name = "created_by")

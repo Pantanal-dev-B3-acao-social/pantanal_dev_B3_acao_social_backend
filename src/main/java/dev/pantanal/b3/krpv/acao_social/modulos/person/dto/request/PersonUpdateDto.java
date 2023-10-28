@@ -10,5 +10,5 @@ public record PersonUpdateDto(
         LocalDateTime dateBirth,
         StatusEnum status,
         String cpf,
-        BigInteger engagementScore
+        Integer engagementScore
 ) {}
