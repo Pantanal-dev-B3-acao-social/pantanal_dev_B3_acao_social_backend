@@ -1,5 +1,5 @@
 # pantanal_dev_B3_acao_social
-<img src="https://github.com/Pantanal-dev-B3-acao-social/pantanal_dev_B3_acao_social_backend/assets/136934067/9f78f17f-1f6e-4a26-b34b-de469dda8d7c" alt="Texto Alternativo" width="150" height="130">
+<img src="https://github.com/Pantanal-dev-B3-acao-social/pantanal_dev_B3_acao_social_backend/assets/136934067/9f78f17f-1f6e-4a26-b34b-de469dda8d7c" alt="Texto Alternativo" width="100" height="90">
 
 ## Tabela de Conteúdo
 
