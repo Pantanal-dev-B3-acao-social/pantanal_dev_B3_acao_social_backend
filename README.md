@@ -1,5 +1,5 @@
 # pantanal_dev_B3_acao_social
-
+<img src="https://github.com/Pantanal-dev-B3-acao-social/pantanal_dev_B3_acao_social_backend/assets/136934067/9f78f17f-1f6e-4a26-b34b-de469dda8d7c" alt="Texto Alternativo" width="150" height="130">
 
 ## Tabela de Conteúdo
 
@@ -21,255 +21,298 @@
 16. [Cargos e Permissões](#cargosepermissoes)
 17. [Melhorias Futuras](#futuro)
 
-
-
 ## Descrição <a name="descrição"> </a>
-- O projeto consiste em uma aplicação de gestão de ações sociais, defirentes Ong. Com a empresa
-- Empresa (Company)
-- ONG
-- Ação Social (Social Action) é o projeto de uma ONG
-- Company pode fazer diversos investimentos em uma Social Action
-- Sessão (session) A Social Action pode ocorrer em uma ou muitas sessões
-- voluntário (vonluntary) pode se candidatar ou ser convidado para ser da Staff
-- Staff são os voluntarios membros da equipe organizadora de uma ação social
-- o voluntário pode ir em qualquer session para trabalhar
-- a presença do voluntário na sessão deve ser registrada via CPF ou QR code
-- Categoria
-  - nível da ação social
-  - tipo da ação social
-  - categoria da doação
-  - categoria da sessão
-  - categoria do investimento 
-  - categoria do recurso
 
-- Recursos
-  - recursos da sessão
-  - recursos da ação social
-  - recursos da ong
-  - recursos da empresa
-  - recursos doados
-  - recursos comprados com dinheiro de investimento da empresa
-  - recursos comprados com dinheiro de doação de pessoa física
+  Nosso projeto tem como objetivo automatizar a gestão de ações sociais, estabelecendo uma conexão eficaz entre empresas, ONGs e voluntários. Utilizamos tecnologias modernas, incluindo Spring Boot 3 e Keycloak 21, além de implementar Docker para facilitar o desenvolvimento e a implantação do sistema. No frontend, criamos uma interface gráfica com React.js para demonstrar as funcionalidades essenciais do backend.
 
-## Funcionalidades <a name="funcionalidades"> </a>
-- Observação, "gestão" inclui normalmente criar, atualizar, buscar e deletar
-- Autenticação e Autorização
-- Gestão de Categorias
-- Gestão de Empresas
-  - Será possível cadastrar mais de uma empresa na mesmoa instancia do sistema, 
-  - mas somente gerente de alto nível de acesso poderão visualizar dados de todas as empresas
-- Gestão de Doações de Pessoa Física
-  - É possivel registrar no sistema que determinada pessoa realizou doação de tal valor em determinado dia, com aprovação de um gerente de necessário
-- Gestão de Investimento
-  - É possivel que o gerente da empresa faça investimento em determinada Ong
-- Pessoa pode manisvestar interesse em determinado tipo de ação social, futuramente irá para receber notificações
-- Gestão de Ong
-  - É possível cadastrar diversas Ongs e realizar sua gestão
-- Gestão de Pcd
-  - As pessoas podem informas que são PCD, e esta informação sempre será visivel para os gerente
-  - Poderá ser implemetado um alerta para o gerente sobre a possível necessidade de gerar acessibilidade quando alguem com PCD se voluntaria para Ação Social.
-- Gestão de Pessoas
-- Gestão de Ação social com
-  - Toda ação social deve pertencer a uma Ong
-  - A ação social possui "visibilidade" que pode estar "privada", "pública somente para interno", "Pública até para os externos"
-  - A ação social pode ter um Nivel
-  - A ação social pode ter um Tipo
-- Gestão de voluntarios da Ação Social
-  - As pessoas cadastradas no sistema podem manifestar interesse em ser voluntário em uma ação social
-  - Será possível que um gerente aprove ou não o voluntário para efetivar sua participação
-  - Os voluntários aprovados poderão visualizar dados da ação social mesmo que esta esteja com "visibilidade" com valor "privada"
-- Gestão de sessões da ação social
-  - Sessão é a execução com data e hora de inicio e fim, e futuramente com local
-  - Possui "visibilidade" que pode estar "privada", "pública somente para interno", "Pública até para os externos"
-  - sessão deve ter quantos pontos de engajamento as pessoas presentes devem receber
-- Gestão de presenças
-  - Quando a pessoa esta presente na sessão ela deve ser registrada
-  - e a pessoa recebe pontuação de engajamento, que cada sessão vindo da sessão
+  A aplicação permite que funcionários da B3 se envolvam em ações sociais através de voluntariado ou doações. Eles podem se voluntariar para diferentes atividades sociais, com suas participações confirmadas por gestores responsáveis. Além do envolvimento dos funcionários, o sistema também oferece opções para investimentos diretos por parte das empresas, doações de fontes externas e fornece insights por meio de dashboards.
 
-## Tecnologias <a name="tecnologias"> </a>
-- spring boot
-  - spring security
-  - jpa
-  - flyway
-  - h2
-  - spring web
-  - lombok
-  - Junit
-  - Swagger
-    - http://localhost:3001/swagger-ui/index.html#/
-    - ![img.png](img.png)
-  - [LOG DE RASTREABILIDADE PARA AUDITORIA]
-- postgres
-  - Tomamos a decisão do banco de dados do postgres por alguns motivos
-    - Padrão de mercado, amplamente usado
-    - Grande quantidade de conteudo disponível
-    - Conhecimento prévio dos membros da equipe
-- docker
-  - Decidimos utilizar docker por todas as vantagens de container
-  - padronização de ambiente em que as diferentes aplicações estão, desde ambiente de desenvolvimento Linux e Windows
-  - facilidade para executar as aplicações rapidamente por meio do docker-compose.yml
-- Keyclock
-  - É um dos maiores e mais populares SSO e IAM
-  - É gratuito
-  - Possui boa documentação e informações 
-  - membros da equipe possuim conhecimento prévio
-- React.js
-  - PM2 
+  Nossa abordagem não apenas promove a colaboração eficaz entre empresas, ONGs e voluntários, mas também garante a funcionalidade do sistema por meio de testes de integração rigorosos. Estamos comprometidos com a evolução contínua do projeto para atender às necessidades em constante mudança da comunidade. Nosso plano inclui a implementação contínua de funcionalidades adicionais para promover eficiência, transparência e automação nas operações entre as entidades envolvidas.
 
-## Perfis <a name="perfis"> </a>
-- Admininstrador
-  - pessoa responsavel por instalar o sistema e cadastrar empresas e seu primeiro gerente
-- Gerente da empresa
-  - gerente da empresa é responsavel por gerir
-- [futuro] Funcionário da empresa
-- [futuro] Gerente pela ONG
-- [futuro] Doador PF (não funcionário)
 
-## Processo de desenvolvimento <a name="processodesenvolvimento"> </a>
 
-- Kanban para controle de demandas a serem desenvolvidas
-- Google docs para brainStorm, elaboração e documentação os requisitos
-- Servidor do Discord para comunicação
-  - compartilhamento de conteúdos 
-  - compartilhamento de dúvidas
-  - tira dúvidas técnicas
-  - reuniões síncronas por chamada de voz
-- Grupo do whatsApp para comunicação rápida e lembretes e avisos urgentes
-- Foi utilizado o github para gerência e configuração de versionamento 
+### Organização das Categorias
 
-## Testes <a name="testes"> </a>
-- Estamos usando como base principal os testes de integração, que apesar de mais custosos para implementar
-- Agregam uma boa cobertura de testes, desde a funcionalidade em si estar funcionando e sua respectiva regra de negócio
-- Até integração com outros serviços
-  - não estamos mockando o banco de dados e nem o SSO
-  - cada caso de teste usa realmente o keyclock para autenticar e autorizar
-  - verificando se o usuário esta autenticado para executar a action do controller, caso seja necessário
-  - verificando se o usuário tem a permissão para executar a action do controller, caso seja necessário
-  - o banco de dados é realmente o postgres, para que garanta que restrições seja as mesmas do ambiente de produção
-  - desta forma garantimos que os erros de consistência sejam validados
-  - todo caso de teste está em uma transaction que faz rollback apos terminar
-  - ao preparar os casos de teste, as vezes é preciso inserir dados fake para poder usados como base dos testes
-    - o problema de que ao inserir dados pelo teste nao tem userLoggedId, e para resolver este problema foi criado uma classe LoginMock que é capaz de mock do spring security o userlogged
-    - desta forma quando o teste inserir um registro no DB, será o user do token como createdBy UUID
-- Possibilidade de melhoria nos teste, os testes foram inicialmente criados para contemplar somente o caso de sucesso com todos os campos sendo passados
-  - criar testes de casos de falha
-  - criar testes de casos de sucesso somente com campos obrigatorio
-   ![Texto Alternativo](diagramas/Teste/diagrama_fluxo_teste-v2.drawio.png)
+- **Nível da Ação Social**
+- **Tipo da Ação Social**
+- **Categoria da Doação**
+- **Categoria da Sessão**
+- **Categoria do Investimento**
+- **Categoria do Recurso**
 
-# Gerência e configuração com git e github <a name="gerencia"> </a>
-- evitamos realizar commit diretamente na branch main
-- merge para a main somente por meio de PR (Pull Request)
-- tentamos usar commit semântico, padrão utilizado: https://blog.geekhunter.com.br/o-que-e-commit-e-como-usar-commits-semanticos/ 
-- nomenclatura padrão para criação de branch:
-- prefixo sempre é: @main
-- pois está sendo criada a partir da branch main
-- e quando uma branch e criado a partir de outra, segue o mesmo padrão
-- desta forma:
-- main
-- @main/ticket56_titulo
-- @main/@ticket56_titulo/ticket57_titulo
-- @main/@ticket56_titulo/@ticket58_titulo
-- @main/@ticket56_titulo/@ticket58_titulo/ticket59_titulo
-- exemplo real:
-```bash
-$ git branch
-  @main/38305473_docker
-  @main/40263979_Interest_CRUD
-  @main/41130419_criar_seeds
-  @main/41673713_fix_getAll_session
-  @main/41826671_fix_getAll_investimento
-  @main/42261853_fix_tests
-  @main/42468431_pontuacao_engajamento
-* main
-```
 
-# Organização de diretórios
-- os diretórios estão organizados em modulos 
-- apesar de não ser uma arquitetura modular 
-- a equipe optou por esta organização para facilitar na visualizações de arquivos durante o desenvolvimento
+## Funcionalidades <a name="funcionalidades"></a>
 
-# Arquitetutra do software <a name="arquitetura"> </a>
-- Arquitetura Monolítica, apesar de ter SSO/IAM
-- A arquitetura do software é inspirada na arquitetura baseada em serviço, pois o fluxo das requisições são orientadas por "services" não "domain"
-- a maior parte das regras de negócio estão contidas na camada de "service"
-- podem existir algumas regras de negócio voltada para dados em outras cadamadas, principalmente validadores
-- como na camada de DTO, Entity e Migration
-  ![Texto Alternativo](diagramas/Arquitetura/pantanal.dev_arquitetura-v3.png)
+### **Gestão(criar, atualizar, buscar e deletar)**
   
 
-## Keyclock: SSO (Single sign-on) Autenticação única / Identity and Access Management (IAM) gerenciamento de identidade e acesso <a name="sso"> </a>
-- optamos por não implementar os serviços de autenticação e autorização
-- optemos por usar uma ferramenta de SSO, no caso o Keyclock
-- em nossa arquitetura, tercerizamos para o Keyclock gerencia tudo do usuário
-- e o backend spring boot somente recebe o ID do user suas autorizações a partir do token da request
-- que ja esta integrado com o spring security e validando a autenticação e autorização antes de executar as ações do controller
-- os endpoint da api do keyclock são acionados pelo keyclock passando o token do user logged, para que o keyclock tenha log de auditoria de quem realizou as operações 
+- **Autenticação e Autorização**
+- **Gestão de Categorias**
+- **Gestão de Empresas**
+  - É possível cadastrar múltiplas empresas na mesma instância do sistema.
+  - A visualização de dados de todas as empresas é restrita aos gerentes de alto nível.
+  
+- **Gestão de Doações de Pessoa Física**
+  - Registre doações específicas de indivíduos em determinado valor e data, sujeito à aprovação de um gerente, quando necessário.
 
-## Responsabilidade de cada camada de acordo com a arquitetura proposta
-- controller
-  - a camada de controller tem a responsabilidade de receber e retornar requisições HTTP rest
-- service
-  - a camada de service tem a responsabilidade de executar o fluxo do serviço necessário, incluindo regra de negócio
-- dto (Data Transfer Object)
-  - declara e valida entrada e saída de dados, Objeto de Transferência de Dados entre camadas, tanto internas quanto externas
-- entity
-  - classe que possui declarações de mapeamento de objeto relacional (ORM) do JPA 
-- config
-  - security
-  - audit
-  - web
-  - postgres
-- enum
-  - para evitar valores mágicos e constantes soltas, vamos usar enum para estrurar as constantes, aumentando a qualidade de código do clean code
-  - serão utilizadas principalmente para status e tipo, e outras informação que precisam aplicar regra de negócio em condicionais
-- repository
-  - É uma camada intermediária entre a aplicação e a base de dados
-  - Ele fornece métodos para acessar e manipular os dados, como criar, ler, atualizar e excluir (CRUD)
-  - O Repository abstrai a complexidade do acesso aos dados subjacentes e fornece uma interface consistente para a aplicação.
-- db/migration
-  - migrações do banco de dados
-  - versionamento do banco de dados 
-  - historico de mudanças na estrutura do banco de dados
+- **Gestão de Investimento**
+  - Os gerentes da empresa podem investir em ONGs específicas.
 
-## Configurações para o Keyclock <a name="keyclock"> </a>
-- criar realm: realm-pantanal-dev
-- criar client:
-  - client-id: client-id-backend-1
-  - Client authentication: on
-    - Standard flow
-    - Direct access grants
-    - Service accounts roles
-  - Root URL: http://localhost:3001/
-  - Home URL: http://localhost:3001/
-  - Valid redirect URIs: http://localhost:3001/*
-  - Web origins: *
-  - Admin URL: http://localhost:3001/
-  - Credentials: client_secret: gerar secret e salvar no application.yml e application-dev.yml
-- Cadastrar role neste padrão:
+- **Interesses em Ações Sociais**
+  - As pessoas podem manifestar interesse em tipos específicos de ações sociais, recebendo notificações correspondentes no futuro.
+
+- **Gestão de ONGs**
+  - Cadastre várias ONGs e gerencie suas atividades.
+
+- **Gestão de Pessoas com Deficiência (PCD)**
+  - Indivíduos podem indicar que são PCD, e essa informação é visível para os gerentes.
+  - Alertas podem ser implementados para os gerentes, indicando a necessidade de acessibilidade quando um voluntário com PCD se candidata a uma Ação Social.
+
+- **Gestão de Pessoas**
+  - Cadastre e gerencie detalhes sobre as pessoas envolvidas no sistema.
+
+- **Gestão de Ações Sociais**
+  - Toda ação social é associada a uma ONG específica.
+  - Cada ação social possui uma "visibilidade", podendo ser "privada", "pública apenas para internos" ou "pública para externos".
+  - A ação social pode ser categorizada por Nível e Tipo.
+
+- **Gestão de Voluntários da Ação Social**
+  - Indivíduos cadastrados no sistema podem expressar interesse em ser voluntários em uma ação social.
+  - Gerentes podem aprovar ou recusar voluntários para participação efetiva.
+  - Voluntários aprovados têm acesso aos dados da ação social, mesmo se ela estiver com "visibilidade" privada.
+
+- **Gestão de Sessões da Ação Social**
+  - Uma sessão é uma execução com data e hora de início e fim, podendo incluir futuramente informações sobre o local.
+  - Cada sessão possui uma "visibilidade" que pode ser "privada", "pública apenas para internos" ou "pública para externos".
+  - As sessões devem ter um número específico de pontos de engajamento atribuídos às pessoas presentes.
+
+- **Gestão de Presenças**
+  - Quando uma pessoa está presente em uma sessão, sua presença deve ser registrada.
+  - As pessoas recebem pontos de engajamento baseados em sua participação, sendo esses pontos provenientes das sessões em que estiveram presentes.
+ 
+- **Programa de milhas**
+  - Para incentivar a participação ativa dos funcionários, cada vez que um funcionário participa de uma ação social, seja como voluntário, doador ou de qualquer outra forma, ele recebe pontos de engajamento com base em seu envolvimento e contribuição.
+
+  - Os pontos podem ser acumuladoa ao longo do tempo. Os funcionários poderão então trocar esses pontos por recompensas arbitrárias definidas pela B3.
+ 
+
+
+
+
+## Tecnologias Utilizadas <a name="tecnologias"></a>
+
+### Spring Boot
+- **Spring Security:** Utilizado para autenticação e autorização no sistema.
+- **JPA (Java Persistence API) com QueryDSL:** Para interação com o banco de dados e consulta de dados de forma eficiente.
+- **Flyway:** Utilizado para controle de versionamento do banco de dados.
+- **H2 Database:** Um banco de dados em memória para desenvolvimento e testes.
+- **Spring Web:** Para criar aplicativos web usando o Spring MVC.
+- **Lombok:** Biblioteca Java que ajuda a reduzir o código boilerplate.
+- **JUnit:** Framework de teste para Java.
+- **Swagger:** Ferramenta para documentação de APIs. A documentação pode ser acessada em [http://localhost:3001/swagger-ui/index.html#/](http://localhost:3001/swagger-ui/index.html#/).
+  ![Swagger](img.png)
+- **Log de Rastreabilidade para Auditoria:** Implementado para rastrear e auditar atividades no sistema.
+
+### Banco de Dados PostgreSQL
+- Optamos pelo PostgreSQL devido a:
+  - **Padrão de Mercado:** Ampla adoção na indústria de TI.
+  - **Abundância de Conteúdo Disponível:** Facilidade em encontrar recursos educacionais e suporte online.
+  - **Conhecimento Prévio da Equipe:** Membros da equipe já possuem experiência com PostgreSQL.
+
+### Docker
+- Utilizamos Docker pelos seguintes motivos:
+  - **Padronização de Ambiente:** Garante que as aplicações se comportem da mesma forma em diferentes ambientes, como desenvolvimento Linux e Windows.
+  - **Facilidade com Docker Compose:** Permite a execução rápida das aplicações por meio do arquivo `docker-compose.yml`.
+
+### Keycloak
+- **SSO (Single Sign-On) e IAM (Identity and Access Management):** Keycloak é uma solução robusta para autenticação e controle de acesso.
+- **Gratuito e com Boa Documentação:** Sendo uma ferramenta popular, possui uma comunidade ativa e documentação abrangente.
+- **Conhecimento Prévio da Equipe:** Membros da equipe já possuem familiaridade com o Keycloak.
+
+
+
+
+## Perfis <a name="perfis"></a>
+
+- **Administrador:**
+  - Pessoa responsável por instalar o sistema e cadastrar empresas e seu primeiro gerente.
+
+- **Gerente da Empresa:**
+  - Responsável por gerir as operações da empresa no sistema.
+
+- **[Futuro] Funcionário da Empresa:**
+  - [Planejado] Funcionários das empresas que podem interagir no sistema.
+
+- **[Futuro] Gerente da ONG:**
+  - [Planejado] Gerentes das Organizações Não Governamentais (ONGs) para gerenciar suas atividades.
+
+- **[Futuro] Doador Pessoa Física (PF):**
+  - [Planejado] Indivíduos que podem fazer doações no sistema, mesmo que não sejam funcionários das empresas.
+
+## Processo de Desenvolvimento <a name="processodesenvolvimento"></a>
+
+- **Kanban:** Utilizado para controle de demandas a serem desenvolvidas.
+
+- **Google Docs:** Usado para brainstorming, elaboração e documentação dos requisitos do sistema.
+
+- **Servidor do Discord:** Plataforma de comunicação que inclui:
+  - Compartilhamento de conteúdos.
+  - Discussões e esclarecimento de dúvidas técnicas.
+  - Reuniões síncronas por chamadas de voz.
+  - Daily meetings para acompanhamento do progresso.
+
+- **Grupo do WhatsApp:** Usado para comunicação rápida, lembretes e avisos urgentes.
+
+- **GitHub:** Utilizado para gerência e configuração de versionamento do código fonte.
+
+## Testes <a name="testes"></a>
+
+- Estamos utilizando principalmente testes de integração, apesar de serem mais custosos para implementar.
+
+- Esses testes oferecem uma cobertura abrangente, incluindo:
+  - Funcionalidade real do sistema e suas regras de negócio.
+  - Integração com outros serviços, sem mockar o banco de dados e nem o SSO (Single Sign-On).
+  - Autenticação e autorização real usando Keycloak.
+  - Verificação das permissões do usuário para executar ações do controlador.
+  - Utilização do banco de dados PostgreSQL para validar as restrições do ambiente de produção.
+  - Garantia de consistência nos dados ao utilizar transactions e rollbacks nos casos de teste.
+  - Preparação dos dados de teste, incluindo inserção de dados fake usando uma classe `LoginMock` para simular o usuário logado.
+
+- Possibilidades de Melhoria nos Testes:
+  - Adicionar testes para casos de falha.
+  - Criar testes para casos de sucesso com campos obrigatórios apenas.
+  
+  ![Diagrama de Fluxo de Teste](diagramas/Teste/diagrama_fluxo_teste-v2.drawio.png)
+
+
+## Gerência e Configuração com Git e GitHub <a name="gerencia"></a>
+
+- **Evitamos** realizar **commits** diretamente na branch **main**.
+- Merges para a **main** são feitos somente por meio de **PRs (Pull Requests)**.
+- Utilizamos o conceito de **commit semântico**. O padrão utilizado segue [este guia](https://blog.geekhunter.com.br/o-que-e-commit-e-como-usar-commits-semanticos/).
+- **Nomenclatura padrão para criação de branches:**
+  - Prefixo sempre é: **@main**, pois é criada a partir da branch **main**.
+  - Quando uma branch é criada a partir de outra, segue o mesmo padrão.
+  - **Exemplo:**
+    ```bash
+    $ git branch
+      @main/38305473_docker
+      @main/40263979_Interest_CRUD
+      @main/41130419_criar_seeds
+      @main/41673713_fix_getAll_session
+      @main/41826671_fix_getAll_investimento
+      @main/42261853_fix_tests
+      @main/42468431_pontuacao_engajamento
+    * main
+    ```
+
+## Organização de Diretórios
+
+- Os diretórios estão organizados em **módulos**.
+- Apesar de não ser uma arquitetura modular, a equipe optou por essa organização para facilitar a visualização de arquivos durante o desenvolvimento.
+
+## Arquitetura do Software <a name="arquitetura"></a>
+
+- **Arquitetura de camadas** com integração via **HTTP com SSO/IAM**.
+- Inspirada na arquitetura baseada em **serviço**, onde o fluxo das requisições é orientado por "services" e não "domain".
+- A maior parte das regras de negócio está contida na camada de **"service"**.
+- Algumas regras de negócio voltadas para dados podem estar em outras camadas, principalmente em validadores, como na camada de **DTO**, **Entity** e **Migration**.
+
+  ![Diagrama de Arquitetura](diagramas/Arquitetura/pantanal.dev_arquitetura-v3.png)
+
+  
+
+## Keycloak: SSO (Single Sign-On) Autenticação Única / Identity and Access Management (IAM) Gerenciamento de Identidade e Acesso <a name="sso"></a>
+
+- Optamos por não implementar os serviços de autenticação e autorização no próprio sistema.
+- Utilizamos a ferramenta de SSO, o **Keycloak**, para gerenciar a autenticação e autorização.
+- Na nossa arquitetura, terceirizamos para o **Keycloak** a responsabilidade de gerenciar todas as informações do usuário.
+- O backend Spring Boot apenas recebe o ID do usuário e suas autorizações a partir do token da requisição.
+- Já está integrado com o Spring Security e valida a autenticação e autorização antes de executar as ações dos controladores.
+- Os endpoints da API do **Keycloak** são acionados pelo sistema, passando o token do usuário logado, para que o **Keycloak** mantenha um registro de auditoria de quem realizou as operações.
+
+## Responsabilidade de Cada Camada de Acordo com a Arquitetura Proposta
+
+- **Controller:**
+  - Responsável por receber e retornar requisições HTTP REST.
+
+- **Service:**
+  - Responsável por executar o fluxo do serviço necessário, incluindo regras de negócio.
+
+- **DTO (Data Transfer Object):**
+  - Declara e valida entrada e saída de dados.
+  - Objeto de Transferência de Dados entre camadas, tanto internas quanto externas.
+
+- **Entity:**
+  - Classe que possui declarações de mapeamento de objeto relacional (ORM) do JPA.
+
+- **Config:**
+  - **Security**
+  - **Audit**
+  - **Web**
+  - **PostgreSQL**
+
+- **Enum:**
+  - Utilizados para evitar valores mágicos e constantes soltas.
+  - Estruturam as constantes, melhorando a qualidade do código conforme os princípios do clean code.
+  - Principalmente usados para status, tipos e outras informações que requerem regras de negócio em condicionais.
+
+- **Repository:**
+  - Camada intermediária entre a aplicação e a base de dados.
+  - Fornece métodos para acessar e manipular os dados (CRUD).
+  - Abstrai a complexidade do acesso aos dados e oferece uma interface consistente para a aplicação.
+
+- **DB/Migration:**
+  - Migrações do banco de dados.
+  - Histórico de mudanças na estrutura do banco de dados.
+
+## Configurações para o Keycloak <a name="keycloak"></a>
+
+- Criar o realm: **realm-pantanal-dev**.
+
+- Criar um cliente:
+  - **Client ID:** client-id-backend-1
+  - **Client Authentication:** Ativado
+    - **Standard Flow**
+    - **Direct Access Grants**
+    - **Service Accounts Roles**
+  - **Root URL:** [http://localhost:3001/](http://localhost:3001/)
+  - **Home URL:** [http://localhost:3001/](http://localhost:3001/)
+  - **Valid Redirect URIs:** [http://localhost:3001/*](http://localhost:3001/*)
+  - **Web Origins:** *
+  - **Admin URL:** [http://localhost:3001/](http://localhost:3001/)
+  - **Credenciais:** **Client Secret:** Gerar um segredo e salvar no arquivo `application.yml` e `application-dev.yml`.
+
+- Cadastrar as seguintes roles:
   - SOCIAL_ACTION_CREATE
   - SOCIAL_ACTION_GET_ALL
   - SOCIAL_ACTION_GET_ONE
   - SOCIAL_ACTION_UPDATE
   - SOCIAL_ACTION_DELETE
-- Cadastrar usuário
-  - username: funcionario1
-  - password: 123
-  - depois de salvar, na aba "credentials" adicionar uma senha
-  - atribuir cargos para o usuário (role mapping)
-- request para autenticação, e retorna access_token
-  - grant_type: password
-  - client_id: client-id-backend-1
-  - username: funcionario1
-  - password: 123
- 
-# Banco de dados
-### exemplo de como acessar o DB por terminal de dentro do container docker
+
+- Cadastrar um usuário:
+  - **Username:** funcionario1
+  - **Password:** 123
+  - Após salvar, na aba "Credentials," adicione uma senha.
+  - Atribua funções ao usuário (role mapping).
+
+- Realizar uma requisição para autenticação, que retornará um **access_token**:
+  - **grant_type:** password
+  - **client_id:** client-id-backend-1
+  - **username:** funcionario1
+  - **password:** 123
+
+# Banco de Dados
+
+### Exemplo de como acessar o banco de dados pelo terminal de dentro do container Docker:
+
 ```bash
-# entra dentro do container docker postgres
+# Entre dentro do container Docker PostgreSQL
 $ docker exec -it postgres_acao_social bash
-# entre na databse
+
+# Acesse o banco de dados
 root@24de07c13cb3:/# PGPASSWORD=dev_password psql -U dev_user -d keycloack_postgres_db
-```
+
 
 ### Como exportar dados para fazer backup do keyclock
 ```bash
@@ -332,7 +375,7 @@ $ docker-compose up
 - executar os testes pelo intellij
 
 ## Processo de Deploy <a name="processodeploy"> </a>
-- frontend usa pm2
+
 ## Processo de execução em ambiente de produção
 $ docker-compose up
 $ ./mvnw spring-boot:run
@@ -442,4 +485,13 @@ server {
   - recuperar senha
 - cargos e permissões no frontend
 - deixar o sistema com a capacidade de Multi-tenancy para isolar em uma unica instancia dados de diferentes empresas, para que os gerentes de uma não acesse dados das outras empresas
+- Tipos de Recursos
+  - Recursos da Sessão
+  - Recursos da Ação Social
+  - Recursos da ONG
+  - Recursos da Empresa
+  - Recursos Doados
+  - Recursos Comprados com Investimento da Empresa
+  - Recursos Comprados com Doações de Pessoa Física
+
 
