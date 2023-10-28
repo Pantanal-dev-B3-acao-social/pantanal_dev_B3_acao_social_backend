@@ -24,7 +24,7 @@
 
 
 ## Descrição <a name="descrição"> </a>
-- O projeto consiste em uma aplicação monolítica de gestão de ação social.
+- O projeto consiste em uma aplicação de gestão de ações sociais, defirentes Ong. Com a empresa
 - Empresa (Company)
 - ONG
 - Ação Social (Social Action) é o projeto de uma ONG
@@ -41,10 +41,7 @@
   - categoria da sessão
   - categoria do investimento 
   - categoria do recurso
-- Mídia social
-  - mídias sociais da ação social
-  - mídias sociais da empresa
-  - mídias sociais da ONG
+
 - Recursos
   - recursos da sessão
   - recursos da ação social
@@ -55,11 +52,39 @@
   - recursos comprados com dinheiro de doação de pessoa física
 
 ## Funcionalidades <a name="funcionalidades"> </a>
-- Ação social
-  - criar, atualizar, buscar, buscar todos, deletar
-  - Nivel da ação social
-  - Tipo da ação social
-  - 
+- Observação, "gestão" inclui normalmente criar, atualizar, buscar e deletar
+- Autenticação e Autorização
+- Gestão de Categorias
+- Gestão de Empresas
+  - Será possível cadastrar mais de uma empresa na mesmoa instancia do sistema, 
+  - mas somente gerente de alto nível de acesso poderão visualizar dados de todas as empresas
+- Gestão de Doações de Pessoa Física
+  - É possivel registrar no sistema que determinada pessoa realizou doação de tal valor em determinado dia, com aprovação de um gerente de necessário
+- Gestão de Investimento
+  - É possivel que o gerente da empresa faça investimento em determinada Ong
+- Pessoa pode manisvestar interesse em determinado tipo de ação social, futuramente irá para receber notificações
+- Gestão de Ong
+  - É possível cadastrar diversas Ongs e realizar sua gestão
+- Gestão de Pcd
+  - As pessoas podem informas que são PCD, e esta informação sempre será visivel para os gerente
+  - Poderá ser implemetado um alerta para o gerente sobre a possível necessidade de gerar acessibilidade quando alguem com PCD se voluntaria para Ação Social.
+- Gestão de Pessoas
+- Gestão de Ação social com
+  - Toda ação social deve pertencer a uma Ong
+  - A ação social possui "visibilidade" que pode estar "privada", "pública somente para interno", "Pública até para os externos"
+  - A ação social pode ter um Nivel
+  - A ação social pode ter um Tipo
+- Gestão de voluntarios da Ação Social
+  - As pessoas cadastradas no sistema podem manifestar interesse em ser voluntário em uma ação social
+  - Será possível que um gerente aprove ou não o voluntário para efetivar sua participação
+  - Os voluntários aprovados poderão visualizar dados da ação social mesmo que esta esteja com "visibilidade" com valor "privada"
+- Gestão de sessões da ação social
+  - Sessão é a execução com data e hora de inicio e fim, e futuramente com local
+  - Possui "visibilidade" que pode estar "privada", "pública somente para interno", "Pública até para os externos"
+  - sessão deve ter quantos pontos de engajamento as pessoas presentes devem receber
+- Gestão de presenças
+  - Quando a pessoa esta presente na sessão ela deve ser registrada
+  - e a pessoa recebe pontuação de engajamento, que cada sessão vindo da sessão
 
 ## Tecnologias <a name="tecnologias"> </a>
 - spring boot
@@ -75,100 +100,45 @@
     - ![img.png](img.png)
   - [LOG DE RASTREABILIDADE PARA AUDITORIA]
 - postgres
+  - Tomamos a decisão do banco de dados do postgres por alguns motivos
+    - Padrão de mercado, amplamente usado
+    - Grande quantidade de conteudo disponível
+    - Conhecimento prévio dos membros da equipe
 - docker
-- docker-compose
-- keyclock
-- spring-data-envers (revisao de mudança do registro)
+  - Decidimos utilizar docker por todas as vantagens de container
+  - padronização de ambiente em que as diferentes aplicações estão, desde ambiente de desenvolvimento Linux e Windows
+  - facilidade para executar as aplicações rapidamente por meio do docker-compose.yml
+- Keyclock
+  - É um dos maiores e mais populares SSO e IAM
+  - É gratuito
+  - Possui boa documentação e informações 
+  - membros da equipe possuim conhecimento prévio
 
 ## Perfis <a name="perfis"> </a>
 - Admininstrador
+  - pessoa responsavel por instalar o sistema e cadastrar empresas e seu primeiro gerente
 - Gerente da empresa
-- [futuro] funcionário da empresa
+  - gerente da empresa é responsavel por gerir
+- [futuro] Funcionário da empresa
 - [futuro] Gerente pela ONG
-- [futuro] funcionário da ONG
-- [futuro] doador PF
+- [futuro] Doador PF (não funcionário)
 
 ## Processo de desenvolvimento <a name="processodesenvolvimento"> </a>
 
-- servidor do discord para comunicação persistente
+- Kanban para controle de demandas a serem desenvolvidas
+- Google docs para brainStorm, elaboração e documentação os requisitos
+- Servidor do Discord para comunicação
   - compartilhamento de conteúdos 
   - compartilhamento de dúvidas
   - tira dúvidas técnicas
   - reuniões síncronas por chamada de voz
-- grupo do whatsApp para comunicação rápida e lembretes e avisos urgentes
+- Grupo do whatsApp para comunicação rápida e lembretes e avisos urgentes
 - Foi utilizado o github para gerência e configuração de versionamento 
-- Kanban para controle de demandas a serem desenvolvidas
-- google docs para brainStorm, elaboração e documentação os requisitos
-
-## Processo de execução em ambiente de desenvolvimento <a name="processoexecução"> </a>
-- para executar em ambiente de desenvolvimento deve usar o docker/docker-compose.yml
-- desta forma somente o keyclock e postgres estarão dentro do container
-- assim podendo executar o spring boot diretamente no intellij para ter acesso ao debug
-$ cd docker/
-$ docker-compose down -v
-$ docker-compose up
-$ ./mvnw clean install
-$ SPRING_PROFILES_ACTIVE=dev ./mvnw spring-boot:run
-- variável de ambiente para executar em ambiente de teste: "SPRING_PROFILES_ACTIVE=dev"
-
-## Processo de execução em ambiente de teste
-$ cd docker/
-$ docker-compose up
-- criar manualmente o database "postgres_testing" ao lado do database "postgres"
-- executar os testes pelo intellij
-
-
-## Processo de Deploy <a name="processodeploy"> </a>
-
-## Processo de execução em ambiente de produção
-$ docker-compose up
-$ ./mvnw spring-boot:run
-
-## AWS - EC2 <a name="awsec"> </a>
-- acesso via SSH
-  - cria chave SSH da VM EC2 e faz download
-    - aws_ec2_pantanal_dev_ubuntu.pem
-  - $ chmod 400 aws_ec2_pantanal_dev_ubuntu.pem
-  - $ ssh -i "aws_ec2_pantanal_dev_ubuntu.pem" ubuntu@ec2-3-94-146-39.compute-1.amazonaws.com
-    - digite: yes
-  - já conectado no terminal da VM, faça clone do projeto
-  - $ git clone https://SEU_TOKEN_DE_ACESSO_COM_PERMISSAO_PARA_ORGANIZACOES@github.com/Pantanal-dev-B3-acao-social/pantanal_dev_B3_acao_social_backend.git
-    - login e senha do github
-  - baixa e instala o docker, instalar o docker pelo curl ja vem configurado, pelo apt  e snap tem q configurar
-  - $ curl -fsSL https://get.docker.com/ | sh  #
-  - $ sudo docker -v
-  - instalando docker-compose
-  - $ sudo curl -L "https://github.com/docker/compose/releases/download/v2.3.3/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
-  - $ sudo chmod +x /usr/local/bin/docker-compose
-  - $ sudo docker-compose -v
-  - $ sudo docker-compose down -v
-  - $ sudo docker-compose up --build
-
-## Nginx <a name="nginx"> </a>
-https://medium.com/@stevernewman/installation-of-nginx-on-aws-ubuntu-instance-e73e72cb8450
-- sudo apt update -y
-- sudo apt install nginx -y
-- sudo systemctl status nginx
-- sudo ufw allow 'Nginx Full'
-- sudo ufw status
-- cd /etc/nginx/sites-available/
-- sudo nano meu_app_react
-```txt
-server {
-  listen 80;
-  server_name seu_nome_de_domínio_ou_endereço_ip;
-  location / {
-    proxy_pass http://127.0.0.1:3000;
-    proxy_set_header Host $host;
-    proxy_set_header X-Real-IP $remote_addr;
-  }
-}
-```
 
 ## Testes <a name="testes"> </a>
-- estamos usando como base principal os testes de integração, que apesar de mais custosos para implementar
-- agregam uma boa cobertura de testes, desde a funcionalidade em si estar funcionando e sua respectiva regra de negócio
-- até integração com outros serviços
+- Estamos usando como base principal os testes de integração, que apesar de mais custosos para implementar
+- Agregam uma boa cobertura de testes, desde a funcionalidade em si estar funcionando e sua respectiva regra de negócio
+- Até integração com outros serviços
   - não estamos mockando o banco de dados e nem o SSO
   - cada caso de teste usa realmente o keyclock para autenticar e autorizar
   - verificando se o usuário esta autenticado para executar a action do controller, caso seja necessário
@@ -179,9 +149,10 @@ server {
   - ao preparar os casos de teste, as vezes é preciso inserir dados fake para poder usados como base dos testes
     - o problema de que ao inserir dados pelo teste nao tem userLoggedId, e para resolver este problema foi criado uma classe LoginMock que é capaz de mock do spring security o userlogged
     - desta forma quando o teste inserir um registro no DB, será o user do token como createdBy UUID
-- possibilidade de melhoria nos teste, os testes foram inicialmente criados para contemplar somente o caso de sucesso com todos os campos sendo passados
+- Possibilidade de melhoria nos teste, os testes foram inicialmente criados para contemplar somente o caso de sucesso com todos os campos sendo passados
   - criar testes de casos de falha
   - criar testes de casos de sucesso somente com campos obrigatorio
+   ![Texto Alternativo](diagramas/Teste/diagrama_fluxo_teste-v2.drawio.png)
 
 # Gerência e configuração com git e github <a name="gerencia"> </a>
 - evitamos realizar commit diretamente na branch main
@@ -210,7 +181,6 @@ $ git branch
 * main
 ```
 
-
 # Organização de diretórios
 - os diretórios estão organizados em modulos 
 - apesar de não ser uma arquitetura modular 
@@ -222,8 +192,10 @@ $ git branch
 - a maior parte das regras de negócio estão contidas na camada de "service"
 - podem existir algumas regras de negócio voltada para dados em outras cadamadas, principalmente validadores
 - como na camada de DTO, Entity e Migration
+  ![Texto Alternativo](diagramas/Arquitetura/pantanal.dev_arquitetura-v3.png)
+  
 
-## SSO (Single sign-on) Autenticação única / Identity and Access Management (IAM) gerenciamento de identidade e acesso <a name="sso"> </a>
+## Keyclock: SSO (Single sign-on) Autenticação única / Identity and Access Management (IAM) gerenciamento de identidade e acesso <a name="sso"> </a>
 - optamos por não implementar os serviços de autenticação e autorização
 - optemos por usar uma ferramenta de SSO, no caso o Keyclock
 - em nossa arquitetura, tercerizamos para o Keyclock gerencia tudo do usuário
@@ -313,10 +285,15 @@ $ sudo docker cp postgres_acao_social:/tmp/backup_keycloak.sql /home/kaio/Docume
   - https://github.com/DiUS/java-faker
   - A variável de ambiente executa o arquivo PostgresDatabaseInitialization (spring.profiles.active: dbinit)
 
+![Texto Alternativo](diagramas/MER/MER_Modelo_Entidade_Relacionamento-MER_V8.drawio.png)
+
+
 ## Auditoria <a name="auditoria"> </a>
 - Revisão de mudanças dos registros
   - cada vez que um registro é criado ou alterado é criado uma revisão
   - spring-data-envers
+- Dados de acesso rápido de detalhes de auditoria
+  - todas as entidades do sistema possem estes dados para facilitar ao gerente um acesso rápido, sem precisar entrar em contato com o SRE para ter acesso aos detalhes da auditoria
   - createdDate, createdBy, lastModifiedDate, lastModifiedBy, deletedDate, deletedBy
 - Auditoria de ações do usuário logado
   - https://medium.com/@helder.versatti/implementando-correlation-id-em-uma-aplica%C3%A7%C3%A3o-spring-c9c3a92c67e5
@@ -335,6 +312,76 @@ Neste cenário, quando o usuário recebe um cargo, ele tem o mesmo cargo em toda
 - Bito (chat gpt integrado com intellij)
 - Copilot
 
+## Processo de execução em ambiente de desenvolvimento <a name="processoexecução"> </a>
+- para executar em ambiente de desenvolvimento deve usar o docker/docker-compose.yml
+- desta forma somente o keyclock e postgres estarão dentro do container
+- assim podendo executar o spring boot diretamente no intellij para ter acesso ao debug
+  $ cd docker/
+  $ docker-compose down -v
+  $ docker-compose up
+  $ ./mvnw clean install
+  $ SPRING_PROFILES_ACTIVE=dev ./mvnw spring-boot:run
+- variável de ambiente para executar em ambiente de teste: "SPRING_PROFILES_ACTIVE=dev"
+
+## Processo de execução em ambiente de teste
+$ cd docker/
+$ docker-compose up
+- criar manualmente o database "postgres_testing" ao lado do database "postgres"
+- executar os testes pelo intellij
+
+## Processo de Deploy <a name="processodeploy"> </a>
+
+## Processo de execução em ambiente de produção
+$ docker-compose up
+$ ./mvnw spring-boot:run
+
+## AWS - EC2 <a name="awsec"> </a>
+- acesso via SSH
+  - cria chave SSH da VM EC2 e faz download
+    - aws_ec2_pantanal_dev_ubuntu.pem
+  - $ chmod 400 aws_ec2_pantanal_dev_ubuntu.pem
+  - $ ssh -i "aws_ec2_pantanal_dev_ubuntu.pem" ubuntu@ec2-3-94-146-39.compute-1.amazonaws.com
+    - digite: yes
+  - já conectado no terminal da VM, faça clone do projeto
+  - $ git clone https://SEU_TOKEN_DE_ACESSO_COM_PERMISSAO_PARA_ORGANIZACOES@github.com/Pantanal-dev-B3-acao-social/pantanal_dev_B3_acao_social_backend.git
+    - login e senha do github
+  - baixa e instala o docker, instalar o docker pelo curl ja vem configurado, pelo apt  e snap tem q configurar
+  - $ curl -fsSL https://get.docker.com/ | sh  #
+  - $ sudo docker -v
+  - instalando docker-compose
+  - $ sudo curl -L "https://github.com/docker/compose/releases/download/v2.3.3/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+  - $ sudo chmod +x /usr/local/bin/docker-compose
+  - $ sudo docker-compose -v
+  - $ sudo docker-compose down -v
+  - $ sudo docker-compose up --build
+
+## Nginx <a name="nginx"> </a>
+https://medium.com/@stevernewman/installation-of-nginx-on-aws-ubuntu-instance-e73e72cb8450
+- sudo apt update -y
+- sudo apt install nginx -y
+- sudo systemctl status nginx
+- sudo ufw allow 'Nginx Full'
+- sudo ufw status
+- cd /etc/nginx/sites-available/
+- sudo nano meu_app_react
+```txt
+server {
+  listen 80;
+  server_name seu_nome_de_domínio_ou_endereço_ip;
+  location / {
+    proxy_pass http://127.0.0.1:3000;
+    proxy_set_header Host $host;
+    proxy_set_header X-Real-IP $remote_addr;
+  }
+}
+```
+
+## Tolerância a mudanças
+- flexibilidade
+- arquitura Frontend
+- arquitetura Backend
+- modelagem db
+- Cargos e permissões
 
 ## Melhorias futuras <a name="futuro"> </a>
 - pontuação de engajamento pode ser usada para gameficação
