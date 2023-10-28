@@ -6,10 +6,9 @@ import jakarta.validation.constraints.NotNull;
 import java.util.UUID;
 
 public record PcdPersonCreateDto(
-
         @NotNull
-        UUID personId,
+        UUID person,
         @NotNull
-        UUID pcdId
+        UUID pcd
 ){
 }

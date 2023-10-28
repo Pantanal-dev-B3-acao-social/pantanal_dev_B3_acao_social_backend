@@ -6,8 +6,8 @@ import java.util.UUID;
 
 public record PcdPersonUpdateDto(
 
-        UUID personId,
+        UUID person,
 
-        UUID pcdId
+        UUID pcd
 ){
 }
