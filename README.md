@@ -152,6 +152,7 @@
 - Possibilidade de melhoria nos teste, os testes foram inicialmente criados para contemplar somente o caso de sucesso com todos os campos sendo passados
   - criar testes de casos de falha
   - criar testes de casos de sucesso somente com campos obrigatorio
+   ![Texto Alternativo](diagramas/Teste/diagrama_fluxo_teste-v2.drawio.png)
 
 # Gerência e configuração com git e github <a name="gerencia"> </a>
 - evitamos realizar commit diretamente na branch main
@@ -191,6 +192,8 @@ $ git branch
 - a maior parte das regras de negócio estão contidas na camada de "service"
 - podem existir algumas regras de negócio voltada para dados em outras cadamadas, principalmente validadores
 - como na camada de DTO, Entity e Migration
+  ![Texto Alternativo](diagramas/Arquitetura/pantanal.dev_arquitetura-v3.png)
+  
 
 ## Keyclock: SSO (Single sign-on) Autenticação única / Identity and Access Management (IAM) gerenciamento de identidade e acesso <a name="sso"> </a>
 - optamos por não implementar os serviços de autenticação e autorização
@@ -281,6 +284,9 @@ $ sudo docker cp postgres_acao_social:/tmp/backup_keycloak.sql /home/kaio/Docume
   - observação: em ambiente de "development" a estrutura do banco de dados está sendo gerado a partir das migration
   - https://github.com/DiUS/java-faker
   - A variável de ambiente executa o arquivo PostgresDatabaseInitialization (spring.profiles.active: dbinit)
+
+![Texto Alternativo](diagramas/MER/MER_Modelo_Entidade_Relacionamento-MER_V8.drawio.png)
+
 
 ## Auditoria <a name="auditoria"> </a>
 - Revisão de mudanças dos registros
