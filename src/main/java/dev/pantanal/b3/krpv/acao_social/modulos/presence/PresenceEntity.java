@@ -85,7 +85,7 @@ public class PresenceEntity {
     private UUID deletedBy;
 
     @Column(name = "engagement_score")
-    private Integer engagementScore;
+    private Integer engagementScore = 0;
 
     @PrePersist
     protected void onCreate() {

@@ -42,6 +42,10 @@ public class SessionPredicates {
             QSocialActionEntity filterPath = qSocialActionEntity.socialAction;
             predicate = predicate.and(filterPath.eq(filters.socialAction()));
         }
+        if (filters.engagementScore() != null) {
+            NumberPath<Integer> filterPath = qSocialActionEntity.engagementScore;
+            predicate = predicate.and(filterPath.eq(filters.engagementScore()));
+        }
 // TODO: implementar outros atributos
         return predicate;
     }

@@ -16,6 +16,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.math.BigInteger;
 import java.util.UUID;
 
 @Service
@@ -47,6 +48,12 @@ public class PresenceService {
         entity.setApprovedBy(approvedBy);
         entity.setApprovedDate(dataRequest.approvedDate());
         PresenceEntity savedObj = presenceRepository.save(entity);
+        if (savedObj != null){
+            Integer newPersonScore;
+            newPersonScore = personEntity.getEngagementScore() + savedObj.getEngagementScore();
+            personEntity.setEngagementScore(newPersonScore);
+            personRepository.update(personEntity);
+        }
         return savedObj;
     }
 
