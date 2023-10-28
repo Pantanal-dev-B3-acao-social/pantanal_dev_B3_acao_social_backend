@@ -376,6 +376,13 @@ server {
 }
 ```
 
+## Tolerância a mudanças
+- flexibilidade
+- arquitura Frontend
+- arquitetura Backend
+- modelagem db
+- Cargos e permissões
+
 ## Melhorias futuras <a name="futuro"> </a>
 - pontuação de engajamento pode ser usada para gameficação
   - pessoas com maior ponto podem receber insignia, como ouro, prata e bronze
