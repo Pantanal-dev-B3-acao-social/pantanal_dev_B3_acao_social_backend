@@ -8,8 +8,8 @@ public record PcdPersonParamsDto(
 
 
 
-        UUID personId,
+        UUID person,
 
-        UUID pcdId
+        UUID pcd
 ){
 }

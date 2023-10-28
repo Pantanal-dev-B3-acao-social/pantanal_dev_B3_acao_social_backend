@@ -14,11 +14,11 @@ public class PcdPersonPredicates {
         QPcdPersonEntity qPcdPersonEntity = QPcdPersonEntity.pcdPersonEntity;
         BooleanExpression predicate = Expressions.asBoolean(true).isTrue();
 
-        if (filters.personId() != null) {
-            predicate = predicate.and(qPcdPersonEntity.person.id.in(filters.personId()));
+        if (filters.person() != null) {
+            predicate = predicate.and(qPcdPersonEntity.person.id.in(filters.person()));
         }
-        if (filters.pcdId() != null) {
-            predicate = predicate.and(qPcdPersonEntity.pcd.id.in(filters.pcdId()));
+        if (filters.pcd() != null) {
+            predicate = predicate.and(qPcdPersonEntity.pcd.id.in(filters.pcd()));
         }
         return predicate;
     }

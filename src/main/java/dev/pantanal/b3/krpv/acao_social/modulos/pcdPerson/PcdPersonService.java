@@ -31,8 +31,8 @@ public class PcdPersonService {
 
     public PcdPersonEntity create(PcdPersonCreateDto dataRequest) {
         PcdPersonEntity entity = new PcdPersonEntity();
-        PersonEntity person = personRepository.findById(dataRequest.personId());
-        PcdEntity pcd = pcdRepository.findById(dataRequest.pcdId());
+        PersonEntity person = personRepository.findById(dataRequest.person());
+        PcdEntity pcd = pcdRepository.findById(dataRequest.pcd());
         if (person != null && pcd != null){
             entity.setPcd(pcd);
             entity.setPerson(person);
@@ -67,12 +67,12 @@ public class PcdPersonService {
         if (obj == null){
             throw new ObjectNotFoundException("Not found");
         }
-        if (request.personId() != null) {
-            PersonEntity person = personRepository.findById(request.personId());
+        if (request.person() != null) {
+            PersonEntity person = personRepository.findById(request.person());
             obj.setPerson(person);
         }
-        if (request.pcdId() != null) {
-            PcdEntity pcd = pcdRepository.findById(request.pcdId());
+        if (request.pcd() != null) {
+            PcdEntity pcd = pcdRepository.findById(request.pcd());
             obj.setPcd(pcd);
         }
 
