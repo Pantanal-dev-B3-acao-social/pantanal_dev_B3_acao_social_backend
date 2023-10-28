@@ -4,6 +4,7 @@ services:
   postgres_acao_social:
     container_name: postgres_acao_social
     image: postgres:13
+    restart: always
     ports:
       - 5432:5432
     environment:
@@ -19,6 +20,7 @@ services:
   keycloak:
     container_name: keycloak
     image: quay.io/keycloak/keycloak:21.1.1
+    restart: always
     environment:
       - KC_DB_URL=jdbc:postgresql://postgres_acao_social/keycloack_postgres_db
       - KEYCLOAK_ADMIN=admin
@@ -39,6 +41,7 @@ services:
 
   spring_boot_acao_social:
     container_name: spring_boot_acao_social
+    restart: always
     build:
       context: .
       dockerfile: Dockerfile
